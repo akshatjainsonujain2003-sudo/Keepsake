@@ -1,6 +1,9 @@
 // Tiny Upstash/Vercel-KV REST client (no dependencies).
-const U = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
-const T = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
+// Works with any env-var prefix Vercel gives the database (KV_, STORAGE_, UPSTASH_REDIS_ ...).
+const env = process.env;
+const pick = suf => { const k = Object.keys(env).find(k => k.endsWith(suf) && !k.includes("READ_ONLY")); return k ? env[k] : undefined; };
+const U = env.KV_REST_API_URL || env.UPSTASH_REDIS_REST_URL || pick("_REST_API_URL") || pick("_REDIS_REST_URL");
+const T = env.KV_REST_API_TOKEN || env.UPSTASH_REDIS_REST_TOKEN || pick("_REST_API_TOKEN") || pick("_REDIS_REST_TOKEN");
 exports.ok = () => !!(U && T);
 const cmd = async (...a) => {
   const r = await fetch(U, { method: "POST", headers: { Authorization: "Bearer " + T, "Content-Type": "application/json" }, body: JSON.stringify(a) });
