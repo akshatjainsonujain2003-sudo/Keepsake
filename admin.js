@@ -23,7 +23,8 @@ module.exports = async (req, res) => {
     if (b.action === "remove") {
       if (!db.KEY.test(String(b.key || ""))) return db.reply(res, 400, { error: "Bad key." });
       for (const id of await db.cmd("SMEMBERS", "shopcards:" + b.key)) { await db.cmd("DEL", "card:" + id); await db.cmd("DEL", "views:" + id); }
-      await db.cmd("DEL", "shopcards:" + b.key); await db.cmd("DEL", "shop:" + b.key); await db.cmd("SREM", "shops", b.key);
+      for (const id of await db.cmd("SMEMBERS", "shopimgs:" + b.key)) await db.cmd("DEL", "img:" + id);
+      await db.cmd("DEL", "shopimgs:" + b.key); await db.cmd("DEL", "shopcards:" + b.key); await db.cmd("DEL", "shop:" + b.key); await db.cmd("SREM", "shops", b.key);
       return db.reply(res, 200, { ok: true });
     }
     if (b.action === "leads") {
