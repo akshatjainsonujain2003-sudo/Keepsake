@@ -18,7 +18,7 @@ input,select,textarea{width:100%;padding:14px;border-radius:12px;border:1px soli
 @keyframes vtout{to{opacity:0;transform:scale(.985)}}@keyframes vtin{from{opacity:0;transform:translateY(12px)}}header.nav{view-transition-name:nav}
 .js .rv{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.2,1)}.js .rv.in{opacity:1;transform:none}
 .grow{position:fixed;z-index:100;object-fit:cover;transition:all .5s cubic-bezier(.65,0,.25,1);pointer-events:none}
-.demo{position:relative;width:min(270px,78%);aspect-ratio:9/16;margin:auto;border-radius:30px;overflow:hidden;border:8px solid #12060a;box-shadow:0 24px 70px #000a;background:#230307 url(/assets/laceAlbum.webp) center/cover}
+.demo{position:relative;width:min(270px,78%);aspect-ratio:9/16;margin:auto;border-radius:30px;overflow:hidden;border:8px solid #12060a;box-shadow:0 24px 70px #000a;background:#230307 url(/assets/t/laceAlbum.webp) center/cover}
 .demo:before{content:"";position:absolute;inset:0;background:linear-gradient(#0000,#230307dd 70%)}
 .demo .tt{position:absolute;top:34px;left:0;right:0;text-align:center;font:500 32px "Cormorant Garamond",serif;color:#fff;animation:dem 9s infinite both;animation-delay:.9s}
 .demo .it{position:absolute;left:16px;right:16px;padding:11px;border-radius:999px;background:#e4c680;color:#2a0409;font:600 14px system-ui,sans-serif;text-align:center;animation:dem 9s infinite both}
