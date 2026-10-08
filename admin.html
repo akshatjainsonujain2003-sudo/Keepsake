@@ -1,0 +1,35 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Keepsake admin</title>
+<style>*{box-sizing:border-box}body{margin:0;background:#2a0409;color:#f8f0df;font:16px/1.5 system-ui,sans-serif;padding:20px;max-width:720px;margin:auto}h1{font-family:Georgia,serif;color:#e4c680;font-weight:400;margin:6px 0 14px}
+input,button,select{font:inherit;padding:12px 14px;border-radius:12px;border:1px solid #6b3a35;background:#1a0206;color:#f8f0df;width:100%;margin:5px 0}
+button{background:#d6b06a;color:#2a0409;border:0;font-weight:700;cursor:pointer}button.g{background:#3a1218;color:#f8f0df;border:1px solid #6b3a35;width:auto;padding:8px 12px;margin:4px 4px 0 0}button.r{color:#ff9aa8}
+.card{background:#3a1218;border:1px solid #6b3a35;border-radius:16px;padding:14px;margin:12px 0}.bad{color:#ff9aa8}.good{color:#9ad8b0}small{opacity:.75}
+.tabs{display:flex;gap:8px}.tabs button{background:#3a1218;color:#f8f0df;border:1px solid #6b3a35}.tabs button.on{background:#d6b06a;color:#2a0409}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.stats div{background:#3a1218;border:1px solid #6b3a35;border-radius:14px;padding:12px;text-align:center}.stats b{display:block;font-size:26px;color:#e4c680}
+.top{display:flex;gap:8px}.top input{margin:5px 0}.top button{width:auto;white-space:nowrap}a{color:#e4c680}</style></head><body>
+<h1>Keepsake admin</h1>
+<div class="top"><input id="ak" type="password" placeholder="Admin key"><button id="go">Open</button></div><div id="msg" class="bad"></div>
+<div id="app" hidden>
+<div class="stats"><div><b id="sS">0</b>shops</div><div><b id="sA">0</b>active</div><div><b id="sC">0</b>cards</div></div>
+<div class="tabs" style="margin-top:14px"><button class="on" data-t="shops">Shops</button><button data-t="leads">Enquiries <span id="lc"></span></button></div>
+<div id="shops"><div class="card"><b>Add a shop</b><input id="n" placeholder="Shop name"><input id="w" placeholder="WhatsApp number (with country code)"><input id="d" type="number" value="30" placeholder="Days of access"><button id="add">Create shop &amp; key</button></div>
+<input id="q" placeholder="Search shops…"><div id="list"></div></div>
+<div id="leads" hidden></div></div>
+<script>
+const $=s=>document.querySelector(s);$("#ak").value=sessionStorage.ak||"";let SH=[];
+const api=async b=>{sessionStorage.ak=$("#ak").value;const r=await fetch("/api/admin",{method:"POST",headers:{"Content-Type":"application/json","x-admin-key":$("#ak").value},body:JSON.stringify(b)});const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||"Error");return j};
+const esc=t=>String(t==null?"":t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function draw(){const q=$("#q").value.toLowerCase(),now=Date.now();$("#list").innerHTML=SH.filter(s=>(s.name+s.whatsapp).toLowerCase().includes(q)).map(s=>{const live=s.active!==false&&s.exp>now,link=location.origin+"/login";return`<div class="card"><b>${esc(s.name)}</b> <span class="${live?"good":"bad"}">${live?"active":s.active===false?"paused":"expired"}</span><br><small>Until ${new Date(s.exp).toLocaleDateString()} · ${s.cards} cards · ${esc(s.whatsapp||"no WhatsApp")}</small><br><small>Key: <code>${esc(s.key)}</code></small><br><button class="g" data-a="copykey" data-k="${s.key}">Copy key</button><button class="g" data-a="copylink" data-k="${s.key}">Copy login link</button><button class="g" data-a="extend" data-k="${s.key}">+30 days</button><button class="g" data-a="toggle" data-k="${s.key}">${s.active===false?"Resume":"Pause"}</button><button class="g" data-a="edit" data-k="${s.key}">Edit</button><button class="g r" data-a="remove" data-k="${s.key}">Delete</button></div>`}).join("")||"<p>No shops found.</p>";
+$("#sS").textContent=SH.length;$("#sA").textContent=SH.filter(s=>s.active!==false&&s.exp>now).length;$("#sC").textContent=SH.reduce((a,s)=>a+s.cards,0)}
+async function load(){$("#msg").textContent="";try{SH=(await api({action:"list"})).shops;$("#app").hidden=false;draw();const L=(await api({action:"leads"})).leads;$("#lc").textContent=L.length?"("+L.length+")":"";
+$("#leads").innerHTML=L.map(l=>{const d=String(l.phone).replace(/\D/g,"");return`<div class="card"><b>${esc(l.name)}</b> <small>${new Date(l.at).toLocaleString()}</small><br>${esc(l.business||"")} <small>${esc(l.type)}</small><p>${esc(l.message)}</p><a href="tel:${esc(l.phone)}">${esc(l.phone)}</a> · <a href="https://wa.me/${d}" target="_blank" rel="noopener">WhatsApp</a></div>`}).join("")||"<p>No enquiries yet.</p>"}catch(e){$("#msg").textContent=e.message}}
+$("#go").onclick=load;$("#q").oninput=draw;
+document.querySelector(".tabs").onclick=e=>{const b=e.target.closest("button");if(!b)return;document.querySelectorAll(".tabs button").forEach(x=>x.classList.toggle("on",x===b));$("#shops").hidden=b.dataset.t!=="shops";$("#leads").hidden=b.dataset.t!=="leads"};
+$("#add").onclick=async()=>{try{await api({action:"create",name:$("#n").value,whatsapp:$("#w").value,days:$("#d").value});$("#n").value="";load()}catch(e){$("#msg").textContent=e.message}};
+$("#list").onclick=async e=>{const b=e.target.closest("button");if(!b)return;const k=b.dataset.k,a=b.dataset.a,s=SH.find(x=>x.key===k);
+ try{if(a==="copykey"){await navigator.clipboard.writeText(k);b.textContent="Copied ✓";return}
+ if(a==="copylink"){await navigator.clipboard.writeText(location.origin+"/studio?shop="+k);b.textContent="Copied ✓";return}
+ if(a==="edit"){const n=prompt("Shop name",s.name);if(n===null)return;const w=prompt("WhatsApp number",s.whatsapp||"");if(w===null)return;await api({action:"update",key:k,name:n,whatsapp:w})}
+ else if(a==="remove"){if(!confirm("Delete "+s.name+" and ALL its cards? This cannot be undone."))return;await api({action:"remove",key:k})}
+ else await api({action:a,key:k,days:30});load()}catch(x){$("#msg").textContent=x.message}};
+if($("#ak").value)load();
+</script></body></html>

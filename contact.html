@@ -1,0 +1,19 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#3b0710">
+<title>Contact Keepsake — Get Started or Ask for a Quote</title><meta name="description" content="Tell us about your shop or business and we will help you set up Keepsake memory cards and a monthly plan."><link rel="canonical" href="/contact"><meta name="robots" content="index,follow,max-image-preview:large">
+<meta property="og:type" content="website"><meta property="og:site_name" content="Keepsake"><meta property="og:title" content="Contact Keepsake — Get Started or Ask for a Quote"><meta property="og:description" content="Tell us about your shop or business and we will help you set up Keepsake memory cards and a monthly plan."><meta name="twitter:card" content="summary">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@400;500;700&family=Parisienne&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/site.css"><script>document.documentElement.classList.add("js")</script><script defer src="/assets/site.js"></script></head><body>
+<header class="nav"><div class="wrap"><a class="brand" href="/">Keepsake</a><nav aria-label="Main"><a class="hide" href="/designs">Designs</a><a class="hide" href="/business">For business</a><a class="hide" href="/contact">Contact</a><a class="btn sm" href="/login">Log in</a></nav></div></header><main><section class="hero"><div class="wrap"><h1>Let's get you started</h1><p class="lead">Tell us a little about you and we will reach out on WhatsApp or by phone.</p></div></section><section><div class="wrap" style="max-width:560px"><form id="f" novalidate>
+<label for="name">Your name</label><input id="name" autocomplete="name" maxlength="80" required>
+<label for="phone">Phone / WhatsApp number</label><input id="phone" type="tel" autocomplete="tel" maxlength="30" required>
+<label for="biz">Business name (optional)</label><input id="biz" maxlength="80">
+<label for="type">I am interested in</label><select id="type"><option>A Keepsake plan for my gift shop</option><option value="business">A business card for my business</option><option>A personal gift card</option><option>Something else</option></select>
+<label for="msg">Message (optional)</label><textarea id="msg" rows="4" maxlength="600"></textarea>
+<input id="website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true">
+<button class="btn" id="send" type="submit">Send enquiry</button><div class="msg" id="m" role="status"></div></form></div></section>
+<script>
+const $=s=>document.querySelector(s);if(new URLSearchParams(location.search).get("topic")==="business")$("#type").value="business";
+$("#f").onsubmit=async e=>{e.preventDefault();const m=$("#m");m.className="msg";m.textContent="Sending…";$("#send").disabled=true;
+try{const r=await fetch("/api/lead",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name:$("#name").value,phone:$("#phone").value,business:$("#biz").value,type:$("#type").selectedOptions[0].text,message:$("#msg").value,website:$("#website").value})});const j=await r.json().catch(()=>({}));
+if(r.ok){m.className="msg ok";m.textContent="Thank you! We will contact you soon.";$("#f").reset()}else{m.className="msg bad";m.textContent=j.error||"Could not send. Please try again."}}catch(x){m.className="msg bad";m.textContent="Network problem. Please try again."}$("#send").disabled=false};
+</script></main><footer><div class="wrap"><div><b class="brand" style="font-size:26px">Keepsake</b><br>NFC &amp; QR memory cards for people and businesses.</div><div><a href="/designs">Designs</a><a href="/business">For business</a><a href="/contact">Contact</a><a href="/login">Log in</a><a href="/studio">Studio</a></div></div></footer></body></html>
