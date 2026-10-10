@@ -2099,7 +2099,7 @@ async function loadMine(){
 document.addEventListener("click",async e=>{const b=e.target.closest("#mineList button");if(!b||!SHOP)return;const id=b.dataset.id;
  if(b.dataset.a==="copy"){try{await navigator.clipboard.writeText(location.origin+"/c/"+id);toast("Link copied ♡")}catch(x){toast(location.origin+"/c/"+id)}}
  if(b.dataset.a==="del"&&confirm("Delete this card? Its QR and NFC link will stop working.")){await fetch(`/api/card?id=${id}&key=${encodeURIComponent(SHOP.key)}`,{method:"DELETE"});loadMine()}});
-async function init(){ if(await parseHash()){showViewer();return} licence();
+async function init(){ if(await parseHash()){showViewer();return} await licence();
  if(!$("#templateGrid")||!$("#preview")){return}
  restoreDraft();
  hydrateForm();
