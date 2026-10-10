@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#3b0710">
+<title>Custom Photo QR Maker — Keepsake</title><meta name="description" content="Make a personalized QR code with your photo or logo in the centre."><link rel="stylesheet" href="/assets/site.css">
+<style>
+.qrHero{text-align:center;padding:50px 0 28px}.qrHero h1{font-size:clamp(40px,7vw,64px)}.qrHero p{max-width:700px;margin:10px auto;color:#f8f0dfbb}.maker{display:grid;grid-template-columns:minmax(0,1fr) minmax(260px,.8fr);gap:24px;align-items:start}.formPanel,.previewPanel{background:#3a1218;border:1px solid #c9a45a55;border-radius:22px;padding:24px}.formPanel h2,.previewPanel h2{font-size:30px}.fieldLabel{display:block;margin:14px 0 6px;font-size:13px;color:#f8f0dfc9}.maker input[type=text],.maker input[type=url],.maker select{margin:0;background:#1a0206}.maker input[type=file]{font-size:13px;margin:8px 0}.maker input[type=color]{width:100%;height:44px;margin:0}.qrOutput{background:#fff;border-radius:16px;padding:14px;width:min(100%,330px);margin:14px auto;display:grid;place-items:center;min-height:280px}.qrOutput canvas,.qrOutput img{max-width:100%;height:auto}.qrOutput canvas{image-rendering:pixelated}.status{min-height:24px;color:#e4c680;font-size:13px}.note{font-size:12px;color:#f8f0df99;line-height:1.6}.btnrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.btnrow .btn{font-size:14px;padding:12px 16px}.btn:disabled{opacity:.45;cursor:not-allowed}@media(max-width:760px){.maker{grid-template-columns:1fr}.qrHero{padding-top:36px}}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script></head><body>
+<header class="nav"><div class="wrap"><a class="brand" href="/">Keepsake</a><nav aria-label="Main"><a class="hide" href="/pricing">Pricing</a><a class="hide" href="/business">For business</a><a class="btn sm" href="/studio">Open Studio</a></nav></div></header>
+<main><section class="qrHero"><div class="wrap"><div class="eyebrow">Make it yours</div><h1>Your link. Your <span style="color:#e4c680">photo QR.</span></h1><p>Generate a QR code for a Keepsake card or any URL, add a personal photo or business logo in the centre, then download it for sharing or printing.</p></div></section>
+<section style="padding-top:12px"><div class="wrap maker">
+<div class="formPanel"><h2>Customize your QR</h2><label class="fieldLabel" for="target">Destination URL</label><input id="target" type="url" placeholder="https://your-keepsake-page-url" autocomplete="url">
+<label class="fieldLabel" for="photo">Photo or logo for the centre (optional)</label><input id="photo" type="file" accept="image/png,image/jpeg,image/webp">
+<label class="fieldLabel" for="dark">QR colour</label><input id="dark" type="color" value="#210307">
+<label class="fieldLabel" for="caption">Caption (optional)</label><input id="caption" type="text" maxlength="60" placeholder="Scan to open our memories">
+<label class="fieldLabel" for="size">Download size</label><select id="size"><option value="512">512 × 512 px</option><option value="1024" selected>1024 × 1024 px</option><option value="1600">1600 × 1600 px</option></select>
+<div class="btnrow"><button class="btn" id="generate" type="button">Generate QR</button><button class="btn ghost" id="download" type="button" disabled>Download PNG</button></div><p class="note">Your selected image is processed in this browser for this tool and isn't uploaded by this page. Avoid transparent or very detailed centre images. Always test the downloaded code with more than one phone before printing.</p><div class="status" id="status" role="status" aria-live="polite"></div></div>
+<div class="previewPanel"><h2>Live preview</h2><div class="qrOutput" id="output"><p style="color:#6d1723;text-align:center">Enter a destination URL and select Generate QR.</p></div><p class="note">For best scan reliability, the photo is kept small with a white border and the QR uses high error correction. The QR pattern remains the part that carries your destination URL.</p></div>
+</div></section></main>
+<footer><div class="wrap"><div><b class="brand" style="font-size:26px">Keepsake</b><br>Digital memories and business cards.</div><div><a href="/pricing">Pricing</a><a href="/studio">Studio</a><a href="/contact">Contact</a></div></div></footer>
+<script>
+(()=> {
+ const $=id=>document.getElementById(id);
+ let photoImage=null,latestCanvas=null;
+ $('photo').addEventListener('change',()=>{
+  const file=$('photo').files&&$('photo').files[0];photoImage=null;
+  if(!file){return}
+  if(!/^image\/(png|jpeg|webp)$/.test(file.type)){ $('status').textContent='Choose a PNG, JPEG or WebP image.';return; }
+  if(file.size>5*1024*1024){$('status').textContent='Please choose an image under 5 MB.';$('photo').value='';return;}
+  const reader=new FileReader();reader.onload=()=>{const im=new Image();im.onload=()=>{photoImage=im;$('status').textContent='Image ready. Generate your QR to preview it.'};im.onerror=()=>{$('status').textContent='Could not read this image.'};im.src=reader.result};reader.readAsDataURL(file);
+ });
+ $('generate').addEventListener('click',()=>{
+  const url=$('target').value.trim();
+  try{const u=new URL(url);if(!['http:','https:'].includes(u.protocol))throw new Error();}catch{$('status').textContent='Enter a valid http:// or https:// destination URL.';return;}
+  if(typeof QRCode==='undefined'){$('status').textContent='QR library is unavailable. Check your connection and reload this page.';return;}
+  const output=$('output');output.innerHTML='';const scratch=document.createElement('div');scratch.style.cssText='position:absolute;left:-99999px;top:0';document.body.appendChild(scratch);
+  try{
+   new QRCode(scratch,{text:url,width:512,height:512,colorDark:$('dark').value,colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.H});
+   setTimeout(()=>{
+    const source=scratch.querySelector('canvas')||scratch.querySelector('img');
+    if(!source){scratch.remove();$('status').textContent='Could not generate this QR. Try a shorter URL.';return;}
+    const size=Number($('size').value)||1024,scale=size/512,canvas=document.createElement('canvas');canvas.width=size;canvas.height=size;
+    const ctx=canvas.getContext('2d');ctx.fillStyle='#ffffff';ctx.fillRect(0,0,size,size);ctx.imageSmoothingEnabled=false;
+    if(source.tagName==='CANVAS')ctx.drawImage(source,0,0,size,size);else{const im=new Image();im.onload=()=>{ctx.drawImage(im,0,0,size,size);finish()};im.src=source.src;}
+    if(source.tagName==='CANVAS')finish();
+    function finish(){
+     if(photoImage){
+      const box=size*.22,x=(size-box)/2,y=(size-box)/2,pad=size*.018;
+      ctx.fillStyle='#ffffff';ctx.fillRect(x-pad,y-pad,box+pad*2,box+pad*2);
+      const ratio=Math.min(box/photoImage.width,box/photoImage.height),w=photoImage.width*ratio,h=photoImage.height*ratio;
+      ctx.save();ctx.beginPath();ctx.roundRect?ctx.roundRect(x,y,box,box,size*.025):ctx.rect(x,y,box,box);ctx.clip();ctx.fillStyle='#fff';ctx.fillRect(x,y,box,box);ctx.drawImage(photoImage,x+(box-w)/2,y+(box-h)/2,w,h);ctx.restore();
+     }
+     const caption=$('caption').value.trim();
+     if(caption){const band=size*.075;ctx.fillStyle='#ffffff';ctx.fillRect(0,size-band,size,band);ctx.fillStyle=$('dark').value;ctx.font='600 '+Math.max(14,size*.025)+'px Arial';ctx.textAlign='center';ctx.textBaseline='middle';let text=caption;while(ctx.measureText(text).width>size*.9&&text.length>3)text=text.slice(0,-2)+'…';ctx.fillText(text,size/2,size-band/2);}
+     latestCanvas=canvas;output.innerHTML='';canvas.style.width='100%';canvas.style.height='auto';output.appendChild(canvas);$('download').disabled=false;$('status').textContent='QR generated. Scan-test it before printing.';scratch.remove();
+    }
+   },80);
+  }catch(e){scratch.remove();$('status').textContent='Could not generate QR. Try a shorter URL.';}
+ });
+ $('download').addEventListener('click',()=>{if(!latestCanvas)return;const a=document.createElement('a');a.download='keepsake-custom-qr.png';a.href=latestCanvas.toDataURL('image/png');a.click();});
+})();
+</script></body></html>
