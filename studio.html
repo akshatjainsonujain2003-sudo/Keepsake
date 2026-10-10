@@ -1916,6 +1916,30 @@ body{overflow-x:hidden}
  .panel{padding:12px}
  .wrap{width:calc(100% - 20px)!important}
 }
+
+/* v21: custom-design mode mobile overflow fix */
+#cPanel{width:100%;max-width:100%;min-width:0;box-sizing:border-box}
+#cPanel *{min-width:0}
+#cPanel .field{width:100%;max-width:100%}
+#cPanel .options{display:flex;flex-wrap:wrap;gap:8px;width:100%;max-width:100%}
+#cPanel .pill{flex:0 1 auto;max-width:100%;white-space:normal;overflow-wrap:anywhere}
+#cPanel .cColors{grid-template-columns:repeat(4,minmax(0,1fr));width:100%;gap:8px}
+#cPanel .cColors label{min-width:0}
+#cPanel .cColors input{min-width:0;width:100%}
+#cRows{width:100%;max-width:100%;min-width:0}
+#cRows .cRow{width:100%;max-width:100%;min-width:0;grid-template-columns:minmax(0,1fr)}
+#cRows input,#cRows select{width:100%;max-width:100%;min-width:0;box-sizing:border-box}
+#cUpNote,.mediaHint{overflow-wrap:anywhere;word-break:break-word}
+@media(max-width:650px){
+ #cPanel{padding:0}
+ #cPanel .cColors{grid-template-columns:repeat(2,minmax(0,1fr))}
+ #cPanel .field label{letter-spacing:.1em}
+ #cPanel .options{gap:6px}
+ #cPanel .pill{padding:8px 10px;font-size:13px}
+ #cRows .cRow{padding:9px}
+ #cAdd{width:100%;white-space:normal}
+ #generateBtn{white-space:normal;line-height:1.35;padding:13px 12px}
+}
 </style></head><body><main class="card"><h1 class="title">${esc(data.t||"Our Memories")}</h1><div class="cover">${safe(data.p)?`<img src="${esc(data.p)}">`:`<div class="empty">♡</div>`}</div><p class="quote">${esc(data.q||"")}</p>${data.i.map((x,n)=>`<button class="row" onclick="openMemory(${n})">${esc(x.l)} <b>→</b></button>`).join("")}</main><script>const d=${JSON.stringify(data)};const safe=u=>/^https?:\\/\\//i.test(u)?u:"";function openMemory(n){const x=d.i[n]||{};const w=window.open("","_blank","width=420,height=700");if(!w)return;w.document.write('<body style="font:20px Georgia;padding:30px;background:#f8f0df;color:#35171b"><h1>'+String(x.l||"").replace(/[<>]/g,"")+'</h1><p style="white-space:pre-wrap;line-height:1.6">'+String(x.v||"Nothing added yet.").replace(/[<>]/g,"")+'</p></body>');w.document.close()}<\/script></body></html>`;
  downloadBlob("keepsake-memory.html",new Blob([html],{type:"text/html;charset=utf-8"}));toast("Memory card HTML saved ♡");
 }
