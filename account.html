@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#3b0710">
+<title>Customer account — Keepsake</title><meta name="description" content="Create or access your Keepsake customer account."><link rel="canonical" href="/account"><meta name="robots" content="noindex,nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@400;500;700&family=Parisienne&display=swap"><link rel="stylesheet" href="/assets/site.css">
+<style>
+.account-wrap{max-width:520px;margin:auto}.account-panel{border:1px solid #6b3a35;border-radius:20px;padding:24px;background:#3a1218}.account-panel input{width:100%;margin:6px 0 16px}.account-panel label{display:block}.account-tabs{display:flex;gap:8px;margin:18px 0}.account-tabs button{flex:1}.notice{margin-top:14px}.fine{font-size:14px;opacity:.8}.account-panel [hidden]{display:none!important}
+</style>
+</head>
+<body>
+<header class="nav"><div class="wrap"><a class="brand" href="/">Keepsake</a><nav><a class="btn sm" href="/login">Business key login</a></nav></div></header>
+<main><section class="hero"><div class="wrap account-wrap">
+<div id="authView" class="account-panel">
+<div class="eyebrow">Your Keepsake account</div><h1 id="heading">Create your account</h1><p class="lead" id="intro">Save your details and get ready to manage your personal Keepsake experience.</p>
+<div class="account-tabs"><button class="btn" type="button" id="signupTab">Sign up</button><button class="btn ghost" type="button" id="loginTab">Log in</button></div>
+<form id="form">
+<div id="nameField"><label for="name">Your name</label><input id="name" autocomplete="name" maxlength="80" required></div>
+<label for="email">Email address</label><input id="email" type="email" autocomplete="email" maxlength="254" required>
+<label for="password">Password (at least 10 characters)</label><input id="password" type="password" autocomplete="new-password" minlength="10" maxlength="128" required>
+<button class="btn" id="submit" type="submit" style="width:100%">Create account</button><p class="notice msg" id="message" role="status"></p>
+</form><p class="fine">Business owners should continue using their existing Keepsake key on the business login page. Account email verification and password reset are not enabled yet.</p>
+</div>
+<div id="signedIn" class="account-panel" hidden><div class="eyebrow">Account</div><h1>Welcome, <span id="userName"></span></h1><p class="lead">You are signed in to Keepsake.</p><p id="userEmail"></p><p class="fine">Your account is created. Personal memory saving will be connected to this account in the next studio integration phase.</p><button class="btn" id="logout" type="button">Log out</button><p class="notice msg" id="accountMessage" role="status"></p></div>
+</div></section></main>
+<footer><div class="wrap"><div><b class="brand" style="font-size:26px">Keepsake</b><br>NFC &amp; QR memory cards for people and businesses.</div><div><a href="/designs">Designs</a><a href="/business">For business</a><a href="/contact">Contact</a><a href="/login">Business key login</a></div></div></footer>
+<script>
+const $=s=>document.querySelector(s);let mode="signup";
+function setMode(next){mode=next;$("#heading").textContent=mode==="signup"?"Create your account":"Welcome back";$("#intro").textContent=mode==="signup"?"Create a customer account for Keepsake.":"Log in to your Keepsake customer account.";$("#nameField").hidden=mode!=="signup";$("#name").required=mode==="signup";$("#password").autocomplete=mode==="signup"?"new-password":"current-password";$("#password").minLength=mode==="signup"?10:1;$("#submit").textContent=mode==="signup"?"Create account":"Log in";$("#signupTab").className=mode==="signup"?"btn":"btn ghost";$("#loginTab").className=mode==="login"?"btn":"btn ghost";$("#message").textContent="";$("#message").className="notice msg";}
+$("#signupTab").onclick=()=>setMode("signup");$("#loginTab").onclick=()=>setMode("login");
+async function refresh(){try{const r=await fetch("/api/customer-auth",{cache:"no-store"});const j=await r.json();if(j.user){$("#authView").hidden=true;$("#signedIn").hidden=false;$("#userName").textContent=j.user.name;$("#userEmail").textContent=j.user.email;}else{$("#authView").hidden=false;$("#signedIn").hidden=true;}}catch(e){}}
+$("#form").onsubmit=async e=>{e.preventDefault();const msg=$("#message"),btn=$("#submit");msg.className="notice msg";msg.textContent="Please wait…";btn.disabled=true;
+try{const body={action:mode,email:$("#email").value,password:$("#password").value};if(mode==="signup")body.name=$("#name").value;const r=await fetch("/api/customer-auth",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||"Could not complete request.");msg.className="notice msg ok";msg.textContent=mode==="signup"?"Account created.":"You are logged in.";$("#password").value="";await refresh();}catch(err){msg.className="notice msg bad";msg.textContent=err.message;}finally{btn.disabled=false;}};
+$("#logout").onclick=async()=>{const m=$("#accountMessage");try{const r=await fetch("/api/customer-auth",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"logout"})});if(!r.ok)throw new Error("Could not log out. Please retry.");await refresh();setMode("login");m.textContent="You have logged out.";}catch(e){m.textContent=e.message;}};
+refresh();
+</script>
+</body></html>
