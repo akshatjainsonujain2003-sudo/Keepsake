@@ -89,3 +89,5 @@ module.exports = async (req, res) => {
     return db.reply(res, 500, { error: "Something went wrong. Please try again." });
   }
 };
+
+module.exports.currentUser = currentUser;
