@@ -189,6 +189,36 @@ details.cuBtn{border-radius:20px}details.cuBtn summary{list-style:none;cursor:po
 .photo .themeRow{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.5);color:#fff;backdrop-filter:blur(8px)}.photo .themeRow i{border-color:#fffa}.photo .themeCover{border-color:#fff}
 .cuWrap.glass .cuBtn{background:rgba(255,255,255,.16);color:var(--cx);border:1px solid rgba(255,255,255,.45);backdrop-filter:blur(8px)}.cuWrap.outline .cuBtn{background:transparent;color:var(--ca);border:1.5px solid var(--ca)}
 .cThemes{display:flex;gap:8px;overflow-x:auto;padding:8px 0}.cThemes button{flex:none;width:60px;padding:0;border:2px solid transparent;border-radius:10px;overflow:hidden;background:none;cursor:pointer}.cThemes button.active{border-color:#e4c680}.cThemes img{display:block;width:100%;height:auto}
+
+/* v23: actual Studio page mobile layout fix (placed in the main stylesheet) */
+html,body{width:100%;max-width:100%;min-width:0}
+body{overflow-x:hidden}
+*,*::before,*::after{box-sizing:border-box}
+#templates,#create,.studio,.section{width:100%;max-width:100%;min-width:0}
+#templates>.wrap,#create>.wrap{width:min(1180px,calc(100% - 24px));max-width:100%;min-width:0;margin-left:auto;margin-right:auto}
+.templates{grid-template-columns:repeat(5,minmax(0,1fr));min-width:0}
+.studioGrid{width:100%;min-width:0;grid-template-columns:minmax(0,430px) minmax(0,1fr);gap:24px}
+.studioGrid>.panel,.studioGrid>.previewArea{min-width:0;max-width:100%;width:100%}
+#cPanel,#cRows,.field,.row2,.options{min-width:0;max-width:100%;box-sizing:border-box}
+#cPanel input,#cPanel select,#cPanel textarea,#cRows input,#cRows select{width:100%;max-width:100%;min-width:0;box-sizing:border-box}
+@media(max-width:950px){
+  #templates>.wrap,#create>.wrap{width:calc(100% - 24px)}
+  .templates{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .studioGrid{grid-template-columns:minmax(0,1fr);gap:18px}
+  .studioGrid>.panel,.studioGrid>.previewArea{grid-column:1/-1}
+  .previewArea{position:relative;top:auto}
+}
+@media(max-width:650px){
+  #templates>.wrap,#create>.wrap{width:calc(100% - 20px)}
+  .studioGrid>.panel{padding:14px}
+  .studioGrid>.previewArea{padding:8px}
+  #cPanel .cColors{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #cPanel .options{display:flex;flex-wrap:wrap}
+  #cPanel .pill{max-width:100%;white-space:normal;overflow-wrap:anywhere}
+  #cRows .cRow{grid-template-columns:minmax(0,1fr)}
+  .row2,.steps,.qrWrap{grid-template-columns:minmax(0,1fr)}
+}
+
 </style>
 <script>
 (function(){
