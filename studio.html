@@ -1940,6 +1940,29 @@ body{overflow-x:hidden}
  #cAdd{width:100%;white-space:normal}
  #generateBtn{white-space:normal;line-height:1.35;padding:13px 12px}
 }
+
+/* v22: harden mobile viewport sizing in custom mode */
+html{width:100%!important;max-width:100%!important;overflow-x:clip}
+body{width:100%!important;max-width:100%!important;min-width:0!important;overflow-x:clip}
+#templates,#create,.section,.studio{width:100%!important;max-width:100%!important;min-width:0!important;box-sizing:border-box}
+#templates>.wrap,#create>.wrap{width:calc(100vw - 24px)!important;max-width:1180px!important;margin-left:auto!important;margin-right:auto!important}
+.studioGrid{display:grid!important;grid-template-columns:minmax(0,1fr)!important;width:100%!important;max-width:100%!important;min-width:0!important;gap:18px!important}
+.studioGrid>.panel,.studioGrid>.previewArea{width:100%!important;max-width:100%!important;min-width:0!important;box-sizing:border-box}
+#cPanel,#cRows,.field,.row2{max-width:100%;min-width:0;box-sizing:border-box}
+#cPanel input,#cPanel select,#cPanel textarea,#cRows input,#cRows select{width:100%;max-width:100%;min-width:0;box-sizing:border-box}
+@media(max-width:950px){
+ #templates .wrap,#create .wrap{width:calc(100vw - 24px)!important}
+ .templates{grid-template-columns:repeat(2,minmax(0,1fr))!important;width:100%!important;min-width:0!important}
+ .studioGrid{grid-template-columns:minmax(0,1fr)!important}
+ .studioGrid>.panel,.studioGrid>.previewArea{grid-column:1/-1}
+ .previewArea{position:relative!important;top:auto!important}
+}
+@media(max-width:650px){
+ #templates .wrap,#create .wrap{width:calc(100vw - 20px)!important}
+ .studioGrid>.panel{padding:14px!important}
+ #cPanel .cColors{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ #cPanel .options{flex-wrap:wrap!important}
+}
 </style></head><body><main class="card"><h1 class="title">${esc(data.t||"Our Memories")}</h1><div class="cover">${safe(data.p)?`<img src="${esc(data.p)}">`:`<div class="empty">♡</div>`}</div><p class="quote">${esc(data.q||"")}</p>${data.i.map((x,n)=>`<button class="row" onclick="openMemory(${n})">${esc(x.l)} <b>→</b></button>`).join("")}</main><script>const d=${JSON.stringify(data)};const safe=u=>/^https?:\\/\\//i.test(u)?u:"";function openMemory(n){const x=d.i[n]||{};const w=window.open("","_blank","width=420,height=700");if(!w)return;w.document.write('<body style="font:20px Georgia;padding:30px;background:#f8f0df;color:#35171b"><h1>'+String(x.l||"").replace(/[<>]/g,"")+'</h1><p style="white-space:pre-wrap;line-height:1.6">'+String(x.v||"Nothing added yet.").replace(/[<>]/g,"")+'</p></body>');w.document.close()}<\/script></body></html>`;
  downloadBlob("keepsake-memory.html",new Blob([html],{type:"text/html;charset=utf-8"}));toast("Memory card HTML saved ♡");
 }
