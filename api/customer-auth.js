@@ -76,7 +76,7 @@ module.exports = async (req, res) => {
       const user = { name, email, phone, salt, passwordHash: derived.toString("hex"), created: Date.now() };
       const saved = await db.cmd("SET", "customer:" + id, JSON.stringify(user), "NX");
       if (saved !== "OK") return db.reply(res, 409, { error: "An account with this email already exists. Please log in." });
-      if (phone) await db.cmd("SET", "customer-phone:" + phone, id);
+      if (phone) await db.setj("customer-phone:" + phone, id);
       const token = crypto.randomBytes(32).toString("base64url");
       const exp = Date.now() + SESSION_SECONDS * 1000;
       await db.setj("customer-session:" + hash(token), { id, exp }, "EX", SESSION_SECONDS);
