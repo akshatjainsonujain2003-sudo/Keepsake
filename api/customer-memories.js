@@ -30,7 +30,7 @@ module.exports = async (req, res) => {
       const b = req.body || {}, data = b.data;
       if (!data || !Array.isArray(data.i) || JSON.stringify(data).length > 30000)
         return db.reply(res, 400, { error: "This memory is empty or too large. Reduce its content and try again." });
-      const id = crypto.randomBytes(6).toString("hex");
+      const id = crypto.randomBytes(8).toString("hex");
       const now = Date.now();
       const memory = { owner: user.id, ownerName: user.name, title: clip(data.t || "Our Memories", 80) || "Our Memories", data, created: now, updated: now };
       await db.setj("customer-memory:" + id, memory, "NX");
