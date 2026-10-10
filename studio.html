@@ -1553,7 +1553,7 @@ function unwire(o){return{c:o.c||null,t:o.t||DEF.t,q:o.q||DEF.q,p:o.p||"",templa
 async function pack(o){const raw=new TextEncoder().encode(JSON.stringify(o));if(window.CompressionStream){try{const z=await pipe(raw,CompressionStream);if(z.length<raw.length)return"~"+b64u(z)}catch(e){}}return"."+b64u(raw)}
 async function unpack(h){const c=h[0],b=unb64u(h.slice(1));return JSON.parse(new TextDecoder().decode(c==="~"?await pipe(b,DecompressionStream):b))}
 const byteLen=s=>new TextEncoder().encode(s).length;
-const isImg=u=>/\.(jpe?g|png|webp|gif)(\?.*)?$/i.test(u), isAud=u=>/\.(mp3|m4a|wav|ogg)(\?.*)?$/i.test(u), isVid=u=>/\.(mp4|webm)(\?.*)?$/i.test(u);
+const isImg=u=>{try{return /^https?:$/.test(new URL(u).protocol)}catch(e){return false}}, isAud=u=>/\.(mp3|m4a|wav|ogg)(\?.*)?$/i.test(u), isVid=u=>/\.(mp4|webm)(\?.*)?$/i.test(u);
 
 function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove("show"),2600)}
 function siteBase(){const v=($("#siteUrl")?.value||"").trim().split("#")[0];if(!/^https?:\/\//i.test(v)||isBlockedHost(v))return"";return v}
@@ -1613,7 +1613,7 @@ function openMemory(it){
    const p=document.createElement("p");p.textContent="Nothing added here yet.";paper.appendChild(p);
  }else if(it?.k==="g"){
    const links=parseLinks(v).filter(isImg);
-   if(links.length){links.forEach(u=>{const im=new Image();im.src=u;im.alt="Memory photo";im.loading="lazy";im.style.cssText="width:100%;display:block;margin:0 0 10px;border:1px solid #c9a45a;max-height:360px;object-fit:cover";im.onerror=()=>im.remove();paper.appendChild(im)});}
+   if(links.length){links.forEach(u=>{const im=new Image();im.src=u;im.alt="Memory photo";im.loading="lazy";im.style.cssText="width:100%;display:block;margin:0 0 10px;border:1px solid #c9a45a;max-height:360px;object-fit:cover";im.onerror=()=>{const a=document.createElement("a");a.href=u;a.target="_blank";a.rel="noopener noreferrer";a.textContent="Open image link ↗";a.style.cssText="display:block;margin:8px 0;padding:10px 14px;border:1px solid #c9a45a;border-radius:8px;color:#6d1723;text-decoration:underline;font:500 14px/1.4 \"DM Sans\",sans-serif;overflow-wrap:anywhere";im.replaceWith(a)};paper.appendChild(im)});}
    else {const p=document.createElement("p");p.textContent="Add direct JPG, PNG or WebP image links.";paper.appendChild(p)}
  }else if(it?.k==="v"){
    const emb=youtubeEmbed(v);
