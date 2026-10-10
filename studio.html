@@ -1543,7 +1543,7 @@ window.qrcode=function(typeNumber,errorLevel){
 </div>
 </section>
 
-<section class="section" id="mine" hidden><div class="wrap"><h2>Your cards</h2><div id="mineList"></div></div></section>
+<section class="section" id="mine" hidden><div class="wrap"><h2 id="mineHeading">Your cards</h2><p id="mineIntro">Your saved memories.</p><div id="mineList"></div></div></section>
 <footer class="footer"><div class="wrap footerIn"><span class="brand">Keepsake</span><span>Made for memories that deserve more than a camera roll.</span></div></footer>
 
 <div class="toast" id="toast"></div>
@@ -1783,6 +1783,7 @@ function needHost(msg){setStatus("#linkStatus",msg,false);const dt=document.quer
 async function generate(){
  const btn=$("#generateBtn");btn.disabled=true;syncForm();persistDraft();short="";longLink="";
  try{
+ if(CUSTOMER){setStatus("#generateStatus","Saving to your account…",true);const r=await fetch("/api/customer-memories",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({data:wire(d)})});const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||"Could not save this memory.");short=location.origin+j.url;longLink=short;$("#shortLink").textContent=short;badge(short);setStatus("#linkStatus","Saved to your account. This public link is ready for QR and NFC.",true);setStatus("#generateStatus","Saved to My Memories ♡",true);drawQR();btn.disabled=false;$("#link").scrollIntoView({behavior:"smooth",block:"start"});toast("Memory saved to your account ♡");return}
  if(SHOP){setStatus("#generateStatus","Saving your card…",true);const r=await fetch("/api/card",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({key:SHOP.key,data:wire(d)})});const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||"Could not save the card.");short=location.origin+"/c/"+j.id;longLink=short;$("#shortLink").textContent=short;badge(short);setStatus("#linkStatus","Saved. This short link is ready for QR and NFC.",true);setStatus("#generateStatus","Ready ♡",true);drawQR();btn.disabled=false;$("#link").scrollIntoView({behavior:"smooth",block:"start"});toast("Card saved ♡");loadMine();return}
 
    const base=forceSelf?"":siteBase();
@@ -2069,23 +2070,25 @@ function urlStart(){const q=new URLSearchParams(location.search),oc=q.get("occas
  if(ds){const i=templates.findIndex(t=>t.id===ds);const b=$$("#templateGrid .template")[i];if(b)b.click()}
  if(oc&&PRESETS[oc]){const P=PRESETS[oc];d.c=structuredClone(P.c);$("#title").value=P.t;$("#quote").value=P.q;cSync();cChanged()}
  if(ds||oc)setTimeout(()=>$("#create")?.scrollIntoView({behavior:"smooth"}),400)}
-async function parseHash(){const pm=location.pathname.match(/^\/c\/([A-Za-z0-9]{4,12})\/?$/);if(pm){try{const r=await fetch("/api/card?id="+pm[1]);if(r.ok){const j=await r.json();d=unwire(j.data);currentTemplate=d.template;window.__shop=j.shop;return true}}catch(e){}d=null;return true}const h=location.hash.slice(1);if(!h)return false;try{if(h[0]==="~"||h[0]==="."){const o=await unpack(h);d=unwire(o);currentTemplate=d.template;return true}const x=dec(h);if(x&&x.t&&Array.isArray(x.i)){d=x;currentTemplate=x.template||"laceAlbum";return true}}catch(e){}return false}
+async function parseHash(){const pm=location.pathname.match(/^\/(c|m)\/([A-Za-z0-9]{8,16})\/?$/);if(pm){try{const api=pm[1]==="m"?"/api/customer-memories?id=":"/api/card?id=";const r=await fetch(api+encodeURIComponent(pm[2]),{cache:"no-store"});if(r.ok){const j=await r.json();d=unwire(j.data);currentTemplate=d.template;if(pm[1]==="c")window.__shop=j.shop;return true}}catch(e){}d=null;return true}const h=location.hash.slice(1);if(!h)return false;try{if(h[0]==="~"||h[0]==="."){const o=await unpack(h);d=unwire(o);currentTemplate=d.template;return true}const x=dec(h);if(x&&x.t&&Array.isArray(x.i)){d=x;currentTemplate=x.template||"laceAlbum";return true}}catch(e){}return false}
 function shopCta(){const sh=window.__shop;if(sh&&sh.name){const wa=(sh.whatsapp||"").replace(/\D/g,"");return `<div style="text-align:center;margin:14px;color:#f8f0df"><div style="font-family:Georgia,serif;font-size:1.1em">${esc(sh.name)}</div>${wa?`<a class="btn" style="display:block;margin-top:10px;text-decoration:none;text-align:center" href="https://wa.me/${wa}?text=${encodeURIComponent("Hi! I'd love a keepsake like this ♡")}">Order yours ♡</a>`:""}</div>`}return `<a href="/" class="btn" style="display:block;text-align:center;margin:14px;text-decoration:none">Make your own keepsake</a>`}
 function showViewer(){ if(!d){document.body.innerHTML='<div style="min-height:100vh;display:grid;place-items:center;background:#2a0409;color:#f8f0df;font:20px Georgia,serif;text-align:center;padding:30px">This card could not be found.</div>';return} document.body.innerHTML=`<div class="hero" style="min-height:100vh;display:grid;place-items:center"><div class="phone" style="width:min(390px,92vw)"><div class="phoneScreen"><div class="memoryCard" id="viewer"></div></div>${shopCta()}</div></div><div class="toast" id="toast"></div>`;
  renderCard($("#viewer"),d);
 }
 window.addEventListener("error",e=>{if(!e?.message||e.message==="Script error."||(e.filename&&/^https?:/.test(e.filename)&&!e.filename.startsWith(location.origin)))return;const t=$("#toast");if(t){t.textContent="A feature had trouble loading. The rest of the page is still available.";t.classList.add("show");clearTimeout(window.__errToast);window.__errToast=setTimeout(()=>t.classList.remove("show"),3500)}});
 
-let SHOP=null;
+let SHOP=null, CUSTOMER=null;
 async function licence(){
  if(!/^https?:$/.test(location.protocol))return;
  const qk=new URLSearchParams(location.search).get("shop");let key=qk||"";try{key=key||localStorage.getItem("ks-shop")||""}catch(e){}
- let r,j={};try{r=await fetch("/api/shop?key="+encodeURIComponent(key),{cache:"no-store"})}catch(e){return}
- if(r.status===501||r.status===404)return;if(!key&&r.status===400){location.replace("/login"+(location.search?"?next="+encodeURIComponent(location.search):""));return}
- try{j=await r.json()}catch(e){}
- if(r.ok&&j.ok){SHOP={key,...j};try{localStorage.setItem("ks-shop",key)}catch(e){}if(qk){const u=new URL(location.href);u.searchParams.delete("shop");history.replaceState(null,"",u.pathname+u.search)}document.querySelectorAll(".brand").forEach(e=>e.textContent=j.name);document.title=j.name+" · Keepsake";$(".navactions")?.insertAdjacentHTML("afterbegin",'<a href="/login" class="tool" style="text-decoration:none;margin-right:8px" onclick="try{localStorage.removeItem(\'ks-shop\')}catch(e){}">Log out</a>');loadMine();return}
+ let r=null,j={};
+ if(key){try{r=await fetch("/api/shop?key="+encodeURIComponent(key),{cache:"no-store"});j=await r.json().catch(()=>({}));}catch(e){}}
+ if(r&&r.status===501)return;
+ if(r&&r.ok&&j.ok){SHOP={key,...j};try{localStorage.setItem("ks-shop",key)}catch(e){}if(qk){const u=new URL(location.href);u.searchParams.delete("shop");history.replaceState(null,"",u.pathname+u.search)}document.querySelectorAll(".brand").forEach(e=>e.textContent=j.name);document.title=j.name+" · Keepsake";const nav=$(".navactions");if(nav)nav.insertAdjacentHTML("afterbegin",'<a href="/login" class="tool" style="text-decoration:none;margin-right:8px">Business log out</a>');loadMine();return}
+ try{const cr=await fetch("/api/customer-auth",{cache:"no-store"});const cj=await cr.json();if(cr.ok&&cj.user){CUSTOMER=cj.user;const nav=$(".navactions");if(nav)nav.insertAdjacentHTML("afterbegin",'<a href="/dashboard" class="tool" style="text-decoration:none;margin-right:8px">My memories</a>');return}}catch(e){}
+ if(!key){location.replace("/login"+(location.search?"?next="+encodeURIComponent(location.search):""));return}
  const g=document.createElement("div");g.style.cssText="position:fixed;inset:0;z-index:9999;background:#2a0409;display:grid;place-items:center;padding:24px;color:#f8f0df;font-family:system-ui,sans-serif";
- g.innerHTML=`<div style="max-width:380px;width:100%;text-align:center"><div style="font:italic 38px Georgia,serif;color:#e4c680">Keepsake</div><p style="opacity:.85">${esc(key?(j.error||"Key not accepted."):"Enter your shop key to open the studio.")}</p><input id="gk" placeholder="Shop key" style="width:100%;box-sizing:border-box;padding:14px;border-radius:12px;border:1px solid #6b3a35;background:#1a0206;color:#f8f0df;font-size:16px"><button id="gb" style="width:100%;margin-top:10px;padding:14px;border:0;border-radius:12px;background:#d6b06a;color:#2a0409;font-weight:700;font-size:16px">Open studio</button></div>`;
+ g.innerHTML=`<div style="max-width:380px;width:100%;text-align:center"><div style="font:italic 38px Georgia,serif;color:#e4c680">Keepsake</div><p style="opacity:.85">${esc(j.error||"Key not accepted.")}</p><input id="gk" placeholder="Shop key" style="width:100%;box-sizing:border-box;padding:14px;border-radius:12px;border:1px solid #6b3a35;background:#1a0206;color:#f8f0df;font-size:16px"><button id="gb" style="width:100%;margin-top:10px;padding:14px;border:0;border-radius:12px;background:#d6b06a;color:#2a0409;font-weight:700;font-size:16px">Open studio</button><p><a style="color:#e4c680" href="/account">Customer account login</a></p></div>`;
  document.body.appendChild(g);g.querySelector("#gb").onclick=()=>{const v=g.querySelector("#gk").value.trim();if(v){try{localStorage.setItem("ks-shop",v)}catch(e){}location.href=location.pathname+"?shop="+encodeURIComponent(v)}};
 }
 async function loadMine(){
