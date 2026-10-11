@@ -220,9 +220,7 @@ details p{margin:14px 0 0;color:var(--ink-2);max-width:60ch;font-size:17.5px}
 .finale h2{font-size:clamp(44px,7.4vw,112px);max-width:12ch;color:#fff6e6}
 .finale p{margin:0;color:#e8dccb;font-size:18px}
 
-/* logo band + footer */
-.brandband{background:var(--paper);border-block:1px solid var(--line);padding-block:48px;text-align:center}
-.brandband img{width:min(520px,86%);margin-inline:auto;mix-blend-mode:multiply}
+/* footer */
 footer{background:var(--wine-deep);color:var(--on-dark);padding-block:64px 36px}
 .foot{display:grid;grid-template-columns:1.4fr 1fr;gap:32px;align-items:start}
 .foot .brand{font-size:56px}
@@ -287,4 +285,3 @@ textarea{resize:vertical;min-height:110px}
 .finale-box.warm::before{background:radial-gradient(ellipse at center,rgba(36,4,9,.82),rgba(36,4,9,.5) 70%)}
 @media (max-width:900px){.hero-split{grid-template-columns:1fr;gap:56px}}
 
-.side .logo{width:min(400px,100%);margin-top:40px;mix-blend-mode:multiply}
