@@ -1,5 +1,6 @@
 const db = require("./_db");
 const auth = require("./customer-auth");
+const lock = require("./_lock");
 const crypto = require("crypto");
 const idPattern = /^[a-z0-9]{8,16}$/i;
 const clip = (v, n) => String(v == null ? "" : v).replace(/[<>]/g, "").trim().slice(0, n);
@@ -12,6 +13,24 @@ module.exports = async (req, res) => {
       if (!idPattern.test(id)) return db.reply(res, 400, { error: "Invalid memory link." });
       const memory = await db.getj("customer-memory:" + id);
       if (!memory) return db.reply(res, 404, { error: "Memory not found." });
+      if (memory.lock) {
+        // Password protected: only its owner (when logged in) gets the content without the password.
+        const me = await auth.currentUser(req);
+        if (!me || me.id !== memory.owner) return db.reply(res, 200, { locked: true }); // nothing about the memory itself is sent
+      }
+      await db.cmd("INCR", "customer-memory-views:" + id);
+      return db.reply(res, 200, { id, data: memory.data, title: memory.title, created: memory.created });
+    }
+    if (req.method === "POST" && (req.body || {}).unlock) {
+      // A visitor opening a password-protected memory.
+      const id = String(req.body.id || "");
+      if (!idPattern.test(id)) return db.reply(res, 400, { error: "Invalid memory link." });
+      const memory = await db.getj("customer-memory:" + id);
+      if (!memory) return db.reply(res, 404, { error: "Memory not found." });
+      if (memory.lock) {
+        const r = await lock.attempt(req, "m", id, req.body.password, memory.lock);
+        if (!r.ok) return db.reply(res, r.status, { error: r.error, locked: true });
+      }
       await db.cmd("INCR", "customer-memory-views:" + id);
       return db.reply(res, 200, { id, data: memory.data, title: memory.title, created: memory.created });
     }
@@ -22,7 +41,7 @@ module.exports = async (req, res) => {
       const memories = (await Promise.all(ids.map(async id => {
         const m = await db.getj("customer-memory:" + id);
         if (!m || m.owner !== user.id) return null;
-        return { id, title: m.title || "Our Memories", created: m.created, updated: m.updated || m.created, views: +(await db.cmd("GET", "customer-memory-views:" + id)) || 0 };
+        return { id, title: m.title || "Our Memories", locked: !!m.lock, created: m.created, updated: m.updated || m.created, views: +(await db.cmd("GET", "customer-memory-views:" + id)) || 0 };
       }))).filter(Boolean).sort((a, b) => b.created - a.created);
       return db.reply(res, 200, { memories });
     }
@@ -30,12 +49,15 @@ module.exports = async (req, res) => {
       const b = req.body || {}, data = b.data;
       if (!data || !Array.isArray(data.i) || JSON.stringify(data).length > 30000)
         return db.reply(res, 400, { error: "This memory is empty or too large. Reduce its content and try again." });
+      const pw = lock.clean(b.lock);
+      if (pw === null) return db.reply(res, 400, { error: `Choose a password of ${lock.MIN} to ${lock.MAX} characters.` });
       const id = crypto.randomBytes(8).toString("hex");
       const now = Date.now();
       const memory = { owner: user.id, ownerName: user.name, title: clip(data.t || "Our Memories", 80) || "Our Memories", data, created: now, updated: now };
+      if (pw) memory.lock = await lock.make(pw);
       await db.setj("customer-memory:" + id, memory, "NX");
       await db.cmd("SADD", "customer-memories:" + user.id, id);
-      return db.reply(res, 201, { id, url: "/m/" + id, title: memory.title, created: now });
+      return db.reply(res, 201, { id, url: "/m/" + id, title: memory.title, created: now, locked: !!pw });
     }
     if (req.method === "PUT") {
       const b = req.body || {}, id = String(b.id || ""), data = b.data;
@@ -45,8 +67,13 @@ module.exports = async (req, res) => {
       const key = "customer-memory:" + id, memory = await db.getj(key);
       if (!memory || memory.owner !== user.id) return db.reply(res, 404, { error: "Memory not found in your account." });
       memory.data = data; memory.title = clip(data.t || "Our Memories", 80) || "Our Memories"; memory.updated = Date.now();
+      if ("lock" in b) { // set, change or (with an empty value) remove the password
+        const pw = lock.clean(b.lock);
+        if (pw === null) return db.reply(res, 400, { error: `Choose a password of ${lock.MIN} to ${lock.MAX} characters.` });
+        if (pw) memory.lock = await lock.make(pw); else delete memory.lock;
+      }
       await db.setj(key, memory);
-      return db.reply(res, 200, { id, url: "/m/" + id, title: memory.title, updated: memory.updated });
+      return db.reply(res, 200, { id, url: "/m/" + id, title: memory.title, updated: memory.updated, locked: !!memory.lock });
     }
     if (req.method === "DELETE") {
       const id = String(q.id || (req.body || {}).id || "");

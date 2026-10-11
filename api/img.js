@@ -1,20 +1,24 @@
 // Stores customer photos (already shrunk by the browser) and serves them with long cache headers.
 const db = require("./_db");
+const auth = require("./customer-auth");
 const MAGIC = { jpeg: b => b[0] === 0xff && b[1] === 0xd8 && b[2] === 0xff, png: b => b[0] === 0x89 && b[1] === 0x50 && b[2] === 0x4e && b[3] === 0x47, webp: b => b.slice(0, 4).toString() === "RIFF" && b.slice(8, 12).toString() === "WEBP" };
 module.exports = async (req, res) => {
   if (!db.ok()) return db.reply(res, 501, { error: "not configured" });
   try {
     if (req.method === "POST") {
       const b = req.body || {};
-      if (!(await db.activeShop(b.key))) return db.reply(res, 403, { error: "Your plan is inactive or the shop key is invalid." });
+      // Shops upload with their shop key; signed-in customers upload with their account session.
+      const shop = await db.activeShop(b.key), me = shop ? null : await auth.currentUser(req);
+      if (!shop && !me) return db.reply(res, 403, { error: b.key ? "Your plan is inactive or the shop key is invalid." : "Please log in to upload photos." });
       const m = /^data:image\/(jpeg|png|webp);base64,([A-Za-z0-9+/=]+)$/.exec(String(b.data || ""));
       if (!m) return db.reply(res, 400, { error: "Please upload a JPG, PNG or WebP photo." });
       const buf = Buffer.from(m[2], "base64");
       if (buf.length > 350 * 1024) return db.reply(res, 413, { error: "Photo is too large. Try a smaller one." });
       if (!MAGIC[m[1]](buf)) return db.reply(res, 400, { error: "That file isn't a valid image." });
-      if ((await db.cmd("SCARD", "shopimgs:" + b.key)) >= 400) return db.reply(res, 429, { error: "Photo limit reached for this shop. Contact us for more." });
+      const owner = shop ? "shopimgs:" + b.key : "customerimgs:" + me.id;
+      if ((await db.cmd("SCARD", owner)) >= (shop ? 400 : 80)) return db.reply(res, 429, { error: shop ? "Photo limit reached for this shop. Contact us for more." : "Photo limit reached for your account. Contact us for more." });
       const id = db.rid(10);
-      await db.setj("img:" + id, { t: m[1], b: m[2] }); await db.cmd("SADD", "shopimgs:" + b.key, id);
+      await db.setj("img:" + id, { t: m[1], b: m[2] }); await db.cmd("SADD", owner, id);
       return db.reply(res, 200, { url: "/api/img?id=" + id });
     }
     const id = String((req.query || {}).id || "");

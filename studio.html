@@ -1481,8 +1481,9 @@ window.qrcode=function(typeNumber,errorLevel){
 <div class="field"><label>Cover photo link (optional)</label><input id="coverUrl" type="url" placeholder="https://.../photo.jpg"></div><div class="mediaHint" id="mediaStatus">Photos from your phone show in the preview only. For the QR/link, paste a hosted photo link so the code stays small and easy to scan.</div>
 <div class="field stdF"><label>Memories</label>
 <div class="row2"><input id="label0" value="Photo gallery" placeholder="Button name"><input id="value0" placeholder="Image URLs separated by spaces"></div>
-<div class="row2" style="margin-top:10px"><input id="label1" value="Watch our video"><input id="value1" placeholder="YouTube / MP4 link"></div>
-<div class="row2" style="margin-top:10px"><input id="label2" value="Our song"><input id="value2" placeholder="Spotify / MP3 link"></div>
+<div id="galUp" hidden style="margin-top:6px"><label class="tool" style="display:inline-block">Upload photos<input id="galFile" type="file" accept="image/*" multiple hidden></label></div>
+<div class="row2" style="margin-top:10px"><input id="label1" value="Watch our video"><input id="value1" placeholder="YouTube, Vimeo or MP4 link"></div>
+<div class="row2" style="margin-top:10px"><input id="label2" value="Our song"><input id="value2" placeholder="Song for the background: MP3 link plays automatically; YouTube also works"></div>
 <div class="row2" style="margin-top:10px"><input id="label3" value="A special message"><textarea id="value3" placeholder="Write a private message"></textarea></div>
 </div>
 <div class="field stdF"><label>Quick style</label><div class="options" id="styleOptions">
@@ -1499,6 +1500,9 @@ window.qrcode=function(typeNumber,errorLevel){
  <div class="field"><label>Buttons (up to 8)</label><div id="cRows"></div><button class="tool" id="cAdd" type="button" style="margin-top:8px">+ Add button</button></div>
  <div class="mediaHint">Use “Cover photo link” above for a logo or photo. For Google reviews: open your business on Google Maps → Share → paste that link as a Link button.</div>
 </div>
+<div class="field" id="lockBox" hidden><label style="display:flex;gap:10px;align-items:center;cursor:pointer"><input type="checkbox" id="lockOn" style="width:auto"> <span>🔒 Protect this card with a password</span></label>
+ <input id="lockPw" type="text" autocomplete="off" maxlength="40" placeholder="Choose a password (4+ characters)" style="margin-top:8px" hidden>
+ <div class="mediaHint">Anyone who scans the QR will be asked for this password before they see anything. Share it with them separately.</div></div>
 <button class="btn" id="generateBtn" style="width:100%;margin-top:8px">Generate my memory link</button>
 <div class="status" id="generateStatus"></div>
 </div>
@@ -1506,7 +1510,7 @@ window.qrcode=function(typeNumber,errorLevel){
 <div class="previewArea reveal">
 <div class="previewTitle"><span>Live preview</span><button class="tool" id="previewShare">Share preview</button></div>
 <div class="phone"><div class="phoneScreen"><div class="memoryCard" id="preview"></div></div></div>
-<div class="tools"><button class="tool" id="resetBtn">Reset</button><button class="tool" id="downloadCard">Save card HTML</button></div>
+<div class="tools"><button class="tool" id="playBtn">▶ Play full animation</button><button class="tool" id="resetBtn">Reset</button><button class="tool" id="downloadCard">Save card HTML</button></div>
 </div>
 </div>
 </div>
@@ -1780,11 +1784,14 @@ async function publishSite(){
  }catch(e){er(e?.message||"Publishing failed.")}finally{btn.disabled=false}
 }
 function needHost(msg){setStatus("#linkStatus",msg,false);const dt=document.querySelector("#link details");if(dt)dt.open=true;const f=$("#siteUrl");if(f){f.scrollIntoView({behavior:"smooth",block:"center"});f.focus({preventScroll:true})}}
+function lockValue(){const on=$("#lockOn");if(!on||!on.checked)return "";return $("#lockPw").value}
 async function generate(){
- const btn=$("#generateBtn");btn.disabled=true;syncForm();persistDraft();short="";longLink="";
+ const btn=$("#generateBtn");
+ if((CUSTOMER||SHOP)&&$("#lockOn")&&$("#lockOn").checked&&($("#lockPw").value||"").length<4){setStatus("#generateStatus","Choose a password of at least 4 characters, or untick the lock.",false);$("#lockPw").focus();return}
+ btn.disabled=true;syncForm();persistDraft();short="";longLink="";
  try{
- if(CUSTOMER){setStatus("#generateStatus","Saving to your account…",true);const r=await fetch("/api/customer-memories",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({data:wire(d)})});const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||"Could not save this memory.");short=location.origin+j.url;longLink=short;$("#shortLink").textContent=short;badge(short);setStatus("#linkStatus","Saved to your account. This public link is ready for QR and NFC.",true);setStatus("#generateStatus","Saved to My Memories ♡",true);drawQR();btn.disabled=false;$("#link").scrollIntoView({behavior:"smooth",block:"start"});toast("Memory saved to your account ♡");return}
- if(SHOP){setStatus("#generateStatus","Saving your card…",true);const r=await fetch("/api/card",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({key:SHOP.key,data:wire(d)})});const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||"Could not save the card.");short=location.origin+"/c/"+j.id;longLink=short;$("#shortLink").textContent=short;badge(short);setStatus("#linkStatus","Saved. This short link is ready for QR and NFC.",true);setStatus("#generateStatus","Ready ♡",true);drawQR();btn.disabled=false;$("#link").scrollIntoView({behavior:"smooth",block:"start"});toast("Card saved ♡");loadMine();return}
+ if(CUSTOMER){setStatus("#generateStatus","Saving to your account…",true);const r=await fetch("/api/customer-memories",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({data:wire(d),lock:lockValue()})});const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||"Could not save this memory.");short=location.origin+j.url;longLink=short;$("#shortLink").textContent=short;badge(short);setStatus("#linkStatus",lockValue()?"Saved and locked 🔒 Anyone who scans the QR must enter the password. Share the password separately.":"Saved to your account. This public link is ready for QR and NFC.",true);setStatus("#generateStatus","Saved to My Memories ♡",true);drawQR();btn.disabled=false;$("#link").scrollIntoView({behavior:"smooth",block:"start"});toast("Memory saved to your account ♡");return}
+ if(SHOP){setStatus("#generateStatus","Saving your card…",true);const r=await fetch("/api/card",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({key:SHOP.key,data:wire(d),lock:lockValue()})});const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||"Could not save the card.");short=location.origin+"/c/"+j.id;longLink=short;$("#shortLink").textContent=short;badge(short);setStatus("#linkStatus",lockValue()?"Saved and locked 🔒 Anyone who scans the QR must enter the password. Share the password separately.":"Saved. This short link is ready for QR and NFC.",true);setStatus("#generateStatus","Ready ♡",true);drawQR();btn.disabled=false;$("#link").scrollIntoView({behavior:"smooth",block:"start"});toast("Card saved ♡");loadMine();return}
 
    const base=forceSelf?"":siteBase();
    if(base){
@@ -2035,11 +2042,12 @@ function renderCustom(root,data){
 const fileToData=f=>new Promise((ok,no)=>{const r=new FileReader();r.onload=()=>ok(r.result);r.onerror=()=>no(new Error("Could not read that photo."));r.readAsDataURL(f)});
 function shrinkData(src,max,q){return new Promise((ok,no)=>{const im=new Image();im.onload=()=>{const k=Math.min(1,max/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);const x=c.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,c.width,c.height);x.drawImage(im,0,0,c.width,c.height);ok(c.toDataURL("image/jpeg",q))};im.onerror=()=>no(new Error("That photo format isn't supported. Try a JPG or PNG."));im.src=src})}
 async function uploadData(src){
- if(!SHOP)throw new Error("Log in with your shop key to upload photos.");
+ if(!SHOP&&!CUSTOMER)throw new Error("Log in to upload photos.");
  let data=await shrinkData(src,1000,.78);if(data.length>440000)data=await shrinkData(src,760,.68);
- const r=await fetch("/api/img",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({key:SHOP.key,data})});
+ const r=await fetch("/api/img",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({key:SHOP?SHOP.key:undefined,data})});
  const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||"Upload failed.");return j.url}
 document.addEventListener("change",async e=>{
+ if(e.target.id==="galFile"){const fs=[...e.target.files].slice(0,8);e.target.value="";if(!fs.length)return;toast("Uploading "+fs.length+" photo"+(fs.length>1?"s":"")+"…");try{const urls=[];for(const f of fs)urls.push(location.origin+await uploadData(await fileToData(f)));const v=$("#value0");v.value=(v.value.trim()+" "+urls.join(" ")).trim();v.dispatchEvent(new Event("input",{bubbles:true}));toast("Photos added ♡")}catch(x){toast(x.message||"Upload failed.")}return}
  const t=e.target;if(!t.matches||!(t.matches("#cBgFile")||t.matches("[data-up]"))||!t.files||!t.files[0])return;
  const f=t.files[0];t.value="";toast("Uploading photo…");
  try{const u=await uploadData(await fileToData(f));
@@ -2070,10 +2078,30 @@ function urlStart(){const q=new URLSearchParams(location.search),oc=q.get("occas
  if(ds){const i=templates.findIndex(t=>t.id===ds);const b=$$("#templateGrid .template")[i];if(b)b.click()}
  if(oc&&PRESETS[oc]){const P=PRESETS[oc];d.c=structuredClone(P.c);$("#title").value=P.t;$("#quote").value=P.q;cSync();cChanged()}
  if(ds||oc)setTimeout(()=>$("#create")?.scrollIntoView({behavior:"smooth"}),400)}
-async function parseHash(){const pm=location.pathname.match(/^\/(c|m)\/([A-Za-z0-9]{4,16})\/?$/);if(pm){try{const api=pm[1]==="m"?"/api/customer-memories?id=":"/api/card?id=";const r=await fetch(api+encodeURIComponent(pm[2]),{cache:"no-store"});if(r.ok){const j=await r.json();d=unwire(j.data);currentTemplate=d.template;if(pm[1]==="c")window.__shop=j.shop;return true}}catch(e){}d=null;return true}const h=location.hash.slice(1);if(!h)return false;try{if(h[0]==="~"||h[0]==="."){const o=await unpack(h);d=unwire(o);currentTemplate=d.template;return true}const x=dec(h);if(x&&x.t&&Array.isArray(x.i)){d=x;currentTemplate=x.template||"laceAlbum";return true}}catch(e){}return false}
+async function parseHash(){const pm=location.pathname.match(/^\/(c|m)\/([A-Za-z0-9]{4,16})\/?$/);if(pm){try{const api=pm[1]==="m"?"/api/customer-memories?id=":"/api/card?id=";const r=await fetch(api+encodeURIComponent(pm[2]),{cache:"no-store"});if(r.ok){const j=await r.json();if(j.locked){window.__lock={kind:pm[1],id:pm[2],api:pm[1]==="m"?"/api/customer-memories":"/api/card",from:(j.shop&&j.shop.name)||""};d={locked:true};return true}d=unwire(j.data);currentTemplate=d.template;if(pm[1]==="c")window.__shop=j.shop;return true}}catch(e){}d=null;return true}const h=location.hash.slice(1);if(!h)return false;try{if(h[0]==="~"||h[0]==="."){const o=await unpack(h);d=unwire(o);currentTemplate=d.template;return true}const x=dec(h);if(x&&x.t&&Array.isArray(x.i)){d=x;currentTemplate=x.template||"laceAlbum";return true}}catch(e){}return false}
 function shopCta(){const sh=window.__shop;if(sh&&sh.name){const wa=(sh.whatsapp||"").replace(/\D/g,"");return `<div style="text-align:center;margin:14px;color:#f8f0df"><div style="font-family:Georgia,serif;font-size:1.1em">${esc(sh.name)}</div>${wa?`<a class="btn" style="display:block;margin-top:10px;text-decoration:none;text-align:center" href="https://wa.me/${wa}?text=${encodeURIComponent("Hi! I'd love a keepsake like this ♡")}">Order yours ♡</a>`:""}</div>`}return `<a href="/" class="btn" style="display:block;text-align:center;margin:14px;text-decoration:none">Make your own keepsake</a>`}
-function showViewer(){ if(!d){document.body.innerHTML='<div style="min-height:100vh;display:grid;place-items:center;background:#2a0409;color:#f8f0df;font:20px Georgia,serif;text-align:center;padding:30px">This card could not be found.</div>';return} document.body.innerHTML=`<div class="hero" style="min-height:100vh;display:grid;place-items:center"><div class="phone" style="width:min(390px,92vw)"><div class="phoneScreen"><div class="memoryCard" id="viewer"></div></div>${shopCta()}</div></div><div class="toast" id="toast"></div>`;
- renderCard($("#viewer"),d);
+function loadAsset(tag,url){return new Promise((ok,no)=>{const e=document.createElement(tag);if(tag==="link"){e.rel="stylesheet";e.href=url}else e.src=url;e.onload=()=>ok();e.onerror=()=>no(new Error("load"));document.head.appendChild(e)})}
+let viewerReady=null;function viewerLib(){return viewerReady||(viewerReady=Promise.all([loadAsset("link","/assets/viewer.css"),loadAsset("script","/assets/viewer.js")]).then(()=>window.KeepsakeViewer))}
+const notFound='<div style="min-height:100vh;display:grid;place-items:center;background:#2a0409;color:#f8f0df;font:20px Georgia,serif;text-align:center;padding:30px">This card could not be found.</div>';
+async function postUnlock(L,pw,key){try{const r=await fetch(L.api,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({unlock:true,id:L.id,password:pw,key})});const j=await r.json().catch(()=>({}));if(r.ok&&j.data){d=unwire(j.data);currentTemplate=d.template;if(L.kind==="c")window.__shop=j.shop;return{ok:true}}return{ok:false,error:j.error}}catch(e){return{ok:false,error:"Could not check the password. Please try again."}}}
+function playCard(){
+ viewerLib().then(KV=>{document.body.innerHTML='<div id="kvHost"></div><div class="toast" id="toast"></div>';KV.mount($("#kvHost"),d,{shop:window.__shop})}).catch(()=>legacyViewer());
+}
+function legacyViewer(){document.body.innerHTML=`<div class="hero" style="min-height:100vh;display:grid;place-items:center"><div class="phone" style="width:min(390px,92vw)"><div class="phoneScreen"><div class="memoryCard" id="viewer"></div></div>${shopCta()}</div></div><div class="toast" id="toast"></div>`;renderCard($("#viewer"),d)}
+async function showViewer(){
+ if(!d){document.body.innerHTML=notFound;return}
+ const L=window.__lock;
+ if(L){
+  document.body.innerHTML='<div id="kvHost"></div><div class="toast" id="toast"></div>';
+  const ss=k=>{try{return sessionStorage.getItem(k)}catch(e){return null}};
+  let ok=false,sk="ks-pw:"+L.id,saved=ss(sk),owner="";try{owner=L.kind==="c"?localStorage.getItem("ks-shop")||"":""}catch(e){}
+  if(owner)ok=(await postUnlock(L,"",owner)).ok;
+  if(!ok&&saved)ok=(await postUnlock(L,saved)).ok;
+  if(ok){playCard();return}
+  try{const KV=await viewerLib();KV.lockScreen($("#kvHost"),{from:L.from,onSubmit:async pw=>{const r=await postUnlock(L,pw);if(r.ok){try{sessionStorage.setItem(sk,pw)}catch(e){}playCard()}return r}})}catch(e){document.body.innerHTML='<div style="min-height:100vh;display:grid;place-items:center;background:#2a0409;color:#f8f0df;font:18px Georgia,serif;text-align:center;padding:30px">This card is password protected. Please reload to try again.</div>'}
+  return}
+ if(d.c){legacyViewer();return}
+ playCard();
 }
 window.addEventListener("error",e=>{if(!e?.message||e.message==="Script error."||(e.filename&&/^https?:/.test(e.filename)&&!e.filename.startsWith(location.origin)))return;const t=$("#toast");if(t){t.textContent="A feature had trouble loading. The rest of the page is still available.";t.classList.add("show");clearTimeout(window.__errToast);window.__errToast=setTimeout(()=>t.classList.remove("show"),3500)}});
 
@@ -2094,7 +2122,7 @@ async function licence(){
 async function loadMine(){
  if(!SHOP)return;const box=$("#mine");if(!box)return;
  try{const r=await fetch("/api/card?list=1&key="+encodeURIComponent(SHOP.key),{cache:"no-store"});const j=await r.json();box.hidden=false;
-  $("#mineList").innerHTML=(j.cards||[]).map(c=>`<div class="mineRow"><div><b>${esc(c.title)}</b><br><small>${new Date(c.created).toLocaleDateString()} · ${c.views} opens</small></div><div><button class="btn small ghost" data-a="copy" data-id="${c.id}">Copy</button> <a class="btn small ghost" style="text-decoration:none" href="/c/${c.id}" target="_blank" rel="noopener">Open</a> <button class="btn small ghost" data-a="del" data-id="${c.id}">Delete</button></div></div>`).join("")||"<p>No cards yet — create your first one above.</p>"}catch(e){}
+  $("#mineList").innerHTML=(j.cards||[]).map(c=>`<div class="mineRow"><div><b>${c.locked?"🔒 ":""}${esc(c.title)}</b><br><small>${new Date(c.created).toLocaleDateString()} · ${c.views} opens</small></div><div><button class="btn small ghost" data-a="copy" data-id="${c.id}">Copy</button> <a class="btn small ghost" style="text-decoration:none" href="/c/${c.id}" target="_blank" rel="noopener">Open</a> <button class="btn small ghost" data-a="del" data-id="${c.id}">Delete</button></div></div>`).join("")||"<p>No cards yet — create your first one above.</p>"}catch(e){}
 }
 document.addEventListener("click",async e=>{const b=e.target.closest("#mineList button");if(!b||!SHOP)return;const id=b.dataset.id;
  if(b.dataset.a==="copy"){try{await navigator.clipboard.writeText(location.origin+"/c/"+id);toast("Link copied ♡")}catch(x){toast(location.origin+"/c/"+id)}}
@@ -2104,7 +2132,10 @@ async function init(){ if(await parseHash()){showViewer();return} await licence(
  restoreDraft();
  hydrateForm();
  templateUI();$("#heroImg").src=getTemplate().th;bindLive();renderPreview();urlStart();
- $("#generateBtn").onclick=generate;$("#shortenBtn").onclick=async()=>{if(shortBusy)return;if(SHOP){toast("Your link is already short ♡");return}const u=longLink||await ensureLink();if(!u)return;if(!isWeb(u)){needHost("Shortening needs a web address. Tap “Publish my site” below (free), then press Generate.");return}if(byteLen(u)>=5000){setStatus("#linkStatus","This link is over the shortener's 5,000-character limit.",false);return}shortBusy=true;$("#shortenBtn").disabled=true;setStatus("#linkStatus","Shortening your link…",true);try{short=await shorten(u);$("#shortLink").textContent=short;badge(short);setStatus("#linkStatus","Short link ready — use it for QR, sharing and NFC.",true);drawQR();toast("Short link created ♡")}catch(e){setStatus("#linkStatus",e?.message||"Could not shorten the link.",false)}finally{shortBusy=false;$("#shortenBtn").disabled=false}};$("#copyBtn").onclick=copyLink;$("#shareBtn").onclick=shareLink;$("#writeBtn").onclick=writeNFC;
+ $("#generateBtn").onclick=generate;
+ if(SHOP||CUSTOMER){$("#galUp").hidden=false;$("#lockBox").hidden=false;$("#lockOn").onchange=()=>{$("#lockPw").hidden=!$("#lockOn").checked;if($("#lockOn").checked)$("#lockPw").focus()}}
+ $("#playBtn").onclick=()=>{syncForm();if(d.c){toast("Business cards open as they are.");return}viewerLib().then(KV=>{const h=document.createElement("div");document.body.appendChild(h);const m=KV.mount(h,d,{preview:true,shop:SHOP?{name:SHOP.name}:null,onClose:()=>h.remove()})}).catch(()=>toast("Could not load the animation."))};
+ $("#shortenBtn").onclick=async()=>{if(shortBusy)return;if(SHOP){toast("Your link is already short ♡");return}const u=longLink||await ensureLink();if(!u)return;if(!isWeb(u)){needHost("Shortening needs a web address. Tap “Publish my site” below (free), then press Generate.");return}if(byteLen(u)>=5000){setStatus("#linkStatus","This link is over the shortener's 5,000-character limit.",false);return}shortBusy=true;$("#shortenBtn").disabled=true;setStatus("#linkStatus","Shortening your link…",true);try{short=await shorten(u);$("#shortLink").textContent=short;badge(short);setStatus("#linkStatus","Short link ready — use it for QR, sharing and NFC.",true);drawQR();toast("Short link created ♡")}catch(e){setStatus("#linkStatus",e?.message||"Could not shorten the link.",false)}finally{shortBusy=false;$("#shortenBtn").disabled=false}};$("#copyBtn").onclick=copyLink;$("#shareBtn").onclick=shareLink;$("#writeBtn").onclick=writeNFC;
  $("#pngBtn").onclick=savePNG;$("#svgBtn").onclick=saveSVG;$("#qrShareBtn")?.addEventListener("click",shareQR);$("#previewShare").onclick=shareLink;$("#downloadCard").onclick=downloadCardHTML;
  $("#publishBtn").onclick=publishSite;
  $("#siteBtn").onclick=()=>{downloadBlob("index.html",new Blob([__SRC.replace(/<div class="toast[^>]*>[^<]*<\/div>/,"")],{type:"text/html;charset=utf-8"}));toast("Saved index.html — upload it to your host ♡")};
