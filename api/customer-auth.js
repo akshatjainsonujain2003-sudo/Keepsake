@@ -79,7 +79,7 @@ module.exports = async (req, res) => {
         });
         if (!emailResponse.ok) {
           await db.cmd("DEL", "customer-reset:" + hash(token));
-          return db.reply(res, 502, { error: "Could not send the reset email. Please try again later." });
+          return db.reply(res, 502, { error: "Resend rejected the reset email request (HTTP " + emailResponse.status + "). Check the sender address, API key permissions, and Resend account sending restrictions." });
         }
       }
       return db.reply(res, 200, { ok: true, message: "If an account exists for that email, a password reset link will be sent shortly." });
