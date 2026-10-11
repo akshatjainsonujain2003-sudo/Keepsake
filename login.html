@@ -6,7 +6,7 @@
 <header class="nav"><div class="wrap"><a class="brand" href="/">Keepsake</a><nav aria-label="Main"><a class="hide" href="/designs">Designs</a><a class="hide" href="/business">For business</a><a class="hide" href="/contact">Contact</a><a class="btn sm" href="/login">Log in</a></nav></div></header><main><section class="hero" style="min-height:70vh"><div class="wrap" style="max-width:460px"><h1>Welcome back</h1><p class="lead">Enter your shop key to open your studio.</p>
 <form id="f"><label for="k">Shop key</label><input id="k" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Paste your shop key" required><button class="btn" style="width:100%" id="go" type="submit">Open my studio</button><div class="msg" id="m" role="alert"></div></form>
 <p id="cont" hidden><a class="btn ghost" href="/studio" style="width:100%;text-align:center">Continue to my studio</a></p>
-<p style="opacity:.8">No key yet? <a href="/contact">Get started</a>. Lost your key? Contact us and we will resend it.</p></div></section>
+<p style="opacity:.8">No key yet? <a href="/contact">Get started</a>. Lost your key? Contact us and we will resend it.</p><p style="opacity:.9">Using Keepsake as a customer? <a href="/account">Create an account or log in here</a>.</p></div></section>
 <script>
 const $=s=>document.querySelector(s);const nx=new URLSearchParams(location.search).get("next")||"",NX=/^\?[\w=&%.\-]*$/.test(nx)?nx:"";$("#cont a").href="/studio"+NX;try{if(localStorage.getItem("ks-shop"))$("#cont").hidden=false}catch(e){}
 $("#f").onsubmit=async e=>{e.preventDefault();const k=$("#k").value.trim(),m=$("#m");m.className="msg";if(!k){m.className="msg bad";m.textContent="Please enter your shop key.";return}m.textContent="Checking…";$("#go").disabled=true;
