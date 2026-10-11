@@ -50,7 +50,7 @@ module.exports = async (req, res) => {
     const b = req.body || {};
     if (b.action === "request-reset") {
       const email = clean(b.email, 254).toLowerCase();
-      if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)) return db.reply(res, 400, { error: "Enter a valid email address." });
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return db.reply(res, 400, { error: "Enter a valid email address." });
       if (!process.env.RESEND_API_KEY || !process.env.RESEND_FROM_EMAIL) {
         return db.reply(res, 503, { error: "Password reset email is not configured yet. Please contact Keepsake support." });
       }
@@ -63,7 +63,7 @@ module.exports = async (req, res) => {
         const token = crypto.randomBytes(32).toString("base64url");
         await db.setj("customer-reset:" + hash(token), { id, created: Date.now() }, "EX", 1800);
         const host = String(req.headers.host || "").toLowerCase();
-        const safeHost = host === "getkeepsake.in" || host === "www.getkeepsake.in" || /^[a-z0-9-]+(?:-[a-z0-9-]+)*\\.vercel\\.app$/.test(host);
+        const safeHost = host === "getkeepsake.in" || host === "www.getkeepsake.in" || /^[a-z0-9-]+(?:-[a-z0-9-]+)*\.vercel\.app$/.test(host);
         const origin = safeHost ? "https://" + host : "https://getkeepsake.in";
         const link = origin + "/reset-password?token=" + encodeURIComponent(token);
         const emailResponse = await fetch("https://api.resend.com/emails", {
