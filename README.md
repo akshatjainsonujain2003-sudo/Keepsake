@@ -1,6 +1,12 @@
 # Keepsake
 
-NFC and QR memory cards for the people you love. Customers design a card in the studio for free (photos, video, song, message, map), then pay once to activate it: digital only, or digital plus a printed NFC card delivered to them. No app needed to open a card.
+NFC and QR keepsakes for the people you love. Customers design for free, then pay once to activate:
+
+- **Template card** (studio) or **Custom website** (builder: gallery, videos, Spotify songs, timeline, letters, details) in one of four themes
+- delivered **Digital** (link, QR, NFC-ready link), or as a printed **Photo frame with QR** or **Photo frame with NFC**, printing either their photo or their card design
+- with an optional **password** that's checked on the server before anything is shown
+
+No app is needed to open a keepsake.
 
 Live: https://keepsake-h4ed.vercel.app
 
@@ -15,10 +21,15 @@ Live: https://keepsake-h4ed.vercel.app
   login         Shop key log in (paused, hidden from menus and search)
   account       Customer account
   reset-password
-  studio        Card editor; also renders cards at /c/:id and /m/:id
+  studio        Template card editor; also shows cards at /c/:id and /m/:id
+  builder       Custom website editor
+  site          Public custom website at /s/:id
   dashboard     Customer's saved memories: live or not, edit, activate
   admin         Admin panel: paid orders, NFC cards to ship, enquiries, shops
 assets/         Theme images (name.webp), thumbnails (t-name.webp), CSS and JS
+  ks-checkout.v1.js    Shared checkout, password field and unlock screen
+  site-render.v1.js    Builds a custom website from its saved content
+  site-themes.v1.css   The four website themes
 api/            Vercel serverless functions
   _db.js        Tiny Upstash / Vercel KV REST client (shared helper)
   _pay.js       Prices and Razorpay helpers (shared helper)
@@ -47,7 +58,7 @@ There is no build step and no npm dependencies.
    - `RESEND_API_KEY` and `RESEND_FROM_EMAIL`: for customer password reset emails
    - `RAZORPAY_KEY_ID` and `RAZORPAY_KEY_SECRET`: from Razorpay Dashboard → Account & Settings → API Keys
    - `RAZORPAY_WEBHOOK_SECRET`: a secret you choose when adding the webhook below
-   - Optional: `PRICE_DIGITAL` and `PRICE_NFC` in rupees (defaults 99 and 349). An NFC card for an already active card costs the difference.
+   - Optional prices in rupees: `PRICE_TEMPLATE` (99), `PRICE_WEBSITE` (299), `PRICE_FRAME_QR` (399), `PRICE_FRAME_NFC` (599). Frames are added on top of the product price; adding a frame to an active keepsake costs only the frame.
 4. In Razorpay Dashboard → Webhooks, add `https://<your-domain>/api/razorpay-webhook` with the events `payment.captured` and `order.paid`, using the same webhook secret. Keep payment capture set to automatic.
 5. Use the production domain (not a preview URL) for QR codes and NFC tags. If scanners hit a Vercel login, turn off Deployment Protection in Project Settings.
 

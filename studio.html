@@ -1439,16 +1439,8 @@ window.qrcode=function(typeNumber,errorLevel){
 };
 })();
 </script>
-<style>
-.payPanel{max-width:760px;margin:0 auto 24px}.payNote,.payFine{color:#c9b99a}.payFine{font-size:.85em;margin:10px 0 0}
-.planGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0}
-.planOpt{position:relative;display:flex;flex-direction:column;gap:4px;padding:16px;border:1px solid #6b3a35;border-radius:16px;cursor:pointer;color:#f8f0df;background:#1a020680}
-.planOpt input{position:absolute;opacity:0;pointer-events:none}.planOpt.on{border-color:#e4c680;box-shadow:0 0 0 1px #e4c680}
-.planOpt .pp{font:500 30px/1.1 Georgia,serif;color:#e4c680}.planOpt small{color:#c9b99a}.planOpt[hidden]{display:none}
-.addrGrid{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}.addrGrid .wide{grid-column:1/-1}.addrGrid label{color:#c9b99a}
-.liveExtra{margin-top:12px}
-@media(max-width:560px){.planGrid,.addrGrid{grid-template-columns:1fr}}
-</style>
+<style>.payPanel{max-width:760px;margin:0 auto 24px}.liveExtra{margin-top:12px}.lockField{margin-top:6px}</style>
+<script src="/assets/ks-checkout.v1.js"></script>
 </head>
 <body>
 <div class="topbar"><div class="wrap nav">
@@ -1509,6 +1501,7 @@ window.qrcode=function(typeNumber,errorLevel){
  <div class="field"><label>Buttons (up to 8)</label><div id="cRows"></div><button class="tool" id="cAdd" type="button" style="margin-top:8px">+ Add button</button></div>
  <div class="mediaHint">Use “Cover photo link” above for a logo or photo. For Google reviews: open your business on Google Maps → Share → paste that link as a Link button.</div>
 </div>
+<div class="field lockField"><label>Password (optional)</label><div id="lockBox"></div></div>
 <button class="btn" id="generateBtn" style="width:100%;margin-top:8px">Save &amp; get my link</button>
 <div class="status" id="generateStatus"></div>
 </div>
@@ -1525,28 +1518,7 @@ window.qrcode=function(typeNumber,errorLevel){
 <section class="section linkSection" id="link">
 <div class="wrap">
 <div class="sectionHead reveal"><div class="script" style="color:#e4c680">one link, many memories</div><h2 style="color:#f4dfaa">Ready for the tag.</h2></div>
-<div class="darkPanel payPanel" id="payPanel" hidden>
-<h3 id="payTitle">Activate your keepsake</h3>
-<p class="payNote" id="payNote"></p>
-<div class="planGrid" id="planGrid">
-<label class="planOpt" data-plan="digital"><input type="radio" name="plan" value="digital" checked><b>Digital</b><span class="pp" data-price="digital">₹99</span><small>Short link, QR code and NFC-ready link you can share or print.</small></label>
-<label class="planOpt" data-plan="nfc"><input type="radio" name="plan" value="nfc"><b>With NFC card</b><span class="pp" data-price="nfc">₹349</span><small>Everything in Digital, plus a printed NFC card delivered to you.</small></label>
-</div>
-<div id="addrBox" hidden>
-<div class="addrGrid">
-<div class="field"><label for="aName">Deliver to (name)</label><input id="aName" autocomplete="name" maxlength="80"></div>
-<div class="field"><label for="aPhone">Mobile number</label><input id="aPhone" type="tel" inputmode="numeric" autocomplete="tel-national" maxlength="14"></div>
-<div class="field wide"><label for="aLine1">House, street, area</label><input id="aLine1" autocomplete="address-line1" maxlength="120"></div>
-<div class="field wide"><label for="aLine2">Landmark (optional)</label><input id="aLine2" autocomplete="address-line2" maxlength="120"></div>
-<div class="field"><label for="aCity">City</label><input id="aCity" autocomplete="address-level2" maxlength="60"></div>
-<div class="field"><label for="aState">State</label><input id="aState" autocomplete="address-level1" maxlength="60"></div>
-<div class="field"><label for="aPin">PIN code</label><input id="aPin" inputmode="numeric" autocomplete="postal-code" maxlength="6"></div>
-</div>
-</div>
-<button class="btn" id="payBtn" style="width:100%;margin-top:12px">Pay &amp; activate</button>
-<div class="status" id="payStatus"></div>
-<p class="payFine">Secure payment by Razorpay: UPI, cards, net banking and wallets.</p>
-</div>
+<div class="darkPanel payPanel" id="payPanel" hidden></div>
 <div class="linkGrid" id="linkGrid">
 <div class="darkPanel reveal">
 <h3>Your memory link</h3>
@@ -1816,7 +1788,7 @@ async function generate(){
  const btn=$("#generateBtn");btn.disabled=true;syncForm();persistDraft();short="";longLink="";
  try{
  if(!CUSTOMER&&!SHOP){persistDraft();setStatus("#generateStatus","Log in or create a free account to save your card…",true);location.href="/account?next="+encodeURIComponent("/studio?resume=1");return}
- if(CUSTOMER){setStatus("#generateStatus","Saving to your account…",true);let r=await saveMemory();if(r.status===404&&EDIT_ID){EDIT_ID=null;r=await saveMemory()}const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||"Could not save this memory.");setEdit(j.id);persistDraft();btn.disabled=false;
+ if(CUSTOMER){const le=LOCK&&LOCK.check();if(le)throw new Error(le);setStatus("#generateStatus","Saving to your account…",true);let r=await saveMemory();if(r.status===404&&EDIT_ID){EDIT_ID=null;r=await saveMemory()}const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||"Could not save this memory.");setEdit(j.id);if(LOCK)LOCK.set(j.locked);persistDraft();btn.disabled=false;
   if(j.active){showLive(j.url);setStatus("#generateStatus","Saved. Your live card is updated ♡",true);toast("Changes saved ♡")}else{setStatus("#generateStatus","Saved to your account. Choose how to activate it below.",true);showCheckout("activate")}return}
  if(SHOP){setStatus("#generateStatus","Saving your card…",true);const r=await fetch("/api/card",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({key:SHOP.key,data:wire(d)})});const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||"Could not save the card.");short=location.origin+"/c/"+j.id;longLink=short;$("#shortLink").textContent=short;badge(short);setStatus("#linkStatus","Saved. This short link is ready for QR and NFC.",true);setStatus("#generateStatus","Ready ♡",true);drawQR();btn.disabled=false;$("#link").scrollIntoView({behavior:"smooth",block:"start"});toast("Card saved ♡");loadMine();return}
 
@@ -2104,7 +2076,7 @@ function urlStart(){const q=new URLSearchParams(location.search),oc=(q.get("occa
  if(ds){const i=templates.findIndex(t=>t.id===ds);const b=$$("#templateGrid .template")[i];if(b)b.click()}
  if(oc&&PRESETS[oc]){const P=PRESETS[oc];d.c=structuredClone(P.c);$("#title").value=P.t;$("#quote").value=P.q;cSync();cChanged()}
  if(ds||oc)setTimeout(()=>$("#create")?.scrollIntoView({behavior:"smooth"}),400)}
-async function parseHash(){const pm=location.pathname.match(/^\/(c|m)\/([A-Za-z0-9]{4,16})\/?$/);if(pm){try{const api=pm[1]==="m"?"/api/customer-memories?id=":"/api/card?id=";const r=await fetch(api+encodeURIComponent(pm[2]),{cache:"no-store"});if(r.status===402){window.__inactive=true;d=null;return true}if(r.ok){const j=await r.json();d=unwire(j.data);currentTemplate=d.template;if(pm[1]==="c")window.__shop=j.shop;if(j.active===false)window.__preview=pm[2];return true}}catch(e){}d=null;return true}const h=location.hash.slice(1);if(!h)return false;try{if(h[0]==="~"||h[0]==="."){const o=await unpack(h);d=unwire(o);currentTemplate=d.template;return true}const x=dec(h);if(x&&x.t&&Array.isArray(x.i)){d=x;currentTemplate=x.template||"laceAlbum";return true}}catch(e){}return false}
+async function parseHash(){const pm=location.pathname.match(/^\/(c|m)\/([A-Za-z0-9]{4,16})\/?$/);if(pm){try{if(pm[1]==="m"){const j=await KSKeepsake.fetch(pm[2]);if(j.error){if(j.inactive)window.__inactive=true;d=null;return true}if(j.kind==="site"){location.replace("/s/"+pm[2]);await new Promise(()=>{})}d=unwire(j.data);currentTemplate=d.template;if(j.active===false)window.__preview=pm[2];return true}const r=await fetch("/api/card?id="+encodeURIComponent(pm[2]),{cache:"no-store"});if(r.ok){const j=await r.json();d=unwire(j.data);currentTemplate=d.template;window.__shop=j.shop;return true}}catch(e){}d=null;return true}const h=location.hash.slice(1);if(!h)return false;try{if(h[0]==="~"||h[0]==="."){const o=await unpack(h);d=unwire(o);currentTemplate=d.template;return true}const x=dec(h);if(x&&x.t&&Array.isArray(x.i)){d=x;currentTemplate=x.template||"laceAlbum";return true}}catch(e){}return false}
 function shopCta(){const sh=window.__shop;if(sh&&sh.name){const wa=(sh.whatsapp||"").replace(/\D/g,"");return `<div style="text-align:center;margin:14px;color:#f8f0df"><div style="font-family:Georgia,serif;font-size:1.1em">${esc(sh.name)}</div>${wa?`<a class="btn" style="display:block;margin-top:10px;text-decoration:none;text-align:center" href="https://wa.me/${wa}?text=${encodeURIComponent("Hi! I'd love a keepsake like this ♡")}">Order yours ♡</a>`:""}</div>`}return `<a href="/" class="btn" style="display:block;text-align:center;margin:14px;text-decoration:none">Make your own keepsake</a>`}
 function showViewer(){ if(!d){document.body.innerHTML='<div style="min-height:100vh;display:grid;place-items:center;background:#2a0409;color:#f8f0df;font:20px Georgia,serif;text-align:center;padding:30px">'+(window.__inactive?'<div>This keepsake isn’t active yet.<br><small style="font:15px system-ui,sans-serif;opacity:.8">If it’s yours, log in and activate it from My memories.</small></div>':'This card could not be found.')+'</div>';return} document.body.innerHTML=`<div class="hero" style="min-height:100vh;display:grid;place-items:center"><div class="phone" style="width:min(390px,92vw)"><div class="phoneScreen"><div class="memoryCard" id="viewer"></div></div>${shopCta()}</div></div><div class="toast" id="toast"></div>`;
  renderCard($("#viewer"),d);
@@ -2114,52 +2086,21 @@ window.addEventListener("error",e=>{if(!e?.message||e.message==="Script error."|
 
 let SHOP=null, CUSTOMER=null;
 // ---- customer cards: save, activate, pay ----
-let EDIT_ID=null,PLANS={digital:{price:99},nfc:{price:349}},PAY_MODE="activate",PLAN="digital";
+let EDIT_ID=null,CHECKOUT=null,LOCK=null;
 function setEdit(id){EDIT_ID=id||null;try{const u=new URL(location.href);if(EDIT_ID)u.searchParams.set("edit",EDIT_ID);else u.searchParams.delete("edit");u.searchParams.delete("resume");u.searchParams.delete("account");history.replaceState(null,"",u.pathname+u.search+u.hash)}catch(e){}}
-function saveMemory(){const body={data:wire(d)};if(EDIT_ID)body.id=EDIT_ID;return fetch("/api/customer-memories",{method:EDIT_ID?"PUT":"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)})}
-function money(n){return "₹"+Number(n).toLocaleString("en-IN")}
-function upgradePrice(){return Math.max(PLANS.nfc.price-PLANS.digital.price,1)}
+function saveMemory(){const body={data:wire(d)};if(EDIT_ID)body.id=EDIT_ID;const lk=LOCK&&LOCK.value();if(lk!==undefined)body.lock=lk;return fetch("/api/customer-memories",{method:EDIT_ID?"PUT":"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)})}
 function showLive(url){short=location.origin+url;longLink=short;$("#shortLink").textContent=short;badge(short);$("#payPanel").hidden=true;$("#linkGrid").hidden=false;setStatus("#linkStatus","Your keepsake is live. Share the link, print the QR or write it to an NFC tag.",true);drawQR();upgradeOffer();$("#link").scrollIntoView({behavior:"smooth",block:"start"})}
-function upgradeOffer(){let x=$("#nfcUpsell");if(!x){x=document.createElement("div");x.id="nfcUpsell";x.className="liveExtra";$("#linkStatus").after(x)}x.innerHTML=`<button class="btn small ghost" type="button" id="orderNfc">Order a printed NFC card · ${money(upgradePrice())}</button>`;$("#orderNfc").onclick=()=>showCheckout("upgrade")}
-function priceFor(plan){return PAY_MODE==="upgrade"?upgradePrice():PLANS[plan].price}
-function paySync(){
- $$("#planGrid .planOpt").forEach(l=>{const on=l.dataset.plan===PLAN;l.classList.toggle("on",on);l.querySelector("input").checked=on});
- $('#planGrid [data-plan="digital"]').hidden=PAY_MODE==="upgrade";$("#addrBox").hidden=PLAN!=="nfc";
- $('[data-price="digital"]').textContent=money(PLANS.digital.price);$('[data-price="nfc"]').textContent=money(priceFor("nfc"));
- $("#payBtn").textContent="Pay "+money(priceFor(PLAN))+(PAY_MODE==="upgrade"?" & order card":" & activate");
- const ob=$("#orderNfc");if(ob)ob.textContent="Order a printed NFC card · "+money(upgradePrice());
-}
+function upgradeOffer(){let x=$("#nfcUpsell");if(!x){x=document.createElement("div");x.id="nfcUpsell";x.className="liveExtra";$("#linkStatus").after(x)}x.innerHTML='<button class="btn small ghost" type="button" id="orderFrame">Get it in a photo frame (QR or NFC)</button>';$("#orderFrame").onclick=()=>showCheckout("upgrade")}
 function showCheckout(mode){
- PAY_MODE=mode;if(mode==="upgrade")PLAN="nfc";
- $("#payTitle").textContent=mode==="upgrade"?"Order a printed NFC card":"Activate your keepsake";
- $("#payNote").textContent=mode==="upgrade"?"We'll print an NFC card for this keepsake and deliver it to you. Your link stays the same.":"Your card is saved. Pay once to switch on its link, QR code and NFC link. It stays live for good, and you can keep editing it.";
- $("#payPanel").hidden=false;if(mode!=="upgrade")$("#linkGrid").hidden=true;setStatus("#payStatus","",true);
- if(CUSTOMER){if(!$("#aName").value)$("#aName").value=CUSTOMER.name||"";if(!$("#aPhone").value)$("#aPhone").value=CUSTOMER.phone||""}
- paySync();$("#payPanel").scrollIntoView({behavior:"smooth",block:"start"});
+ if(!CHECKOUT)CHECKOUT=KSCheckout.mount($("#payPanel"),{kind:"card",getId:()=>EDIT_ID,customer:()=>CUSTOMER,onPaid:v=>{showLive(v.url);const fr=v.plan==="frameQr"||v.plan==="frameNfc";toast(fr?"Paid ♡ Your photo frame is on its way":"Paid ♡ Your keepsake is live");setStatus("#linkStatus",fr?"Paid. Your keepsake is live and we'll ship your photo frame soon.":"Paid. Your keepsake is live.",true)}});
+ $("#payPanel").hidden=false;if(mode!=="upgrade")$("#linkGrid").hidden=true;CHECKOUT.open(mode).then(()=>$("#payPanel").scrollIntoView({behavior:"smooth",block:"start"}));
 }
-function loadRazorpay(){return window.Razorpay?Promise.resolve():new Promise((ok,no)=>{const sc=document.createElement("script");sc.src="https://checkout.razorpay.com/v1/checkout.js";sc.onload=ok;sc.onerror=()=>no(new Error("Could not load the payment window. Check your connection and try again."));document.head.appendChild(sc)})}
-async function startPay(){
- if(!CUSTOMER||!EDIT_ID){toast("Save your card first ♡");return}
- const btn=$("#payBtn");btn.disabled=true;setStatus("#payStatus","Opening secure payment…",true);
- try{
-  const body={action:"create",id:EDIT_ID,plan:PLAN};
-  if(PLAN==="nfc")body.address={name:$("#aName").value,phone:$("#aPhone").value,line1:$("#aLine1").value,line2:$("#aLine2").value,city:$("#aCity").value,state:$("#aState").value,pincode:$("#aPin").value};
-  const r=await fetch("/api/checkout",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});const o=await r.json().catch(()=>({}));if(!r.ok)throw new Error(o.error||"Could not start the payment.");
-  await loadRazorpay();
-  const rzp=new Razorpay({key:o.keyId,amount:o.amount,currency:o.currency,order_id:o.orderId,name:"Keepsake",description:o.description,prefill:o.prefill,theme:{color:"#42070f"},
-   handler:async p=>{setStatus("#payStatus","Confirming your payment…",true);try{const v=await fetch("/api/checkout",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"verify",...p})});const vj=await v.json().catch(()=>({}));if(!v.ok)throw new Error(vj.error||"Could not confirm the payment.");setStatus("#payStatus","",true);showLive(vj.url);toast(vj.plan==="nfc"?"Paid ♡ Your NFC card is on its way":"Paid ♡ Your keepsake is live");setStatus("#linkStatus",vj.plan==="nfc"?"Paid. Your keepsake is live and we'll ship your NFC card soon.":"Paid. Your keepsake is live.",true)}catch(e){setStatus("#payStatus",(e.message||"Could not confirm the payment.")+" If money was taken, your card will switch on within a few minutes; check My memories.",false)}finally{btn.disabled=false}},
-   modal:{ondismiss:()=>{btn.disabled=false;if(!$("#payPanel").hidden)setStatus("#payStatus","Payment window closed. You can try again any time.",false)}}});
-  rzp.on("payment.failed",e=>{setStatus("#payStatus",(e&&e.error&&e.error.description)||"Payment failed. Please try again.",false)});
-  rzp.open();
- }catch(e){btn.disabled=false;setStatus("#payStatus",e.message||"Could not start the payment.",false)}
-}
-async function loadPlans(){try{const r=await fetch("/api/checkout",{cache:"no-store"});const j=await r.json();if(j.plans)PLANS=j.plans}catch(e){}}
 async function openForEdit(){
  const q=new URLSearchParams(location.search),id=q.get("edit");
  if(q.get("resume")&&!id&&CUSTOMER){setStatus("#generateStatus","Welcome! Your design is still here. Tap Save & get my link.",true);setTimeout(()=>$("#generateBtn")?.scrollIntoView({behavior:"smooth",block:"center"}),500)}
  if(!id||!CUSTOMER)return;
  try{const r=await fetch("/api/customer-memories?id="+encodeURIComponent(id),{cache:"no-store"});const j=await r.json();if(!r.ok||!j.data)throw new Error(j.error||"Card not found.");
-  d=unwire(j.data);currentTemplate=d.template;hydrateForm();$$("#templateGrid .template").forEach(b=>b.classList.toggle("active",b.dataset.template===currentTemplate));$("#heroImg").src=getTemplate().th;renderPreview();setEdit(id);
+  d=unwire(j.data);currentTemplate=d.template;hydrateForm();$$("#templateGrid .template").forEach(b=>b.classList.toggle("active",b.dataset.template===currentTemplate));$("#heroImg").src=getTemplate().th;renderPreview();setEdit(id);if(LOCK)LOCK.set(j.locked);
   if(j.active===false){setStatus("#generateStatus","Editing your saved card. It isn't active yet.",true);showCheckout("activate")}
   else{showLive("/m/"+id);setStatus("#generateStatus","Editing your live card. Save to update it.",true);if(location.hash!=="#link")setTimeout(()=>$("#create")?.scrollIntoView({behavior:"smooth"}),300)}
  }catch(e){setEdit(null);toast(e.message||"Could not open that card.")}
@@ -2191,12 +2132,12 @@ async function init(){ if(await parseHash()){showViewer();return} await licence(
  restoreDraft();
  hydrateForm();
  templateUI();$("#heroImg").src=getTemplate().th;bindLive();renderPreview();urlStart();
- loadPlans().then(paySync);$("#planGrid").onchange=e=>{if(e.target.name==="plan"){PLAN=e.target.value;paySync()}};$("#payBtn").onclick=startPay;await openForEdit();
+ LOCK=KSLock.mount($("#lockBox"));await openForEdit();
  $("#generateBtn").onclick=generate;$("#shortenBtn").onclick=async()=>{if(shortBusy)return;if(SHOP){toast("Your link is already short ♡");return}const u=longLink||await ensureLink();if(!u)return;if(!isWeb(u)){needHost("Shortening needs a web address. Tap “Publish my site” below (free), then press Generate.");return}if(byteLen(u)>=5000){setStatus("#linkStatus","This link is over the shortener's 5,000-character limit.",false);return}shortBusy=true;$("#shortenBtn").disabled=true;setStatus("#linkStatus","Shortening your link…",true);try{short=await shorten(u);$("#shortLink").textContent=short;badge(short);setStatus("#linkStatus","Short link ready — use it for QR, sharing and NFC.",true);drawQR();toast("Short link created ♡")}catch(e){setStatus("#linkStatus",e?.message||"Could not shorten the link.",false)}finally{shortBusy=false;$("#shortenBtn").disabled=false}};$("#copyBtn").onclick=copyLink;$("#shareBtn").onclick=shareLink;$("#writeBtn").onclick=writeNFC;
  $("#pngBtn").onclick=savePNG;$("#svgBtn").onclick=saveSVG;$("#qrShareBtn")?.addEventListener("click",shareQR);$("#previewShare").onclick=shareLink;$("#downloadCard").onclick=downloadCardHTML;
  $("#publishBtn").onclick=publishSite;
  $("#siteBtn").onclick=()=>{downloadBlob("index.html",new Blob([__SRC.replace(/<div class="toast[^>]*>[^<]*<\/div>/,"")],{type:"text/html;charset=utf-8"}));toast("Saved index.html — upload it to your host ♡")};
- $("#resetBtn").onclick=()=>{setEdit(null);$("#payPanel").hidden=true;$("#linkGrid").hidden=false;$("#nfcUpsell")?.remove();d=structuredClone(DEF);d.template="laceAlbum";currentTemplate="laceAlbum";qrStyle="rounded";heart=true;localThumb="";longLink="";localCover="";short="";qrSVG="";qrFallbackUrl="";try{localStorage.removeItem("keepsake-draft-v18")}catch(e){}$("#coverFile").value="";$("#mediaStatus").textContent="Large photos are accepted and optimized in your browser. For videos, audio and very large originals, use your own HTTPS-hosted media URL so the NFC/QR link stays small and reliable.";$$("#styleOptions .pill").forEach(b=>b.classList.toggle("active",b.dataset.style==="classic"));$$("#templateGrid .template").forEach(b=>b.classList.toggle("active",b.dataset.template==="laceAlbum"));$("#heroImg").src="/assets/t-laceAlbum.webp";hydrateForm();$("#qrFg").value="#42070f";$("#qrBg").value="#fffaf0";$$("#link .pill[data-qrstyle]").forEach(b=>b.classList.toggle("active",b.dataset.qrstyle==="rounded"));$("#heartToggle").classList.add("active");$("#byteBadge").textContent="";renderPreview();$("#shortLink").textContent="Generate your card first.";$("#linkStatus").textContent="";$("#generateStatus").textContent="";drawQR();persistDraft();toast("Reset to a clean page")};
+ $("#resetBtn").onclick=()=>{setEdit(null);$("#payPanel").hidden=true;$("#linkGrid").hidden=false;$("#nfcUpsell")?.remove();if(LOCK)LOCK.set(false);d=structuredClone(DEF);d.template="laceAlbum";currentTemplate="laceAlbum";qrStyle="rounded";heart=true;localThumb="";longLink="";localCover="";short="";qrSVG="";qrFallbackUrl="";try{localStorage.removeItem("keepsake-draft-v18")}catch(e){}$("#coverFile").value="";$("#mediaStatus").textContent="Large photos are accepted and optimized in your browser. For videos, audio and very large originals, use your own HTTPS-hosted media URL so the NFC/QR link stays small and reliable.";$$("#styleOptions .pill").forEach(b=>b.classList.toggle("active",b.dataset.style==="classic"));$$("#templateGrid .template").forEach(b=>b.classList.toggle("active",b.dataset.template==="laceAlbum"));$("#heroImg").src="/assets/t-laceAlbum.webp";hydrateForm();$("#qrFg").value="#42070f";$("#qrBg").value="#fffaf0";$$("#link .pill[data-qrstyle]").forEach(b=>b.classList.toggle("active",b.dataset.qrstyle==="rounded"));$("#heartToggle").classList.add("active");$("#byteBadge").textContent="";renderPreview();$("#shortLink").textContent="Generate your card first.";$("#linkStatus").textContent="";$("#generateStatus").textContent="";drawQR();persistDraft();toast("Reset to a clean page")};
  ["qrFg","qrBg"].forEach(id=>$("#"+id).oninput=drawQR);
  $$("#link .pill[data-qrstyle]").forEach(b=>b.onclick=()=>{$$("#link .pill[data-qrstyle]").forEach(x=>x.classList.remove("active"));b.classList.add("active");qrStyle=b.dataset.qrstyle;drawQR()});
  $("#heartToggle").onclick=()=>{$("#heartToggle").classList.toggle("active");heart=$("#heartToggle").classList.contains("active");drawQR()};

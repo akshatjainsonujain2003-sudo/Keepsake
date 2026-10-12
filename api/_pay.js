@@ -1,27 +1,43 @@
-// Razorpay helpers and the one place prices are defined. Not a route (files starting with _ are not deployed as functions).
+// Products, prices and Razorpay helpers. Not a route (files starting with _ are not deployed as functions).
 const crypto = require("crypto");
 const db = require("./_db");
 
 const env = process.env;
 const rupees = (v, d) => { const n = Math.round(+v); return n >= 1 ? n : d; };
 
-// Prices in rupees. Change them in Vercel with PRICE_DIGITAL and PRICE_NFC, no code change needed.
-function plans() {
-  const digital = rupees(env.PRICE_DIGITAL, 99), nfc = Math.max(rupees(env.PRICE_NFC, 349), digital);
+// Everything sold is: a product (template card or custom website) + how it's delivered
+// (digital only, or a printed photo frame with a QR code or an NFC chip).
+// Prices are in rupees and can be changed in Vercel without code changes.
+function catalog() {
   return {
-    digital: { price: digital, name: "Digital keepsake", desc: "Your card, its short link and QR code, live for good." },
-    nfc: { price: nfc, name: "Keepsake + NFC card", desc: "Everything in Digital, plus a printed NFC card delivered to your door." }
+    products: {
+      card: { name: "Template", price: rupees(env.PRICE_TEMPLATE, 99), desc: "One beautiful memory card from our designs." },
+      site: { name: "Custom website", price: rupees(env.PRICE_WEBSITE, 299), desc: "A full page for your story: photos, videos, songs, timeline and letters." }
+    },
+    delivery: {
+      digital: { name: "Digital", price: 0, desc: "Short link, QR code and NFC-ready link to share or print." },
+      frameQr: { name: "Photo frame with QR", price: rupees(env.PRICE_FRAME_QR, 399), desc: "A printed photo frame with a scannable QR code, delivered to you." },
+      frameNfc: { name: "Photo frame with NFC", price: rupees(env.PRICE_FRAME_NFC, 599), desc: "A printed photo frame with a hidden NFC chip. Tap a phone to open.", }
+    }
   };
 }
+const isFrame = plan => plan === "frameQr" || plan === "frameNfc";
+const kindOf = memory => (memory.kind === "site" ? "site" : "card");
 
-// What this customer pays for a plan on this memory. An already-active card pays only the difference for an NFC card.
+// What this customer pays for a delivery option on this memory.
+// An already-active memory only pays for the frame.
 function amountFor(memory, plan) {
-  const p = plans();
-  if (!p[plan]) return { error: "Choose a plan." };
-  const active = memory.paid !== false;
-  if (plan === "digital" && active) return { error: "This keepsake is already active." };
-  if (plan === "nfc" && active) return { rupees: Math.max(p.nfc.price - p.digital.price, 1), upgrade: true };
-  return { rupees: p[plan].price, upgrade: false };
+  const c = catalog();
+  if (!c.delivery[plan]) return { error: "Choose how you'd like it delivered." };
+  const active = memory.paid !== false, base = c.products[kindOf(memory)].price;
+  if (active && !isFrame(plan)) return { error: "This keepsake is already active." };
+  const total = (active ? 0 : base) + c.delivery[plan].price;
+  return { rupees: total, upgrade: active };
+}
+function describe(memory, plan, upgrade) {
+  const c = catalog(), product = c.products[kindOf(memory)].name;
+  if (upgrade) return c.delivery[plan].name;
+  return isFrame(plan) ? `${product} + ${c.delivery[plan].name.toLowerCase()}` : `${product} (digital)`;
 }
 
 const keyId = () => env.RAZORPAY_KEY_ID || "";
@@ -68,12 +84,12 @@ async function markPaid(orderId, paymentId) {
     if (!order) return null;
     if (order.status === "paid") return order;
     order.status = "paid"; order.paymentId = String(paymentId || ""); order.paidAt = Date.now();
-    if (order.plan === "nfc") order.ship = "to-ship";
+    if (isFrame(order.plan)) order.ship = "to-ship";
     await db.setj(key, order);
     const mk = "customer-memory:" + order.memory, memory = await db.getj(mk);
     if (memory) {
       memory.paid = true; memory.activatedAt = memory.activatedAt || order.paidAt;
-      memory.plan = order.plan === "nfc" ? "nfc" : (memory.plan || "digital");
+      memory.plan = isFrame(order.plan) ? order.plan : (memory.plan || "digital");
       memory.orders = [...(memory.orders || []), orderId].slice(-20);
       await db.setj(mk, memory);
     }
@@ -84,4 +100,4 @@ async function markPaid(orderId, paymentId) {
   }
 }
 
-module.exports = { plans, amountFor, keyId, configured, createOrder, verifyPayment, verifyWebhook, markPaid };
+module.exports = { catalog, amountFor, describe, isFrame, kindOf, keyId, configured, createOrder, verifyPayment, verifyWebhook, markPaid };

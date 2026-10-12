@@ -17,6 +17,10 @@
       "destination": "/studio"
     },
     {
+      "source": "/s/:id",
+      "destination": "/site"
+    },
+    {
       "source": "/sitemap.xml",
       "destination": "/api/sitemap"
     },

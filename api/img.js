@@ -20,7 +20,9 @@ module.exports = async (req, res) => {
       const m = /^data:image\/(jpeg|png|webp);base64,([A-Za-z0-9+/=]+)$/.exec(String(b.data || ""));
       if (!m) return db.reply(res, 400, { error: "Please upload a JPG, PNG or WebP photo." });
       const buf = Buffer.from(m[2], "base64");
-      if (buf.length > 350 * 1024) return db.reply(res, 413, { error: "Photo is too large. Try a smaller one." });
+      // Photos printed in a frame need more detail than photos shown on a phone.
+      const maxKb = b.purpose === "print" && !b.key ? 700 : 350;
+      if (buf.length > maxKb * 1024) return db.reply(res, 413, { error: "Photo is too large. Try a smaller one." });
       if (!MAGIC[m[1]](buf)) return db.reply(res, 400, { error: "That file isn't a valid image." });
       if ((await db.cmd("SCARD", owner.set)) >= owner.max) return db.reply(res, 429, { error: "Photo limit reached for your account. Contact us for more." });
       const id = db.rid(10);

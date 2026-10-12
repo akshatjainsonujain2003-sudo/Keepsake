@@ -37,7 +37,7 @@ module.exports = async (req, res) => {
       const id = String(b.order || "");
       if (!/^order_\w+$/.test(id)) return db.reply(res, 400, { error: "Bad order." });
       const o = await db.getj("order:" + id);
-      if (!o || o.plan !== "nfc" || o.status !== "paid") return db.reply(res, 404, { error: "Order not found." });
+      if (!o || !(o.plan === "frameQr" || o.plan === "frameNfc") || o.status !== "paid") return db.reply(res, 404, { error: "Order not found." });
       o.ship = b.undo ? "to-ship" : "shipped"; o.tracking = String(b.tracking || o.tracking || "").slice(0, 120); o.shippedAt = b.undo ? null : Date.now();
       await db.setj("order:" + id, o); return db.reply(res, 200, { ok: true });
     }
