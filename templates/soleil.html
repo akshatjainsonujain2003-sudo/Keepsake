@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#EEE7DB">
+<title>Meera &amp; Aarav · Soleil · Keepsake</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gloock&family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,400&family=Hanken+Grotesk:wght@400;500;600&family=Mrs+Saint+Delafield&display=swap">
+<style>
+/* Soleil: a Keepsake website template. Sun-warmed linen, pressed flowers, a scrapbook of two people. */
+:root{
+  --linen:#EEE7DB;--paper:#F8F3EA;--ink:#2A2922;--soft:#625E52;--olive:#5D6646;--deep:#3F4630;--blush:#C9A79C;--rule:#2A29222b;
+  --display:"Gloock",Georgia,serif;--serif:"Newsreader",Georgia,serif;--sans:"Hanken Grotesk",system-ui,sans-serif;--hand:"Mrs Saint Delafield",cursive;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;color:var(--ink);font:400 17px/1.7 var(--serif);-webkit-font-smoothing:antialiased;overflow-x:hidden;
+  background:linear-gradient(#eee7dbd9,#eee7dbd9),url(/assets/soleil/linen.webp) center/760px repeat,var(--linen)}
+img{display:block;max-width:100%}
+main{overflow:clip}
+a{color:inherit}
+.wrap{width:min(1120px,100% - 40px);margin:0 auto}
+.narrow{width:min(620px,100% - 40px);margin:0 auto}
+.label{font:500 13px/1.3 var(--sans);letter-spacing:.02em;color:var(--soft)}
+h1,h2,h3{font-family:var(--display);font-weight:400;margin:0;line-height:1.02;letter-spacing:-.01em}
+h2{font-size:clamp(44px,8vw,84px);text-wrap:balance}
+section{position:relative;padding:clamp(80px,12vw,150px) 0}
+:focus-visible{outline:2px solid var(--olive);outline-offset:3px}
+.deco{position:absolute;pointer-events:none;user-select:none}
+/* pampas and grasses move as if there's a breeze */
+@media (prefers-reduced-motion:no-preference){.sway{animation:sway 6s ease-in-out infinite alternate;transform-origin:50% 100%}.sway.slow{animation-duration:8s}}
+@keyframes sway{from{rotate:-2.5deg}to{rotate:3deg}}
+
+/* a photo inside a cut-out frame; --x/--y/--w/--h = the frame's window */
+.pf{position:relative}
+.pf>.pic{position:absolute;left:var(--x);top:var(--y);width:var(--w);height:var(--h);overflow:hidden;background:#ddd2c1}
+.pf>.pic img{width:100%;height:100%;object-fit:cover}
+.pf>.edge{position:relative;z-index:2;width:100%;pointer-events:none;filter:drop-shadow(0 12px 18px #3a33242e)}
+.polaroid{--x:16.4%;--y:14.6%;--w:67.9%;--h:60.8%}
+.ribbon{--x:29%;--y:22.2%;--w:55.1%;--h:69.2%}
+
+/* ---------- top bar ---------- */
+.bar{position:sticky;top:0;z-index:30;background:#eee7dbe6;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.bar .wrap{display:flex;justify-content:space-between;align-items:center;height:58px}
+.bar b{font:400 20px var(--display)}
+.bar nav{display:flex;gap:22px;font:500 14px var(--sans)}
+.bar nav a{text-decoration:none;color:var(--soft)}
+.bar nav a:hover{color:var(--ink)}
+@media(max-width:720px){.bar nav{display:none}}
+
+/* ---------- hero: a scrapbook collage ---------- */
+.hero{padding:20px 0 80px;overflow:hidden}
+.hero .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:0 40px;align-items:center}
+.collage{position:relative;aspect-ratio:4/4.6}
+.collage .plume{left:-12%;top:-4%;width:52%;rotate:-18deg;z-index:0}
+.collage .gyp{left:2%;bottom:-6%;width:16%;z-index:4}
+.collage .tallf{position:absolute;right:0;top:2%;width:72%;rotate:3deg;z-index:1}
+.collage .wide{position:absolute;left:0;bottom:3%;width:50%;rotate:-7deg;z-index:3}
+.collage .stamp{right:-2%;top:-1%;width:20%;rotate:9deg;z-index:5}
+.hero-text .label{margin-bottom:20px}
+.hero h1{font-size:clamp(70px,11.5vw,150px);line-height:.9}
+.hero h1 span{display:block}
+.hero h1 .amp{font-size:.62em;color:var(--olive);margin:.08em 0 .02em .1em}
+.hero .when{margin-top:28px;display:flex;gap:26px;align-items:baseline;border-top:1px solid var(--rule);padding-top:16px;font:400 19px var(--serif)}
+.hero .when i{color:var(--soft)}
+@media(max-width:820px){.hero .wrap{grid-template-columns:1fr}.collage{margin:10px 4% 40px}}
+/* the pieces are laid down one by one */
+@media (prefers-reduced-motion:no-preference){
+  .collage>*{animation:place .9s cubic-bezier(.2,.8,.3,1.2) both}
+  .collage .plume{animation-delay:.05s}.collage .tallf{animation-delay:.2s}.collage .wide{animation-delay:.55s}.collage .stamp{animation-delay:.9s}.collage .gyp{animation-delay:1.05s}
+  .hero h1 span{animation:up 1s cubic-bezier(.2,.7,.2,1) both}.hero h1 span:nth-child(2){animation-delay:.1s}.hero h1 span:nth-child(3){animation-delay:.2s}
+  .hero .when{animation:up 1s .45s both}
+}
+@keyframes place{from{opacity:0;transform:translateY(-28px) scale(1.08)}}
+@keyframes up{from{opacity:0;transform:translateY(22px)}}
+
+/* ---------- the date, on a calendar ---------- */
+.cal .wrap{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
+.cal .photo{position:relative}
+.cal .photo img.f{width:100%;aspect-ratio:4/3.3;object-fit:cover;box-shadow:0 24px 50px -24px #2a292266}
+.cal .sheet{position:relative;background:var(--paper);padding:30px 28px 26px;box-shadow:0 1px 0 var(--rule),0 24px 50px -30px #2a292255}
+.cal .olive{right:-34px;top:-70px;width:120px;rotate:24deg;z-index:2}
+.month{font-family:var(--display);font-size:clamp(46px,7vw,72px);display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid var(--rule);padding-bottom:12px;margin-bottom:14px}
+.month small{font:400 italic 20px var(--serif);color:var(--soft)}
+.grid{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;row-gap:4px}
+.grid .d{font:500 12px var(--sans);color:var(--soft);padding-bottom:8px}
+.grid span{font:400 19px/2.3 var(--serif);position:relative}
+.grid .mark{color:var(--olive);font-weight:600}
+.grid .mark svg{position:absolute;left:50%;top:50%;width:58px;height:46px;transform:translate(-50%,-50%) rotate(-6deg);overflow:visible}
+.grid .mark path{fill:none;stroke:#b4483d;stroke-width:1.8;stroke-linecap:round;stroke-dasharray:190;stroke-dashoffset:190}
+.cal.seen .mark path{transition:stroke-dashoffset 1.6s .3s ease;stroke-dashoffset:0}
+.cal .calnote{margin:16px 0 0;font:400 44px/1 var(--hand);color:#b4483d}
+@media(max-width:820px){.cal .wrap{grid-template-columns:1fr;gap:60px}.cal .olive{right:-14px;width:96px}}
+
+/* ---------- quote + our song on a floral record ---------- */
+.song{text-align:center}
+.song blockquote{margin:0 auto;max-width:17ch;font:400 clamp(30px,5.4vw,50px)/1.18 var(--display)}
+.player{position:relative;margin:64px auto 0;width:min(460px,100%);display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:center;text-align:left;background:var(--paper);padding:16px 22px 16px 16px;box-shadow:0 1px 0 var(--rule),0 24px 50px -30px #2a292266}
+.player .lilies{left:-58px;top:-78px;width:150px;rotate:-8deg;z-index:3}
+.disc{position:relative;width:160px;height:116px}
+.disc .cover{position:relative;z-index:2;width:116px;height:116px;object-fit:cover;box-shadow:4px 0 10px #0003}
+.disc .rec{position:absolute;z-index:1;top:3px;left:14px;width:110px;height:110px;transition:left .7s cubic-bezier(.2,.7,.2,1)}
+.player.on .disc .rec{left:46px;animation:spin 4s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.player h3{font-size:22px;line-height:1.15}
+.player .by{font:500 13px var(--sans);color:var(--soft);margin:3px 0 10px}
+.prog{height:2px;background:var(--rule);position:relative}
+.prog b{position:absolute;inset:0 auto 0 0;width:0;background:var(--olive);transition:width .3s linear}
+.ctrl{display:flex;align-items:center;gap:14px;margin-top:10px}
+.ctrl button{border:0;background:none;padding:0;cursor:pointer;color:var(--ink)}
+.ctrl .play{width:38px;height:38px;border-radius:50%;background:var(--ink);color:var(--paper);display:grid;place-items:center}
+.ctrl small{white-space:nowrap;font:500 12px var(--sans);color:var(--soft);margin-left:auto}
+.song .cap{margin-top:18px;font-style:italic;color:var(--soft)}
+@media(max-width:520px){.player .lilies{left:-24px;top:-86px;width:120px}.disc{width:140px}.disc .cover{width:104px;height:104px}.disc .rec{width:98px;height:98px}.player.on .disc .rec{left:40px}}
+
+/* ---------- countdown ---------- */
+.count{background:var(--deep);color:var(--paper);padding:clamp(80px,11vw,130px) 0;overflow:hidden}
+.count .pressed{right:-40px;bottom:-60px;width:min(300px,52vw);opacity:.9;rotate:-12deg}
+.count .wrap{position:relative;display:grid;grid-template-columns:auto 1fr;gap:40px;align-items:end}
+.count .label{color:#f8f3eab3}
+.count h2{font-size:clamp(34px,5vw,54px);max-width:9ch}
+.nums{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.nums div{border-left:1px solid #f8f3ea40;padding-left:14px}
+.nums b{display:block;font:400 clamp(44px,8vw,96px)/1 var(--display);font-variant-numeric:tabular-nums}
+.nums span{font:500 13px var(--sans);color:#f8f3eab3}
+@media(max-width:820px){.count .wrap{grid-template-columns:1fr}.nums{grid-template-columns:repeat(2,1fr);row-gap:26px}}
+
+/* ---------- our story: chapters on polaroids ---------- */
+.story h2{margin-bottom:clamp(40px,7vw,90px)}
+.chapter{position:relative;display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:clamp(28px,6vw,90px);align-items:center;margin-bottom:clamp(80px,11vw,140px)}
+.chapter:nth-of-type(even) .ph{order:2}
+.chapter .pf{width:min(100%,460px);margin:0 auto;transition:rotate 1.1s cubic-bezier(.2,.8,.3,1.2),transform 1.1s cubic-bezier(.2,.8,.3,1.2),opacity .8s}
+.chapter:nth-of-type(odd) .pf{rotate:-3deg}.chapter:nth-of-type(even) .pf{rotate:2.5deg}
+.js .chapter:not(.seen) .pf{opacity:0;transform:translateY(40px);rotate:-12deg}
+.chapter .accent{z-index:3}
+.chapter .n{font:400 italic 20px var(--serif);color:var(--olive)}
+.chapter h3{font-size:clamp(34px,5vw,54px);margin:6px 0 14px}
+.chapter p{max-width:34ch;color:var(--soft);margin:0}
+.chapter time{display:block;margin-top:18px;font:500 13px var(--sans);color:var(--soft)}
+@media(max-width:820px){.chapter{grid-template-columns:1fr}.chapter:nth-of-type(even) .ph{order:0}}
+
+/* ---------- little moments: a strip you swipe ---------- */
+.moments{overflow:hidden}
+.moments .head{display:flex;justify-content:space-between;align-items:end;margin-bottom:34px;gap:20px}
+.moments .head p{font-style:italic;color:var(--soft);max-width:28ch;margin:0}
+.moments .dried{right:-30px;top:-40px;width:min(170px,32vw);rotate:14deg;z-index:2}
+.strip{display:flex;gap:22px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding-inline:max(20px,calc((100vw - 1120px)/2));padding:20px max(20px,calc((100vw - 1120px)/2)) 30px;scrollbar-width:none}
+.strip::-webkit-scrollbar{display:none}
+.strip figure{flex:0 0 auto;margin:0;scroll-snap-align:start;background:#fffdf8;padding:12px 12px 14px;box-shadow:0 14px 30px -16px #2a292266}
+.strip figure:nth-child(odd){rotate:-1.6deg}.strip figure:nth-child(even){rotate:1.4deg}
+.strip img{height:min(52vh,420px);max-width:min(78vw,620px);width:auto;aspect-ratio:auto 3/4;object-fit:cover}
+.strip figcaption{margin-top:10px;font:400 italic 17px var(--serif);color:var(--soft)}
+
+/* ---------- a letter in a flower envelope ---------- */
+.letter{text-align:center;overflow:hidden}
+.letter .label{margin-bottom:8px}
+.letter h2{font-size:clamp(40px,7vw,64px);text-wrap:balance}
+.stack{display:grid;justify-items:center;margin:40px auto 0;width:min(560px,100%)}
+.stack>*{grid-area:1/1}
+.envbtn{border:0;background:none;padding:0;cursor:pointer;width:min(440px,92%);z-index:3;transition:transform 1.1s cubic-bezier(.4,0,.2,1),opacity .9s .2s}
+.envbtn img{width:100%;filter:drop-shadow(0 20px 26px #3a33243a)}
+.envbtn small{display:block;margin-top:10px;font:500 13px var(--sans);color:var(--soft)}
+@media (prefers-reduced-motion:no-preference){.envbtn img{animation:breathe 3.2s ease-in-out infinite}}
+@keyframes breathe{50%{transform:translateY(-6px) rotate(-1deg)}}
+.handletter{width:min(420px,84%);rotate:5deg;translate:14% -2%;opacity:0;transform:translateY(40%) scale(.85);transition:transform 1.2s .2s cubic-bezier(.2,.8,.3,1),opacity .8s .2s;box-shadow:0 20px 40px -20px #3a332466}
+.note{position:relative;width:min(470px,92%);text-align:left;background:var(--paper);padding:clamp(34px,7vw,52px);rotate:-1.5deg;opacity:0;transform:translateY(46%) scale(.85);transition:transform 1.2s .35s cubic-bezier(.2,.8,.3,1),opacity .8s .35s;box-shadow:0 30px 60px -30px #2a292277;z-index:2}
+.note h3{font-size:clamp(32px,6vw,44px);margin-bottom:16px}
+.note p{font-size:18px;line-height:1.75;margin:0 0 1em}
+.note .sig{font:400 clamp(44px,8vw,58px)/1 var(--hand);color:var(--olive);text-align:right;margin-top:8px}
+.note .stamp{right:-26px;top:-30px;width:86px;rotate:10deg}
+.letter.open .envbtn{transform:translateY(75%) scale(.6) rotate(-6deg);opacity:0;pointer-events:none}
+.letter.open .handletter,.letter.open .note{opacity:1;transform:none}
+.reclose{margin-top:26px;border:0;background:none;font:500 14px var(--sans);color:var(--soft);text-decoration:underline;cursor:pointer;visibility:hidden}
+.letter.open .reclose{visibility:visible}
+
+/* ---------- the day ---------- */
+.day .wrap{display:grid;grid-template-columns:1fr 1fr;gap:clamp(30px,6vw,90px)}
+.day .bouquet{left:-30px;top:-70px;width:min(150px,30vw);rotate:-14deg}
+.day ol{list-style:none;margin:30px 0 0;padding:0}
+.day li{display:grid;grid-template-columns:96px 1fr;gap:16px;padding:16px 0;border-top:1px solid var(--rule)}
+.day li b{font:500 15px var(--sans)}
+.day li span{font-size:20px}
+.place{position:relative}
+.place img.v{width:100%;aspect-ratio:3/2;object-fit:cover;box-shadow:0 24px 50px -24px #2a292266}
+.place h3{font-size:34px;margin:22px 0 6px}
+.place p{margin:0;color:var(--soft)}
+.btn{display:inline-block;margin-top:20px;padding:13px 24px;border:1px solid var(--ink);border-radius:999px;text-decoration:none;font:500 14px var(--sans)}
+.btn:hover{background:var(--ink);color:var(--paper)}
+.day .daywrap{position:relative}
+@media(max-width:820px){.day .wrap{grid-template-columns:1fr}.day .bouquet{left:auto;right:-10px;top:-80px}}
+
+/* ---------- ending ---------- */
+.end{padding:clamp(100px,13vw,160px) 0 40px;text-align:center;overflow:hidden}
+.end .dried{left:-40px;bottom:40px;width:min(200px,38vw);rotate:-8deg}
+.end .plume{right:-90px;top:-10px;width:min(280px,50vw);rotate:22deg;opacity:.75}
+.end .plume{-webkit-mask:linear-gradient(#000 55%,#0000 92%);mask:linear-gradient(#000 55%,#0000 92%)}
+.end h2{position:relative;z-index:2;font-size:clamp(64px,14vw,180px);line-height:.9}
+.end .label{margin-top:18px;position:relative}
+.end .credit{position:relative;margin-top:110px;font:500 12px var(--sans);color:var(--soft)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}.js .chapter:not(.seen) .pf{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<script>
+document.documentElement.classList.add("js");
+// Demo photos. Customers replace these with their own.
+const PH = {
+  heroTall: "https://www.figma.com/api/mcp/asset/2748263e-1118-431f-8025-5089c39cd40f.png",
+  heroWide: "https://www.figma.com/api/mcp/asset/a5cd53e9-c42f-472a-935c-e8b8e877ac18.png",
+  flatlay: "https://www.figma.com/api/mcp/asset/9b8065f7-e8f3-4a16-a9e3-3ad9435aeaa5.png",
+  sunset: "https://www.figma.com/api/mcp/asset/0a49e7a2-43b4-4aa2-a557-72993a4d18b4.png",
+  cafe: "https://www.figma.com/api/mcp/asset/8b78f683-febb-442d-bdb3-1ad52739579c.png",
+  seaside: "https://www.figma.com/api/mcp/asset/93aa1a90-ca0d-4fa6-9f5d-28e2c63175a4.png",
+  rain: "https://www.figma.com/api/mcp/asset/76f33412-7a51-4a97-9fee-948756d562c6.png",
+  wheat: "https://www.figma.com/api/mcp/asset/c98f48dd-1f8b-4159-9d49-224f2df2f134.png",
+  lakedance: "/assets/soleil/lakedance.webp", lotus: "/assets/soleil/lotus.webp", twirl: "/assets/soleil/twirl.webp"
+};
+</script>
+
+<header class="bar"><div class="wrap"><b>M &amp; A</b><nav aria-label="Sections"><a href="#story">Our story</a><a href="#moments">Moments</a><a href="#letter">A letter</a><a href="#day">The day</a></nav></div></header>
+
+<main>
+<section class="hero" aria-label="Meera and Aarav">
+ <div class="wrap">
+  <div class="collage">
+   <img class="deco plume sway" src="/assets/soleil/plume.webp" alt="">
+   <div class="pf ribbon tallf"><div class="pic"><img data-ph="heroTall" alt="Meera and Aarav among the olive trees"></div><img class="edge" src="/assets/soleil/ribbonframe.webp" alt=""></div>
+   <div class="pf polaroid wide"><div class="pic"><img data-ph="lakedance" alt="Dancing by the lake at sunset"></div><img class="edge" src="/assets/soleil/polaroid.webp" alt=""></div>
+   <img class="deco stamp" src="/assets/soleil/stamp.webp" alt="">
+   <img class="deco gyp sway slow" src="/assets/soleil/gyp.webp" alt="">
+  </div>
+  <div class="hero-text">
+   <div class="label">Five years, and counting</div>
+   <h1><span>Meera</span><span class="amp">&amp;</span><span>Aarav</span></h1>
+   <div class="when"><span>14.02.2027</span><i>Udaipur, Rajasthan</i></div>
+  </div>
+ </div>
+</section>
+
+<section class="cal" id="date" aria-label="Our date">
+ <div class="wrap">
+  <div class="photo"><img class="f" data-ph="flatlay" alt="Dried flowers, a note and two rings on linen" loading="lazy"></div>
+  <div class="sheet">
+   <img class="deco olive" src="/assets/soleil/olive.webp" alt="">
+   <div class="month">February <small>2027</small></div>
+   <div class="grid" id="grid"></div>
+   <p class="calnote">save this one, it's ours</p>
+  </div>
+ </div>
+</section>
+
+<section class="song" aria-label="Our song">
+ <div class="narrow">
+  <blockquote>Somewhere between the first coffee and the last train home, you became my favourite place.</blockquote>
+  <div class="player" id="player">
+   <img class="deco lilies" src="/assets/soleil/lilies.webp" alt="">
+   <div class="disc"><img class="rec" src="/assets/soleil/vinyl.webp" alt=""><img class="cover" data-ph="sunset" alt="Album cover"></div>
+   <div>
+    <h3>Slow Mornings</h3>
+    <div class="by">Our song</div>
+    <div class="prog"><b id="bar"></b></div>
+    <div class="ctrl">
+     <button type="button" aria-label="Previous"><svg width="18" height="18" viewBox="0 0 24 24"><path fill="currentColor" d="M6 5h2v14H6zM20 5v14L9 12z"/></svg></button>
+     <button type="button" class="play" id="play" aria-label="Play"><svg width="16" height="16" viewBox="0 0 24 24"><path id="pi" fill="currentColor" d="M7 4v16l13-8z"/></svg></button>
+     <button type="button" aria-label="Next"><svg width="18" height="18" viewBox="0 0 24 24"><path fill="currentColor" d="M16 5h2v14h-2zM4 5v14l11-7z"/></svg></button>
+     <small id="time">0:00 / 3:42</small>
+    </div>
+   </div>
+  </div>
+  <p class="cap">Press play. It's the one from our first drive.</p>
+ </div>
+</section>
+
+<section class="count" aria-label="Countdown">
+ <img class="deco pressed" src="/assets/soleil/pressed.webp" alt="">
+ <div class="wrap">
+  <div><div class="label">Until 14 February 2027</div><h2>Not long now</h2></div>
+  <div class="nums"><div><b id="cd">0</b><span>days</span></div><div><b id="ch">0</b><span>hours</span></div><div><b id="cm">0</b><span>minutes</span></div><div><b id="cs">0</b><span>seconds</span></div></div>
+ </div>
+</section>
+
+<section class="story" id="story">
+ <div class="wrap">
+  <h2>Our story</h2>
+  <article class="chapter"><div class="ph"><div class="pf polaroid"><div class="pic"><img data-ph="cafe" alt="Laughing at a cafe table" loading="lazy"></div><img class="edge" src="/assets/soleil/polaroid.webp" alt=""></div></div><div><div class="n">I.</div><h3>The beginning</h3><p>A borrowed table at a crowded café, two coffees going cold, and a conversation neither of us wanted to end.</p><time>March 2022</time></div></article>
+  <article class="chapter"><div class="ph"><div class="pf polaroid"><div class="pic"><img data-ph="seaside" alt="Sitting by the sea" loading="lazy"></div><img class="edge" src="/assets/soleil/polaroid.webp" alt=""></div></div><div><div class="n">II.</div><h3>The first trip</h3><p>Salt in our hair, the wrong ferry twice, and the moment we knew we travelled well together.</p><time>August 2023</time></div></article>
+  <article class="chapter"><div class="ph"><div class="pf polaroid"><div class="pic"><img data-ph="lotus" alt="Hands holding a lotus" loading="lazy"></div><img class="edge" src="/assets/soleil/polaroid.webp" alt=""></div></div><div><div class="n">III.</div><h3>The question</h3><p>Somewhere along the way, forever stopped feeling like a distant idea and started feeling like us.</p><time>December 2025</time></div></article>
+  <article class="chapter"><div class="ph"><div class="pf polaroid"><div class="pic"><img data-ph="lakedance" alt="Dancing by the lake" loading="lazy"></div><img class="edge" src="/assets/soleil/polaroid.webp" alt=""></div></div><div><div class="n">IV.</div><h3>Still choosing you</h3><p>Every ordinary evening, every small win, every quiet Sunday. This is the chapter we're writing now.</p><time>Today</time></div></article>
+ </div>
+</section>
+
+<section class="moments" id="moments">
+ <img class="deco dried sway slow" src="/assets/soleil/dried.webp" alt="">
+ <div class="wrap head"><h2>Little moments</h2><p>The glances, the detours, the days we didn't want to end.</p></div>
+ <div class="strip" tabindex="0" aria-label="Photos, swipe to see more">
+  <figure><img data-ph="twirl" alt="Twirling in a field" loading="lazy"><figcaption>One more spin</figcaption></figure>
+  <figure><img data-ph="wheat" alt="In a wheat field" loading="lazy"><figcaption>The long drive to nowhere</figcaption></figure>
+  <figure><img data-ph="rain" alt="Under an umbrella in the rain" loading="lazy"><figcaption>One umbrella, two people</figcaption></figure>
+  <figure><img data-ph="sunset" alt="Watching the sunset" loading="lazy"><figcaption>That sunset we almost missed</figcaption></figure>
+  <figure><img data-ph="heroWide" alt="Walking on a garden path" loading="lazy"><figcaption>Your hand in mine</figcaption></figure>
+ </div>
+</section>
+
+<section class="letter" id="letter">
+ <div class="label">For you, from me</div>
+ <h2>Open when you miss me</h2>
+ <div class="stack">
+  <img class="handletter" src="/assets/soleil/loveletter.webp" alt="">
+  <article class="note" id="note">
+   <img class="deco stamp" src="/assets/soleil/stamp.webp" alt="">
+   <h3>My love,</h3>
+   <p>You make ordinary days feel like a holiday. You remember the small things, you laugh at my worst jokes, and you make every room feel like home.</p>
+   <p>Thank you for five years of choosing me, on the easy days and the hard ones. I'd choose you again, every single time.</p>
+   <div class="sig">Yours, Aarav</div>
+  </article>
+  <button class="envbtn" type="button" id="envBtn" aria-controls="note" aria-expanded="false"><img src="/assets/soleil/envelope.webp" alt="An envelope full of flowers"><small>Tap to open</small></button>
+ </div>
+ <button class="reclose" type="button" id="reclose">Put it back in the envelope</button>
+</section>
+
+<section class="day" id="day">
+ <div class="wrap">
+  <div class="daywrap">
+   <img class="deco bouquet sway slow" src="/assets/soleil/bouquet.webp" alt="">
+   <h2>The day</h2>
+   <ol>
+    <li><b>4:00 pm</b><span>Welcome drinks</span></li>
+    <li><b>5:30 pm</b><span>The ceremony</span></li>
+    <li><b>7:00 pm</b><span>Dinner under the stars</span></li>
+    <li><b>9:30 pm</b><span>Dancing, until they stop us</span></li>
+   </ol>
+  </div>
+  <div class="place">
+   <img class="v" data-ph="wheat" alt="The venue grounds" loading="lazy">
+   <h3>The Garden Courtyard</h3>
+   <p>Lake Pichola, Udaipur, Rajasthan</p>
+   <a class="btn" href="https://maps.google.com/?q=Udaipur" target="_blank" rel="noopener">Open in Maps</a>
+  </div>
+ </div>
+</section>
+
+<section class="end" aria-label="Closing">
+ <img class="deco dried sway" src="/assets/soleil/dried.webp" alt="">
+ <img class="deco plume sway slow" src="/assets/soleil/plume.webp" alt="">
+ <h2>Meera<br>&amp; Aarav</h2>
+ <div class="label">14 February 2027, Udaipur</div>
+ <div class="credit">Made with <a href="/">Keepsake</a></div>
+</section>
+</main>
+
+<script>
+// photos
+document.querySelectorAll("[data-ph]").forEach(i => { i.src = PH[i.dataset.ph]; i.decoding = "async"; });
+
+// calendar for the chosen date
+const DATE = new Date("2027-02-14T17:30:00+05:30");
+(function () {
+  const g = document.getElementById("grid"), y = DATE.getFullYear(), m = DATE.getMonth(), day = DATE.getDate();
+  ["Mo","Tu","We","Th","Fr","Sa","Su"].forEach(d => g.insertAdjacentHTML("beforeend", `<span class="d">${d}</span>`));
+  const lead = (new Date(y, m, 1).getDay() + 6) % 7, days = new Date(y, m + 1, 0).getDate();
+  for (let i = 0; i < lead; i++) g.insertAdjacentHTML("beforeend", "<span></span>");
+  for (let d = 1; d <= days; d++) g.insertAdjacentHTML("beforeend", d === day
+    ? `<span class="mark" aria-label="${d}, our day">${d}<svg viewBox="0 0 58 46" aria-hidden="true"><path d="M30 4C14 3 3 12 4 24c1 12 15 19 29 17 13-2 22-10 21-21C53 8 40 2 24 6"/></svg></span>`
+    : `<span>${d}</span>`);
+})();
+
+// things that happen once, as they come into view
+const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("seen"); io.unobserve(e.target); } }), { threshold: .3 });
+document.querySelectorAll(".cal,.chapter").forEach(s => io.observe(s));
+
+// countdown
+(function tick() {
+  let s = Math.max(0, Math.floor((DATE - Date.now()) / 1000));
+  const set = (id, v) => document.getElementById(id).textContent = v;
+  set("cd", Math.floor(s / 86400)); s %= 86400; set("ch", String(Math.floor(s / 3600)).padStart(2, "0")); s %= 3600;
+  set("cm", String(Math.floor(s / 60)).padStart(2, "0")); set("cs", String(s % 60).padStart(2, "0"));
+  setTimeout(tick, 1000);
+})();
+
+// player: in the live site this plays the couple's Spotify song; here it shows the motion
+(function () {
+  const p = document.getElementById("player"), b = document.getElementById("play"), bar = document.getElementById("bar"), t = document.getElementById("time");
+  let on = false, sec = 0, timer = 0; const len = 222;
+  b.onclick = () => {
+    on = !on; p.classList.toggle("on", on); b.setAttribute("aria-label", on ? "Pause" : "Play");
+    document.getElementById("pi").setAttribute("d", on ? "M6 4h4v16H6zM14 4h4v16h-4z" : "M7 4v16l13-8z");
+    clearInterval(timer);
+    if (on) timer = setInterval(() => { sec = (sec + 1) % len; bar.style.width = (sec / len * 100) + "%"; t.textContent = `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, "0")} / 3:42`; }, 1000);
+  };
+})();
+
+// the flower envelope opens to the letter
+(function () {
+  const sec = document.getElementById("letter"), env = document.getElementById("envBtn");
+  const set = open => { sec.classList.toggle("open", open); env.setAttribute("aria-expanded", open); if (open) setTimeout(() => document.getElementById("note").scrollIntoView({ behavior: "smooth", block: "center" }), 500); };
+  env.onclick = () => set(true);
+  document.getElementById("reclose").onclick = () => set(false);
+})();
+</script>
+</body>
+</html>
