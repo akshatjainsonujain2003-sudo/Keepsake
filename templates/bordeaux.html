@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#2a0207">
+<title>Meera &amp; Aarav · Bordeaux · Keepsake</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Pinyon+Script&display=swap">
+<style>
+/* Bordeaux: a Keepsake website template. Silk, wax, lace and old gold. */
+:root{
+  --wine:#3c0003;--deep:#1f0104;--cream:#F3E7D3;--ink:#3A0A12;--muted:#8a5a5f;--g2:#D2AE63;--g1:#F3DD9E;
+  --gold:linear-gradient(115deg,#8C6526 0%,#E8C978 22%,#FFF0BE 34%,#C9A04F 52%,#8C6526 70%,#E3C273 88%,#9B7330 100%);
+  --display:"Bodoni Moda",Didot,serif;--body:"EB Garamond",Garamond,serif;--script:"Pinyon Script",cursive;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--deep);color:var(--cream);font:400 19px/1.65 var(--body);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{display:block;max-width:100%}
+a{color:inherit}
+h1,h2,h3{font-weight:400;margin:0}
+.wrap{width:min(1080px,100% - 40px);margin:0 auto}
+.narrow{width:min(560px,100% - 40px);margin:0 auto}
+section{position:relative;padding:clamp(90px,12vw,150px) 0;overflow:hidden}
+:focus-visible{outline:2px solid var(--g2);outline-offset:3px}
+.goldtext{background:var(--gold);-webkit-background-clip:text;background-clip:text;color:transparent}
+.script{font-family:var(--script);font-weight:400;line-height:1.15}
+.kicker{font:400 italic 20px var(--display);color:var(--g2)}
+h2.title{font:400 clamp(44px,8vw,78px)/1.05 var(--display);letter-spacing:-.01em}
+h2.title em{font-family:var(--script);font-style:normal;font-size:1.15em;margin-left:.08em}
+.center{text-align:center}
+
+/* backgrounds made from the real textures */
+.silk{background:linear-gradient(#1f010499,#1f0104cc),url(/assets/bordeaux/silk.webp) center/cover}
+.damask{background:url(/assets/bordeaux/damask.webp) center/560px repeat,#3a0408}
+.paper{background:url(/assets/bordeaux/paper.webp) center/cover,#efe0c6;color:var(--ink)}
+.lace-band{height:clamp(54px,9vw,90px);background:url(/assets/bordeaux/lace.webp) center/auto 100% repeat-x;position:relative;z-index:3;margin:-1px 0;filter:drop-shadow(0 4px 6px #0006)}
+
+/* photos: black & white, or washed in wine */
+.bw{filter:grayscale(1) contrast(1.08) brightness(1.03)}
+.tint{position:relative;overflow:hidden}
+.tint img{filter:grayscale(1) contrast(1.1)}
+.tint::after{content:"";position:absolute;inset:0;background:#6d1222;mix-blend-mode:multiply;opacity:.75}
+
+/* a photo inside a real gold frame. --x/--y/--w/--h = the frame's opening */
+.gframe{position:relative}
+.gframe>.pic{position:absolute;left:var(--x);top:var(--y);width:var(--w);height:var(--h);overflow:hidden;background:#000}
+.gframe>.pic img{width:100%;height:100%;object-fit:cover}
+.gframe>.border{position:relative;z-index:2;width:100%;pointer-events:none;filter:drop-shadow(0 14px 22px #0008)}
+.rect{--x:28%;--y:23%;--w:45%;--h:52.5%}
+.ovalf{--x:19.5%;--y:21%;--w:60.5%;--h:61%}
+.ovalf>.pic{border-radius:50%}
+
+/* ---------- falling petals (whole page, very light) ---------- */
+.petals{position:fixed;inset:0;pointer-events:none;z-index:40;overflow:hidden}
+.petals img{position:absolute;top:-80px;width:var(--s);opacity:.75;animation:fall var(--d) linear var(--delay) infinite;will-change:transform}
+@keyframes fall{0%{transform:translate3d(0,-10vh,0) rotate(0)}25%{transform:translate3d(var(--sway),25vh,0) rotate(90deg)}50%{transform:translate3d(calc(var(--sway)*-1),55vh,0) rotate(200deg)}100%{transform:translate3d(var(--sway),115vh,0) rotate(400deg)}}
+
+/* ---------- hero ---------- */
+.hero{min-height:100svh;display:grid;place-items:center;padding:56px 0 64px;text-align:center}
+.hero h1{font-size:clamp(66px,15vw,150px);line-height:1.1;padding:0 .1em}
+.stage{position:relative;width:min(380px,86vw);margin:34px auto 0}
+.stage .bow{position:absolute;z-index:3;width:34%;left:33%;top:-11%}
+.stage .ring{position:absolute;z-index:3;width:30%;right:2%;bottom:6%;transform:rotate(-14deg);filter:drop-shadow(0 10px 12px #0009)}
+.hero .date{margin-top:22px;font:400 clamp(17px,2.4vw,21px) var(--display);letter-spacing:.06em}
+.hero .date span{display:inline-block;margin:0 12px;color:var(--g2)}
+.scroll-cue{margin-top:30px;font:400 italic 16px var(--display);color:#e8d4b8aa}
+@media (prefers-reduced-motion:no-preference){
+  .stage .gframe{animation:settle 1.5s cubic-bezier(.2,.7,.2,1) both}
+  .stage .bow{animation:drop 1.1s .7s cubic-bezier(.3,1.4,.5,1) both}
+  .stage .ring{animation:roll 1.3s 1s cubic-bezier(.2,.8,.3,1) both}
+  .hero h1{animation:fade 1.6s .1s both}.hero .date,.scroll-cue{animation:fade 1.2s 1.3s both}
+  .scroll-cue{animation:fade 1.2s 1.6s both,bob 2.4s 2.8s ease-in-out infinite}
+}
+@keyframes settle{from{opacity:0;transform:translateY(46px) rotate(-3deg) scale(.95)}}
+@keyframes drop{from{opacity:0;transform:translateY(-60px) rotate(-12deg)}}
+@keyframes roll{from{opacity:0;transform:translateX(90px) rotate(-200deg)}}
+@keyframes fade{from{opacity:0}}
+@keyframes bob{50%{transform:translateY(6px)}}
+
+/* ---------- the letter: it rises out of the envelope ---------- */
+.letter{background:var(--wine);text-align:center}
+.env{position:relative;width:min(420px,88vw);margin:30px auto 0;aspect-ratio:720/1280;cursor:pointer;border:0;padding:0;background:none;display:block}
+.env img{position:absolute;inset:0;width:100%;height:100%}
+.env .sheet{transition:transform 1.6s cubic-bezier(.2,.7,.2,1);transform:translateY(34%)}
+.env .pocket{z-index:2}
+.env .on-paper{position:absolute;left:16%;right:16%;top:31%;z-index:1;transition:transform 1.6s cubic-bezier(.2,.7,.2,1);transform:translateY(34%);color:var(--ink);text-align:center}
+.env .on-paper b{display:block;font:400 clamp(40px,10vw,58px)/1 var(--script);color:var(--wine)}
+.env .on-paper small{display:block;margin-top:10px;font:400 italic 16px var(--display);color:var(--muted)}
+.letter.seen .env .sheet,.letter.seen .env .on-paper{transform:translateY(0)}
+.letter .hint{margin-top:18px;font:400 italic 17px var(--display);color:#e8d4b8bb}
+.unfold{display:grid;grid-template-rows:0fr;transition:grid-template-rows 1.1s cubic-bezier(.2,.7,.2,1)}
+.unfold>div{overflow:hidden}
+.letter.open .unfold{grid-template-rows:1fr}
+.note{position:relative;margin:36px auto 0;width:min(520px,100% - 36px);text-align:left;padding:clamp(44px,8vw,64px) clamp(26px,7vw,56px);box-shadow:0 30px 60px #000a}
+.note h3{font:400 clamp(44px,9vw,62px)/1 var(--script);color:var(--wine);margin-bottom:16px}
+.note p{margin:0 0 1em}
+.note .sign{font:400 42px/1 var(--script);color:var(--wine);text-align:right;margin-top:20px}
+.note .rose{position:absolute;width:118px;right:-26px;top:-40px;transform:rotate(16deg);filter:drop-shadow(0 10px 10px #0007)}
+.note .seal{position:absolute;width:76px;left:22px;bottom:-26px;transform:rotate(-12deg);filter:drop-shadow(0 6px 6px #0007)}
+
+/* ---------- save the date ---------- */
+.card{position:relative;max-width:500px;margin:0 auto;text-align:center;padding:clamp(48px,9vw,70px) 28px;background:#2a0207e6;border:1px solid #d2ae6366;outline:1px solid #d2ae6366;outline-offset:-10px}
+.card .names{font-size:clamp(46px,9vw,64px)}
+.card .big{font:400 clamp(30px,5vw,40px)/1.2 var(--display);margin:18px 0 6px}
+.card .small{font:400 italic 20px var(--display);color:#e8d4b8}
+.orn{width:170px;margin:20px auto;display:block}
+.card .glasses{position:absolute;width:clamp(120px,30vw,170px);right:-34px;top:-90px;transform-origin:50% 90%;filter:drop-shadow(0 12px 14px #0008)}
+.datesec.seen .glasses{animation:clink 1.4s .3s cubic-bezier(.3,1.5,.5,1) both}
+@keyframes clink{0%{transform:rotate(18deg) translateY(30px);opacity:0}60%{transform:rotate(-6deg)}100%{transform:rotate(0)}}
+.card .toast{margin-top:22px;font:400 30px/1 var(--script);color:var(--g1)}
+
+/* ---------- candlelight still with a drifting film strip ---------- */
+.film{position:relative;overflow:hidden;padding:0;min-height:clamp(440px,70vw,720px);display:grid;place-items:end center;background:url(/assets/bordeaux/candles.webp) center/cover}
+.film::before{content:"";position:absolute;inset:0;background:linear-gradient(#1f010400 40%,#1f0104ee)}
+.film .strip{position:absolute;width:min(760px,130vw);left:50%;top:8%;opacity:.85;transform:translateX(-50%) rotate(-6deg);filter:sepia(.4) brightness(1.1)}
+@media (prefers-reduced-motion:no-preference){.film .strip{animation:drift 14s ease-in-out infinite alternate}}
+@keyframes drift{to{transform:translateX(-42%) rotate(-3deg)}}
+.film figcaption{position:relative;z-index:2;margin-bottom:9%;text-align:center;font:400 clamp(44px,9vw,78px)/1.2 var(--script)}
+
+/* ---------- our story ---------- */
+.story .wrap{display:grid;grid-template-columns:1fr 1.1fr;gap:clamp(36px,7vw,90px);align-items:center}
+.duo{position:relative;aspect-ratio:1/1.08}
+.duo .ovalf{position:absolute;width:62%;left:0;top:0;transform:rotate(-3deg)}
+.duo .rect{position:absolute;width:62%;right:-4%;bottom:-2%;transform:rotate(4deg)}
+.duo .rose{position:absolute;width:30%;left:34%;bottom:2%;z-index:4;transform:rotate(-20deg);filter:drop-shadow(0 10px 10px #0006)}
+.story .kicker{color:#8C6526}
+.story h2{margin:6px 0 22px}
+.story p{margin:0 0 1em;max-width:38ch}
+.story p:first-of-type::first-letter{float:left;font:400 84px/.8 var(--display);color:var(--wine);margin:8px 10px 0 0}
+@media(max-width:820px){.story .wrap{grid-template-columns:1fr}.duo{max-width:440px;width:100%;margin:0 auto 20px}}
+
+/* ---------- the evening, on an old television ---------- */
+.sched .wrap{display:grid;grid-template-columns:1fr 1fr;gap:clamp(36px,7vw,90px);align-items:center}
+.tv{position:relative;max-width:460px;width:100%;margin:0 auto}
+.tv .screen{position:absolute;left:13%;top:28.1%;width:51.1%;height:40.7%;overflow:hidden;border-radius:12%/16%;background:#000}
+.tv .screen img{width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.15) brightness(1.08)}
+.tv .screen::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(#0000 0 2px,#0004 3px),radial-gradient(circle,#0000 50%,#000b)}
+@media (prefers-reduced-motion:no-preference){.tv .screen img{animation:flick 5s steps(1) infinite}}
+@keyframes flick{0%,100%{opacity:1}47%{opacity:.82}48%{opacity:1}73%{opacity:.9}}
+.tv .set{position:relative;z-index:2;width:100%;filter:drop-shadow(0 20px 26px #000b)}
+.sched ol{list-style:none;padding:0;margin:26px 0 0}
+.sched li{display:grid;grid-template-columns:92px 1fr;align-items:baseline;padding:18px 0;border-bottom:1px solid #d2ae6340}
+.sched li b{font:400 italic 22px var(--display);color:var(--g2)}
+.sched li span{font-size:22px}
+@media(max-width:820px){.sched .wrap{grid-template-columns:1fr}}
+
+/* ---------- moments in gold frames ---------- */
+.moments .sub{max-width:36ch;margin:16px auto 46px;color:#e8d4b8;font-style:italic}
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(6px,2vw,24px)}
+.tiles figure{margin:0}
+.tiles figure:nth-child(odd){transform:rotate(-2.4deg)}
+.tiles figure:nth-child(even){transform:rotate(2deg) translateY(16px)}
+.tiles figcaption{text-align:center;font:400 30px/1.1 var(--script);color:var(--g1);margin-top:-6px}
+@media(max-width:820px){.tiles{grid-template-columns:1fr 1fr}}
+
+/* ---------- our song ---------- */
+.ticket{display:grid;grid-template-columns:120px 1fr;gap:20px;align-items:center;text-align:left;max-width:460px;margin:40px auto 0;padding:18px;background:url(/assets/bordeaux/paper.webp) center/cover,#f6ecdc;color:var(--ink);
+  -webkit-mask:radial-gradient(circle 12px at 0 50%,#0000 98%,#000) left/51% 100% no-repeat,radial-gradient(circle 12px at 100% 50%,#0000 98%,#000) right/51% 100% no-repeat;
+          mask:radial-gradient(circle 12px at 0 50%,#0000 98%,#000) left/51% 100% no-repeat,radial-gradient(circle 12px at 100% 50%,#0000 98%,#000) right/51% 100% no-repeat}
+.ticket .tint{aspect-ratio:1}
+.ticket .tint img{width:100%;height:100%;object-fit:cover}
+.ticket h3{font:400 26px/1.1 var(--display)}
+.ticket .by{font-style:italic;color:var(--muted)}
+.ticket button{margin-top:10px;display:inline-flex;align-items:center;gap:8px;border:0;border-radius:999px;padding:9px 16px;background:var(--wine);color:var(--cream);font:500 15px var(--body);cursor:pointer}
+
+/* ---------- ending ---------- */
+.end{text-align:center;padding-bottom:50px}
+.end .ovalf{width:min(300px,70vw);margin:0 auto 26px}
+.end h2{font-size:clamp(46px,12.5vw,120px);line-height:1.25;padding:0 .2em}
+.end .date{font:400 italic 21px var(--display);color:#e8d4b8;margin-top:10px}
+.end .seal{width:84px;margin:34px auto 0;filter:drop-shadow(0 6px 8px #0008)}
+.end .credit{margin-top:50px;font:400 14px var(--body);color:#e8d4b899}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}.petals{display:none}.env .sheet,.env .on-paper{transform:none}}
+</style>
+</head>
+<body>
+<script>
+// Demo photos. Customers replace these with their own.
+const PH = {
+  heroTall: "https://www.figma.com/api/mcp/asset/2748263e-1118-431f-8025-5089c39cd40f.png",
+  heroWide: "https://www.figma.com/api/mcp/asset/a5cd53e9-c42f-472a-935c-e8b8e877ac18.png",
+  sunset: "https://www.figma.com/api/mcp/asset/0a49e7a2-43b4-4aa2-a557-72993a4d18b4.png",
+  cafe: "https://www.figma.com/api/mcp/asset/8b78f683-febb-442d-bdb3-1ad52739579c.png",
+  hands: "https://www.figma.com/api/mcp/asset/1066ea2d-ff10-44cd-8786-09b55f985aaa.png",
+  seaside: "https://www.figma.com/api/mcp/asset/93aa1a90-ca0d-4fa6-9f5d-28e2c63175a4.png",
+  steps: "https://www.figma.com/api/mcp/asset/80c674ab-7ebb-4641-8f49-43aad59c2563.png",
+  rain: "https://www.figma.com/api/mcp/asset/76f33412-7a51-4a97-9fee-948756d562c6.png",
+  wheat: "https://www.figma.com/api/mcp/asset/c98f48dd-1f8b-4159-9d49-224f2df2f134.png"
+};
+</script>
+<div class="petals" aria-hidden="true" id="petals"></div>
+
+<main>
+<section class="hero silk" aria-label="Meera and Aarav">
+ <div>
+  <div class="kicker">two hearts, one story</div>
+  <h1 class="script goldtext">Meera &amp; Aarav</h1>
+  <div class="stage">
+   <div class="gframe rect"><div class="pic"><img class="bw" data-ph="heroTall" alt="Meera and Aarav"></div><img class="border" src="/assets/bordeaux/frame.webp" alt=""></div>
+   <img class="bow" src="/assets/bordeaux/bow.webp" alt="">
+   <img class="ring" src="/assets/bordeaux/ring.webp" alt="">
+  </div>
+  <div class="date">14<span>❦</span>February<span>❦</span>2027</div>
+  <div class="scroll-cue">a letter is waiting for you</div>
+ </div>
+</section>
+
+<div class="lace-band" aria-hidden="true"></div>
+
+<section class="letter" id="letter" aria-label="A letter">
+ <div class="kicker">sealed with love</div>
+ <h2 class="title">For <em>you</em></h2>
+ <button class="env" type="button" id="envBtn" aria-expanded="false" aria-controls="note">
+  <img class="sheet" src="/assets/bordeaux/env-letter.webp" alt="">
+  <span class="on-paper"><b>Dear you,</b><small>tap to open</small></span>
+  <img class="pocket" src="/assets/bordeaux/env-pocket.webp" alt="">
+ </button>
+ <div class="unfold"><div>
+  <article class="note paper" id="note">
+   <img class="rose" src="/assets/bordeaux/rose.webp" alt="">
+   <h3>Dear you,</h3>
+   <p>Five years ago a crowded café gave me the best seat in the house: the one across from you. Since then you've turned rainy days into stories and ordinary evenings into the parts of life I want to keep.</p>
+   <p>This page holds a few of them, so you can open it whenever you miss me, and remember that I'd choose you again, every single time.</p>
+   <div class="sign">Always yours, Aarav</div>
+   <img class="seal" src="/assets/bordeaux/seal.webp" alt="">
+  </article>
+ </div></div>
+</section>
+
+<section class="datesec damask" aria-label="Our date">
+ <div class="wrap">
+  <div class="card">
+   <img class="glasses" src="/assets/bordeaux/champagne.webp" alt="">
+   <div class="kicker">save the date</div>
+   <div class="names script goldtext">Meera &amp; Aarav</div>
+   <svg class="orn" viewBox="0 0 180 20" aria-hidden="true"><defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#8C6526"/><stop offset=".5" stop-color="#FFF0BE"/><stop offset="1" stop-color="#8C6526"/></linearGradient></defs><g fill="none" stroke="url(#g)" stroke-width="1.4"><path d="M0 10h70M110 10h70"/><path d="M90 2c-8 0-14 8-20 8 6 0 12 8 20 8s14-8 20-8c-6 0-12-8-20-8z"/></g><circle cx="90" cy="10" r="2.4" fill="#E8C978"/></svg>
+   <div class="big">Sunday, 14 February 2027</div>
+   <div class="small">half past five in the evening</div>
+   <svg class="orn" viewBox="0 0 180 20" aria-hidden="true"><g fill="none" stroke="url(#g)" stroke-width="1.4"><path d="M0 10h70M110 10h70"/><path d="M90 2c-8 0-14 8-20 8 6 0 12 8 20 8s14-8 20-8c-6 0-12-8-20-8z"/></g><circle cx="90" cy="10" r="2.4" fill="#E8C978"/></svg>
+   <div class="small">The Garden Courtyard, Udaipur</div>
+   <div class="toast">let's raise a glass</div>
+  </div>
+ </div>
+</section>
+
+<figure class="film" style="margin:0" aria-label="By candlelight">
+ <img class="strip" src="/assets/bordeaux/filmstrip.webp" alt="">
+ <figcaption class="goldtext">by candlelight, always</figcaption>
+</figure>
+
+<section class="story paper" aria-label="Our story">
+ <div class="wrap">
+  <div class="duo">
+   <div class="gframe ovalf"><div class="pic tint"><img data-ph="cafe" alt="At the café"></div><img class="border" src="/assets/bordeaux/oval.webp" alt=""></div>
+   <div class="gframe rect"><div class="pic"><img class="bw" data-ph="steps" alt="On the garden steps"></div><img class="border" src="/assets/bordeaux/frame.webp" alt=""></div>
+   <img class="rose" src="/assets/bordeaux/rose.webp" alt="">
+  </div>
+  <div>
+   <div class="kicker">chapter one, and every one since</div>
+   <h2 class="title">Our <em>story</em></h2>
+   <p>Once upon a time, two people reached for the last free table at the same café. Neither of us gave it up, so we shared it, and talked until they stacked the chairs.</p>
+   <p>Then came the wrong ferry, the right umbrella, a hundred late-night drives and one very nervous question. This is the part where we promise each other the rest.</p>
+  </div>
+ </div>
+</section>
+
+<section class="sched silk" aria-label="The evening">
+ <div class="wrap">
+  <div class="tv"><div class="screen"><img data-ph="rain" alt="Under an umbrella in the rain"></div><img class="set" src="/assets/bordeaux/tv.webp" alt=""></div>
+  <div>
+   <div class="kicker">the evening</div>
+   <h2 class="title">Tonight's <em>programme</em></h2>
+   <ol>
+    <li><b>4:00</b><span>Arrival &amp; welcome</span></li>
+    <li><b>5:30</b><span>The promise</span></li>
+    <li><b>7:00</b><span>Dinner by candlelight</span></li>
+    <li><b>9:30</b><span>Dancing till late</span></li>
+   </ol>
+  </div>
+ </div>
+</section>
+
+<div class="lace-band" aria-hidden="true"></div>
+
+<section class="moments damask center" aria-label="Moments so far">
+ <div class="wrap">
+  <h2 class="title">Moments <em>so far</em></h2>
+  <p class="sub">The glances, journeys and quiet celebrations that shaped everything we're about to begin.</p>
+  <div class="tiles">
+   <figure><div class="gframe rect"><div class="pic"><img class="bw" data-ph="hands" alt="Holding hands"></div><img class="border" src="/assets/bordeaux/frame.webp" alt=""></div><figcaption>the yes</figcaption></figure>
+   <figure><div class="gframe rect"><div class="pic tint"><img data-ph="seaside" alt="By the sea"></div><img class="border" src="/assets/bordeaux/frame.webp" alt=""></div><figcaption>wrong ferry</figcaption></figure>
+   <figure><div class="gframe rect"><div class="pic"><img class="bw" data-ph="sunset" alt="Watching the sunset"></div><img class="border" src="/assets/bordeaux/frame.webp" alt=""></div><figcaption>that sunset</figcaption></figure>
+   <figure><div class="gframe rect"><div class="pic tint"><img data-ph="wheat" alt="In a wheat field"></div><img class="border" src="/assets/bordeaux/frame.webp" alt=""></div><figcaption>long walks</figcaption></figure>
+  </div>
+ </div>
+</section>
+
+<section class="song silk center" aria-label="Our song">
+ <div class="narrow">
+  <div class="kicker">press play</div>
+  <h2 class="title">Our <em>song</em></h2>
+  <div class="ticket">
+   <div class="tint"><img data-ph="sunset" alt="Album cover"></div>
+   <div><h3>Slow Mornings</h3><div class="by">the one from our first drive</div><button type="button"><svg width="12" height="12" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6 4v16l14-8z"/></svg>Play on Spotify</button></div>
+  </div>
+ </div>
+</section>
+
+<div class="lace-band" aria-hidden="true"></div>
+
+<section class="end damask" aria-label="Closing">
+ <div class="gframe ovalf"><div class="pic"><img class="bw" data-ph="steps" alt="Meera and Aarav"></div><img class="border" src="/assets/bordeaux/oval.webp" alt=""></div>
+ <h2 class="script goldtext">Meera &amp; Aarav</h2>
+ <div class="date">14 February 2027, Udaipur</div>
+ <img class="seal" src="/assets/bordeaux/seal.webp" alt="">
+ <div class="credit">Made with <a href="/">Keepsake</a></div>
+</section>
+</main>
+
+<script>
+// demo photos
+document.querySelectorAll("[data-ph]").forEach(i => { i.src = PH[i.dataset.ph]; i.decoding = "async"; });
+
+// rose petals drifting down the page
+(function () {
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const box = document.getElementById("petals"), srcs = [0,1,2,3,4,5,6].map(i => `/assets/bordeaux/petal${i}.webp`);
+  const n = innerWidth < 600 ? 9 : 14;
+  for (let i = 0; i < n; i++) {
+    const p = new Image(); p.src = srcs[i % srcs.length]; p.alt = "";
+    p.style.left = (Math.random() * 100) + "vw";
+    p.style.setProperty("--s", (18 + Math.random() * 22) + "px");
+    p.style.setProperty("--d", (11 + Math.random() * 10) + "s");
+    p.style.setProperty("--delay", (-Math.random() * 20) + "s");
+    p.style.setProperty("--sway", ((Math.random() * 60) - 30) + "px");
+    box.appendChild(p);
+  }
+})();
+
+// moments that happen once, when a section comes into view
+const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("seen"); io.unobserve(e.target); } }), { threshold: .35 });
+document.querySelectorAll(".letter,.datesec").forEach(s => io.observe(s));
+
+// tap the envelope to unfold the letter
+const letter = document.getElementById("letter"), env = document.getElementById("envBtn");
+env.addEventListener("click", () => {
+  const open = !letter.classList.contains("open");
+  letter.classList.add("seen"); letter.classList.toggle("open", open); env.setAttribute("aria-expanded", open);
+  env.querySelector("small").textContent = open ? "tap to close" : "tap to open";
+  if (open) setTimeout(() => document.getElementById("note").scrollIntoView({ behavior: "smooth", block: "center" }), 450);
+});
+</script>
+</body>
+</html>
