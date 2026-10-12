@@ -3,6 +3,14 @@ const auth = require("./customer-auth");
 const crypto = require("crypto");
 const idPattern = /^[a-z0-9]{8,16}$/i;
 const clip = (v, n) => String(v == null ? "" : v).replace(/[<>]/g, "").trim().slice(0, n);
+// Delivery status of the most recent NFC card order on a memory, if any.
+async function shipStatus(m) {
+  for (const oid of [...(m.orders || [])].reverse()) {
+    const o = await db.getj("order:" + oid);
+    if (o && o.plan === "nfc" && o.status === "paid") return o.ship || "to-ship";
+  }
+  return "";
+}
 module.exports = async (req, res) => {
   if (!db.ok()) return db.reply(res, 501, { error: "Memory storage is not configured yet." });
   try {
@@ -12,8 +20,15 @@ module.exports = async (req, res) => {
       if (!idPattern.test(id)) return db.reply(res, 400, { error: "Invalid memory link." });
       const memory = await db.getj("customer-memory:" + id);
       if (!memory) return db.reply(res, 404, { error: "Memory not found." });
-      await db.cmd("INCR", "customer-memory-views:" + id);
-      return db.reply(res, 200, { id, data: memory.data, title: memory.title, created: memory.created });
+      // Cards saved before payments existed have no "paid" field and stay active.
+      const active = memory.paid !== false;
+      const viewer = await auth.currentUser(req), isOwner = !!viewer && viewer.id === memory.owner;
+      if (!active) {
+        if (!isOwner) return db.reply(res, 402, { error: "This keepsake isn't active yet.", inactive: true });
+        return db.reply(res, 200, { id, data: memory.data, title: memory.title, created: memory.created, active: false, owner: true });
+      }
+      if (!isOwner) await db.cmd("INCR", "customer-memory-views:" + id);
+      return db.reply(res, 200, { id, data: memory.data, title: memory.title, created: memory.created, active: true });
     }
     const user = await auth.currentUser(req);
     if (!user) return db.reply(res, 401, { error: "Please log in to manage your memories." });
@@ -22,7 +37,7 @@ module.exports = async (req, res) => {
       const memories = (await Promise.all(ids.map(async id => {
         const m = await db.getj("customer-memory:" + id);
         if (!m || m.owner !== user.id) return null;
-        return { id, title: m.title || "Our Memories", created: m.created, updated: m.updated || m.created, views: +(await db.cmd("GET", "customer-memory-views:" + id)) || 0 };
+        return { id, title: m.title || "Our Memories", created: m.created, updated: m.updated || m.created, views: +(await db.cmd("GET", "customer-memory-views:" + id)) || 0, active: m.paid !== false, plan: m.plan || "", ship: await shipStatus(m) };
       }))).filter(Boolean).sort((a, b) => b.created - a.created);
       return db.reply(res, 200, { memories });
     }
@@ -32,10 +47,13 @@ module.exports = async (req, res) => {
         return db.reply(res, 400, { error: "This memory is empty or too large. Reduce its content and try again." });
       const id = crypto.randomBytes(8).toString("hex");
       const now = Date.now();
-      const memory = { owner: user.id, ownerName: user.name, title: clip(data.t || "Our Memories", 80) || "Our Memories", data, created: now, updated: now };
+      // Limit unpaid drafts so storage can't be filled for free.
+      const ids = await db.cmd("SMEMBERS", "customer-memories:" + user.id);
+      if (ids.length >= 60) return db.reply(res, 429, { error: "You have a lot of saved cards. Delete a few unused ones first." });
+      const memory = { owner: user.id, ownerName: user.name, title: clip(data.t || "Our Memories", 80) || "Our Memories", data, created: now, updated: now, paid: false };
       await db.setj("customer-memory:" + id, memory, "NX");
       await db.cmd("SADD", "customer-memories:" + user.id, id);
-      return db.reply(res, 201, { id, url: "/m/" + id, title: memory.title, created: now });
+      return db.reply(res, 201, { id, url: "/m/" + id, title: memory.title, created: now, active: false });
     }
     if (req.method === "PUT") {
       const b = req.body || {}, id = String(b.id || ""), data = b.data;
@@ -46,7 +64,7 @@ module.exports = async (req, res) => {
       if (!memory || memory.owner !== user.id) return db.reply(res, 404, { error: "Memory not found in your account." });
       memory.data = data; memory.title = clip(data.t || "Our Memories", 80) || "Our Memories"; memory.updated = Date.now();
       await db.setj(key, memory);
-      return db.reply(res, 200, { id, url: "/m/" + id, title: memory.title, updated: memory.updated });
+      return db.reply(res, 200, { id, url: "/m/" + id, title: memory.title, updated: memory.updated, active: memory.paid !== false });
     }
     if (req.method === "DELETE") {
       const id = String(q.id || (req.body || {}).id || "");

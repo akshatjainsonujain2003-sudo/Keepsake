@@ -27,6 +27,20 @@ module.exports = async (req, res) => {
       await db.cmd("DEL", "shopimgs:" + b.key); await db.cmd("DEL", "shopcards:" + b.key); await db.cmd("DEL", "shop:" + b.key); await db.cmd("SREM", "shops", b.key);
       return db.reply(res, 200, { ok: true });
     }
+    if (b.action === "orders") {
+      // Most recent 200 paid customer orders, newest first.
+      const ids = await db.cmd("ZRANGE", "orders-paid", 0, 199, "REV");
+      const orders = (await Promise.all(ids.map(async id => { const o = await db.getj("order:" + id); return o && { id, ...o }; }))).filter(Boolean);
+      return db.reply(res, 200, { orders });
+    }
+    if (b.action === "ship") {
+      const id = String(b.order || "");
+      if (!/^order_\w+$/.test(id)) return db.reply(res, 400, { error: "Bad order." });
+      const o = await db.getj("order:" + id);
+      if (!o || o.plan !== "nfc" || o.status !== "paid") return db.reply(res, 404, { error: "Order not found." });
+      o.ship = b.undo ? "to-ship" : "shipped"; o.tracking = String(b.tracking || o.tracking || "").slice(0, 120); o.shippedAt = b.undo ? null : Date.now();
+      await db.setj("order:" + id, o); return db.reply(res, 200, { ok: true });
+    }
     if (b.action === "leads") {
       const rows = (await db.cmd("LRANGE", "leads", 0, 99)).map(x => { try { return JSON.parse(x); } catch (e) { return null; } }).filter(Boolean);
       return db.reply(res, 200, { leads: rows });
