@@ -28,7 +28,7 @@ function readAddress(a) {
 module.exports = async (req, res) => {
   try {
     if (req.method === "GET") {
-      return db.reply(res, 200, { ready: pay.configured() && db.ok(), currency: "INR", ...pay.catalog() });
+      return db.reply(res, 200, { ready: pay.configured() && db.ok(), free: !pay.configured(), currency: "INR", ...pay.catalog() });
     }
     if (req.method !== "POST") { res.setHeader("Allow", "GET, POST"); return db.reply(res, 405, { error: "Method not allowed." }); }
     if (!db.ok()) return db.reply(res, 501, { error: "Storage is not configured yet." });

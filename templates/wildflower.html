@@ -34,6 +34,8 @@ section{position:relative;padding:clamp(80px,12vw,150px) 0}
 
 /* a photo inside a cut-out frame; --x/--y/--w/--h = the frame's window */
 .pf{position:relative}
+.pf>.pic img:not([src]){visibility:hidden}
+#spot iframe{display:block;width:100%;border:0;border-radius:12px;margin-top:16px}
 .pf>.pic{position:absolute;left:var(--x);top:var(--y);width:var(--w);height:var(--h);overflow:hidden;background:#ddd2c1}
 .pf>.pic img{width:100%;height:100%;object-fit:cover}
 .pf>.edge{position:relative;z-index:2;width:100%;pointer-events:none;filter:drop-shadow(0 12px 18px #3a33242e)}
@@ -283,67 +285,54 @@ section{position:relative;padding:clamp(80px,12vw,150px) 0}
 
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}.js .chapter:not(.seen) .pf{opacity:1;transform:none}}
 </style>
+<script src="/assets/ks-templates.v1.js"></script>
 </head>
 <body>
-<script>
-document.documentElement.classList.add("js");
-// Demo photos. Customers replace these with their own.
-const PH = {
-  heroTall: "https://www.figma.com/api/mcp/asset/2748263e-1118-431f-8025-5089c39cd40f.png",
-  heroWide: "https://www.figma.com/api/mcp/asset/a5cd53e9-c42f-472a-935c-e8b8e877ac18.png",
-  flatlay: "https://www.figma.com/api/mcp/asset/9b8065f7-e8f3-4a16-a9e3-3ad9435aeaa5.png",
-  sunset: "https://www.figma.com/api/mcp/asset/0a49e7a2-43b4-4aa2-a557-72993a4d18b4.png",
-  cafe: "https://www.figma.com/api/mcp/asset/8b78f683-febb-442d-bdb3-1ad52739579c.png",
-  seaside: "https://www.figma.com/api/mcp/asset/93aa1a90-ca0d-4fa6-9f5d-28e2c63175a4.png",
-  rain: "https://www.figma.com/api/mcp/asset/76f33412-7a51-4a97-9fee-948756d562c6.png",
-  wheat: "https://www.figma.com/api/mcp/asset/c98f48dd-1f8b-4159-9d49-224f2df2f134.png",
-  lakedance: "/assets/wildflower/lakedance.webp", lotus: "/assets/wildflower/lotus.webp", twirl: "/assets/wildflower/twirl.webp"
-};
-</script>
+<script>document.documentElement.classList.add("js");</script>
 
-<header class="bar"><div class="wrap"><b>M &amp; A</b><nav aria-label="Sections"><a href="#story">Our story</a><a href="#moments">Moments</a><a href="#letter">A letter</a><a href="#day">The day</a></nav></div></header>
+<header class="bar"><div class="wrap"><b id="initials">M &amp; A</b><nav aria-label="Sections"><a href="#story">Our story</a><a href="#moments">Moments</a><a href="#letter">A letter</a><a href="#day">The day</a></nav></div></header>
 
 <main>
-<section class="hero" aria-label="Meera and Aarav">
+<section class="hero" aria-label="The two of you">
  <svg class="bfly b1" viewBox="0 0 60 44" aria-hidden="true"><g class="w wl"><path d="M29 20C24 4 6 0 4 12c-1 9 12 12 25 9z" fill="#d9a46b"/><path d="M29 23C19 25 8 34 13 40c5 4 13-5 16-17z" fill="#e8bd86"/><circle cx="14" cy="12" r="2.4" fill="#fff8ec"/></g><g class="w wr"><path d="M31 20C36 4 54 0 56 12c1 9-12 12-25 9z" fill="#d9a46b"/><path d="M31 23C41 25 52 34 47 40c-5 4-13-5-16-17z" fill="#e8bd86"/><circle cx="46" cy="12" r="2.4" fill="#fff8ec"/></g><path d="M30 12v22" stroke="#5b4630" stroke-width="2.4" stroke-linecap="round"/><path d="M30 12c-2-5-5-7-7-8M30 12c2-5 5-7 7-8" stroke="#5b4630" stroke-width="1" fill="none"/></svg><svg class="bfly b2" viewBox="0 0 60 44" aria-hidden="true"><g class="w wl"><path d="M29 20C24 4 6 0 4 12c-1 9 12 12 25 9z" fill="#d9a46b"/><path d="M29 23C19 25 8 34 13 40c5 4 13-5 16-17z" fill="#e8bd86"/><circle cx="14" cy="12" r="2.4" fill="#fff8ec"/></g><g class="w wr"><path d="M31 20C36 4 54 0 56 12c1 9-12 12-25 9z" fill="#d9a46b"/><path d="M31 23C41 25 52 34 47 40c-5 4-13-5-16-17z" fill="#e8bd86"/><circle cx="46" cy="12" r="2.4" fill="#fff8ec"/></g><path d="M30 12v22" stroke="#5b4630" stroke-width="2.4" stroke-linecap="round"/><path d="M30 12c-2-5-5-7-7-8M30 12c2-5 5-7 7-8" stroke="#5b4630" stroke-width="1" fill="none"/></svg>
  <div class="wrap">
   <div class="collage">
    <img class="deco plume sway" src="/assets/wildflower/plume.webp" alt="">
-   <div class="pf ribbon tallf"><div class="pic"><img data-ph="heroTall" alt="Meera and Aarav among the olive trees"></div><img class="edge" src="/assets/wildflower/ribbonframe.webp" alt=""></div>
-   <div class="pf polaroid wide"><div class="pic"><img data-ph="lakedance" alt="Dancing by the lake at sunset"></div><img class="edge" src="/assets/wildflower/polaroid.webp" alt=""></div>
+   <div class="pf ribbon tallf"><div class="pic"><img data-ph="photos.hero" alt=""></div><img class="edge" src="/assets/wildflower/ribbonframe.webp" alt=""></div>
+   <div class="pf polaroid wide"><div class="pic"><img data-ph="photos.hero2" alt=""></div><img class="edge" src="/assets/wildflower/polaroid.webp" alt=""></div>
    <img class="deco stamp" src="/assets/wildflower/stamp.webp" alt="">
    <img class="deco gyp sway slow" src="/assets/wildflower/gyp.webp" alt="">
    <svg class="doodle arrow draw" viewBox="0 0 74 60" style="--len:120;--at:1.5s" aria-hidden="true"><path d="M70 52C52 54 26 46 14 18"/><path d="M8 26 13 16 24 20"/></svg>
-   <span class="anno write" style="--at:1.9s">us, obviously</span>
+   <span class="anno write" id="anno" style="--at:1.9s">us, obviously</span>
   </div>
   <div class="hero-text">
-   <div class="label">Five years, and counting</div>
-   <h1><span>Meera</span><span class="amp">&amp;</span><span>Aarav</span></h1>
-   <div class="when"><span>14.02.2027</span><i>Udaipur, Rajasthan<svg class="doodle hrt draw" viewBox="0 0 30 28" style="--len:90;--at:2.4s" aria-hidden="true"><path d="M15 25C5 18 2 12 4 7c2-5 9-5 11 1 2-6 9-6 11-1 2 5-1 11-11 18z"/></svg></i></div>
+   <div class="label" id="tagline">Five years, and counting</div>
+   <h1><span id="nA">Meera</span><span class="amp">&amp;</span><span id="nB">Aarav</span></h1>
+   <div class="when"><span id="dDots">14.02.2027</span><i><span id="place">Udaipur, Rajasthan</span><svg class="doodle hrt draw" viewBox="0 0 30 28" style="--len:90;--at:2.4s" aria-hidden="true"><path d="M15 25C5 18 2 12 4 7c2-5 9-5 11 1 2-6 9-6 11-1 2 5-1 11-11 18z"/></svg></i></div>
   </div>
  </div>
 </section>
 
 <section class="cal" id="date" aria-label="Our date">
  <div class="wrap">
-  <div class="photo"><img class="f" data-ph="flatlay" alt="Dried flowers, a note and two rings on linen" loading="lazy"></div>
+  <div class="photo"><img class="f" data-ph="photos.calendar" alt="" loading="lazy"></div>
   <div class="sheet">
    <img class="deco olive" src="/assets/wildflower/olive.webp" alt="">
-   <div class="month">February <small>2027</small></div>
+   <div class="month"><span id="month">February</span> <small id="year">2027</small></div>
    <div class="grid" id="grid"></div>
-   <p class="calnote">save this one, it's ours</p>
+   <p class="calnote" id="calnote">save this one, it's ours</p>
   </div>
  </div>
 </section>
 
 <section class="song" aria-label="Our song">
  <div class="narrow">
-  <blockquote>Somewhere between the first coffee and the last train home, you became my favourite place.</blockquote>
+  <blockquote id="quote"></blockquote>
   <div class="player" id="player">
    <img class="deco lilies" src="/assets/wildflower/lilies.webp" alt="">
-   <div class="disc"><img class="rec" src="/assets/wildflower/vinyl.webp" alt=""><img class="cover" data-ph="sunset" alt="Album cover"></div>
+   <div class="disc"><img class="rec" src="/assets/wildflower/vinyl.webp" alt=""><img class="cover" data-ph="photos.cover" alt="Album cover"></div>
    <div>
-    <h3>Slow Mornings</h3>
+    <h3 id="songTitle">Slow Mornings</h3>
     <div class="by">Our song</div>
     <div class="prog"><b id="bar"></b></div>
     <div class="ctrl">
@@ -354,40 +343,32 @@ const PH = {
     </div>
    </div>
   </div>
-  <p class="cap">Press play. It's the one from our first drive.</p>
+  <div id="spot"></div>
+  <p class="cap" id="songCap"></p>
  </div>
 </section>
 
-<section class="count" aria-label="Countdown">
+<section class="count" id="countSec" aria-label="Countdown">
  <img class="deco pressed" src="/assets/wildflower/pressed.webp" alt="">
  <div class="wrap">
-  <div><div class="label">Until 14 February 2027</div><h2>Not long now</h2></div>
+  <div><div class="label" id="countLabel">Until 14 February 2027</div><h2>Not long now</h2></div>
   <div class="nums"><div><b id="cd">0</b><span>days</span></div><div><b id="ch">0</b><span>hours</span></div><div><b id="cm">0</b><span>minutes</span></div><div><b id="cs">0</b><span>seconds</span></div></div>
  </div>
 </section>
 
-<div class="marq" aria-hidden="true"><div class="mq-in"><span>forever</span><i>✿</i><span>you</span><i>✿</i><span>home</span><i>✿</i><span>always</span><i>✿</i><span>us</span><i>✿</i><span>every day</span><i>✿</i><span>my person</span><i>✿</i><span>still you</span><i>✿</i><span>forever</span><i>✿</i><span>you</span><i>✿</i><span>home</span><i>✿</i><span>always</span><i>✿</i><span>us</span><i>✿</i><span>every day</span><i>✿</i><span>my person</span><i>✿</i><span>still you</span><i>✿</i></div></div>
+<div class="marq" aria-hidden="true"><div class="mq-in" id="words"></div></div>
 
 <section class="story" id="story">
  <div class="wrap">
   <h2>Our story</h2>
-  <article class="chapter"><div class="ph"><div class="pf polaroid"><div class="pic"><img data-ph="cafe" alt="Laughing at a cafe table" loading="lazy"></div><img class="edge" src="/assets/wildflower/polaroid.webp" alt=""></div></div><div><div class="n">I.</div><h3>The beginning</h3><p>A borrowed table at a crowded café, two coffees going cold, and a conversation neither of us wanted to end.</p><time>March 2022</time></div></article>
-  <article class="chapter"><div class="ph"><div class="pf polaroid"><div class="pic"><img data-ph="seaside" alt="Sitting by the sea" loading="lazy"></div><img class="edge" src="/assets/wildflower/polaroid.webp" alt=""></div></div><div><div class="n">II.</div><h3>The first trip</h3><p>Salt in our hair, the wrong ferry twice, and the moment we knew we travelled well together.</p><time>August 2023</time></div></article>
-  <article class="chapter"><div class="ph"><div class="pf polaroid"><div class="pic"><img data-ph="lotus" alt="Hands holding a lotus" loading="lazy"></div><img class="edge" src="/assets/wildflower/polaroid.webp" alt=""></div></div><div><div class="n">III.</div><h3>The question</h3><p>Somewhere along the way, forever stopped feeling like a distant idea and started feeling like us.</p><time>December 2025</time></div></article>
-  <article class="chapter"><div class="ph"><div class="pf polaroid"><div class="pic"><img data-ph="lakedance" alt="Dancing by the lake" loading="lazy"></div><img class="edge" src="/assets/wildflower/polaroid.webp" alt=""></div></div><div><div class="n">IV.</div><h3>Still choosing you</h3><p>Every ordinary evening, every small win, every quiet Sunday. This is the chapter we're writing now.</p><time>Today</time></div></article>
+  <div id="chapters"></div>
  </div>
 </section>
 
 <section class="moments" id="moments">
  <img class="deco dried sway slow" src="/assets/wildflower/dried.webp" alt="">
- <div class="wrap head"><h2>Little moments</h2><p>The glances, the detours, the days we didn't want to end.</p></div>
- <div class="strip" tabindex="0" aria-label="Photos, swipe to see more">
-  <figure><img data-ph="twirl" alt="Twirling in a field" loading="lazy"><figcaption>One more spin</figcaption></figure>
-  <figure><img data-ph="wheat" alt="In a wheat field" loading="lazy"><figcaption>The long drive to nowhere</figcaption></figure>
-  <figure><img data-ph="rain" alt="Under an umbrella in the rain" loading="lazy"><figcaption>One umbrella, two people</figcaption></figure>
-  <figure><img data-ph="sunset" alt="Watching the sunset" loading="lazy"><figcaption>That sunset we almost missed</figcaption></figure>
-  <figure><img data-ph="heroWide" alt="Walking on a garden path" loading="lazy"><figcaption>Your hand in mine</figcaption></figure>
- </div>
+ <div class="wrap head"><h2>Little moments</h2><p id="momentsIntro"></p></div>
+ <div class="strip" id="strip" tabindex="0" aria-label="Photos, swipe to see more"></div>
 </section>
 
 <section class="love" id="love">
@@ -401,15 +382,14 @@ const PH = {
 
 <section class="letter" id="letter">
  <div class="label">For you, from me</div>
- <h2>Open when you miss me</h2>
+ <h2 id="letterTitle">Open when you miss me</h2>
  <div class="stack">
   <img class="handletter" src="/assets/wildflower/loveletter.webp" alt="">
   <article class="note" id="note">
    <img class="deco stamp" src="/assets/wildflower/stamp.webp" alt="">
-   <h3>My love,</h3>
-   <p>You make ordinary days feel like a holiday. You remember the small things, you laugh at my worst jokes, and you make every room feel like home.</p>
-   <p>Thank you for five years of choosing me, on the easy days and the hard ones. I'd choose you again, every single time.</p>
-   <div class="sig">Yours, Aarav</div>
+   <h3 id="greeting">My love,</h3>
+   <div id="letterBody"></div>
+   <div class="sig" id="sign">Yours, Aarav</div>
   </article>
   <button class="envbtn" type="button" id="envBtn" aria-controls="note" aria-expanded="false"><img src="/assets/wildflower/envelope.webp" alt="An envelope full of flowers"><small>Tap to open</small></button>
  </div>
@@ -421,18 +401,13 @@ const PH = {
   <div class="daywrap">
    <img class="deco bouquet sway slow" src="/assets/wildflower/bouquet.webp" alt="">
    <h2>The day</h2>
-   <ol>
-    <li><b>4:00 pm</b><span>Welcome drinks</span></li>
-    <li><b>5:30 pm</b><span>The ceremony</span></li>
-    <li><b>7:00 pm</b><span>Dinner under the stars</span></li>
-    <li><b>9:30 pm</b><span>Dancing, until they stop us</span></li>
-   </ol>
+   <ol id="sched"></ol>
   </div>
   <div class="place">
-   <img class="v" data-ph="wheat" alt="The venue grounds" loading="lazy">
-   <h3>The Garden Courtyard</h3>
-   <p>Lake Pichola, Udaipur, Rajasthan</p>
-   <a class="btn" href="https://maps.google.com/?q=Udaipur" target="_blank" rel="noopener">Open in Maps</a>
+   <img class="v" data-ph="venue.photo" alt="" loading="lazy">
+   <h3 id="venueName"></h3>
+   <p id="venueAddr"></p>
+   <a class="btn" id="venueMap" target="_blank" rel="noopener">Open in Maps</a>
   </div>
  </div>
 </section>
@@ -440,99 +415,150 @@ const PH = {
 <section class="end" aria-label="Closing">
  <img class="deco dried sway" src="/assets/wildflower/dried.webp" alt="">
  <img class="deco plume sway slow" src="/assets/wildflower/plume.webp" alt="">
- <h2>Meera<br>&amp; Aarav</h2>
- <div class="label">14 February 2027, Udaipur</div>
+ <h2 id="endNames"></h2>
+ <div class="label" id="endLabel"></div>
  <div class="credit">Made with <a href="/">Keepsake</a></div>
 </section>
 </main>
 
 <script>
-// photos
-document.querySelectorAll("[data-ph]").forEach(i => { i.src = PH[i.dataset.ph]; i.decoding = "async"; });
-
-// calendar for the chosen date
-const DATE = new Date("2027-02-14T17:30:00+05:30");
-(function () {
-  const g = document.getElementById("grid"), y = DATE.getFullYear(), m = DATE.getMonth(), day = DATE.getDate();
-  ["Mo","Tu","We","Th","Fr","Sa","Su"].forEach(d => g.insertAdjacentHTML("beforeend", `<span class="d">${d}</span>`));
-  const lead = (new Date(y, m, 1).getDay() + 6) % 7, days = new Date(y, m + 1, 0).getDate();
-  for (let i = 0; i < lead; i++) g.insertAdjacentHTML("beforeend", "<span></span>");
-  for (let d = 1; d <= days; d++) g.insertAdjacentHTML("beforeend", d === day
-    ? `<span class="mark" aria-label="${d}, our day">${d}<svg viewBox="0 0 58 46" aria-hidden="true"><path d="M30 4C14 3 3 12 4 24c1 12 15 19 29 17 13-2 22-10 21-21C53 8 40 2 24 6"/></svg></span>`
-    : `<span>${d}</span>`);
-})();
-
-// things that happen once, as they come into view
+const K = KSKit, $ = id => document.getElementById(id);
+let DATE = new Date();
+const HEART = '<svg viewBox="0 0 30 28" aria-hidden="true"><path d="M15 25C5 18 2 12 4 7c2-5 9-5 11 1 2-6 9-6 11-1 2 5-1 11-11 18z" fill="none" stroke="currentColor" stroke-width="2"/></svg>';
 const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("seen"); io.unobserve(e.target); } }), { threshold: .3 });
-document.querySelectorAll(".cal,.chapter").forEach(s => io.observe(s));
+io.observe(document.querySelector(".cal"));
+const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+
+function render(D, first) {
+  DATE = K.date(D.date);
+  const a = K.str(D.a, 30), b = K.str(D.b, 30);
+  document.title = `${a} & ${b} · Keepsake`;
+  $("initials").textContent = `${a.charAt(0)} & ${b.charAt(0)}`;
+  $("nA").textContent = a; $("nB").textContent = b;
+  $("tagline").textContent = K.str(D.tagline, 60);
+  $("dDots").textContent = K.fmt.dots(DATE); $("place").textContent = K.str(D.place, 60);
+  $("anno").textContent = K.str(D.note, 30); $("anno").hidden = !D.note;
+  document.querySelectorAll("[data-ph]").forEach(i => K.setImg(i, K.get(D, i.dataset.ph)));
+
+  // calendar
+  $("month").textContent = K.fmt.month(DATE); $("year").textContent = DATE.getFullYear();
+  const g = $("grid"); g.textContent = "";
+  ["Mo","Tu","We","Th","Fr","Sa","Su"].forEach(x => g.appendChild(el("span", "d", x)));
+  const y = DATE.getFullYear(), m = DATE.getMonth(), lead = (new Date(y, m, 1).getDay() + 6) % 7, days = new Date(y, m + 1, 0).getDate();
+  for (let i = 0; i < lead; i++) g.appendChild(el("span"));
+  for (let d = 1; d <= days; d++) {
+    const s = el("span", d === DATE.getDate() ? "mark" : "", String(d));
+    if (d === DATE.getDate()) { s.setAttribute("aria-label", d + ", our day"); s.insertAdjacentHTML("beforeend", '<svg viewBox="0 0 58 46" aria-hidden="true"><path d="M30 4C14 3 3 12 4 24c1 12 15 19 29 17 13-2 22-10 21-21C53 8 40 2 24 6"/></svg>'); }
+    g.appendChild(s);
+  }
+  $("calnote").textContent = K.str(D.calnote, 50);
+
+  // song
+  $("quote").textContent = K.str(D.quote, 220); $("quote").hidden = !D.quote;
+  $("songTitle").textContent = K.str(D.song && D.song.title, 50);
+  $("songCap").textContent = K.str(D.song && D.song.cap, 90);
+  const sp = K.spotify(D.song && D.song.url), spot = $("spot");
+  if (!sp) spot.textContent = "";
+  else if (!spot.firstChild || spot.firstChild.src !== sp.src) { spot.textContent = ""; const f = el("iframe"); f.src = sp.src; f.height = sp.h; f.loading = "lazy"; f.allow = "encrypted-media; clipboard-write"; f.title = "Our song on Spotify"; spot.appendChild(f); }
+
+  // countdown + words
+  $("countSec").hidden = D.countdown === false;
+  $("countLabel").textContent = "Until " + K.fmt.long(DATE);
+  const w = $("words"); w.textContent = "";
+  const list = K.words(D.words);
+  for (let r = 0; r < 2; r++) list.forEach(x => { w.appendChild(el("span", "", x)); w.appendChild(el("i", "", "✿")); });
+
+  // story
+  const ch = $("chapters"); ch.textContent = "";
+  (D.story || []).slice(0, 6).forEach((c, i) => {
+    const art = el("article", "chapter" + (first ? "" : " seen"));
+    art.innerHTML = '<div class="ph"><div class="pf polaroid"><div class="pic"><img alt="" loading="lazy"></div><img class="edge" src="/assets/wildflower/polaroid.webp" alt=""></div></div><div><div class="n"></div><h3></h3><p></p><time></time></div>';
+    K.setImg(art.querySelector(".pic img"), c.photo);
+    art.querySelector(".n").textContent = K.roman(i) + ".";
+    art.querySelector("h3").textContent = K.str(c.title, 40);
+    art.querySelector("p").textContent = K.str(c.text, 300);
+    art.querySelector("time").textContent = K.str(c.when, 30);
+    ch.appendChild(art); if (first) io.observe(art);
+  });
+
+  // moments
+  $("momentsIntro").textContent = K.str(D.momentsIntro, 120);
+  const st = $("strip"); st.textContent = "";
+  (D.moments || []).filter(x => K.img(x.photo)).slice(0, 10).forEach(x => {
+    const f = el("figure"), im = el("img"); im.alt = K.str(x.cap, 60); im.loading = "lazy"; im.src = K.img(x.photo);
+    f.appendChild(im); f.appendChild(el("figcaption", "", K.str(x.cap, 60))); st.appendChild(f);
+  });
+  $("moments").hidden = !st.children.length;
+
+  // sticky notes
+  const C = ["#F4E6B9", "#EBD6CF", "#DCE3CC", "#F2DCC4", "#E4DCEB", "#F7F0E2"], R = [-3, 2.2, -1.5, 2.8, -2.4, 1.6];
+  const box = $("notes"); box.textContent = "";
+  (D.love || []).map(t => K.str(t, 90)).filter(Boolean).slice(0, 9).forEach((t, i) => {
+    const bt = el("button", "sn"); bt.type = "button";
+    bt.style.setProperty("--c", C[i % C.length]); bt.style.setProperty("--r", R[i % R.length] + "deg");
+    bt.setAttribute("aria-pressed", "false"); bt.setAttribute("aria-label", `Note ${i + 1}: ${t}`);
+    bt.innerHTML = `<span class="sn-in"><span class="sn-f"><b>No. ${i + 1}</b>${HEART}<small>tap me</small></span><span class="sn-b"><span></span></span></span>`;
+    bt.querySelector(".sn-b span").textContent = t;
+    bt.onclick = () => { const on = bt.classList.toggle("on"); bt.setAttribute("aria-pressed", on); };
+    box.appendChild(bt);
+  });
+  $("love").hidden = !box.children.length;
+
+  // letter, split into words so it can appear as if being written
+  $("letterTitle").textContent = K.str(D.letterTitle, 50);
+  $("greeting").textContent = K.str(D.greeting, 40);
+  $("sign").textContent = K.str(D.sign, 40);
+  const body = $("letterBody"); body.textContent = ""; let n = 0;
+  K.paras(D.letter).forEach(t => {
+    const p = el("p");
+    t.split(/(\s+)/).forEach(x => { if (/^\s+$/.test(x)) { p.append(x); return; } const s = el("span", "w", x); s.style.setProperty("--i", n++); p.appendChild(s); });
+    body.appendChild(p);
+  });
+  $("note").style.setProperty("--n", n);
+
+  // the day
+  $("day").hidden = D.showDay === false;
+  const ol = $("sched"); ol.textContent = "";
+  (D.schedule || []).filter(x => x.time || x.what).slice(0, 8).forEach(x => { const li = el("li"); li.appendChild(el("b", "", K.str(x.time, 14))); li.appendChild(el("span", "", K.str(x.what, 50))); ol.appendChild(li); });
+  const v = D.venue || {};
+  $("venueName").textContent = K.str(v.name, 50); $("venueAddr").textContent = K.str(v.address, 90);
+  const map = K.link(v.map); $("venueMap").hidden = !map; if (map) $("venueMap").href = map;
+
+  // ending
+  const en = $("endNames"); en.textContent = ""; en.append(a, el("br"), "& " + b);
+  $("endLabel").textContent = K.fmt.long(DATE) + (D.place ? ", " + K.str(D.place, 60) : "");
+}
 
 // countdown
 (function tick() {
   let s = Math.max(0, Math.floor((DATE - Date.now()) / 1000));
-  const set = (id, v) => document.getElementById(id).textContent = v;
-  set("cd", Math.floor(s / 86400)); s %= 86400; set("ch", String(Math.floor(s / 3600)).padStart(2, "0")); s %= 3600;
-  set("cm", String(Math.floor(s / 60)).padStart(2, "0")); set("cs", String(s % 60).padStart(2, "0"));
+  const put = (id, v) => $(id).textContent = v;
+  put("cd", Math.floor(s / 86400)); s %= 86400; put("ch", String(Math.floor(s / 3600)).padStart(2, "0")); s %= 3600;
+  put("cm", String(Math.floor(s / 60)).padStart(2, "0")); put("cs", String(s % 60).padStart(2, "0"));
   setTimeout(tick, 1000);
 })();
 
-// player: in the live site this plays the couple's Spotify song; here it shows the motion
+// player: spins the record; the real song plays in the Spotify player below it
 (function () {
-  const p = document.getElementById("player"), b = document.getElementById("play"), bar = document.getElementById("bar"), t = document.getElementById("time");
+  const p = $("player"), b = $("play"), bar = $("bar"), t = $("time");
   let on = false, sec = 0, timer = 0; const len = 222;
   b.onclick = () => {
     on = !on; p.classList.toggle("on", on); b.setAttribute("aria-label", on ? "Pause" : "Play");
-    document.getElementById("pi").setAttribute("d", on ? "M6 4h4v16H6zM14 4h4v16h-4z" : "M7 4v16l13-8z");
+    $("pi").setAttribute("d", on ? "M6 4h4v16H6zM14 4h4v16h-4z" : "M7 4v16l13-8z");
     clearInterval(timer);
     if (on) timer = setInterval(() => { sec = (sec + 1) % len; bar.style.width = (sec / len * 100) + "%"; t.textContent = `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, "0")} / 3:42`; }, 1000);
   };
 })();
 
-
-// little things I love about you
-(function () {
-  const LOVE = [
-    "The way you hum when you cook.",
-    "How you always save me the last bite.",
-    "Your terrible jokes. Every single one.",
-    "That you remember my coffee order.",
-    "How safe I feel when you hold my hand.",
-    "You, on a lazy Sunday morning."
-  ];
-  const C = ["#F4E6B9", "#EBD6CF", "#DCE3CC", "#F2DCC4", "#E4DCEB", "#F7F0E2"], R = [-3, 2.2, -1.5, 2.8, -2.4, 1.6];
-  const box = document.getElementById("notes");
-  LOVE.forEach((t, i) => {
-    const b = document.createElement("button");
-    b.type = "button"; b.className = "sn"; b.style.setProperty("--c", C[i % C.length]); b.style.setProperty("--r", R[i % R.length] + "deg");
-    b.setAttribute("aria-pressed", "false");
-    b.innerHTML = `<span class="sn-in"><span class="sn-f"><b>No. ${i + 1}</b><svg viewBox="0 0 30 28" aria-hidden="true"><path d="M15 25C5 18 2 12 4 7c2-5 9-5 11 1 2-6 9-6 11-1 2 5-1 11-11 18z" fill="none" stroke="currentColor" stroke-width="2"/></svg><small>tap me</small></span><span class="sn-b"><span></span></span></span>`;
-    b.querySelector(".sn-b span").textContent = t;
-    b.setAttribute("aria-label", `Note ${i + 1}: ${t}`);
-    b.onclick = () => { const on = b.classList.toggle("on"); b.setAttribute("aria-pressed", on); };
-    box.appendChild(b);
-  });
-})();
-
-// letter: split into words so it can appear as if being written
-(function () {
-  let i = 0;
-  document.querySelectorAll("#note p").forEach(p => {
-    const words = p.textContent.split(/(\s+)/);
-    p.textContent = "";
-    words.forEach(w => {
-      if (/^\s+$/.test(w)) { p.append(w); return; }
-      const s = document.createElement("span"); s.className = "w"; s.style.setProperty("--i", i++); s.textContent = w; p.append(s);
-    });
-  });
-  document.getElementById("note").style.setProperty("--n", i);
-})();
-
 // the flower envelope opens to the letter
 (function () {
-  const sec = document.getElementById("letter"), env = document.getElementById("envBtn");
-  const set = open => { sec.classList.toggle("open", open); env.setAttribute("aria-expanded", open); if (open) setTimeout(() => document.getElementById("note").scrollIntoView({ behavior: "smooth", block: "center" }), 500); };
+  const sec = $("letter"), env = $("envBtn");
+  const set = open => { sec.classList.toggle("open", open); env.setAttribute("aria-expanded", open); if (open) setTimeout(() => $("note").scrollIntoView({ behavior: "smooth", block: "center" }), 500); };
   env.onclick = () => set(true);
-  document.getElementById("reclose").onclick = () => set(false);
+  $("reclose").onclick = () => set(false);
 })();
+
+K.boot("wildflower", render);
 </script>
 </body>
 </html>

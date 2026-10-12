@@ -46,6 +46,9 @@ h2.title em{font-family:var(--script);font-style:normal;font-size:1.15em;margin-
 /* a photo inside a real gold frame. --x/--y/--w/--h = the frame's opening */
 .gframe{position:relative}
 .gframe>.pic{position:absolute;left:var(--x);top:var(--y);width:var(--w);height:var(--h);overflow:hidden;background:#000}
+.gframe>.pic img:not([src]),.tv .screen img:not([src]),.ticket img:not([src]){visibility:hidden}
+#spot iframe{display:block;width:100%;max-width:460px;margin:16px auto 0;border:0;border-radius:12px}
+.ks-preview .gate{display:none!important}
 .gframe>.pic img{width:100%;height:100%;object-fit:cover}
 .gframe>.border{position:relative;z-index:2;width:100%;pointer-events:none;filter:drop-shadow(0 14px 22px #0008)}
 .rect{--x:28%;--y:23%;--w:45%;--h:52.5%}
@@ -247,22 +250,12 @@ html.locked{overflow:hidden}
 
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}.petals{display:none}.env .sheet,.env .on-paper{transform:none}}
 </style>
+<script src="/assets/ks-templates.v1.js"></script>
 </head>
 <body>
 <script>
 document.documentElement.classList.add("js","locked");
-// Demo photos. Customers replace these with their own.
-const PH = {
-  heroTall: "https://www.figma.com/api/mcp/asset/2748263e-1118-431f-8025-5089c39cd40f.png",
-  heroWide: "https://www.figma.com/api/mcp/asset/a5cd53e9-c42f-472a-935c-e8b8e877ac18.png",
-  sunset: "https://www.figma.com/api/mcp/asset/0a49e7a2-43b4-4aa2-a557-72993a4d18b4.png",
-  cafe: "https://www.figma.com/api/mcp/asset/8b78f683-febb-442d-bdb3-1ad52739579c.png",
-  hands: "https://www.figma.com/api/mcp/asset/1066ea2d-ff10-44cd-8786-09b55f985aaa.png",
-  seaside: "https://www.figma.com/api/mcp/asset/93aa1a90-ca0d-4fa6-9f5d-28e2c63175a4.png",
-  steps: "https://www.figma.com/api/mcp/asset/80c674ab-7ebb-4641-8f49-43aad59c2563.png",
-  rain: "https://www.figma.com/api/mcp/asset/76f33412-7a51-4a97-9fee-948756d562c6.png",
-  wheat: "https://www.figma.com/api/mcp/asset/c98f48dd-1f8b-4159-9d49-224f2df2f134.png"
-};
+if (/[?&]preview=1/.test(location.search)) document.documentElement.classList.add("entered");
 </script>
 <div class="petals" aria-hidden="true" id="petals"></div>
 
@@ -270,25 +263,25 @@ const PH = {
  <div class="gate-l"></div><div class="gate-r"></div>
  <div class="gate-in">
   <div class="kicker">a keepsake for</div>
-  <div class="gname script goldtext">Meera</div>
+  <div class="gname script goldtext" id="recipient">Meera</div>
   <button class="gseal" id="gseal" type="button" aria-label="Break the seal to open"><img class="sl" src="/assets/candlelit/seal.webp" alt=""><img class="sr" src="/assets/candlelit/seal.webp" alt=""></button>
   <div class="ghint">tap the seal to open</div>
  </div>
 </div>
 
 <main>
-<section class="hero silk" aria-label="Meera and Aarav">
+<section class="hero silk" aria-label="The two of you">
  <div class="dust" id="dust" aria-hidden="true"></div>
  <div>
-  <div class="kicker">two hearts, one story</div>
-  <h1 class="script goldtext">Meera &amp; Aarav</h1>
+  <div class="kicker" id="tagline">two hearts, one story</div>
+  <h1 class="script goldtext" data-names>Meera &amp; Aarav</h1>
   <div class="stage">
-   <div class="gframe rect"><div class="pic"><img class="bw" data-ph="heroTall" alt="Meera and Aarav"></div><img class="border" src="/assets/candlelit/frame.webp" alt=""></div>
+   <div class="gframe rect"><div class="pic"><img class="bw" data-ph="photos.hero" alt=""></div><img class="border" src="/assets/candlelit/frame.webp" alt=""></div>
    <img class="bow" src="/assets/candlelit/bow.webp" alt="">
    <img class="ring" src="/assets/candlelit/ring.webp" alt="">
   </div>
-  <div class="date">14<span>❦</span>February<span>❦</span>2027</div>
-  <div class="scroll-cue">a letter is waiting for you</div>
+  <div class="date" id="heroDate"></div>
+  <div class="scroll-cue" id="cue">a letter is waiting for you</div>
  </div>
 </section>
 
@@ -299,16 +292,15 @@ const PH = {
  <h2 class="title">For <em>you</em></h2>
  <button class="env" type="button" id="envBtn" aria-expanded="false" aria-controls="note">
   <img class="sheet" src="/assets/candlelit/env-letter.webp" alt="">
-  <span class="on-paper"><b>Dear you,</b><small>tap to open</small></span>
+  <span class="on-paper"><b data-greeting>Dear you,</b><small>tap to open</small></span>
   <img class="pocket" src="/assets/candlelit/env-pocket.webp" alt="">
  </button>
  <div class="unfold"><div>
   <article class="note paper" id="note">
    <img class="rose" src="/assets/candlelit/rose.webp" alt="">
-   <h3>Dear you,</h3>
-   <p>Five years ago a crowded café gave me the best seat in the house: the one across from you. Since then you've turned rainy days into stories and ordinary evenings into the parts of life I want to keep.</p>
-   <p>This page holds a few of them, so you can open it whenever you miss me, and remember that I'd choose you again, every single time.</p>
-   <div class="sign">Always yours, Aarav</div>
+   <h3 data-greeting>Dear you,</h3>
+   <div id="letterBody"></div>
+   <div class="sign" id="sign">Always yours, Aarav</div>
    <img class="seal" src="/assets/candlelit/seal.webp" alt="">
   </article>
  </div></div>
@@ -319,73 +311,62 @@ const PH = {
   <div class="card">
    <img class="glasses" src="/assets/candlelit/champagne.webp" alt="">
    <div class="kicker">save the date</div>
-   <div class="names script goldtext">Meera &amp; Aarav</div>
+   <div class="names script goldtext" data-names>Meera &amp; Aarav</div>
    <svg class="orn" viewBox="0 0 180 20" aria-hidden="true"><defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#8C6526"/><stop offset=".5" stop-color="#FFF0BE"/><stop offset="1" stop-color="#8C6526"/></linearGradient></defs><g fill="none" stroke="url(#g)" stroke-width="1.4"><path d="M0 10h70M110 10h70"/><path d="M90 2c-8 0-14 8-20 8 6 0 12 8 20 8s14-8 20-8c-6 0-12-8-20-8z"/></g><circle cx="90" cy="10" r="2.4" fill="#E8C978"/></svg>
-   <div class="big">Sunday, 14 February 2027</div>
-   <div class="small">half past five in the evening</div>
+   <div class="big" id="weekday"></div>
+   <div class="small" id="timeText"></div>
    <svg class="orn" viewBox="0 0 180 20" aria-hidden="true"><g fill="none" stroke="url(#g)" stroke-width="1.4"><path d="M0 10h70M110 10h70"/><path d="M90 2c-8 0-14 8-20 8 6 0 12 8 20 8s14-8 20-8c-6 0-12-8-20-8z"/></g><circle cx="90" cy="10" r="2.4" fill="#E8C978"/></svg>
-   <div class="small">The Garden Courtyard, Udaipur</div>
-   <div class="toast">let's raise a glass</div>
+   <div class="small" id="place"></div>
+   <div class="toast" id="toast"></div>
   </div>
  </div>
 </section>
 
-<div class="marq" aria-hidden="true"><div class="mq-in"><span>forever</span><i>❦</i><span>always</span><i>❦</i><span>only you</span><i>❦</i><span>my love</span><i>❦</i><span>home</span><i>❦</i><span>every day</span><i>❦</i><span>forever</span><i>❦</i><span>always</span><i>❦</i><span>only you</span><i>❦</i><span>my love</span><i>❦</i><span>home</span><i>❦</i><span>every day</span><i>❦</i></div></div>
+<div class="marq" aria-hidden="true"><div class="mq-in" id="words"></div></div>
 
 <figure class="film" style="margin:0" aria-label="By candlelight">
  <div class="glow" aria-hidden="true"></div>
  <img class="strip" src="/assets/candlelit/filmstrip.webp" alt="">
- <figcaption class="goldtext">by candlelight, always</figcaption>
+ <figcaption class="goldtext" id="filmCaption"></figcaption>
 </figure>
 
 <section class="story paper" aria-label="Our story">
  <div class="wrap">
   <div class="duo">
-   <div class="gframe ovalf"><div class="pic tint"><img data-ph="cafe" alt="At the café"></div><img class="border" src="/assets/candlelit/oval.webp" alt=""></div>
-   <div class="gframe rect"><div class="pic"><img class="bw" data-ph="steps" alt="On the garden steps"></div><img class="border" src="/assets/candlelit/frame.webp" alt=""></div>
+   <div class="gframe ovalf"><div class="pic tint"><img data-ph="photos.storyA" alt=""></div><img class="border" src="/assets/candlelit/oval.webp" alt=""></div>
+   <div class="gframe rect"><div class="pic"><img class="bw" data-ph="photos.storyB" alt=""></div><img class="border" src="/assets/candlelit/frame.webp" alt=""></div>
    <img class="rose" src="/assets/candlelit/rose.webp" alt="">
   </div>
   <div>
-   <div class="kicker">chapter one, and every one since</div>
+   <div class="kicker" id="storyKicker"></div>
    <h2 class="title">Our <em>story</em></h2>
-   <p>Once upon a time, two people reached for the last free table at the same café. Neither of us gave it up, so we shared it, and talked until they stacked the chairs.</p>
-   <p>Then came the wrong ferry, the right umbrella, a hundred late-night drives and one very nervous question. This is the part where we promise each other the rest.</p>
+   <div id="storyBody"></div>
   </div>
  </div>
 </section>
 
-<section class="sched silk" aria-label="The evening">
+<section class="sched silk" id="evening" aria-label="The evening">
  <div class="wrap">
-  <div class="tv"><div class="screen"><img data-ph="rain" alt="Under an umbrella in the rain"></div><img class="set" src="/assets/candlelit/tv.webp" alt=""></div>
+  <div class="tv"><div class="screen"><img data-ph="photos.tv" alt=""></div><img class="set" src="/assets/candlelit/tv.webp" alt=""></div>
   <div>
    <div class="kicker">the evening</div>
    <h2 class="title">Tonight's <em>programme</em></h2>
-   <ol>
-    <li><b>4:00</b><span>Arrival &amp; welcome</span></li>
-    <li><b>5:30</b><span>The promise</span></li>
-    <li><b>7:00</b><span>Dinner by candlelight</span></li>
-    <li><b>9:30</b><span>Dancing till late</span></li>
-   </ol>
+   <ol id="sched"></ol>
   </div>
  </div>
 </section>
 
 <div class="lace-band" aria-hidden="true"></div>
 
-<section class="moments damask center" aria-label="Moments so far">
+<section class="moments damask center" id="momentsSec" aria-label="Moments so far">
  <div class="wrap">
   <h2 class="title">Moments <em>so far</em></h2>
-  <p class="sub">The glances, journeys and quiet celebrations that shaped everything we're about to begin.</p>
-  <div class="tiles">
-   <figure><div class="gframe rect"><div class="pic"><img class="bw" data-ph="hands" alt="Holding hands"></div><img class="border" src="/assets/candlelit/frame.webp" alt=""></div><figcaption>the yes</figcaption></figure>
-   <figure><div class="gframe rect"><div class="pic tint"><img data-ph="seaside" alt="By the sea"></div><img class="border" src="/assets/candlelit/frame.webp" alt=""></div><figcaption>wrong ferry</figcaption></figure>
-   <figure><div class="gframe rect"><div class="pic"><img class="bw" data-ph="sunset" alt="Watching the sunset"></div><img class="border" src="/assets/candlelit/frame.webp" alt=""></div><figcaption>that sunset</figcaption></figure>
-   <figure><div class="gframe rect"><div class="pic tint"><img data-ph="wheat" alt="In a wheat field"></div><img class="border" src="/assets/candlelit/frame.webp" alt=""></div><figcaption>long walks</figcaption></figure>
-  </div>
+  <p class="sub" id="momentsIntro"></p>
+  <div class="tiles" id="tiles"></div>
  </div>
 </section>
 
-<section class="openwhen silk center" aria-label="Open when">
+<section class="openwhen silk center" id="owSec" aria-label="Open when">
  <div class="wrap">
   <div class="kicker">for the days you need me</div>
   <h2 class="title">Open <em>when…</em></h2>
@@ -399,19 +380,20 @@ const PH = {
  <div class="narrow">
   <div class="kicker">press play</div>
   <h2 class="title">Our <em>song</em></h2>
-  <div class="ticket">
-   <div class="tint"><img data-ph="sunset" alt="Album cover"></div>
-   <div><h3>Slow Mornings</h3><div class="by">the one from our first drive</div><button type="button"><svg width="12" height="12" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6 4v16l14-8z"/></svg>Play on Spotify</button></div>
+  <div class="ticket" id="ticket">
+   <div class="tint"><img data-ph="photos.cover" alt="Album cover"></div>
+   <div><h3 id="songTitle"></h3><div class="by" id="songNote"></div><button type="button" id="spotBtn"><svg width="12" height="12" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6 4v16l14-8z"/></svg>Play on Spotify</button></div>
   </div>
+  <div id="spot"></div>
  </div>
 </section>
 
 <div class="lace-band" aria-hidden="true"></div>
 
 <section class="end damask" aria-label="Closing">
- <div class="gframe ovalf"><div class="pic"><img class="bw" data-ph="steps" alt="Meera and Aarav"></div><img class="border" src="/assets/candlelit/oval.webp" alt=""></div>
- <h2 class="script goldtext">Meera &amp; Aarav</h2>
- <div class="date">14 February 2027, Udaipur</div>
+ <div class="gframe ovalf"><div class="pic"><img class="bw" data-ph="photos.end" alt=""></div><img class="border" src="/assets/candlelit/oval.webp" alt=""></div>
+ <h2 class="script goldtext" data-names>Meera &amp; Aarav</h2>
+ <div class="date" id="endDate"></div>
  <img class="seal" src="/assets/candlelit/seal.webp" alt="">
  <div class="credit">Made with <a href="/">Keepsake</a></div>
 </section>
@@ -419,9 +401,92 @@ const PH = {
 
 <script>
 
+
+const K = KSKit, $ = id => document.getElementById(id);
+const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+const FRAME = '<div class="gframe rect"><div class="pic"><img alt=""></div><img class="border" src="/assets/candlelit/frame.webp" alt=""></div>';
+
+function render(D) {
+  const a = K.str(D.a, 30), b = K.str(D.b, 30), d = K.date(D.date), names = `${a} & ${b}`;
+  document.title = `${names} · Keepsake`;
+  if ($("recipient")) $("recipient").textContent = K.str(D.recipient || a, 30);
+  $("tagline").textContent = K.str(D.tagline, 60);
+  document.querySelectorAll("[data-names]").forEach(e => e.textContent = names);
+  document.querySelectorAll("[data-ph]").forEach(i => K.setImg(i, K.get(D, i.dataset.ph)));
+  const hd = $("heroDate"); hd.textContent = "";
+  hd.append(String(d.getDate()), el("span", "", "❦"), K.fmt.month(d), el("span", "", "❦"), String(d.getFullYear()));
+  $("cue").textContent = K.str(D.cue, 60);
+
+  // letter, split into words so it can appear as if being written
+  document.querySelectorAll("[data-greeting]").forEach(e => e.textContent = K.str(D.greeting, 40));
+  $("sign").textContent = K.str(D.sign, 40);
+  const body = $("letterBody"); body.textContent = ""; let n = 0;
+  K.paras(D.letter).forEach(t => {
+    const p = el("p");
+    t.split(/(\s+)/).forEach(x => { if (/^\s+$/.test(x)) { p.append(x); return; } const s = el("span", "w", x); s.style.setProperty("--i", n++); p.appendChild(s); });
+    body.appendChild(p);
+  });
+  $("note").style.setProperty("--n", n);
+
+  // save the date
+  $("weekday").textContent = K.fmt.weekday(d);
+  $("timeText").textContent = K.str(D.timeText, 50);
+  $("place").textContent = K.str(D.place, 60);
+  $("toast").textContent = K.str(D.toast, 40);
+  const w = $("words"); w.textContent = "";
+  const list = K.words(D.words);
+  for (let r = 0; r < 2; r++) list.forEach(x => { w.appendChild(el("span", "", x)); w.appendChild(el("i", "", "❦")); });
+  $("filmCaption").textContent = K.str(D.filmCaption, 40);
+
+  // story
+  $("storyKicker").textContent = K.str(D.storyKicker, 60);
+  const sb = $("storyBody"); sb.textContent = "";
+  K.paras(D.story).forEach(t => sb.appendChild(el("p", "", t)));
+
+  // the evening
+  $("evening").hidden = D.showDay === false;
+  const ol = $("sched"); ol.textContent = "";
+  (D.schedule || []).filter(x => x.time || x.what).slice(0, 8).forEach(x => { const li = el("li"); li.appendChild(el("b", "", K.str(x.time, 10))); li.appendChild(el("span", "", K.str(x.what, 50))); ol.appendChild(li); });
+
+  // moments in gold frames; alternate black-and-white and wine-tinted photos
+  $("momentsIntro").textContent = K.str(D.momentsIntro, 140);
+  const tiles = $("tiles"); tiles.textContent = "";
+  (D.moments || []).filter(x => K.img(x.photo)).slice(0, 8).forEach((x, i) => {
+    const f = el("figure"); f.innerHTML = FRAME;
+    const pic = f.querySelector(".pic"), im = pic.querySelector("img");
+    if (i % 2) pic.classList.add("tint"); else im.className = "bw";
+    im.src = K.img(x.photo); im.alt = K.str(x.cap, 60);
+    f.appendChild(el("figcaption", "", K.str(x.cap, 60))); tiles.appendChild(f);
+  });
+  $("momentsSec").hidden = !tiles.children.length;
+
+  // open when...
+  const ow = $("ow"); ow.textContent = "";
+  (D.openWhen || []).filter(x => x.when && x.msg).slice(0, 8).forEach(x => {
+    const bt = el("button", "owe"); bt.type = "button"; bt.setAttribute("aria-expanded", "false");
+    bt.innerHTML = '<span class="env2"><span class="back"></span><span class="card2"></span><span class="front"></span><span class="flap"></span><img class="wseal" src="/assets/candlelit/seal.webp" alt=""></span><span class="lbl">open when<b></b></span>';
+    bt.querySelector(".card2").textContent = K.str(x.msg, 200); bt.querySelector(".lbl b").textContent = K.str(x.when, 30);
+    bt.setAttribute("aria-label", "Open when " + K.str(x.when, 30));
+    bt.onclick = () => { const on = bt.classList.toggle("on"); bt.setAttribute("aria-expanded", on); };
+    ow.appendChild(bt);
+  });
+  $("owSec").hidden = !ow.children.length;
+
+  // song: the ticket opens the real Spotify player
+  $("songTitle").textContent = K.str(D.song && D.song.title, 50);
+  $("songNote").textContent = K.str(D.song && D.song.note, 60);
+  const sp = K.spotify(D.song && D.song.url);
+  $("spotBtn").hidden = !sp; $("spot").textContent = "";
+  $("spotBtn").onclick = () => { if (!sp || $("spot").firstChild) return; const f = el("iframe"); f.src = sp.src; f.height = sp.h; f.allow = "autoplay; encrypted-media; clipboard-write"; f.title = "Our song on Spotify"; $("spot").appendChild(f); };
+
+  $("endDate").textContent = K.fmt.long(d) + (D.place ? ", " + K.str(D.place, 60) : "");
+}
+
 // opening: break the seal
 (function () {
   const root = document.documentElement, gate = document.getElementById("gate");
+  // the builder preview skips the opening screen
+  if (/[?&]preview=1/.test(location.search)) { root.classList.remove("locked"); root.classList.add("js", "entered"); gate.remove(); return; }
   root.classList.add("js", "locked");
   const enter = () => {
     gate.classList.add("opening"); root.classList.add("entered");
@@ -440,38 +505,8 @@ const PH = {
   }
 })();
 
-// open when...
-(function () {
-  const OW = [
-    ["you miss me", "Close your eyes. I'm thinking of you right now, I promise."],
-    ["you can't sleep", "Count every time I said I love you today. Then add one more."],
-    ["you need a smile", "Remember the wrong ferry? I still laugh about it."],
-    ["we've had a fight", "I'm already sorry. Let's get chai and start over."]
-  ];
-  const box = document.getElementById("ow");
-  OW.forEach(([when, msg]) => {
-    const b = document.createElement("button");
-    b.type = "button"; b.className = "owe"; b.setAttribute("aria-expanded", "false");
-    b.innerHTML = `<span class="env2"><span class="back"></span><span class="card2"></span><span class="front"></span><span class="flap"></span><img class="wseal" src="/assets/candlelit/seal.webp" alt=""></span><span class="lbl">open when<b></b></span>`;
-    b.querySelector(".card2").textContent = msg; b.querySelector(".lbl b").textContent = when;
-    b.setAttribute("aria-label", "Open when " + when);
-    b.onclick = () => { const on = b.classList.toggle("on"); b.setAttribute("aria-expanded", on); };
-    box.appendChild(b);
-  });
-})();
 
-// letter: split into words so it can appear as if being written
-(function () {
-  let i = 0;
-  document.querySelectorAll("#note p").forEach(p => {
-    const words = p.textContent.split(/(\s+)/); p.textContent = "";
-    words.forEach(w => { if (/^\s+$/.test(w)) { p.append(w); return; } const s = document.createElement("span"); s.className = "w"; s.style.setProperty("--i", i++); s.textContent = w; p.append(s); });
-  });
-  document.getElementById("note").style.setProperty("--n", i);
-})();
 
-// demo photos
-document.querySelectorAll("[data-ph]").forEach(i => { i.src = PH[i.dataset.ph]; i.decoding = "async"; });
 
 // rose petals drifting down the page
 (function () {
@@ -501,6 +536,8 @@ env.addEventListener("click", () => {
   env.querySelector("small").textContent = open ? "tap to close" : "tap to open";
   if (open) setTimeout(() => document.getElementById("note").scrollIntoView({ behavior: "smooth", block: "center" }), 450);
 });
+
+K.boot("candlelit", render);
 </script>
 </body>
 </html>

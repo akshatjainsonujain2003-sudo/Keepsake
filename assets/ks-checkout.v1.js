@@ -226,7 +226,7 @@
     });
   }
 
-  window.KSCheckout = { mount };
+  window.KSCheckout = { mount, catalog };
   window.KSLock = { mount: lock };
   window.KSKeepsake = { fetch: fetchKeepsake, uploadPhoto, esc, money };
 })();

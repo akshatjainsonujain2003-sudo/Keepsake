@@ -11,6 +11,7 @@
 <link rel="stylesheet" href="/assets/site-themes.v1.css">
 <script src="/assets/ks-checkout.v1.js"></script>
 <script src="/assets/site-render.v1.js"></script>
+<script src="/assets/ks-templates.v1.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js" defer></script>
 <style>
 :root{--bg:#240409;--panel:#33100f;--panel2:#3d1517;--line:#6b3a35;--ink:#f8f0df;--muted:#c9b99a;--gold:#e4c680;--field:#1a0206;--bad:#ff9aa8;--ok:#9ad8b0}
@@ -87,6 +88,28 @@ textarea.in{min-height:110px;resize:vertical;line-height:1.5}
  .fab{display:inline-flex;position:fixed;left:50%;transform:translateX(-50%);bottom:calc(18px + env(safe-area-inset-bottom));z-index:30;box-shadow:0 10px 30px #000a}
 }
 @media (max-width:420px){.themes{grid-template-columns:1fr 1fr}.row2{grid-template-columns:1fr}}
+
+[hidden]{display:none!important}
+/* designed templates */
+.designs{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.design{display:flex;flex-direction:column;gap:6px;text-align:left;padding:8px;border-radius:18px;border:1px solid var(--line);background:var(--panel);cursor:pointer;color:var(--ink)}
+.design.on{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold)}
+.design .art{position:relative;height:150px;border-radius:12px;overflow:hidden;display:grid;place-items:center}
+.design b{font-weight:700;font-size:16px;padding:2px 4px 0}.design small{color:var(--muted);font-size:12.5px;line-height:1.35;padding:0 4px 4px}
+.art.wf{background:linear-gradient(#eee7dbcc,#eee7dbcc),url(/assets/wildflower/linen.webp) center/300px}
+.art.wf .pol{width:58%;rotate:-5deg;position:relative}
+.art.wf .pol img.ph{position:absolute;left:16.4%;top:14.6%;width:67.9%;height:60.8%;object-fit:cover}
+.art.wf .pol img.edge{position:relative;width:100%}
+.art.wf .fl{position:absolute;right:-6px;top:-8px;width:44%;rotate:18deg}
+.art.cl{background:linear-gradient(#1f010466,#1f0104aa),url(/assets/candlelit/silk.webp) center/cover}
+.art.cl .seal{width:44%;filter:drop-shadow(0 8px 10px #000a)}
+.art.cl .nm{position:absolute;bottom:10px;font:italic 26px/1 "Cormorant Garamond",Georgia,serif;color:#e8c978}
+.legacy-note{font-size:13px;color:var(--muted);margin:10px 0 0}
+.phone-in iframe,.overlay iframe{display:block;width:100%;height:100%;border:0;background:#fff}
+.overlay .scroll iframe{height:100%}
+.tplf .grp>summary .name{font-weight:700}
+.tglrow{display:flex;gap:10px;align-items:center;margin:0 0 14px;color:var(--ink);font-size:15px;cursor:pointer}
+.tglrow input{width:20px;height:20px;accent-color:#d6b06a}
 </style>
 </head>
 <body>
@@ -94,11 +117,13 @@ textarea.in{min-height:110px;resize:vertical;line-height:1.5}
 <div class="layout">
  <main class="editor">
   <h1 class="page">Your website</h1>
-  <p class="lede">Pick a look, add your photos, songs and words. Everything you change shows in the preview.</p>
+  <p class="lede">Pick a design, then make it yours with your photos, song and words. Everything you change shows in the preview.</p>
 
-  <section class="block"><h2>Look</h2><div class="themes" id="themes"></div></section>
+  <section class="block"><h2>Design</h2><div class="designs" id="designs"></div><div class="themes" id="themes" hidden></div><p class="legacy-note" id="legacyNote" hidden>This website uses one of our earlier looks. Pick a design above to switch to it (your names, date and letter come with you).</p></section>
 
-  <section class="block"><h2>Cover</h2>
+  <div id="tplEditor" class="tplf" hidden></div>
+
+  <section class="block legacy"><h2>Cover</h2>
    <label class="f">Names or title<input class="in" data-k="t" maxlength="80"></label>
    <label class="f">Line under the title<input class="in" data-k="sub" maxlength="160"></label>
    <label class="f">Date (optional)<input class="in" data-k="date" maxlength="60" placeholder="14 February 2027"></label>
@@ -106,7 +131,7 @@ textarea.in{min-height:110px;resize:vertical;line-height:1.5}
    <div class="photo" id="coverPhoto"></div>
   </section>
 
-  <section class="block"><h2>Sections</h2>
+  <section class="block legacy"><h2>Sections</h2>
    <div id="sections"></div>
    <div class="addsec"><select class="in" id="addType" aria-label="Section to add"></select><button class="btn line" type="button" id="addBtn">Add</button></div>
   </section>
@@ -134,7 +159,7 @@ textarea.in{min-height:110px;resize:vertical;line-height:1.5}
 <script>
 (() => {
 const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
-const DRAFT = "ks-site-draft-v1";
+const DRAFT = "ks-site-draft-v2";
 let D = null, EDIT_ID = null, USER = null, ACTIVE = false, LOCK = null, CHECKOUT = null, dirty = false;
 const SW = { reel: ["#2b060b", "#f3ead9", "#c9a86a", "#120204"], lace: ["#1d271e", "#efe9dc", "#b8954f", "#c98b8b"], sidea: ["#efeadb", "#8e9b7c", "#2f3329", "#f8f5ec"], scrap: ["#e6dccb", "#4f79b4", "#c23a3a", "#f7f3ea"] };
 const status = (t, cls) => { const s = $("#saveStatus"); s.textContent = t || ""; s.className = "status" + (cls ? " " + cls : ""); };
@@ -144,7 +169,7 @@ const blank = { story: () => ({ type: "story", h: "", text: "", img: "" }), gall
 
 // ---------- preview ----------
 let raf = 0;
-function preview() { cancelAnimationFrame(raf); raf = requestAnimationFrame(() => { KSSite.render($("#preview"), D, { editing: true }); if ($("#overlay").classList.contains("open")) KSSite.render($("#previewFull"), D, { editing: true }); }); }
+function preview() { if (isTpl()) { tplPreview(); return; } cancelAnimationFrame(raf); raf = requestAnimationFrame(() => { KSSite.render($("#preview"), D, { editing: true }); if ($("#overlay").classList.contains("open")) KSSite.render($("#previewFull"), D, { editing: true }); }); }
 function changed() { dirty = true; save(); preview(); }
 
 // ---------- photos ----------
@@ -156,11 +181,112 @@ async function upload(file) {
 function photoField(holder, get, set) {
   holder.textContent = "";
   const u = get();
-  if (KSSite.imgUrl(u)) { const i = document.createElement("img"); i.src = u; i.alt = ""; holder.appendChild(i); }
+  if (KSSite.imgUrl(u) || KSKit.img(u)) { const i = document.createElement("img"); i.src = u; i.alt = ""; holder.appendChild(i); }
   const l = document.createElement("label"); l.className = "upl"; l.textContent = u ? "Change photo" : "Add photo";
   const inp = document.createElement("input"); inp.type = "file"; inp.accept = "image/*"; l.appendChild(inp); holder.appendChild(l);
   inp.onchange = async () => { const f = inp.files[0]; inp.value = ""; if (!f) return; try { set(await upload(f)); changed(); photoField(holder, get, set); } catch (e) { if (e.message !== "login") status(e.message, "bad"); } };
   if (u) { const r = document.createElement("button"); r.type = "button"; r.className = "link-btn"; r.textContent = "Remove"; r.onclick = () => { set(""); changed(); photoField(holder, get, set); }; holder.appendChild(r); }
+}
+
+
+// ---------- designed templates (Wildflower, Candlelit) ----------
+const isTpl = () => !!(D && D.tpl && KSKit.DEMO[D.tpl]);
+let FRAME = null, FRAME_TPL = "", BIG = null, postT = 0;
+function post(frame) { try { frame && frame.contentWindow && frame.contentWindow.postMessage({ type: "ks-preview", data: D }, location.origin); } catch (e) {} }
+function tplPreview() {
+  const box = $("#preview");
+  if (!FRAME || FRAME_TPL !== D.tpl || !box.contains(FRAME)) {
+    box.textContent = ""; box.className = ""; FRAME_TPL = D.tpl;
+    FRAME = document.createElement("iframe"); FRAME.title = "Preview"; FRAME.src = "/templates/" + D.tpl + "?preview=1";
+    FRAME.onload = () => post(FRAME); box.style.height = "100%"; box.appendChild(FRAME);
+  }
+  clearTimeout(postT); postT = setTimeout(() => { post(FRAME); if ($("#overlay").classList.contains("open")) post(BIG); }, 120);
+}
+function openBig() {
+  const holder = $("#previewFull"); holder.textContent = ""; holder.style.height = "100%";
+  BIG = document.createElement("iframe"); BIG.title = "Preview"; BIG.src = "/templates/" + D.tpl + "?preview=1"; BIG.onload = () => post(BIG);
+  holder.appendChild(BIG);
+}
+function designs() {
+  const box = $("#designs"); box.textContent = "";
+  [["wildflower", '<div class="art wf"><div class="pol"><img class="ph" src="/assets/wildflower/lakedance.webp" alt=""><img class="edge" src="/assets/wildflower/polaroid.webp" alt=""></div><img class="fl" src="/assets/wildflower/pressed.webp" alt=""></div>'],
+   ["candlelit", '<div class="art cl"><img class="seal" src="/assets/candlelit/seal.webp" alt=""><span class="nm">for you</span></div>']].forEach(([k, art]) => {
+    const b = document.createElement("button"); b.type = "button"; b.className = "design" + (D.tpl === k ? " on" : "");
+    b.innerHTML = art + "<b></b><small></small>"; b.querySelector("b").textContent = KSKit.NAMES[k]; b.querySelector("small").textContent = KSKit.HINTS[k];
+    b.onclick = () => switchTo(k); box.appendChild(b);
+  });
+}
+// switching design keeps what both designs share
+function switchTo(k) {
+  if (D.tpl === k) return;
+  const next = KSKit.clone(KSKit.DEMO[k]), old = D || {};
+  if (old.tpl) { ["a", "b", "date", "place", "greeting", "letter", "sign"].forEach(f => { if (old[f]) next[f] = old[f]; });
+    if (old.song) ["url", "title"].forEach(f => { if (old.song[f]) next.song[f] = old.song[f]; });
+    if (old.photos && old.photos.hero) next.photos.hero = old.photos.hero; }
+  else if (old.sections) { // coming from an older look
+    if (old.t && old.t.includes("&")) { const [x, y] = old.t.split("&"); next.a = x.trim(); next.b = y.trim(); }
+    const lt = old.sections.find(z => z.type === "letter"); if (lt && lt.text) { next.letter = lt.text; if (lt.from) next.sign = lt.from; }
+    if (KSKit.img(old.cover)) next.photos.hero = old.cover;
+  }
+  D = next; changed(); all();
+}
+function fieldEl(f, getV, setV) {
+  const wrap = document.createElement("div");
+  if (f.type === "photo") {
+    const lab = document.createElement("div"); lab.className = "f"; lab.style.margin = "0"; lab.textContent = f.label;
+    const ph = document.createElement("div"); ph.className = "photo"; wrap.append(lab, ph);
+    photoField(ph, getV, setV); return wrap;
+  }
+  if (f.type === "toggle") {
+    const l = document.createElement("label"); l.className = "tglrow"; const c = document.createElement("input"); c.type = "checkbox"; c.checked = getV() !== false;
+    c.onchange = () => { setV(c.checked); changed(); }; l.append(c, f.label); return l;
+  }
+  const l = document.createElement("label"); l.className = "f"; l.textContent = f.label;
+  const e = document.createElement(f.type === "area" ? "textarea" : "input"); e.className = "in";
+  if (f.type === "date") { e.type = "datetime-local"; } else { e.maxLength = f.max || 300; }
+  if (f.placeholder) e.placeholder = f.placeholder;
+  e.value = getV() == null ? "" : getV();
+  if (f.type === "area") e.style.minHeight = (f.max || 0) > 600 ? "190px" : "96px";
+  e.oninput = () => { setV(e.value); changed(); };
+  l.appendChild(e); return l;
+}
+function listEl(f, arr) {
+  const wrap = document.createElement("div");
+  const lab = document.createElement("div"); lab.className = "f"; lab.style.marginBottom = "6px"; lab.textContent = f.label; wrap.appendChild(lab);
+  const box = document.createElement("div"); wrap.appendChild(box);
+  const draw = () => {
+    box.textContent = "";
+    arr.forEach((it, i) => {
+      const r = document.createElement("div"); r.className = "list-row";
+      if (f.type === "strings") { r.appendChild(fieldEl({ type: "text", label: (f.item || "Item") + " " + (i + 1), max: f.itemMax }, () => arr[i], v => arr[i] = v)); }
+      else f.of.forEach(sf => r.appendChild(fieldEl(sf, () => it[sf.key], v => it[sf.key] = v)));
+      const ctl = document.createElement("div"); ctl.style.cssText = "display:flex;gap:6px;justify-content:flex-end";
+      const up = document.createElement("button"); up.type = "button"; up.className = "ib"; up.textContent = "↑"; up.setAttribute("aria-label", "Move up"); up.disabled = i === 0;
+      up.onclick = () => { [arr[i - 1], arr[i]] = [arr[i], arr[i - 1]]; changed(); draw(); };
+      const rm = document.createElement("button"); rm.type = "button"; rm.className = "link-btn"; rm.textContent = "Remove";
+      rm.onclick = () => { arr.splice(i, 1); changed(); draw(); };
+      ctl.append(up, rm); r.appendChild(ctl); box.appendChild(r);
+    });
+    if (arr.length < (f.max || 10)) {
+      const a = document.createElement("button"); a.type = "button"; a.className = "btn line"; a.textContent = f.add || "Add";
+      a.onclick = () => { if (f.type === "strings") arr.push(""); else { const o = {}; f.of.forEach(sf => o[sf.key] = ""); arr.push(o); } changed(); draw(); };
+      box.appendChild(a);
+    }
+  };
+  draw(); return wrap;
+}
+function tplEditor() {
+  const box = $("#tplEditor"); const open = new Set($$("#tplEditor details[open]").map(d => d.dataset.g)); box.textContent = "";
+  KSKit.FIELDS[D.tpl].forEach((g, gi) => {
+    const d = document.createElement("details"); d.className = "sec grp"; d.dataset.g = gi; if (open.has(String(gi)) || (!open.size && gi === 0)) d.open = true;
+    const sm = document.createElement("summary"); const n = document.createElement("span"); n.className = "name"; n.textContent = g.group; sm.appendChild(n); d.appendChild(sm);
+    const b = document.createElement("div"); b.className = "body";
+    g.fields.forEach(f => {
+      if (f.type === "list" || f.type === "strings") { let arr = KSKit.get(D, f.key); if (!Array.isArray(arr)) { arr = []; KSKit.set(D, f.key, arr); } b.appendChild(listEl(f, arr)); }
+      else b.appendChild(fieldEl(f, () => KSKit.get(D, f.key), v => KSKit.set(D, f.key, v)));
+    });
+    d.appendChild(b); box.appendChild(d);
+  });
 }
 
 // ---------- themes ----------
@@ -251,7 +377,12 @@ function cover() {
   $$("[data-k]").forEach(i => { i.value = D[i.dataset.k] || ""; i.oninput = () => { D[i.dataset.k] = i.value; changed(); }; });
   photoField($("#coverPhoto"), () => D.cover, v => D.cover = v);
 }
-function all() { themes(); cover(); sections(); preview(); }
+function all() {
+  const t = isTpl();
+  designs(); $("#tplEditor").hidden = !t; $$(".legacy").forEach(e => e.hidden = t); $("#themes").hidden = t; $("#legacyNote").hidden = t;
+  if (t) { if (FRAME_TPL !== D.tpl) { FRAME = null; } tplEditor(); } else { FRAME = null; FRAME_TPL = ""; $("#preview").style.height = ""; themes(); cover(); sections(); }
+  preview();
+}
 
 // ---------- save, pay, live ----------
 async function saveSite() {
@@ -259,6 +390,7 @@ async function saveSite() {
   const le = LOCK.check(); if (le) { status(le, "bad"); return; }
   const btn = $("#saveBtn"); btn.disabled = true; status("Saving…");
   try {
+    if (isTpl()) D.t = `${(D.a || "").trim()} & ${(D.b || "").trim()}`.slice(0, 80);
     const body = { data: D, kind: "site" }; if (EDIT_ID) body.id = EDIT_ID; const lk = LOCK.value(); if (lk !== undefined) body.lock = lk;
     let r = await fetch("/api/customer-memories", { method: EDIT_ID ? "PUT" : "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
     let j = await r.json().catch(() => ({}));
@@ -295,9 +427,10 @@ $("#qrPng").onclick = () => {
   img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(new XMLSerializer().serializeToString(svg));
 };
 $("#frameBtn").onclick = () => checkout("upgrade");
+KSCheckout.catalog().then(c => { if (c.free) $("#frameBtn").hidden = true; });
 $("#saveBtn").onclick = saveSite;
 $("#addBtn").onclick = () => { const t = $("#addType").value; D.sections.push(blank[t]()); changed(); sections(); const last = $$("#sections details").pop(); if (last) { last.open = true; last.scrollIntoView({ behavior: "smooth", block: "center" }); } };
-$("#previewBtn").onclick = () => { $("#overlay").classList.add("open"); document.body.style.overflow = "hidden"; KSSite.render($("#previewFull"), D, { editing: true }); };
+$("#previewBtn").onclick = () => { $("#overlay").classList.add("open"); document.body.style.overflow = "hidden"; if (isTpl()) openBig(); else { $("#previewFull").style.height = ""; KSSite.render($("#previewFull"), D, { editing: true }); } };
 $("#closePreview").onclick = () => { $("#overlay").classList.remove("open"); document.body.style.overflow = ""; };
 window.addEventListener("beforeunload", e => { if (dirty && EDIT_ID) { e.preventDefault(); e.returnValue = ""; } });
 
@@ -311,13 +444,14 @@ window.addEventListener("beforeunload", e => { if (dirty && EDIT_ID) { e.prevent
   else nav.insertAdjacentHTML("beforeend", '<a class="chip" href="/account?next=%2Fbuilder%3Fresume%3D1">Log in</a>');
   const q = new URLSearchParams(location.search), id = q.get("edit");
   try { D = JSON.parse(localStorage.getItem(DRAFT) || "null"); } catch (e) { D = null; }
-  if (q.get("theme") && KSSite.THEMES[q.get("theme")] && !D) D = KSSite.starter(q.get("theme"));
-  if (!D || !Array.isArray(D.sections)) D = KSSite.starter(q.get("theme") || "reel");
+  const want = KSKit.DEMO[q.get("tpl")] ? q.get("tpl") : "";
+  if (want && (!D || D.tpl !== want)) D = KSKit.clone(KSKit.DEMO[want]);
+  if (!D || !(D.tpl ? KSKit.DEMO[D.tpl] : Array.isArray(D.sections))) D = KSKit.clone(KSKit.DEMO.wildflower);
   if (id && USER) {
     try {
       const r = await fetch("/api/customer-memories?id=" + encodeURIComponent(id), { cache: "no-store" }); const j = await r.json();
       if (!r.ok || j.kind !== "site") throw new Error(j.error || "Website not found.");
-      D = j.data; EDIT_ID = id; ACTIVE = j.active; LOCK.set(j.locked);
+      D = j.data.tpl ? KSKit.withDefaults(j.data.tpl, j.data) : j.data; EDIT_ID = id; ACTIVE = j.active; LOCK.set(j.locked);
       all();
       if (j.active) live("/s/" + id); else checkout("activate");
       status(j.active ? "Editing your live website. Save to update it." : "Editing your saved website. It isn't active yet.", "ok");

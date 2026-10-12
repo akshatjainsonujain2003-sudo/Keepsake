@@ -1,12 +1,15 @@
 const db = require("./_db");
 const auth = require("./customer-auth");
+const pay = require("./_pay");
 const crypto = require("crypto");
 const idPattern = /^[a-z0-9]{8,16}$/i;
 const clip = (v, n) => String(v == null ? "" : v).replace(/[<>]/g, "").trim().slice(0, n);
 const MAX = { card: 30000, site: 90000 };
 const kindOf = v => (v === "site" ? "site" : "card");
 const tooBig = (data, kind) => JSON.stringify(data).length > MAX[kind];
-const validData = (data, kind) => !!data && (kind === "site" ? Array.isArray(data.sections) : Array.isArray(data.i));
+// A website is either section-based (older themes) or one of the designed templates.
+const TEMPLATES = ["wildflower", "candlelit"];
+const validData = (data, kind) => !!data && (kind === "site" ? (Array.isArray(data.sections) || TEMPLATES.includes(data.tpl)) : Array.isArray(data.i));
 
 // Optional password lock. Only a salted hash is stored; the card's content is never sent until it matches.
 const hashPw = (pw, salt) => crypto.scryptSync(String(pw), salt, 32).toString("hex");
@@ -83,11 +86,13 @@ module.exports = async (req, res) => {
       // Limit unpaid drafts so storage can't be filled for free.
       const ids = await db.cmd("SMEMBERS", "customer-memories:" + user.id);
       if (ids.length >= 60) return db.reply(res, 429, { error: "You have a lot of saved cards. Delete a few unused ones first." });
-      const memory = { owner: user.id, ownerName: user.name, kind, title: clip(data.t || "Our Memories", 80) || "Our Memories", data, created: now, updated: now, paid: false };
+      const memory = { owner: user.id, ownerName: user.name, kind, title: clip(data.t || "Our Memories", 80) || "Our Memories", data, created: now, updated: now,
+        // Until Razorpay keys are added in Vercel, keepsakes go live without payment.
+        paid: !pay.configured(), ...(pay.configured() ? {} : { free: true }) };
       const lockErr = setLock(memory, b.lock); if (lockErr) return db.reply(res, 400, { error: lockErr });
       await db.setj("customer-memory:" + id, memory, "NX");
       await db.cmd("SADD", "customer-memories:" + user.id, id);
-      return db.reply(res, 201, { id, kind, url: (kind === "site" ? "/s/" : "/m/") + id, title: memory.title, created: now, active: false, locked: !!memory.lock });
+      return db.reply(res, 201, { id, kind, url: (kind === "site" ? "/s/" : "/m/") + id, title: memory.title, created: now, active: memory.paid !== false, locked: !!memory.lock });
     }
     if (req.method === "PUT") {
       const b = req.body || {}, id = String(b.id || ""), data = b.data;

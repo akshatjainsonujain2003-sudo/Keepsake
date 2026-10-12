@@ -30,6 +30,16 @@ html,body{margin:0;background:#2b060b}
   const j = await KSKeepsake.fetch(m[1]).catch(() => ({ error: "x" }));
   if (j.error) return j.inactive ? say("This keepsake isn’t active yet.", "If it’s yours, log in and activate it from My memories.") : say("This page could not be found.");
   if (j.kind !== "site") { location.replace("/m/" + m[1]); return; }
+  // Designed templates are full pages: load the template and hand it this website's content.
+  if (["wildflower", "candlelit"].includes(j.data && j.data.tpl)) {
+    const r = await fetch("/templates/" + j.data.tpl, { cache: "no-cache" });
+    if (!r.ok) return say("This page could not be loaded. Please try again.");
+    const safe = v => JSON.stringify(v).replace(/</g, "\\u003c").replace(/\u2028/g, "\\u2028").replace(/\u2029/g, "\\u2029");
+    const boot = `<script>window.KS_DATA=${safe(j.data)};window.KS_META=${safe({ id: m[1], ownerPreview: j.active === false })};<\/script>`;
+    const html = (await r.text()).replace(/<head>/i, "<head>" + boot);
+    document.open(); document.write(html); document.close();
+    return;
+  }
   KSSite.render(root, j.data);
   document.title = (j.data.t || "Our story") + " · Keepsake";
   const tc = getComputedStyle(root).getPropertyValue("--bg").trim(); if (tc) { document.querySelector('meta[name=theme-color]').content = tc; document.body.style.background = tc; }
