@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#EEE7DB">
-<title>Meera &amp; Aarav · Soleil · Keepsake</title>
+<title>Meera &amp; Aarav · Wildflower · Keepsake</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gloock&family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,400&family=Hanken+Grotesk:wght@400;500;600&family=Mrs+Saint+Delafield&display=swap">
 <style>
-/* Soleil: a Keepsake website template. Sun-warmed linen, pressed flowers, a scrapbook of two people. */
+/* Wildflower: a Keepsake website template. Sun-warmed linen, pressed flowers, a scrapbook of two people. */
 :root{
   --linen:#EEE7DB;--paper:#F8F3EA;--ink:#2A2922;--soft:#625E52;--olive:#5D6646;--deep:#3F4630;--blush:#C9A79C;--rule:#2A29222b;
   --display:"Gloock",Georgia,serif;--serif:"Newsreader",Georgia,serif;--sans:"Hanken Grotesk",system-ui,sans-serif;--hand:"Mrs Saint Delafield",cursive;
@@ -16,7 +16,7 @@
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{margin:0;color:var(--ink);font:400 17px/1.7 var(--serif);-webkit-font-smoothing:antialiased;overflow-x:hidden;
-  background:linear-gradient(#eee7dbd9,#eee7dbd9),url(/assets/soleil/linen.webp) center/760px repeat,var(--linen)}
+  background:linear-gradient(#eee7dbd9,#eee7dbd9),url(/assets/wildflower/linen.webp) center/760px repeat,var(--linen)}
 img{display:block;max-width:100%}
 main{overflow:clip}
 a{color:inherit}
@@ -50,7 +50,7 @@ section{position:relative;padding:clamp(80px,12vw,150px) 0}
 @media(max-width:720px){.bar nav{display:none}}
 
 /* ---------- hero: a scrapbook collage ---------- */
-.hero{padding:20px 0 80px;overflow:hidden}
+.hero{position:relative;padding:20px 0 110px;overflow:hidden}
 .hero .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:0 40px;align-items:center}
 .collage{position:relative;aspect-ratio:4/4.6}
 .collage .plume{left:-12%;top:-4%;width:52%;rotate:-18deg;z-index:0}
@@ -198,6 +198,89 @@ section{position:relative;padding:clamp(80px,12vw,150px) 0}
 .end h2{position:relative;z-index:2;font-size:clamp(64px,14vw,180px);line-height:.9}
 .end .label{margin-top:18px;position:relative}
 .end .credit{position:relative;margin-top:110px;font:500 12px var(--sans);color:var(--soft)}
+
+/* ---------- Pinterest touches ---------- */
+/* handwriting that draws itself */
+.anno{position:absolute;z-index:7;font:400 clamp(34px,7vw,46px)/1 var(--hand);color:#b4483d;pointer-events:none;white-space:nowrap}
+.doodle{position:absolute;z-index:7;pointer-events:none;color:#b4483d;overflow:visible}
+.doodle path{fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+@media (prefers-reduced-motion:no-preference){
+  .draw path{stroke-dasharray:var(--len,260);stroke-dashoffset:var(--len,260);animation:drawin 1.3s var(--at,1.6s) ease-out forwards}
+  .anno.write{clip-path:inset(0 100% 0 0);animation:writein 1.4s var(--at,1.4s) ease-out forwards}
+}
+@keyframes drawin{to{stroke-dashoffset:0}}
+@keyframes writein{to{clip-path:inset(0 0 0 0)}}
+.hero .anno{right:1%;bottom:-11%}
+.hero .arrow{right:30%;bottom:-5%;width:74px;height:60px}
+.hero .hrt{width:30px;height:28px;margin-left:10px;vertical-align:middle;position:relative}
+
+/* soft light leak over the hero */
+.hero::before{content:"";position:absolute;inset:-10%;pointer-events:none;z-index:8;mix-blend-mode:soft-light;opacity:.55;
+  background:radial-gradient(40% 35% at 85% 10%,#ffb36b,#0000 70%),radial-gradient(35% 30% at 10% 90%,#ff9b8a,#0000 70%)}
+@media (prefers-reduced-motion:no-preference){.hero::before{animation:leak 12s ease-in-out infinite alternate}}
+@keyframes leak{to{transform:translate(-4%,3%) scale(1.06);opacity:.35}}
+
+/* butterflies */
+.bfly{position:absolute;z-index:9;width:40px;pointer-events:none;top:0;left:0;offset-rotate:auto 90deg}
+.bfly .w{transform-box:fill-box}
+.bfly .wl{transform-origin:100% 50%}.bfly .wr{transform-origin:0% 50%}
+@media (prefers-reduced-motion:no-preference){
+  .bfly .wl,.bfly .wr{animation:flap .28s ease-in-out infinite alternate}
+  .bfly.b1{offset-path:path("M-60 260 C 120 120, 220 380, 420 200 S 760 60, 1500 240");animation:fly 22s linear infinite}
+  .bfly.b2{width:30px;offset-path:path("M1500 80 C 1100 260, 900 0, 640 160 S 200 360, -80 120");animation:fly 28s 6s linear infinite}
+}
+@media (prefers-reduced-motion:reduce){.bfly{display:none}}
+@media (max-width:700px) and (prefers-reduced-motion:no-preference){.bfly.b1{offset-path:path("M-50 140 C 60 40, 160 260, 250 120 S 380 60, 460 200");animation-duration:13s}.bfly.b2{offset-path:path("M450 60 C 340 200, 260 20, 180 110 S 60 230, -60 90");animation-duration:16s}}
+@keyframes flap{to{transform:scaleX(.18)}}
+@keyframes fly{from{offset-distance:0%}to{offset-distance:100%}}
+
+/* washi tape on the story polaroids */
+.chapter .ph{position:relative}
+.chapter .ph::before{content:"";position:absolute;z-index:4;top:2%;left:50%;width:110px;height:28px;margin-left:-55px;rotate:-5deg;opacity:.92;
+  background:repeating-linear-gradient(45deg,#ffffff55 0 6px,#0000 6px 12px),var(--tape,#e9c9b5);box-shadow:0 1px 2px #0002;
+  -webkit-mask:linear-gradient(90deg,#0000 0 3px,#000 3px calc(100% - 3px),#0000 0),radial-gradient(circle at 0 50%,#0000 3px,#000 3.5px);mask:linear-gradient(90deg,#0000,#000 4px,#000 calc(100% - 4px),#0000)}
+.chapter:nth-of-type(2) .ph{--tape:#c9d3b8}.chapter:nth-of-type(3) .ph{--tape:#ead9a7}.chapter:nth-of-type(4) .ph{--tape:#d8c9df}
+.js .chapter:not(.seen) .ph::before{opacity:0}
+.chapter .ph::before{transition:opacity .4s .9s}
+
+/* torn paper countdown */
+.count{-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='20' viewBox='0 0 600 20' preserveAspectRatio='none'%3E%3Cpath d='M0 20 L0 6.9 L11 10.8 L21 9.4 L35 3.7 L50 3.4 L65 3.8 L75 8.1 L95 4.5 L107 10.5 L128 9.9 L142 14.7 L152 13.3 L165 4.7 L175 6.7 L195 5.2 L211 10.7 L225 9.6 L235 3.7 L247 11.2 L261 6.8 L278 8.4 L291 12.5 L309 5.9 L325 9.3 L346 11.8 L358 14.8 L369 8.0 L388 4.8 L403 3.5 L421 12.2 L437 13.5 L450 11.3 L467 10.0 L482 13.1 L503 8.7 L521 3.7 L539 10.8 L561 12.9 L574 7.6 L591 3.3 L600 6.9 L600 20Z'/%3E%3C/svg%3E") top left/600px 20px repeat-x,linear-gradient(#000,#000) center/100% calc(100% - 38px) no-repeat,url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='20' viewBox='0 0 600 20' preserveAspectRatio='none'%3E%3Cpath d='M0 0 L0 15.0 L11 16.3 L30 15.4 L42 12.3 L62 16.0 L77 10.4 L97 7.2 L118 13.7 L132 12.7 L153 5.5 L163 14.9 L175 14.2 L191 9.9 L203 17.0 L218 12.6 L234 5.6 L252 10.8 L269 8.9 L279 6.2 L298 6.5 L317 12.3 L331 15.8 L349 16.3 L359 14.5 L370 12.9 L379 17.0 L390 15.8 L404 16.7 L424 9.6 L435 14.0 L449 12.6 L459 6.8 L481 11.4 L497 16.0 L507 12.9 L519 7.1 L531 16.7 L552 10.7 L563 10.5 L572 10.7 L594 6.6 L600 15.0 L600 0Z'/%3E%3C/svg%3E") bottom left/600px 20px repeat-x;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='20' viewBox='0 0 600 20' preserveAspectRatio='none'%3E%3Cpath d='M0 20 L0 6.9 L11 10.8 L21 9.4 L35 3.7 L50 3.4 L65 3.8 L75 8.1 L95 4.5 L107 10.5 L128 9.9 L142 14.7 L152 13.3 L165 4.7 L175 6.7 L195 5.2 L211 10.7 L225 9.6 L235 3.7 L247 11.2 L261 6.8 L278 8.4 L291 12.5 L309 5.9 L325 9.3 L346 11.8 L358 14.8 L369 8.0 L388 4.8 L403 3.5 L421 12.2 L437 13.5 L450 11.3 L467 10.0 L482 13.1 L503 8.7 L521 3.7 L539 10.8 L561 12.9 L574 7.6 L591 3.3 L600 6.9 L600 20Z'/%3E%3C/svg%3E") top left/600px 20px repeat-x,linear-gradient(#000,#000) center/100% calc(100% - 38px) no-repeat,url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='20' viewBox='0 0 600 20' preserveAspectRatio='none'%3E%3Cpath d='M0 0 L0 15.0 L11 16.3 L30 15.4 L42 12.3 L62 16.0 L77 10.4 L97 7.2 L118 13.7 L132 12.7 L153 5.5 L163 14.9 L175 14.2 L191 9.9 L203 17.0 L218 12.6 L234 5.6 L252 10.8 L269 8.9 L279 6.2 L298 6.5 L317 12.3 L331 15.8 L349 16.3 L359 14.5 L370 12.9 L379 17.0 L390 15.8 L404 16.7 L424 9.6 L435 14.0 L449 12.6 L459 6.8 L481 11.4 L497 16.0 L507 12.9 L519 7.1 L531 16.7 L552 10.7 L563 10.5 L572 10.7 L594 6.6 L600 15.0 L600 0Z'/%3E%3C/svg%3E") bottom left/600px 20px repeat-x}
+
+/* a band of handwritten words */
+.marq{overflow:hidden;padding:8px 0 4px;position:relative;rotate:-1.2deg;margin:40px -10px 0}
+.mq-in{display:flex;width:max-content;align-items:center;gap:30px;font:400 clamp(44px,9vw,64px)/1.25 var(--hand);color:var(--olive);white-space:nowrap}
+.mq-in i{font:normal 22px/1 var(--serif);color:#b4483d}
+@media (prefers-reduced-motion:no-preference){.mq-in{animation:mq 46s linear infinite}}
+@keyframes mq{to{transform:translateX(-50%)}}
+
+/* little things I love about you: sticky notes that flip */
+.love{text-align:center}
+.love .label{margin-bottom:10px}
+.love h2{margin:0 auto 14px;max-width:12ch}
+.love .tip{font-style:italic;color:var(--soft);margin:0 0 50px}
+.notes{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(18px,3.4vw,34px);max-width:820px;margin:0 auto}
+.sn{position:relative;aspect-ratio:1;border:0;padding:0;background:none;cursor:pointer;perspective:900px;rotate:var(--r);transition:rotate .5s}
+.sn:hover{rotate:0deg}
+.sn::before{content:"";position:absolute;z-index:3;top:-11px;left:50%;width:74px;height:22px;margin-left:-37px;rotate:-4deg;background:repeating-linear-gradient(-45deg,#ffffff4d 0 5px,#0000 5px 10px),#efe3c3d9;box-shadow:0 1px 2px #0001}
+.sn-in{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .8s cubic-bezier(.3,1.3,.5,1)}
+.sn.on .sn-in{transform:rotateY(180deg)}
+.sn-f,.sn-b{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:var(--c);display:grid;place-content:center;padding:16px;box-shadow:0 16px 26px -16px #2a29226b;text-align:center}
+.sn-f::after{content:"";position:absolute;right:0;bottom:0;width:26px;height:26px;background:linear-gradient(135deg,#0000 50%,#00000014 50%,#ffffff66)}
+.sn-b{transform:rotateY(180deg)}
+.sn-f b{display:block;font:400 clamp(44px,8vw,62px)/1 var(--hand);color:var(--ink)}
+.sn-f small{display:block;margin-top:4px;font:500 12px var(--sans);color:var(--soft)}
+.sn-f svg{width:26px;margin:4px auto 0;color:#b4483d}
+.sn-b span{font:400 italic clamp(15px,2.8vw,20px)/1.35 var(--serif);color:var(--ink)}
+@media(max-width:620px){.notes{grid-template-columns:repeat(2,1fr)}}
+
+/* the letter writes itself */
+.js .note .w{opacity:0;filter:blur(4px);transition:opacity .45s,filter .45s;transition-delay:calc(var(--i)*32ms + .95s)}
+.letter.open .note .w{opacity:1;filter:none}
+.letter:not(.open) .note .w{transition-delay:0s}
+.js .note .sig{clip-path:inset(0 100% 0 0);transition:clip-path 1.6s calc(var(--n,40)*32ms + 1.2s) ease-out}
+.letter.open .note .sig{clip-path:inset(0 0 0 0)}
+.letter:not(.open) .note .sig{transition-delay:0s}
+
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}.js .chapter:not(.seen) .pf{opacity:1;transform:none}}
 </style>
 </head>
@@ -214,7 +297,7 @@ const PH = {
   seaside: "https://www.figma.com/api/mcp/asset/93aa1a90-ca0d-4fa6-9f5d-28e2c63175a4.png",
   rain: "https://www.figma.com/api/mcp/asset/76f33412-7a51-4a97-9fee-948756d562c6.png",
   wheat: "https://www.figma.com/api/mcp/asset/c98f48dd-1f8b-4159-9d49-224f2df2f134.png",
-  lakedance: "/assets/soleil/lakedance.webp", lotus: "/assets/soleil/lotus.webp", twirl: "/assets/soleil/twirl.webp"
+  lakedance: "/assets/wildflower/lakedance.webp", lotus: "/assets/wildflower/lotus.webp", twirl: "/assets/wildflower/twirl.webp"
 };
 </script>
 
@@ -222,18 +305,21 @@ const PH = {
 
 <main>
 <section class="hero" aria-label="Meera and Aarav">
+ <svg class="bfly b1" viewBox="0 0 60 44" aria-hidden="true"><g class="w wl"><path d="M29 20C24 4 6 0 4 12c-1 9 12 12 25 9z" fill="#d9a46b"/><path d="M29 23C19 25 8 34 13 40c5 4 13-5 16-17z" fill="#e8bd86"/><circle cx="14" cy="12" r="2.4" fill="#fff8ec"/></g><g class="w wr"><path d="M31 20C36 4 54 0 56 12c1 9-12 12-25 9z" fill="#d9a46b"/><path d="M31 23C41 25 52 34 47 40c-5 4-13-5-16-17z" fill="#e8bd86"/><circle cx="46" cy="12" r="2.4" fill="#fff8ec"/></g><path d="M30 12v22" stroke="#5b4630" stroke-width="2.4" stroke-linecap="round"/><path d="M30 12c-2-5-5-7-7-8M30 12c2-5 5-7 7-8" stroke="#5b4630" stroke-width="1" fill="none"/></svg><svg class="bfly b2" viewBox="0 0 60 44" aria-hidden="true"><g class="w wl"><path d="M29 20C24 4 6 0 4 12c-1 9 12 12 25 9z" fill="#d9a46b"/><path d="M29 23C19 25 8 34 13 40c5 4 13-5 16-17z" fill="#e8bd86"/><circle cx="14" cy="12" r="2.4" fill="#fff8ec"/></g><g class="w wr"><path d="M31 20C36 4 54 0 56 12c1 9-12 12-25 9z" fill="#d9a46b"/><path d="M31 23C41 25 52 34 47 40c-5 4-13-5-16-17z" fill="#e8bd86"/><circle cx="46" cy="12" r="2.4" fill="#fff8ec"/></g><path d="M30 12v22" stroke="#5b4630" stroke-width="2.4" stroke-linecap="round"/><path d="M30 12c-2-5-5-7-7-8M30 12c2-5 5-7 7-8" stroke="#5b4630" stroke-width="1" fill="none"/></svg>
  <div class="wrap">
   <div class="collage">
-   <img class="deco plume sway" src="/assets/soleil/plume.webp" alt="">
-   <div class="pf ribbon tallf"><div class="pic"><img data-ph="heroTall" alt="Meera and Aarav among the olive trees"></div><img class="edge" src="/assets/soleil/ribbonframe.webp" alt=""></div>
-   <div class="pf polaroid wide"><div class="pic"><img data-ph="lakedance" alt="Dancing by the lake at sunset"></div><img class="edge" src="/assets/soleil/polaroid.webp" alt=""></div>
-   <img class="deco stamp" src="/assets/soleil/stamp.webp" alt="">
-   <img class="deco gyp sway slow" src="/assets/soleil/gyp.webp" alt="">
+   <img class="deco plume sway" src="/assets/wildflower/plume.webp" alt="">
+   <div class="pf ribbon tallf"><div class="pic"><img data-ph="heroTall" alt="Meera and Aarav among the olive trees"></div><img class="edge" src="/assets/wildflower/ribbonframe.webp" alt=""></div>
+   <div class="pf polaroid wide"><div class="pic"><img data-ph="lakedance" alt="Dancing by the lake at sunset"></div><img class="edge" src="/assets/wildflower/polaroid.webp" alt=""></div>
+   <img class="deco stamp" src="/assets/wildflower/stamp.webp" alt="">
+   <img class="deco gyp sway slow" src="/assets/wildflower/gyp.webp" alt="">
+   <svg class="doodle arrow draw" viewBox="0 0 74 60" style="--len:120;--at:1.5s" aria-hidden="true"><path d="M70 52C52 54 26 46 14 18"/><path d="M8 26 13 16 24 20"/></svg>
+   <span class="anno write" style="--at:1.9s">us, obviously</span>
   </div>
   <div class="hero-text">
    <div class="label">Five years, and counting</div>
    <h1><span>Meera</span><span class="amp">&amp;</span><span>Aarav</span></h1>
-   <div class="when"><span>14.02.2027</span><i>Udaipur, Rajasthan</i></div>
+   <div class="when"><span>14.02.2027</span><i>Udaipur, Rajasthan<svg class="doodle hrt draw" viewBox="0 0 30 28" style="--len:90;--at:2.4s" aria-hidden="true"><path d="M15 25C5 18 2 12 4 7c2-5 9-5 11 1 2-6 9-6 11-1 2 5-1 11-11 18z"/></svg></i></div>
   </div>
  </div>
 </section>
@@ -242,7 +328,7 @@ const PH = {
  <div class="wrap">
   <div class="photo"><img class="f" data-ph="flatlay" alt="Dried flowers, a note and two rings on linen" loading="lazy"></div>
   <div class="sheet">
-   <img class="deco olive" src="/assets/soleil/olive.webp" alt="">
+   <img class="deco olive" src="/assets/wildflower/olive.webp" alt="">
    <div class="month">February <small>2027</small></div>
    <div class="grid" id="grid"></div>
    <p class="calnote">save this one, it's ours</p>
@@ -254,8 +340,8 @@ const PH = {
  <div class="narrow">
   <blockquote>Somewhere between the first coffee and the last train home, you became my favourite place.</blockquote>
   <div class="player" id="player">
-   <img class="deco lilies" src="/assets/soleil/lilies.webp" alt="">
-   <div class="disc"><img class="rec" src="/assets/soleil/vinyl.webp" alt=""><img class="cover" data-ph="sunset" alt="Album cover"></div>
+   <img class="deco lilies" src="/assets/wildflower/lilies.webp" alt="">
+   <div class="disc"><img class="rec" src="/assets/wildflower/vinyl.webp" alt=""><img class="cover" data-ph="sunset" alt="Album cover"></div>
    <div>
     <h3>Slow Mornings</h3>
     <div class="by">Our song</div>
@@ -273,25 +359,27 @@ const PH = {
 </section>
 
 <section class="count" aria-label="Countdown">
- <img class="deco pressed" src="/assets/soleil/pressed.webp" alt="">
+ <img class="deco pressed" src="/assets/wildflower/pressed.webp" alt="">
  <div class="wrap">
   <div><div class="label">Until 14 February 2027</div><h2>Not long now</h2></div>
   <div class="nums"><div><b id="cd">0</b><span>days</span></div><div><b id="ch">0</b><span>hours</span></div><div><b id="cm">0</b><span>minutes</span></div><div><b id="cs">0</b><span>seconds</span></div></div>
  </div>
 </section>
 
+<div class="marq" aria-hidden="true"><div class="mq-in"><span>forever</span><i>✿</i><span>you</span><i>✿</i><span>home</span><i>✿</i><span>always</span><i>✿</i><span>us</span><i>✿</i><span>every day</span><i>✿</i><span>my person</span><i>✿</i><span>still you</span><i>✿</i><span>forever</span><i>✿</i><span>you</span><i>✿</i><span>home</span><i>✿</i><span>always</span><i>✿</i><span>us</span><i>✿</i><span>every day</span><i>✿</i><span>my person</span><i>✿</i><span>still you</span><i>✿</i></div></div>
+
 <section class="story" id="story">
  <div class="wrap">
   <h2>Our story</h2>
-  <article class="chapter"><div class="ph"><div class="pf polaroid"><div class="pic"><img data-ph="cafe" alt="Laughing at a cafe table" loading="lazy"></div><img class="edge" src="/assets/soleil/polaroid.webp" alt=""></div></div><div><div class="n">I.</div><h3>The beginning</h3><p>A borrowed table at a crowded café, two coffees going cold, and a conversation neither of us wanted to end.</p><time>March 2022</time></div></article>
-  <article class="chapter"><div class="ph"><div class="pf polaroid"><div class="pic"><img data-ph="seaside" alt="Sitting by the sea" loading="lazy"></div><img class="edge" src="/assets/soleil/polaroid.webp" alt=""></div></div><div><div class="n">II.</div><h3>The first trip</h3><p>Salt in our hair, the wrong ferry twice, and the moment we knew we travelled well together.</p><time>August 2023</time></div></article>
-  <article class="chapter"><div class="ph"><div class="pf polaroid"><div class="pic"><img data-ph="lotus" alt="Hands holding a lotus" loading="lazy"></div><img class="edge" src="/assets/soleil/polaroid.webp" alt=""></div></div><div><div class="n">III.</div><h3>The question</h3><p>Somewhere along the way, forever stopped feeling like a distant idea and started feeling like us.</p><time>December 2025</time></div></article>
-  <article class="chapter"><div class="ph"><div class="pf polaroid"><div class="pic"><img data-ph="lakedance" alt="Dancing by the lake" loading="lazy"></div><img class="edge" src="/assets/soleil/polaroid.webp" alt=""></div></div><div><div class="n">IV.</div><h3>Still choosing you</h3><p>Every ordinary evening, every small win, every quiet Sunday. This is the chapter we're writing now.</p><time>Today</time></div></article>
+  <article class="chapter"><div class="ph"><div class="pf polaroid"><div class="pic"><img data-ph="cafe" alt="Laughing at a cafe table" loading="lazy"></div><img class="edge" src="/assets/wildflower/polaroid.webp" alt=""></div></div><div><div class="n">I.</div><h3>The beginning</h3><p>A borrowed table at a crowded café, two coffees going cold, and a conversation neither of us wanted to end.</p><time>March 2022</time></div></article>
+  <article class="chapter"><div class="ph"><div class="pf polaroid"><div class="pic"><img data-ph="seaside" alt="Sitting by the sea" loading="lazy"></div><img class="edge" src="/assets/wildflower/polaroid.webp" alt=""></div></div><div><div class="n">II.</div><h3>The first trip</h3><p>Salt in our hair, the wrong ferry twice, and the moment we knew we travelled well together.</p><time>August 2023</time></div></article>
+  <article class="chapter"><div class="ph"><div class="pf polaroid"><div class="pic"><img data-ph="lotus" alt="Hands holding a lotus" loading="lazy"></div><img class="edge" src="/assets/wildflower/polaroid.webp" alt=""></div></div><div><div class="n">III.</div><h3>The question</h3><p>Somewhere along the way, forever stopped feeling like a distant idea and started feeling like us.</p><time>December 2025</time></div></article>
+  <article class="chapter"><div class="ph"><div class="pf polaroid"><div class="pic"><img data-ph="lakedance" alt="Dancing by the lake" loading="lazy"></div><img class="edge" src="/assets/wildflower/polaroid.webp" alt=""></div></div><div><div class="n">IV.</div><h3>Still choosing you</h3><p>Every ordinary evening, every small win, every quiet Sunday. This is the chapter we're writing now.</p><time>Today</time></div></article>
  </div>
 </section>
 
 <section class="moments" id="moments">
- <img class="deco dried sway slow" src="/assets/soleil/dried.webp" alt="">
+ <img class="deco dried sway slow" src="/assets/wildflower/dried.webp" alt="">
  <div class="wrap head"><h2>Little moments</h2><p>The glances, the detours, the days we didn't want to end.</p></div>
  <div class="strip" tabindex="0" aria-label="Photos, swipe to see more">
   <figure><img data-ph="twirl" alt="Twirling in a field" loading="lazy"><figcaption>One more spin</figcaption></figure>
@@ -302,19 +390,28 @@ const PH = {
  </div>
 </section>
 
+<section class="love" id="love">
+ <div class="wrap">
+  <div class="label">A few of my favourite things</div>
+  <h2>Little things I love about you</h2>
+  <p class="tip">Tap a note to read it.</p>
+  <div class="notes" id="notes"></div>
+ </div>
+</section>
+
 <section class="letter" id="letter">
  <div class="label">For you, from me</div>
  <h2>Open when you miss me</h2>
  <div class="stack">
-  <img class="handletter" src="/assets/soleil/loveletter.webp" alt="">
+  <img class="handletter" src="/assets/wildflower/loveletter.webp" alt="">
   <article class="note" id="note">
-   <img class="deco stamp" src="/assets/soleil/stamp.webp" alt="">
+   <img class="deco stamp" src="/assets/wildflower/stamp.webp" alt="">
    <h3>My love,</h3>
    <p>You make ordinary days feel like a holiday. You remember the small things, you laugh at my worst jokes, and you make every room feel like home.</p>
    <p>Thank you for five years of choosing me, on the easy days and the hard ones. I'd choose you again, every single time.</p>
    <div class="sig">Yours, Aarav</div>
   </article>
-  <button class="envbtn" type="button" id="envBtn" aria-controls="note" aria-expanded="false"><img src="/assets/soleil/envelope.webp" alt="An envelope full of flowers"><small>Tap to open</small></button>
+  <button class="envbtn" type="button" id="envBtn" aria-controls="note" aria-expanded="false"><img src="/assets/wildflower/envelope.webp" alt="An envelope full of flowers"><small>Tap to open</small></button>
  </div>
  <button class="reclose" type="button" id="reclose">Put it back in the envelope</button>
 </section>
@@ -322,7 +419,7 @@ const PH = {
 <section class="day" id="day">
  <div class="wrap">
   <div class="daywrap">
-   <img class="deco bouquet sway slow" src="/assets/soleil/bouquet.webp" alt="">
+   <img class="deco bouquet sway slow" src="/assets/wildflower/bouquet.webp" alt="">
    <h2>The day</h2>
    <ol>
     <li><b>4:00 pm</b><span>Welcome drinks</span></li>
@@ -341,8 +438,8 @@ const PH = {
 </section>
 
 <section class="end" aria-label="Closing">
- <img class="deco dried sway" src="/assets/soleil/dried.webp" alt="">
- <img class="deco plume sway slow" src="/assets/soleil/plume.webp" alt="">
+ <img class="deco dried sway" src="/assets/wildflower/dried.webp" alt="">
+ <img class="deco plume sway slow" src="/assets/wildflower/plume.webp" alt="">
  <h2>Meera<br>&amp; Aarav</h2>
  <div class="label">14 February 2027, Udaipur</div>
  <div class="credit">Made with <a href="/">Keepsake</a></div>
@@ -388,6 +485,45 @@ document.querySelectorAll(".cal,.chapter").forEach(s => io.observe(s));
     clearInterval(timer);
     if (on) timer = setInterval(() => { sec = (sec + 1) % len; bar.style.width = (sec / len * 100) + "%"; t.textContent = `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, "0")} / 3:42`; }, 1000);
   };
+})();
+
+
+// little things I love about you
+(function () {
+  const LOVE = [
+    "The way you hum when you cook.",
+    "How you always save me the last bite.",
+    "Your terrible jokes. Every single one.",
+    "That you remember my coffee order.",
+    "How safe I feel when you hold my hand.",
+    "You, on a lazy Sunday morning."
+  ];
+  const C = ["#F4E6B9", "#EBD6CF", "#DCE3CC", "#F2DCC4", "#E4DCEB", "#F7F0E2"], R = [-3, 2.2, -1.5, 2.8, -2.4, 1.6];
+  const box = document.getElementById("notes");
+  LOVE.forEach((t, i) => {
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "sn"; b.style.setProperty("--c", C[i % C.length]); b.style.setProperty("--r", R[i % R.length] + "deg");
+    b.setAttribute("aria-pressed", "false");
+    b.innerHTML = `<span class="sn-in"><span class="sn-f"><b>No. ${i + 1}</b><svg viewBox="0 0 30 28" aria-hidden="true"><path d="M15 25C5 18 2 12 4 7c2-5 9-5 11 1 2-6 9-6 11-1 2 5-1 11-11 18z" fill="none" stroke="currentColor" stroke-width="2"/></svg><small>tap me</small></span><span class="sn-b"><span></span></span></span>`;
+    b.querySelector(".sn-b span").textContent = t;
+    b.setAttribute("aria-label", `Note ${i + 1}: ${t}`);
+    b.onclick = () => { const on = b.classList.toggle("on"); b.setAttribute("aria-pressed", on); };
+    box.appendChild(b);
+  });
+})();
+
+// letter: split into words so it can appear as if being written
+(function () {
+  let i = 0;
+  document.querySelectorAll("#note p").forEach(p => {
+    const words = p.textContent.split(/(\s+)/);
+    p.textContent = "";
+    words.forEach(w => {
+      if (/^\s+$/.test(w)) { p.append(w); return; }
+      const s = document.createElement("span"); s.className = "w"; s.style.setProperty("--i", i++); s.textContent = w; p.append(s);
+    });
+  });
+  document.getElementById("note").style.setProperty("--n", i);
 })();
 
 // the flower envelope opens to the letter
