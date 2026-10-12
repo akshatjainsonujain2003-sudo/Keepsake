@@ -1439,6 +1439,8 @@ window.qrcode=function(typeNumber,errorLevel){
 };
 })();
 </script>
+<style>.payPanel{max-width:760px;margin:0 auto 24px}.liveExtra{margin-top:12px}.lockField{margin-top:6px}</style>
+<script src="/assets/ks-checkout.v1.js"></script>
 </head>
 <body>
 <div class="topbar"><div class="wrap nav">
@@ -1499,14 +1501,15 @@ window.qrcode=function(typeNumber,errorLevel){
  <div class="field"><label>Buttons (up to 8)</label><div id="cRows"></div><button class="tool" id="cAdd" type="button" style="margin-top:8px">+ Add button</button></div>
  <div class="mediaHint">Use “Cover photo link” above for a logo or photo. For Google reviews: open your business on Google Maps → Share → paste that link as a Link button.</div>
 </div>
-<button class="btn" id="generateBtn" style="width:100%;margin-top:8px">Generate my memory link</button>
+<div class="field lockField"><label>Password (optional)</label><div id="lockBox"></div></div>
+<button class="btn" id="generateBtn" style="width:100%;margin-top:8px">Save &amp; get my link</button>
 <div class="status" id="generateStatus"></div>
 </div>
 
 <div class="previewArea reveal">
-<div class="previewTitle"><span>Live preview</span><button class="tool" id="previewShare">Share preview</button></div>
+<div class="previewTitle"><span>Live preview</span><button class="tool" id="previewShare" hidden>Share preview</button></div>
 <div class="phone"><div class="phoneScreen"><div class="memoryCard" id="preview"></div></div></div>
-<div class="tools"><button class="tool" id="resetBtn">Reset</button><button class="tool" id="downloadCard">Save card HTML</button></div>
+<div class="tools"><button class="tool" id="resetBtn">Reset</button><button class="tool" id="downloadCard" hidden>Save card HTML</button></div>
 </div>
 </div>
 </div>
@@ -1515,14 +1518,15 @@ window.qrcode=function(typeNumber,errorLevel){
 <section class="section linkSection" id="link">
 <div class="wrap">
 <div class="sectionHead reveal"><div class="script" style="color:#e4c680">one link, many memories</div><h2 style="color:#f4dfaa">Ready for the tag.</h2></div>
-<div class="linkGrid">
+<div class="darkPanel payPanel" id="payPanel" hidden></div>
+<div class="linkGrid" id="linkGrid">
 <div class="darkPanel reveal">
 <h3>Your memory link</h3>
 
-<div class="field"><label style="color:#c9b99a">Page the QR opens (this site's address)</label><input id="siteUrl" type="url" placeholder="https://yourname.github.io/keepsake/"></div><div class="linkBox" id="shortLink">Generate your card first.</div><div class="badge" id="byteBadge"></div>
-<div class="heroBtns"><button class="btn small" id="shortenBtn">Shorten link</button><button class="btn small ghost" id="copyBtn">Copy link</button><button class="btn small ghost" id="shareBtn">Share</button><button class="btn small ghost" id="writeBtn">Write NFC</button><button class="btn small ghost" id="testBtn">Test</button></div>
+<div class="field" hidden><label style="color:#c9b99a">Page the QR opens (this site's address)</label><input id="siteUrl" type="url" placeholder="https://yourname.github.io/keepsake/"></div><div class="linkBox" id="shortLink">Save your card first.</div><div class="badge" id="byteBadge"></div>
+<div class="heroBtns"><button class="btn small" id="shortenBtn" hidden>Shorten link</button><button class="btn small ghost" id="copyBtn">Copy link</button><button class="btn small ghost" id="shareBtn">Share</button><button class="btn small ghost" id="writeBtn">Write NFC</button><button class="btn small ghost" id="testBtn">Test</button></div>
 <div class="status" id="linkStatus"></div>
-<details style="margin-top:14px"><summary>Host this site free — publish in one tap</summary>
+<details hidden style="margin-top:14px"><summary>Host this site free — publish in one tap</summary>
 <p>Publishes this page to your own free GitHub Pages site and fills in the address for you. Your token is used only to talk to GitHub and is never saved.</p>
 <div class="field"><label style="color:#c9b99a">GitHub token</label><input id="ghToken" type="password" autocomplete="off" placeholder="ghp_…"></div>
 <p style="font-size:.85em"><a href="https://github.com/settings/tokens/new?scopes=public_repo&description=Keepsake" target="_blank" rel="noopener" style="color:#e4c680">Get a token</a> (free GitHub account; tick “public_repo”, tap Generate, copy it here).</p>
@@ -1588,8 +1592,8 @@ const isImg=u=>{try{return /^https?:$/.test(new URL(u).protocol)}catch(e){return
 function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove("show"),2600)}
 function siteBase(){const v=($("#siteUrl")?.value||"").trim().split("#")[0];if(!/^https?:\/\//i.test(v)||isBlockedHost(v))return"";return v}
 async function cardLink(){const b=siteBase();if(!b)throw new Error("base");return b+"#"+await pack(wire(d))}
-function finalLink(){return short||longLink||siteBase()}
-async function ensureLink(){if(short||longLink)return finalLink();syncForm();const base=forceSelf?"":siteBase();try{if(base){longLink=await cardLink();return longLink}longLink=selfLink();return longLink}catch(e){toast("Could not build the memory link");return""}}
+function finalLink(){return short||longLink||""}
+async function ensureLink(){if(short||longLink)return finalLink();if(/^https?:$/.test(location.protocol)){toast(CUSTOMER&&EDIT_ID?"Activate your card to get its link ♡":"Save your card first ♡");$("#generateBtn")?.scrollIntoView({behavior:"smooth",block:"center"});return""}syncForm();const base=forceSelf?"":siteBase();try{if(base){longLink=await cardLink();return longLink}longLink=selfLink();return longLink}catch(e){toast("Could not build the memory link");return""}}
 function syncForm(){d.t=$("#title").value.trim()||DEF.t;d.q=$("#quote").value.trim()||DEF.q;for(let i=0;i<4;i++){d.i[i].l=$("#label"+i).value.trim()||DEF.i[i].l;d.i[i].v=$("#value"+i).value.trim()}d.p=$("#coverUrl").value.trim();d.template=currentTemplate}
 function badge(u){const n=byteLen(u),el=$("#byteBadge");if(!el)return;el.textContent=u?`${n} bytes · ${n<100?"✓ under 100":"over 100"}`:"";el.className="badge "+(n<100?"good":"warn")}
 function icon(n){return ["▧","▶","♫","♡"][n]||"♡"}
@@ -1783,7 +1787,9 @@ function needHost(msg){setStatus("#linkStatus",msg,false);const dt=document.quer
 async function generate(){
  const btn=$("#generateBtn");btn.disabled=true;syncForm();persistDraft();short="";longLink="";
  try{
- if(CUSTOMER){setStatus("#generateStatus","Saving to your account…",true);const r=await fetch("/api/customer-memories",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({data:wire(d)})});const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||"Could not save this memory.");short=location.origin+j.url;longLink=short;$("#shortLink").textContent=short;badge(short);setStatus("#linkStatus","Saved to your account. This public link is ready for QR and NFC.",true);setStatus("#generateStatus","Saved to My Memories ♡",true);drawQR();btn.disabled=false;$("#link").scrollIntoView({behavior:"smooth",block:"start"});toast("Memory saved to your account ♡");return}
+ if(!CUSTOMER&&!SHOP){persistDraft();setStatus("#generateStatus","Log in or create a free account to save your card…",true);location.href="/account?next="+encodeURIComponent("/studio?resume=1");return}
+ if(CUSTOMER){const le=LOCK&&LOCK.check();if(le)throw new Error(le);setStatus("#generateStatus","Saving to your account…",true);let r=await saveMemory();if(r.status===404&&EDIT_ID){EDIT_ID=null;r=await saveMemory()}const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||"Could not save this memory.");setEdit(j.id);if(LOCK)LOCK.set(j.locked);persistDraft();btn.disabled=false;
+  if(j.active){showLive(j.url);setStatus("#generateStatus","Saved. Your live card is updated ♡",true);toast("Changes saved ♡")}else{setStatus("#generateStatus","Saved to your account. Choose how to activate it below.",true);showCheckout("activate")}return}
  if(SHOP){setStatus("#generateStatus","Saving your card…",true);const r=await fetch("/api/card",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({key:SHOP.key,data:wire(d)})});const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||"Could not save the card.");short=location.origin+"/c/"+j.id;longLink=short;$("#shortLink").textContent=short;badge(short);setStatus("#linkStatus","Saved. This short link is ready for QR and NFC.",true);setStatus("#generateStatus","Ready ♡",true);drawQR();btn.disabled=false;$("#link").scrollIntoView({behavior:"smooth",block:"start"});toast("Card saved ♡");loadMine();return}
 
    const base=forceSelf?"":siteBase();
@@ -1879,7 +1885,7 @@ async function shareLink(){
  if(navigator.share){try{await navigator.share(isWeb(u)?{title:d.t||"Keepsake memory",text:d.q||"A memory for you ♡",url:u}:{title:d.t||"Keepsake memory",text:u});return}catch(e){if(e.name==="AbortError")return}}
  await copyLink();
 }
-async function writeNFC(){ let u=finalLink(); if(isWeb(u)&&!short&&byteLen(u)>=100&&byteLen(u)<5000){try{setStatus("#linkStatus","Shortening for the tag…",true);short=await shorten(u);u=short;$("#shortLink").textContent=u;badge(u);drawQR()}catch(e){setStatus("#linkStatus","Couldn't shorten the link, so it's over 100 bytes. Check your connection and press Shorten link again.",false);return}}
+async function writeNFC(){ let u=finalLink(); if(!u){await ensureLink();return} if(isWeb(u)&&!short&&byteLen(u)>=100&&byteLen(u)<5000){try{setStatus("#linkStatus","Shortening for the tag…",true);short=await shorten(u);u=short;$("#shortLink").textContent=u;badge(u);drawQR()}catch(e){setStatus("#linkStatus","Couldn't shorten the link, so it's over 100 bytes. Check your connection and press Shorten link again.",false);return}}
  if(!u||byteLen(u)>=1000){$("#linkStatus").textContent="This memory link is large for an NFC tag. Publish the page and use a shorter page URL before writing NFC.";$("#linkStatus").className="status err";toast("NFC link is too large");return}
  if(!window.isSecureContext){$("#linkStatus").textContent="NFC writing requires HTTPS. Open the hosted site over HTTPS.";$("#linkStatus").className="status err";return}
  if(!("NDEFReader" in window)){await copyLink();$("#linkStatus").textContent="Web NFC isn't supported here. The link was copied; use an NFC writing app.";$("#linkStatus").className="status err";return}
@@ -2035,9 +2041,9 @@ function renderCustom(root,data){
 const fileToData=f=>new Promise((ok,no)=>{const r=new FileReader();r.onload=()=>ok(r.result);r.onerror=()=>no(new Error("Could not read that photo."));r.readAsDataURL(f)});
 function shrinkData(src,max,q){return new Promise((ok,no)=>{const im=new Image();im.onload=()=>{const k=Math.min(1,max/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);const x=c.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,c.width,c.height);x.drawImage(im,0,0,c.width,c.height);ok(c.toDataURL("image/jpeg",q))};im.onerror=()=>no(new Error("That photo format isn't supported. Try a JPG or PNG."));im.src=src})}
 async function uploadData(src){
- if(!SHOP)throw new Error("Log in with your shop key to upload photos.");
+ if(!SHOP&&!CUSTOMER){persistDraft();throw new Error("Log in or create a free account to upload photos.")}
  let data=await shrinkData(src,1000,.78);if(data.length>440000)data=await shrinkData(src,760,.68);
- const r=await fetch("/api/img",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({key:SHOP.key,data})});
+ const r=await fetch("/api/img",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(SHOP?{key:SHOP.key,data}:{data})});
  const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||"Upload failed.");return j.url}
 document.addEventListener("change",async e=>{
  const t=e.target;if(!t.matches||!(t.matches("#cBgFile")||t.matches("[data-up]"))||!t.files||!t.files[0])return;
@@ -2047,13 +2053,13 @@ document.addEventListener("change",async e=>{
   else{t.closest(".cRow").querySelector("[data-f=v]").value=u;cRead();cChanged()}
   toast("Photo added ♡")}catch(x){toast(x.message||"Upload failed.")}});
 function cRead(){if(!d.c)return;d.c.b=$("#cB").value;d.c.g=$("#cG").value;d.c.x=$("#cX").value;d.c.a=$("#cA").value;d.c.f=$("#cF").value;d.c.o=+$("#cO").value;d.c.s=$("#cS").value;d.c.r=$$("#cRows .cRow").map(r=>[r.querySelector("[data-f=l]").value.trim().slice(0,40),r.querySelector("[data-f=t]").value,r.querySelector("[data-f=v]").value.trim()])}
-function cRows(){$("#cRows").innerHTML=(d.c.r||[]).map(([l,t,v])=>`<div class="cRow"><input data-f="l" maxlength="40" placeholder="Button name" value="${esc(l)}"><select data-f="t">${Object.entries(CT).map(([k,x])=>`<option value="${k}"${k===t?" selected":""}>${x[1]}</option>`).join("")}</select><input data-f="v" placeholder="${esc((CT[t]||CT.link)[2])}" value="${esc(v)}">${t==="img"&&SHOP?`<label class="tool">Upload photo<input type="file" accept="image/*" hidden data-up></label>`:""}<button class="tool" data-del type="button">Remove</button></div>`).join("")}
+function cRows(){$("#cRows").innerHTML=(d.c.r||[]).map(([l,t,v])=>`<div class="cRow"><input data-f="l" maxlength="40" placeholder="Button name" value="${esc(l)}"><select data-f="t">${Object.entries(CT).map(([k,x])=>`<option value="${k}"${k===t?" selected":""}>${x[1]}</option>`).join("")}</select><input data-f="v" placeholder="${esc((CT[t]||CT.link)[2])}" value="${esc(v)}">${t==="img"&&(SHOP||CUSTOMER)?`<label class="tool">Upload photo<input type="file" accept="image/*" hidden data-up></label>`:""}<button class="tool" data-del type="button">Remove</button></div>`).join("")}
 function cSync(){const on=!!d.c;$$("#modeOpts .pill").forEach(b=>b.classList.toggle("active",(b.dataset.m==="cus")===on));$("#cPanel").hidden=!on;$$(".stdF").forEach(e=>e.hidden=on);
- if(!$("#cPresets").children.length)$("#cPresets").innerHTML=Object.entries(PRESETS).map(([k,p])=>`<button class="pill" type="button" data-p="${k}">${p.n}</button>`).join("");
+ if(!$("#cPresets").children.length)$("#cPresets").innerHTML=Object.entries(PRESETS).filter(([k])=>k!=="shop"||SHOP).map(([k,p])=>`<button class="pill" type="button" data-p="${k}">${p.n}</button>`).join("");
  if(on){$("#cB").value=safeColor(d.c.b,"#42070f");$("#cG").value=safeColor(d.c.g,"#230307");$("#cX").value=safeColor(d.c.x,"#f8f0df");$("#cA").value=safeColor(d.c.a,"#d6b06a");$("#cF").value=FONTS[d.c.f]?d.c.f:"serif";$("#cO").value=d.c.o??35;$("#cS").value=d.c.s||"solid";
   const bm=d.c.bm||"col";$$("#cBgMode .pill").forEach(b=>b.classList.toggle("active",b.dataset.bm===bm));$("#cThemes").hidden=bm!=="th";$("#cUp").hidden=bm!=="up";
   if(!$("#cThemes").children.length)$("#cThemes").innerHTML=templates.map(t=>`<button type="button" data-bt="${t.id}" aria-label="${esc(t.name)}"><img src="${t.th}" alt="${esc(t.name)}" loading="lazy" width="60" height="107" onerror="this.onerror=null;this.src='/assets/${t.id}.webp'"></button>`).join("");
-  $$("#cThemes button").forEach(b=>b.classList.toggle("active",b.dataset.bt===d.c.bt));$("#cBgFile").disabled=!SHOP;$("#cUpNote").textContent=SHOP?"Your photo is saved with the card.":"Log in with your shop key to upload your own photos.";
+  $$("#cThemes button").forEach(b=>b.classList.toggle("active",b.dataset.bt===d.c.bt));$("#cBgFile").disabled=!SHOP&&!CUSTOMER;$("#cUpNote").innerHTML=(SHOP||CUSTOMER)?"Your photo is saved with the card.":'<a href="/account?next=%2Fstudio%3Fresume%3D1" style="color:#e4c680">Log in</a> to upload your own photos.';
   cRows()}}
 function cChanged(){short="";longLink="";renderPreview();persistDraft()}
 document.addEventListener("click",e=>{
@@ -2066,18 +2072,40 @@ document.addEventListener("click",e=>{
  if(e.target.closest("#downloadCard")&&d.c){e.stopImmediatePropagation();e.preventDefault();toast("Custom designs are shared with the link, QR or NFC")}
 },true);
 document.addEventListener("input",e=>{if(!e.target.closest("#cPanel")||!d.c)return;cRead();if(e.target.tagName==="SELECT"&&e.target.dataset.f==="t")cRows();cChanged()});
-function urlStart(){const q=new URLSearchParams(location.search),oc=q.get("occasion")||(q.get("mode")==="business"?"shop":""),ds=q.get("design");
+function urlStart(){const q=new URLSearchParams(location.search),oc=(q.get("occasion")==="shop"&&!SHOP?"":q.get("occasion"))||(q.get("mode")==="business"&&SHOP?"shop":""),ds=q.get("design");
  if(ds){const i=templates.findIndex(t=>t.id===ds);const b=$$("#templateGrid .template")[i];if(b)b.click()}
  if(oc&&PRESETS[oc]){const P=PRESETS[oc];d.c=structuredClone(P.c);$("#title").value=P.t;$("#quote").value=P.q;cSync();cChanged()}
  if(ds||oc)setTimeout(()=>$("#create")?.scrollIntoView({behavior:"smooth"}),400)}
-async function parseHash(){const pm=location.pathname.match(/^\/(c|m)\/([A-Za-z0-9]{4,16})\/?$/);if(pm){try{const api=pm[1]==="m"?"/api/customer-memories?id=":"/api/card?id=";const r=await fetch(api+encodeURIComponent(pm[2]),{cache:"no-store"});if(r.ok){const j=await r.json();d=unwire(j.data);currentTemplate=d.template;if(pm[1]==="c")window.__shop=j.shop;return true}}catch(e){}d=null;return true}const h=location.hash.slice(1);if(!h)return false;try{if(h[0]==="~"||h[0]==="."){const o=await unpack(h);d=unwire(o);currentTemplate=d.template;return true}const x=dec(h);if(x&&x.t&&Array.isArray(x.i)){d=x;currentTemplate=x.template||"laceAlbum";return true}}catch(e){}return false}
+async function parseHash(){const pm=location.pathname.match(/^\/(c|m)\/([A-Za-z0-9]{4,16})\/?$/);if(pm){try{if(pm[1]==="m"){const j=await KSKeepsake.fetch(pm[2]);if(j.error){if(j.inactive)window.__inactive=true;d=null;return true}if(j.kind==="site"){location.replace("/s/"+pm[2]);await new Promise(()=>{})}d=unwire(j.data);currentTemplate=d.template;if(j.active===false)window.__preview=pm[2];return true}const r=await fetch("/api/card?id="+encodeURIComponent(pm[2]),{cache:"no-store"});if(r.ok){const j=await r.json();d=unwire(j.data);currentTemplate=d.template;window.__shop=j.shop;return true}}catch(e){}d=null;return true}const h=location.hash.slice(1);if(!h)return false;try{if(h[0]==="~"||h[0]==="."){const o=await unpack(h);d=unwire(o);currentTemplate=d.template;return true}const x=dec(h);if(x&&x.t&&Array.isArray(x.i)){d=x;currentTemplate=x.template||"laceAlbum";return true}}catch(e){}return false}
 function shopCta(){const sh=window.__shop;if(sh&&sh.name){const wa=(sh.whatsapp||"").replace(/\D/g,"");return `<div style="text-align:center;margin:14px;color:#f8f0df"><div style="font-family:Georgia,serif;font-size:1.1em">${esc(sh.name)}</div>${wa?`<a class="btn" style="display:block;margin-top:10px;text-decoration:none;text-align:center" href="https://wa.me/${wa}?text=${encodeURIComponent("Hi! I'd love a keepsake like this ♡")}">Order yours ♡</a>`:""}</div>`}return `<a href="/" class="btn" style="display:block;text-align:center;margin:14px;text-decoration:none">Make your own keepsake</a>`}
-function showViewer(){ if(!d){document.body.innerHTML='<div style="min-height:100vh;display:grid;place-items:center;background:#2a0409;color:#f8f0df;font:20px Georgia,serif;text-align:center;padding:30px">This card could not be found.</div>';return} document.body.innerHTML=`<div class="hero" style="min-height:100vh;display:grid;place-items:center"><div class="phone" style="width:min(390px,92vw)"><div class="phoneScreen"><div class="memoryCard" id="viewer"></div></div>${shopCta()}</div></div><div class="toast" id="toast"></div>`;
+function showViewer(){ if(!d){document.body.innerHTML='<div style="min-height:100vh;display:grid;place-items:center;background:#2a0409;color:#f8f0df;font:20px Georgia,serif;text-align:center;padding:30px">'+(window.__inactive?'<div>This keepsake isn’t active yet.<br><small style="font:15px system-ui,sans-serif;opacity:.8">If it’s yours, log in and activate it from My memories.</small></div>':'This card could not be found.')+'</div>';return} document.body.innerHTML=`<div class="hero" style="min-height:100vh;display:grid;place-items:center"><div class="phone" style="width:min(390px,92vw)"><div class="phoneScreen"><div class="memoryCard" id="viewer"></div></div>${shopCta()}</div></div><div class="toast" id="toast"></div>`;
  renderCard($("#viewer"),d);
+ if(window.__preview)document.body.insertAdjacentHTML("afterbegin",`<div style="position:sticky;top:0;z-index:50;background:#d6b06a;color:#2a0409;padding:10px 14px;text-align:center;font:600 14px system-ui,sans-serif">Preview: only you can see this until it’s activated. <a style="color:#2a0409" href="/studio?edit=${encodeURIComponent(window.__preview)}#link">Activate it</a></div>`);
 }
 window.addEventListener("error",e=>{if(!e?.message||e.message==="Script error."||(e.filename&&/^https?:/.test(e.filename)&&!e.filename.startsWith(location.origin)))return;const t=$("#toast");if(t){t.textContent="A feature had trouble loading. The rest of the page is still available.";t.classList.add("show");clearTimeout(window.__errToast);window.__errToast=setTimeout(()=>t.classList.remove("show"),3500)}});
 
 let SHOP=null, CUSTOMER=null;
+// ---- customer cards: save, activate, pay ----
+let EDIT_ID=null,CHECKOUT=null,LOCK=null;
+function setEdit(id){EDIT_ID=id||null;try{const u=new URL(location.href);if(EDIT_ID)u.searchParams.set("edit",EDIT_ID);else u.searchParams.delete("edit");u.searchParams.delete("resume");u.searchParams.delete("account");history.replaceState(null,"",u.pathname+u.search+u.hash)}catch(e){}}
+function saveMemory(){const body={data:wire(d)};if(EDIT_ID)body.id=EDIT_ID;const lk=LOCK&&LOCK.value();if(lk!==undefined)body.lock=lk;return fetch("/api/customer-memories",{method:EDIT_ID?"PUT":"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)})}
+function showLive(url){short=location.origin+url;longLink=short;$("#shortLink").textContent=short;badge(short);$("#payPanel").hidden=true;$("#linkGrid").hidden=false;setStatus("#linkStatus","Your keepsake is live. Share the link, print the QR or write it to an NFC tag.",true);drawQR();upgradeOffer();$("#link").scrollIntoView({behavior:"smooth",block:"start"})}
+function upgradeOffer(){let x=$("#nfcUpsell");if(!x){x=document.createElement("div");x.id="nfcUpsell";x.className="liveExtra";$("#linkStatus").after(x)}x.innerHTML='<button class="btn small ghost" type="button" id="orderFrame">Get it in a photo frame (QR or NFC)</button>';$("#orderFrame").onclick=()=>showCheckout("upgrade");KSCheckout.catalog().then(c=>{if(c.free)x.hidden=true})}
+function showCheckout(mode){
+ if(!CHECKOUT)CHECKOUT=KSCheckout.mount($("#payPanel"),{kind:"card",getId:()=>EDIT_ID,customer:()=>CUSTOMER,onPaid:v=>{showLive(v.url);const fr=v.plan==="frameQr"||v.plan==="frameNfc";toast(fr?"Paid ♡ Your photo frame is on its way":"Paid ♡ Your keepsake is live");setStatus("#linkStatus",fr?"Paid. Your keepsake is live and we'll ship your photo frame soon.":"Paid. Your keepsake is live.",true)}});
+ $("#payPanel").hidden=false;if(mode!=="upgrade")$("#linkGrid").hidden=true;CHECKOUT.open(mode).then(()=>$("#payPanel").scrollIntoView({behavior:"smooth",block:"start"}));
+}
+async function openForEdit(){
+ const q=new URLSearchParams(location.search),id=q.get("edit");
+ if(q.get("resume")&&!id&&CUSTOMER){setStatus("#generateStatus","Welcome! Your design is still here. Tap Save & get my link.",true);setTimeout(()=>$("#generateBtn")?.scrollIntoView({behavior:"smooth",block:"center"}),500)}
+ if(!id||!CUSTOMER)return;
+ try{const r=await fetch("/api/customer-memories?id="+encodeURIComponent(id),{cache:"no-store"});const j=await r.json();if(!r.ok||!j.data)throw new Error(j.error||"Card not found.");
+  d=unwire(j.data);currentTemplate=d.template;hydrateForm();$$("#templateGrid .template").forEach(b=>b.classList.toggle("active",b.dataset.template===currentTemplate));$("#heroImg").src=getTemplate().th;renderPreview();setEdit(id);if(LOCK)LOCK.set(j.locked);
+  if(j.active===false){setStatus("#generateStatus","Editing your saved card. It isn't active yet.",true);showCheckout("activate")}
+  else{showLive("/m/"+id);setStatus("#generateStatus","Editing your live card. Save to update it.",true);if(location.hash!=="#link")setTimeout(()=>$("#create")?.scrollIntoView({behavior:"smooth"}),300)}
+ }catch(e){setEdit(null);toast(e.message||"Could not open that card.")}
+}
+
 async function licence(){
  if(!/^https?:$/.test(location.protocol))return;
  const params=new URLSearchParams(location.search),qk=params.get("shop"),customerMode=params.get("account")==="1";let key=qk||"";try{key=key||(customerMode?"":localStorage.getItem("ks-shop")||"")}catch(e){}
@@ -2086,7 +2114,7 @@ async function licence(){
  if(r&&r.status===501)return;
  if(r&&r.ok&&j.ok){SHOP={key,...j};try{localStorage.setItem("ks-shop",key)}catch(e){}if(qk){const u=new URL(location.href);u.searchParams.delete("shop");history.replaceState(null,"",u.pathname+u.search)}document.querySelectorAll(".brand").forEach(e=>e.textContent=j.name);document.title=j.name+" · Keepsake";const nav=$(".navactions");if(nav)nav.insertAdjacentHTML("afterbegin",'<a href="/login" class="tool" style="text-decoration:none;margin-right:8px">Business log out</a>');loadMine();return}
  try{const cr=await fetch("/api/customer-auth",{cache:"no-store"});const cj=await cr.json();if(cr.ok&&cj.user){CUSTOMER=cj.user;const nav=$(".navactions");if(nav)nav.insertAdjacentHTML("afterbegin",'<a href="/dashboard" class="tool" style="text-decoration:none;margin-right:8px">My memories</a>');return}}catch(e){}
- if(!key){location.replace(customerMode?"/account":"/login"+(location.search?"?next="+encodeURIComponent(location.search):""));return}
+ if(!key){const nav=$(".navactions");if(nav)nav.insertAdjacentHTML("afterbegin",'<a href="/account?next=%2Fstudio%3Fresume%3D1" class="tool" style="text-decoration:none;margin-right:8px">Log in</a>');return}
  const g=document.createElement("div");g.style.cssText="position:fixed;inset:0;z-index:9999;background:#2a0409;display:grid;place-items:center;padding:24px;color:#f8f0df;font-family:system-ui,sans-serif";
  g.innerHTML=`<div style="max-width:380px;width:100%;text-align:center"><div style="font:italic 38px Georgia,serif;color:#e4c680">Keepsake</div><p style="opacity:.85">${esc(j.error||"Key not accepted.")}</p><input id="gk" placeholder="Shop key" style="width:100%;box-sizing:border-box;padding:14px;border-radius:12px;border:1px solid #6b3a35;background:#1a0206;color:#f8f0df;font-size:16px"><button id="gb" style="width:100%;margin-top:10px;padding:14px;border:0;border-radius:12px;background:#d6b06a;color:#2a0409;font-weight:700;font-size:16px">Open studio</button><p><a style="color:#e4c680" href="/account">Customer account login</a></p></div>`;
  document.body.appendChild(g);g.querySelector("#gb").onclick=()=>{const v=g.querySelector("#gk").value.trim();if(v){try{localStorage.setItem("ks-shop",v)}catch(e){}location.href=location.pathname+"?shop="+encodeURIComponent(v)}};
@@ -2104,11 +2132,12 @@ async function init(){ if(await parseHash()){showViewer();return} await licence(
  restoreDraft();
  hydrateForm();
  templateUI();$("#heroImg").src=getTemplate().th;bindLive();renderPreview();urlStart();
+ LOCK=KSLock.mount($("#lockBox"));await openForEdit();
  $("#generateBtn").onclick=generate;$("#shortenBtn").onclick=async()=>{if(shortBusy)return;if(SHOP){toast("Your link is already short ♡");return}const u=longLink||await ensureLink();if(!u)return;if(!isWeb(u)){needHost("Shortening needs a web address. Tap “Publish my site” below (free), then press Generate.");return}if(byteLen(u)>=5000){setStatus("#linkStatus","This link is over the shortener's 5,000-character limit.",false);return}shortBusy=true;$("#shortenBtn").disabled=true;setStatus("#linkStatus","Shortening your link…",true);try{short=await shorten(u);$("#shortLink").textContent=short;badge(short);setStatus("#linkStatus","Short link ready — use it for QR, sharing and NFC.",true);drawQR();toast("Short link created ♡")}catch(e){setStatus("#linkStatus",e?.message||"Could not shorten the link.",false)}finally{shortBusy=false;$("#shortenBtn").disabled=false}};$("#copyBtn").onclick=copyLink;$("#shareBtn").onclick=shareLink;$("#writeBtn").onclick=writeNFC;
  $("#pngBtn").onclick=savePNG;$("#svgBtn").onclick=saveSVG;$("#qrShareBtn")?.addEventListener("click",shareQR);$("#previewShare").onclick=shareLink;$("#downloadCard").onclick=downloadCardHTML;
  $("#publishBtn").onclick=publishSite;
  $("#siteBtn").onclick=()=>{downloadBlob("index.html",new Blob([__SRC.replace(/<div class="toast[^>]*>[^<]*<\/div>/,"")],{type:"text/html;charset=utf-8"}));toast("Saved index.html — upload it to your host ♡")};
- $("#resetBtn").onclick=()=>{d=structuredClone(DEF);d.template="laceAlbum";currentTemplate="laceAlbum";qrStyle="rounded";heart=true;localThumb="";longLink="";localCover="";short="";qrSVG="";qrFallbackUrl="";try{localStorage.removeItem("keepsake-draft-v18")}catch(e){}$("#coverFile").value="";$("#mediaStatus").textContent="Large photos are accepted and optimized in your browser. For videos, audio and very large originals, use your own HTTPS-hosted media URL so the NFC/QR link stays small and reliable.";$$("#styleOptions .pill").forEach(b=>b.classList.toggle("active",b.dataset.style==="classic"));$$("#templateGrid .template").forEach(b=>b.classList.toggle("active",b.dataset.template==="laceAlbum"));$("#heroImg").src="/assets/t-laceAlbum.webp";hydrateForm();$("#qrFg").value="#42070f";$("#qrBg").value="#fffaf0";$$("#link .pill[data-qrstyle]").forEach(b=>b.classList.toggle("active",b.dataset.qrstyle==="rounded"));$("#heartToggle").classList.add("active");$("#byteBadge").textContent="";renderPreview();$("#shortLink").textContent="Generate your card first.";$("#linkStatus").textContent="";$("#generateStatus").textContent="";drawQR();persistDraft();toast("Reset to a clean page")};
+ $("#resetBtn").onclick=()=>{setEdit(null);$("#payPanel").hidden=true;$("#linkGrid").hidden=false;$("#nfcUpsell")?.remove();if(LOCK)LOCK.set(false);d=structuredClone(DEF);d.template="laceAlbum";currentTemplate="laceAlbum";qrStyle="rounded";heart=true;localThumb="";longLink="";localCover="";short="";qrSVG="";qrFallbackUrl="";try{localStorage.removeItem("keepsake-draft-v18")}catch(e){}$("#coverFile").value="";$("#mediaStatus").textContent="Large photos are accepted and optimized in your browser. For videos, audio and very large originals, use your own HTTPS-hosted media URL so the NFC/QR link stays small and reliable.";$$("#styleOptions .pill").forEach(b=>b.classList.toggle("active",b.dataset.style==="classic"));$$("#templateGrid .template").forEach(b=>b.classList.toggle("active",b.dataset.template==="laceAlbum"));$("#heroImg").src="/assets/t-laceAlbum.webp";hydrateForm();$("#qrFg").value="#42070f";$("#qrBg").value="#fffaf0";$$("#link .pill[data-qrstyle]").forEach(b=>b.classList.toggle("active",b.dataset.qrstyle==="rounded"));$("#heartToggle").classList.add("active");$("#byteBadge").textContent="";renderPreview();$("#shortLink").textContent="Generate your card first.";$("#linkStatus").textContent="";$("#generateStatus").textContent="";drawQR();persistDraft();toast("Reset to a clean page")};
  ["qrFg","qrBg"].forEach(id=>$("#"+id).oninput=drawQR);
  $$("#link .pill[data-qrstyle]").forEach(b=>b.onclick=()=>{$$("#link .pill[data-qrstyle]").forEach(x=>x.classList.remove("active"));b.classList.add("active");qrStyle=b.dataset.qrstyle;drawQR()});
  $("#heartToggle").onclick=()=>{$("#heartToggle").classList.toggle("active");heart=$("#heartToggle").classList.contains("active");drawQR()};

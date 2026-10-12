@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#2b060b">
+<title>Keepsake</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="/assets/site-themes.v1.css">
+<style>
+html,body{margin:0;background:#2b060b}
+.msg{min-height:100svh;display:grid;place-items:center;padding:30px;text-align:center;color:#f3ead9;font:20px/1.5 Georgia,serif;background:radial-gradient(ellipse at top,#5a0f17,#1b0306 70%)}
+.msg small{display:block;font:15px/1.5 system-ui,sans-serif;opacity:.8;margin-top:8px}
+.msg a{color:#e4c680}
+.preview-bar{position:sticky;top:0;z-index:50;background:#d6b06a;color:#2a0409;padding:10px 14px;text-align:center;font:600 14px/1.4 system-ui,sans-serif}
+.preview-bar a{color:#2a0409}
+</style>
+<script src="/assets/ks-checkout.v1.js"></script>
+<script src="/assets/site-render.v1.js"></script>
+</head>
+<body>
+<main id="site" aria-live="polite"></main>
+<script>
+(async () => {
+  const root = document.getElementById("site");
+  const say = (title, small) => { root.className = "msg"; root.innerHTML = ""; const d = document.createElement("div"); d.textContent = title; if (small) { const s = document.createElement("small"); s.textContent = small; d.appendChild(s); } root.appendChild(d); };
+  const m = location.pathname.match(/^\/s\/([a-f0-9]{8,16})\/?$/i);
+  if (!m) return say("This page could not be found.");
+  const j = await KSKeepsake.fetch(m[1]).catch(() => ({ error: "x" }));
+  if (j.error) return j.inactive ? say("This keepsake isn’t active yet.", "If it’s yours, log in and activate it from My memories.") : say("This page could not be found.");
+  if (j.kind !== "site") { location.replace("/m/" + m[1]); return; }
+  // Designed templates are full pages: load the template and hand it this website's content.
+  if (["wildflower", "candlelit"].includes(j.data && j.data.tpl)) {
+    const r = await fetch("/templates/" + j.data.tpl, { cache: "no-cache" });
+    if (!r.ok) return say("This page could not be loaded. Please try again.");
+    const safe = v => JSON.stringify(v).replace(/</g, "\\u003c").replace(/\u2028/g, "\\u2028").replace(/\u2029/g, "\\u2029");
+    const boot = `<script>window.KS_DATA=${safe(j.data)};window.KS_META=${safe({ id: m[1], ownerPreview: j.active === false })};<\/script>`;
+    const html = (await r.text()).replace(/<head>/i, "<head>" + boot);
+    document.open(); document.write(html); document.close();
+    return;
+  }
+  KSSite.render(root, j.data);
+  document.title = (j.data.t || "Our story") + " · Keepsake";
+  const tc = getComputedStyle(root).getPropertyValue("--bg").trim(); if (tc) { document.querySelector('meta[name=theme-color]').content = tc; document.body.style.background = tc; }
+  if (j.active === false) {
+    const b = document.createElement("div"); b.className = "preview-bar";
+    b.append("Preview: only you can see this until it’s activated. ");
+    const a = document.createElement("a"); a.href = "/builder?edit=" + encodeURIComponent(m[1]) + "#publish"; a.textContent = "Activate it"; b.appendChild(a);
+    document.body.prepend(b);
+  }
+})();
+</script>
+</body>
+</html>

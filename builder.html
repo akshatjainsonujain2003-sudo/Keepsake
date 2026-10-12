@@ -1,0 +1,467 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#240409">
+<title>Website builder · Keepsake</title>
+<meta name="description" content="Build a website for your story with photos, videos, Spotify songs, a timeline and letters. Share it by link, QR code, NFC or a printed photo frame.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,500&family=DM+Sans:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="/assets/site-themes.v1.css">
+<script src="/assets/ks-checkout.v1.js"></script>
+<script src="/assets/site-render.v1.js"></script>
+<script src="/assets/ks-templates.v1.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js" defer></script>
+<style>
+:root{--bg:#240409;--panel:#33100f;--panel2:#3d1517;--line:#6b3a35;--ink:#f8f0df;--muted:#c9b99a;--gold:#e4c680;--field:#1a0206;--bad:#ff9aa8;--ok:#9ad8b0}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 "DM Sans",system-ui,sans-serif}
+a{color:var(--gold)}
+button,input,textarea,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.top{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:12px;justify-content:space-between;padding:12px 18px;background:#240409f2;border-bottom:1px solid #ffffff14;backdrop-filter:blur(8px)}
+.brand{font:italic 500 28px/1 "Cormorant Garamond",Georgia,serif;color:var(--gold);text-decoration:none}
+.top nav{display:flex;gap:8px;align-items:center}
+.chip{padding:8px 14px;border-radius:999px;border:1px solid var(--line);text-decoration:none;color:var(--ink);font-size:14px;background:none;cursor:pointer}
+.layout{display:grid;grid-template-columns:minmax(0,460px) minmax(0,1fr);gap:0;min-height:calc(100svh - 60px)}
+.editor{padding:26px 22px 120px;border-right:1px solid #ffffff14}
+.stage{position:sticky;top:60px;height:calc(100svh - 60px);display:grid;place-items:center;padding:24px;background:radial-gradient(ellipse at 50% 30%,#4a0f15,#1b0306 75%)}
+.phone{width:390px;height:min(780px,calc(100svh - 120px));border-radius:42px;border:10px solid #120204;overflow:hidden;box-shadow:0 30px 80px #0009;background:#000}
+.phone-in{height:100%;overflow-y:auto;overscroll-behavior:contain}
+h1.page{font:500 clamp(38px,6vw,50px)/1.05 "Cormorant Garamond",Georgia,serif;margin:0 0 6px}
+.lede{color:var(--muted);margin:0 0 26px}
+.block{border-top:1px solid #ffffff14;padding:22px 0}
+.block>h2{font:500 26px/1.1 "Cormorant Garamond",Georgia,serif;margin:0 0 14px}
+.themes{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.theme{display:flex;flex-direction:column;gap:8px;text-align:left;padding:10px;border-radius:16px;border:1px solid var(--line);background:var(--panel);cursor:pointer}
+.theme.on{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold)}
+.theme .sw{height:58px;border-radius:10px;display:flex;overflow:hidden}
+.theme .sw i{flex:1}
+.theme b{font-weight:700;font-size:15px}.theme small{color:var(--muted);font-size:12.5px;line-height:1.35}
+label.f{display:flex;flex-direction:column;gap:6px;margin:0 0 14px;font-size:14px;color:var(--muted)}
+.in{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--field);color:var(--ink);font-size:16px}
+textarea.in{min-height:110px;resize:vertical;line-height:1.5}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.photo{display:flex;gap:12px;align-items:center;margin:4px 0 14px}
+.photo img{width:64px;height:64px;object-fit:cover;border-radius:10px;border:1px solid var(--line)}
+.upl{display:inline-flex;align-items:center;gap:6px;padding:10px 16px;border-radius:999px;border:1px dashed var(--gold);color:var(--gold);cursor:pointer;font-size:14px}
+.upl input{display:none}
+.link-btn{background:none;border:0;color:var(--muted);text-decoration:underline;cursor:pointer;font-size:14px;padding:4px}
+.sec{border:1px solid var(--line);border-radius:18px;background:var(--panel);margin-bottom:12px;overflow:hidden}
+.sec>summary{list-style:none;display:flex;align-items:center;gap:8px;padding:14px 14px 14px 16px;cursor:pointer}
+.sec>summary::-webkit-details-marker{display:none}
+.sec>summary .name{flex:1;font-weight:700}
+.sec>summary .sub{display:block;font-weight:400;color:var(--muted);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:240px}
+.ib{width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:none;cursor:pointer;display:grid;place-items:center;color:var(--ink)}
+.ib:disabled{opacity:.3;cursor:default}
+.sec .body{padding:4px 16px 16px}
+.thumbs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
+.thumbs div{position:relative}
+.thumbs img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:10px}
+.thumbs button{position:absolute;top:4px;right:4px;width:24px;height:24px;border-radius:50%;border:0;background:#000b;color:#fff;cursor:pointer;line-height:1}
+.list-row{display:grid;gap:8px;padding:12px;border-radius:14px;background:#00000026;margin-bottom:8px}
+.list-row .rm{justify-self:end}
+.addsec{display:flex;gap:8px}
+.addsec select{flex:1}
+.btn{display:inline-flex;justify-content:center;align-items:center;gap:8px;padding:14px 22px;border-radius:999px;border:0;cursor:pointer;font-weight:700;text-decoration:none}
+.btn.gold{background:linear-gradient(135deg,#e8cf8e,#b88a3e);color:#2a0409}
+.btn.line{background:none;border:1px solid var(--line);color:var(--ink)}
+.btn.wide{width:100%}
+.btn:disabled{opacity:.6;cursor:wait}
+.status{min-height:1.4em;margin-top:10px;font-size:14px;color:var(--muted)}.status.bad{color:var(--bad)}.status.ok{color:var(--ok)}
+.panel{border:1px solid var(--line);border-radius:22px;background:var(--panel);padding:20px;margin-top:16px}
+.linkbox{padding:12px 14px;border-radius:12px;background:var(--field);border:1px solid var(--line);word-break:break-all;font-size:15px}
+.acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.qr{display:flex;gap:16px;align-items:center;margin-top:16px;flex-wrap:wrap}
+.qr .code{width:150px;height:150px;background:#fffaf0;border-radius:14px;padding:10px}
+.qr .code svg{width:100%;height:100%;display:block}
+.fab{display:none}
+.overlay{position:fixed;inset:0;z-index:60;background:#000;display:none}
+.overlay.open{display:block}
+.overlay .bar{position:absolute;top:calc(10px + env(safe-area-inset-top));right:12px;z-index:3}
+.overlay .scroll{height:100%;overflow-y:auto}
+@media (max-width:900px){
+ .layout{grid-template-columns:1fr}
+ .stage{display:none}
+ .editor{border-right:0;padding:22px 16px 120px}
+ .fab{display:inline-flex;position:fixed;left:50%;transform:translateX(-50%);bottom:calc(18px + env(safe-area-inset-bottom));z-index:30;box-shadow:0 10px 30px #000a}
+}
+@media (max-width:420px){.themes{grid-template-columns:1fr 1fr}.row2{grid-template-columns:1fr}}
+
+[hidden]{display:none!important}
+/* designed templates */
+.designs{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.design{display:flex;flex-direction:column;gap:6px;text-align:left;padding:8px;border-radius:18px;border:1px solid var(--line);background:var(--panel);cursor:pointer;color:var(--ink)}
+.design.on{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold)}
+.design .art{position:relative;height:150px;border-radius:12px;overflow:hidden;display:grid;place-items:center}
+.design b{font-weight:700;font-size:16px;padding:2px 4px 0}.design small{color:var(--muted);font-size:12.5px;line-height:1.35;padding:0 4px 4px}
+.art.wf{background:linear-gradient(#eee7dbcc,#eee7dbcc),url(/assets/wildflower/linen.webp) center/300px}
+.art.wf .pol{width:58%;rotate:-5deg;position:relative}
+.art.wf .pol img.ph{position:absolute;left:16.4%;top:14.6%;width:67.9%;height:60.8%;object-fit:cover}
+.art.wf .pol img.edge{position:relative;width:100%}
+.art.wf .fl{position:absolute;right:-6px;top:-8px;width:44%;rotate:18deg}
+.art.cl{background:linear-gradient(#1f010466,#1f0104aa),url(/assets/candlelit/silk.webp) center/cover}
+.art.cl .seal{width:44%;filter:drop-shadow(0 8px 10px #000a)}
+.art.cl .nm{position:absolute;bottom:10px;font:italic 26px/1 "Cormorant Garamond",Georgia,serif;color:#e8c978}
+.legacy-note{font-size:13px;color:var(--muted);margin:10px 0 0}
+.phone-in iframe,.overlay iframe{display:block;width:100%;height:100%;border:0;background:#fff}
+.overlay .scroll iframe{height:100%}
+.tplf .grp>summary .name{font-weight:700}
+.tglrow{display:flex;gap:10px;align-items:center;margin:0 0 14px;color:var(--ink);font-size:15px;cursor:pointer}
+.tglrow input{width:20px;height:20px;accent-color:#d6b06a}
+</style>
+</head>
+<body>
+<header class="top"><a class="brand" href="/">Keepsake</a><nav id="nav"><a class="chip" href="/studio">Templates</a></nav></header>
+<div class="layout">
+ <main class="editor">
+  <h1 class="page">Your website</h1>
+  <p class="lede">Pick a design, then make it yours with your photos, song and words. Everything you change shows in the preview.</p>
+
+  <section class="block"><h2>Design</h2><div class="designs" id="designs"></div><div class="themes" id="themes" hidden></div><p class="legacy-note" id="legacyNote" hidden>This website uses one of our earlier looks. Pick a design above to switch to it (your names, date and letter come with you).</p></section>
+
+  <div id="tplEditor" class="tplf" hidden></div>
+
+  <section class="block legacy"><h2>Cover</h2>
+   <label class="f">Names or title<input class="in" data-k="t" maxlength="80"></label>
+   <label class="f">Line under the title<input class="in" data-k="sub" maxlength="160"></label>
+   <label class="f">Date (optional)<input class="in" data-k="date" maxlength="60" placeholder="14 February 2027"></label>
+   <div class="f" style="margin:0">Cover photo</div>
+   <div class="photo" id="coverPhoto"></div>
+  </section>
+
+  <section class="block legacy"><h2>Sections</h2>
+   <div id="sections"></div>
+   <div class="addsec"><select class="in" id="addType" aria-label="Section to add"></select><button class="btn line" type="button" id="addBtn">Add</button></div>
+  </section>
+
+  <section class="block"><h2>Privacy</h2><div id="lockBox"></div></section>
+
+  <section class="block" id="publish"><h2>Publish</h2>
+   <button class="btn gold wide" type="button" id="saveBtn">Save website</button>
+   <div class="status" id="saveStatus" role="status"></div>
+   <div class="panel" id="payPanel" hidden></div>
+   <div class="panel" id="livePanel" hidden>
+    <h3 style="margin:0 0 10px;font:500 26px/1.1 'Cormorant Garamond',Georgia,serif">Your website is live</h3>
+    <div class="linkbox" id="liveLink"></div>
+    <div class="acts"><button class="btn line" type="button" id="copyBtn">Copy link</button><a class="btn line" id="openBtn" target="_blank" rel="noopener">Open</a><button class="btn line" type="button" id="shareBtn">Share</button></div>
+    <div class="qr"><div class="code" id="qrCode" aria-label="QR code for your website"></div><div><button class="btn line" type="button" id="qrPng">Download QR</button><p class="status" style="max-width:220px">Print it, or write the link to any NFC tag.</p></div></div>
+    <button class="btn gold" type="button" id="frameBtn" style="margin-top:14px">Get it in a photo frame</button>
+   </div>
+  </section>
+ </main>
+ <aside class="stage" aria-label="Preview"><div class="phone"><div class="phone-in"><div id="preview"></div></div></div></aside>
+</div>
+<button class="btn gold fab" type="button" id="previewBtn">Preview</button>
+<div class="overlay" id="overlay" role="dialog" aria-label="Preview"><div class="bar"><button class="btn gold" type="button" id="closePreview">Back to editing</button></div><div class="scroll"><div id="previewFull"></div></div></div>
+
+<script>
+(() => {
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+const DRAFT = "ks-site-draft-v2";
+let D = null, EDIT_ID = null, USER = null, ACTIVE = false, LOCK = null, CHECKOUT = null, dirty = false;
+const SW = { reel: ["#2b060b", "#f3ead9", "#c9a86a", "#120204"], lace: ["#1d271e", "#efe9dc", "#b8954f", "#c98b8b"], sidea: ["#efeadb", "#8e9b7c", "#2f3329", "#f8f5ec"], scrap: ["#e6dccb", "#4f79b4", "#c23a3a", "#f7f3ea"] };
+const status = (t, cls) => { const s = $("#saveStatus"); s.textContent = t || ""; s.className = "status" + (cls ? " " + cls : ""); };
+// Unsaved work is kept on this device until it has been saved to the account.
+const save = () => { if (EDIT_ID) return; try { localStorage.setItem(DRAFT, JSON.stringify(D)); } catch (e) {} };
+const blank = { story: () => ({ type: "story", h: "", text: "", img: "" }), gallery: () => ({ type: "gallery", h: "", imgs: [] }), songs: () => ({ type: "songs", h: "", songs: [{ url: "", note: "" }] }), video: () => ({ type: "video", h: "", url: "" }), quote: () => ({ type: "quote", text: "", by: "" }), timeline: () => ({ type: "timeline", h: "", items: [{ when: "", what: "" }] }), letter: () => ({ type: "letter", h: "", text: "", from: "" }), details: () => ({ type: "details", h: "", when: "", where: "", map: "" }) };
+
+// ---------- preview ----------
+let raf = 0;
+function preview() { if (isTpl()) { tplPreview(); return; } cancelAnimationFrame(raf); raf = requestAnimationFrame(() => { KSSite.render($("#preview"), D, { editing: true }); if ($("#overlay").classList.contains("open")) KSSite.render($("#previewFull"), D, { editing: true }); }); }
+function changed() { dirty = true; save(); preview(); }
+
+// ---------- photos ----------
+async function upload(file) {
+  if (!USER) { save(); status("Log in to add your own photos. Your work so far is kept.", "bad"); setTimeout(() => location.href = "/account?next=" + encodeURIComponent("/builder?resume=1"), 1400); throw new Error("login"); }
+  status("Uploading photo…");
+  const u = await KSKeepsake.uploadPhoto(file, "web"); status("Photo added ♡", "ok"); return u;
+}
+function photoField(holder, get, set) {
+  holder.textContent = "";
+  const u = get();
+  if (KSSite.imgUrl(u) || KSKit.img(u)) { const i = document.createElement("img"); i.src = u; i.alt = ""; holder.appendChild(i); }
+  const l = document.createElement("label"); l.className = "upl"; l.textContent = u ? "Change photo" : "Add photo";
+  const inp = document.createElement("input"); inp.type = "file"; inp.accept = "image/*"; l.appendChild(inp); holder.appendChild(l);
+  inp.onchange = async () => { const f = inp.files[0]; inp.value = ""; if (!f) return; try { set(await upload(f)); changed(); photoField(holder, get, set); } catch (e) { if (e.message !== "login") status(e.message, "bad"); } };
+  if (u) { const r = document.createElement("button"); r.type = "button"; r.className = "link-btn"; r.textContent = "Remove"; r.onclick = () => { set(""); changed(); photoField(holder, get, set); }; holder.appendChild(r); }
+}
+
+
+// ---------- designed templates (Wildflower, Candlelit) ----------
+const isTpl = () => !!(D && D.tpl && KSKit.DEMO[D.tpl]);
+let FRAME = null, FRAME_TPL = "", BIG = null, postT = 0;
+function post(frame) { try { frame && frame.contentWindow && frame.contentWindow.postMessage({ type: "ks-preview", data: D }, location.origin); } catch (e) {} }
+function tplPreview() {
+  const box = $("#preview");
+  if (!FRAME || FRAME_TPL !== D.tpl || !box.contains(FRAME)) {
+    box.textContent = ""; box.className = ""; FRAME_TPL = D.tpl;
+    FRAME = document.createElement("iframe"); FRAME.title = "Preview"; FRAME.src = "/templates/" + D.tpl + "?preview=1";
+    FRAME.onload = () => post(FRAME); box.style.height = "100%"; box.appendChild(FRAME);
+  }
+  clearTimeout(postT); postT = setTimeout(() => { post(FRAME); if ($("#overlay").classList.contains("open")) post(BIG); }, 120);
+}
+function openBig() {
+  const holder = $("#previewFull"); holder.textContent = ""; holder.style.height = "100%";
+  BIG = document.createElement("iframe"); BIG.title = "Preview"; BIG.src = "/templates/" + D.tpl + "?preview=1"; BIG.onload = () => post(BIG);
+  holder.appendChild(BIG);
+}
+function designs() {
+  const box = $("#designs"); box.textContent = "";
+  [["wildflower", '<div class="art wf"><div class="pol"><img class="ph" src="/assets/wildflower/lakedance.webp" alt=""><img class="edge" src="/assets/wildflower/polaroid.webp" alt=""></div><img class="fl" src="/assets/wildflower/pressed.webp" alt=""></div>'],
+   ["candlelit", '<div class="art cl"><img class="seal" src="/assets/candlelit/seal.webp" alt=""><span class="nm">for you</span></div>']].forEach(([k, art]) => {
+    const b = document.createElement("button"); b.type = "button"; b.className = "design" + (D.tpl === k ? " on" : "");
+    b.innerHTML = art + "<b></b><small></small>"; b.querySelector("b").textContent = KSKit.NAMES[k]; b.querySelector("small").textContent = KSKit.HINTS[k];
+    b.onclick = () => switchTo(k); box.appendChild(b);
+  });
+}
+// switching design keeps what both designs share
+function switchTo(k) {
+  if (D.tpl === k) return;
+  const next = KSKit.clone(KSKit.DEMO[k]), old = D || {};
+  if (old.tpl) { ["a", "b", "date", "place", "greeting", "letter", "sign"].forEach(f => { if (old[f]) next[f] = old[f]; });
+    if (old.song) ["url", "title"].forEach(f => { if (old.song[f]) next.song[f] = old.song[f]; });
+    if (old.photos && old.photos.hero) next.photos.hero = old.photos.hero; }
+  else if (old.sections) { // coming from an older look
+    if (old.t && old.t.includes("&")) { const [x, y] = old.t.split("&"); next.a = x.trim(); next.b = y.trim(); }
+    const lt = old.sections.find(z => z.type === "letter"); if (lt && lt.text) { next.letter = lt.text; if (lt.from) next.sign = lt.from; }
+    if (KSKit.img(old.cover)) next.photos.hero = old.cover;
+  }
+  D = next; changed(); all();
+}
+function fieldEl(f, getV, setV) {
+  const wrap = document.createElement("div");
+  if (f.type === "photo") {
+    const lab = document.createElement("div"); lab.className = "f"; lab.style.margin = "0"; lab.textContent = f.label;
+    const ph = document.createElement("div"); ph.className = "photo"; wrap.append(lab, ph);
+    photoField(ph, getV, setV); return wrap;
+  }
+  if (f.type === "toggle") {
+    const l = document.createElement("label"); l.className = "tglrow"; const c = document.createElement("input"); c.type = "checkbox"; c.checked = getV() !== false;
+    c.onchange = () => { setV(c.checked); changed(); }; l.append(c, f.label); return l;
+  }
+  const l = document.createElement("label"); l.className = "f"; l.textContent = f.label;
+  const e = document.createElement(f.type === "area" ? "textarea" : "input"); e.className = "in";
+  if (f.type === "date") { e.type = "datetime-local"; } else { e.maxLength = f.max || 300; }
+  if (f.placeholder) e.placeholder = f.placeholder;
+  e.value = getV() == null ? "" : getV();
+  if (f.type === "area") e.style.minHeight = (f.max || 0) > 600 ? "190px" : "96px";
+  e.oninput = () => { setV(e.value); changed(); };
+  l.appendChild(e); return l;
+}
+function listEl(f, arr) {
+  const wrap = document.createElement("div");
+  const lab = document.createElement("div"); lab.className = "f"; lab.style.marginBottom = "6px"; lab.textContent = f.label; wrap.appendChild(lab);
+  const box = document.createElement("div"); wrap.appendChild(box);
+  const draw = () => {
+    box.textContent = "";
+    arr.forEach((it, i) => {
+      const r = document.createElement("div"); r.className = "list-row";
+      if (f.type === "strings") { r.appendChild(fieldEl({ type: "text", label: (f.item || "Item") + " " + (i + 1), max: f.itemMax }, () => arr[i], v => arr[i] = v)); }
+      else f.of.forEach(sf => r.appendChild(fieldEl(sf, () => it[sf.key], v => it[sf.key] = v)));
+      const ctl = document.createElement("div"); ctl.style.cssText = "display:flex;gap:6px;justify-content:flex-end";
+      const up = document.createElement("button"); up.type = "button"; up.className = "ib"; up.textContent = "↑"; up.setAttribute("aria-label", "Move up"); up.disabled = i === 0;
+      up.onclick = () => { [arr[i - 1], arr[i]] = [arr[i], arr[i - 1]]; changed(); draw(); };
+      const rm = document.createElement("button"); rm.type = "button"; rm.className = "link-btn"; rm.textContent = "Remove";
+      rm.onclick = () => { arr.splice(i, 1); changed(); draw(); };
+      ctl.append(up, rm); r.appendChild(ctl); box.appendChild(r);
+    });
+    if (arr.length < (f.max || 10)) {
+      const a = document.createElement("button"); a.type = "button"; a.className = "btn line"; a.textContent = f.add || "Add";
+      a.onclick = () => { if (f.type === "strings") arr.push(""); else { const o = {}; f.of.forEach(sf => o[sf.key] = ""); arr.push(o); } changed(); draw(); };
+      box.appendChild(a);
+    }
+  };
+  draw(); return wrap;
+}
+function tplEditor() {
+  const box = $("#tplEditor"); const open = new Set($$("#tplEditor details[open]").map(d => d.dataset.g)); box.textContent = "";
+  KSKit.FIELDS[D.tpl].forEach((g, gi) => {
+    const d = document.createElement("details"); d.className = "sec grp"; d.dataset.g = gi; if (open.has(String(gi)) || (!open.size && gi === 0)) d.open = true;
+    const sm = document.createElement("summary"); const n = document.createElement("span"); n.className = "name"; n.textContent = g.group; sm.appendChild(n); d.appendChild(sm);
+    const b = document.createElement("div"); b.className = "body";
+    g.fields.forEach(f => {
+      if (f.type === "list" || f.type === "strings") { let arr = KSKit.get(D, f.key); if (!Array.isArray(arr)) { arr = []; KSKit.set(D, f.key, arr); } b.appendChild(listEl(f, arr)); }
+      else b.appendChild(fieldEl(f, () => KSKit.get(D, f.key), v => KSKit.set(D, f.key, v)));
+    });
+    d.appendChild(b); box.appendChild(d);
+  });
+}
+
+// ---------- themes ----------
+function themes() {
+  $("#themes").innerHTML = "";
+  Object.entries(KSSite.THEMES).forEach(([k, t]) => {
+    const b = document.createElement("button"); b.type = "button"; b.className = "theme" + (D.theme === k ? " on" : ""); b.dataset.k = k;
+    const sw = document.createElement("span"); sw.className = "sw"; SW[k].forEach(c => { const i = document.createElement("i"); i.style.background = c; sw.appendChild(i); });
+    const n = document.createElement("b"); n.textContent = t.name; const h = document.createElement("small"); h.textContent = t.hint;
+    b.append(sw, n, h); b.onclick = () => { D.theme = k; themes(); changed(); };
+    $("#themes").appendChild(b);
+  });
+}
+
+// ---------- section editors ----------
+const LABEL = { h: "Heading", text: "Text", by: "Who said it", from: "Signed", url: "Video link (YouTube, Vimeo or .mp4)", when: "When", where: "Where", map: "Google Maps link (optional)" };
+function input(s, k, opt) {
+  const l = document.createElement("label"); l.className = "f"; l.textContent = (opt && opt.label) || LABEL[k];
+  const el = document.createElement(opt && opt.area ? "textarea" : "input"); el.className = "in"; el.value = s[k] || ""; if (opt && opt.ph) el.placeholder = opt.ph; el.maxLength = (opt && opt.max) || 300;
+  el.oninput = () => { s[k] = el.value; changed(); summaries(); };
+  l.appendChild(el); return l;
+}
+function rows(s, key, make, fields, addLabel, max) {
+  const wrap = document.createElement("div");
+  const draw = () => {
+    wrap.textContent = "";
+    s[key].forEach((it, i) => {
+      const r = document.createElement("div"); r.className = "list-row";
+      fields.forEach(([k, label, ph, mx]) => { const l = document.createElement("label"); l.className = "f"; l.style.margin = "0"; l.textContent = label; const e = document.createElement("input"); e.className = "in"; e.value = it[k] || ""; e.placeholder = ph || ""; e.maxLength = mx || 300; e.oninput = () => { it[k] = e.value; changed(); }; l.appendChild(e); r.appendChild(l); });
+      const rm = document.createElement("button"); rm.type = "button"; rm.className = "link-btn rm"; rm.textContent = "Remove"; rm.onclick = () => { s[key].splice(i, 1); changed(); draw(); }; r.appendChild(rm);
+      wrap.appendChild(r);
+    });
+    if (s[key].length < max) { const a = document.createElement("button"); a.type = "button"; a.className = "btn line"; a.textContent = addLabel; a.onclick = () => { s[key].push(make()); changed(); draw(); }; wrap.appendChild(a); }
+  };
+  draw(); return wrap;
+}
+function gallery(s) {
+  const wrap = document.createElement("div");
+  const draw = () => {
+    wrap.textContent = "";
+    const t = document.createElement("div"); t.className = "thumbs";
+    s.imgs.forEach((u, i) => { const d = document.createElement("div"); const im = document.createElement("img"); im.src = u; im.alt = ""; const x = document.createElement("button"); x.type = "button"; x.textContent = "×"; x.setAttribute("aria-label", "Remove photo"); x.onclick = () => { s.imgs.splice(i, 1); changed(); draw(); }; d.append(im, x); t.appendChild(d); });
+    wrap.appendChild(t);
+    if (s.imgs.length < 24) {
+      const l = document.createElement("label"); l.className = "upl"; l.textContent = s.imgs.length ? "Add more photos" : "Add photos";
+      const inp = document.createElement("input"); inp.type = "file"; inp.accept = "image/*"; inp.multiple = true; l.appendChild(inp);
+      inp.onchange = async () => { const fs = [...inp.files].slice(0, 24 - s.imgs.length); inp.value = ""; for (const f of fs) { try { s.imgs.push(await upload(f)); changed(); draw(); } catch (e) { if (e.message !== "login") status(e.message, "bad"); break; } } };
+      wrap.appendChild(l);
+    }
+  };
+  draw(); return wrap;
+}
+function body(s) {
+  const b = document.createElement("div"); b.className = "body";
+  switch (s.type) {
+    case "story": b.append(input(s, "h", { max: 120 }), input(s, "text", { area: true, max: 4000 })); { const p = document.createElement("div"); p.className = "photo"; b.appendChild(p); photoField(p, () => s.img, v => s.img = v); } break;
+    case "gallery": b.append(input(s, "h", { max: 120 }), gallery(s)); break;
+    case "songs": b.append(input(s, "h", { max: 120 }), rows(s, "songs", () => ({ url: "", note: "" }), [["url", "Spotify link", "https://open.spotify.com/track/…", 300], ["note", "A note about it (optional)", "The one from our first drive", 300]], "Add a song", 12)); break;
+    case "video": b.append(input(s, "h", { max: 120 }), input(s, "url", { ph: "https://youtu.be/…", max: 400 })); break;
+    case "quote": b.append(input(s, "text", { label: "Quote", area: true, max: 600 }), input(s, "by", { max: 120 })); break;
+    case "timeline": b.append(input(s, "h", { max: 120 }), rows(s, "items", () => ({ when: "", what: "" }), [["when", "When", "2024", 60], ["what", "What happened", "Our first trip", 300]], "Add a moment", 30)); break;
+    case "letter": b.append(input(s, "h", { max: 120 }), input(s, "text", { label: "Letter", area: true, max: 6000 }), input(s, "from", { max: 80 })); break;
+    case "details": b.append(input(s, "h", { max: 120 }), input(s, "when", { max: 120 }), input(s, "where", { area: true, max: 300 }), input(s, "map", { ph: "https://maps.app.goo.gl/…", max: 400 })); break;
+  }
+  return b;
+}
+function sub(s) { return s.h || s.text || (s.type === "gallery" ? s.imgs.length + " photos" : "") || ""; }
+function summaries() { $$("#sections .sec").forEach((d, i) => { const s = D.sections[i]; if (s) d.querySelector(".sub").textContent = sub(s); }); }
+function sections() {
+  const box = $("#sections"); const open = new Set($$("#sections details[open]").map(d => d.dataset.i)); box.textContent = "";
+  D.sections.forEach((s, i) => {
+    const d = document.createElement("details"); d.className = "sec"; d.dataset.i = i; if (open.has(String(i))) d.open = true;
+    const sm = document.createElement("summary");
+    const n = document.createElement("span"); n.className = "name"; n.textContent = (KSSite.SECTIONS[s.type] || {}).name || s.type; const sb = document.createElement("span"); sb.className = "sub"; sb.textContent = sub(s); n.appendChild(sb);
+    const up = document.createElement("button"); up.type = "button"; up.className = "ib"; up.textContent = "↑"; up.setAttribute("aria-label", "Move up"); up.disabled = i === 0;
+    const dn = document.createElement("button"); dn.type = "button"; dn.className = "ib"; dn.textContent = "↓"; dn.setAttribute("aria-label", "Move down"); dn.disabled = i === D.sections.length - 1;
+    const rm = document.createElement("button"); rm.type = "button"; rm.className = "ib"; rm.textContent = "×"; rm.setAttribute("aria-label", "Remove section");
+    const mv = (e, k) => { e.preventDefault(); const j = i + k; [D.sections[i], D.sections[j]] = [D.sections[j], D.sections[i]]; changed(); sections(); };
+    up.onclick = e => mv(e, -1); dn.onclick = e => mv(e, 1);
+    rm.onclick = e => { e.preventDefault(); if (!confirm("Remove this section?")) return; D.sections.splice(i, 1); changed(); sections(); };
+    sm.append(n, up, dn, rm); d.appendChild(sm);
+    d.addEventListener("toggle", () => { if (d.open && !d.querySelector(".body")) d.appendChild(body(s)); });
+    if (d.open) d.appendChild(body(s));
+    box.appendChild(d);
+  });
+}
+function cover() {
+  $$("[data-k]").forEach(i => { i.value = D[i.dataset.k] || ""; i.oninput = () => { D[i.dataset.k] = i.value; changed(); }; });
+  photoField($("#coverPhoto"), () => D.cover, v => D.cover = v);
+}
+function all() {
+  const t = isTpl();
+  designs(); $("#tplEditor").hidden = !t; $$(".legacy").forEach(e => e.hidden = t); $("#themes").hidden = t; $("#legacyNote").hidden = t;
+  if (t) { if (FRAME_TPL !== D.tpl) { FRAME = null; } tplEditor(); } else { FRAME = null; FRAME_TPL = ""; $("#preview").style.height = ""; themes(); cover(); sections(); }
+  preview();
+}
+
+// ---------- save, pay, live ----------
+async function saveSite() {
+  if (!USER) { save(); location.href = "/account?next=" + encodeURIComponent("/builder?resume=1"); return; }
+  const le = LOCK.check(); if (le) { status(le, "bad"); return; }
+  const btn = $("#saveBtn"); btn.disabled = true; status("Saving…");
+  try {
+    if (isTpl()) D.t = `${(D.a || "").trim()} & ${(D.b || "").trim()}`.slice(0, 80);
+    const body = { data: D, kind: "site" }; if (EDIT_ID) body.id = EDIT_ID; const lk = LOCK.value(); if (lk !== undefined) body.lock = lk;
+    let r = await fetch("/api/customer-memories", { method: EDIT_ID ? "PUT" : "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+    let j = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(j.error || "Could not save your website.");
+    setEdit(j.id); LOCK.set(j.locked); dirty = false; ACTIVE = j.active; try { localStorage.removeItem(DRAFT); } catch (e) {}
+    if (j.active) { status("Saved. Your live website is updated ♡", "ok"); live(j.url); }
+    else { status("Saved. Choose how to activate it below.", "ok"); checkout("activate"); }
+  } catch (e) { status(e.message, "bad"); } finally { btn.disabled = false; }
+}
+function setEdit(id) { EDIT_ID = id; const u = new URL(location.href); u.searchParams.set("edit", id); u.searchParams.delete("resume"); history.replaceState(null, "", u.pathname + u.search + u.hash); }
+function checkout(mode) {
+  if (!CHECKOUT) CHECKOUT = KSCheckout.mount($("#payPanel"), { kind: "site", getId: () => EDIT_ID, customer: () => USER, onPaid: v => { ACTIVE = true; live(v.url); const fr = v.plan === "frameQr" || v.plan === "frameNfc"; status(fr ? "Paid. Your website is live and we'll ship your photo frame soon." : "Paid. Your website is live ♡", "ok"); } });
+  $("#payPanel").hidden = false; if (mode !== "upgrade") $("#livePanel").hidden = true;
+  CHECKOUT.open(mode).then(() => $("#payPanel").scrollIntoView({ behavior: "smooth", block: "start" }));
+}
+function live(path) {
+  const url = location.origin + path;
+  $("#payPanel").hidden = true; $("#livePanel").hidden = false;
+  $("#liveLink").textContent = url; $("#openBtn").href = path;
+  drawQR(url);
+  $("#livePanel").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+function drawQR(url) {
+  const box = $("#qrCode"); box.textContent = "";
+  if (!window.qrcode) { box.textContent = "QR loading…"; setTimeout(() => drawQR(url), 400); return; }
+  const q = qrcode(0, "M"); q.addData(url); q.make();
+  box.innerHTML = q.createSvgTag({ cellSize: 4, margin: 2, scalable: true }).replace(/fill="#000000"/g, 'fill="#42070f"').replace(/fill="#ffffff"/g, 'fill="#fffaf0"');
+}
+$("#copyBtn").onclick = async () => { const u = $("#liveLink").textContent; try { await navigator.clipboard.writeText(u); status("Link copied ♡", "ok"); } catch (e) { prompt("Copy your link:", u); } };
+$("#shareBtn").onclick = async () => { const u = $("#liveLink").textContent; if (navigator.share) { try { await navigator.share({ title: D.t || "Our story", url: u }); } catch (e) {} } else $("#copyBtn").click(); };
+$("#qrPng").onclick = () => {
+  const svg = $("#qrCode svg"); if (!svg) return;
+  const img = new Image(); img.onload = () => { const c = document.createElement("canvas"); c.width = c.height = 1200; const x = c.getContext("2d"); x.fillStyle = "#fffaf0"; x.fillRect(0, 0, 1200, 1200); x.drawImage(img, 0, 0, 1200, 1200); const a = document.createElement("a"); a.download = "keepsake-qr.png"; a.href = c.toDataURL("image/png"); a.click(); };
+  img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(new XMLSerializer().serializeToString(svg));
+};
+$("#frameBtn").onclick = () => checkout("upgrade");
+KSCheckout.catalog().then(c => { if (c.free) $("#frameBtn").hidden = true; });
+$("#saveBtn").onclick = saveSite;
+$("#addBtn").onclick = () => { const t = $("#addType").value; D.sections.push(blank[t]()); changed(); sections(); const last = $$("#sections details").pop(); if (last) { last.open = true; last.scrollIntoView({ behavior: "smooth", block: "center" }); } };
+$("#previewBtn").onclick = () => { $("#overlay").classList.add("open"); document.body.style.overflow = "hidden"; if (isTpl()) openBig(); else { $("#previewFull").style.height = ""; KSSite.render($("#previewFull"), D, { editing: true }); } };
+$("#closePreview").onclick = () => { $("#overlay").classList.remove("open"); document.body.style.overflow = ""; };
+window.addEventListener("beforeunload", e => { if (dirty && EDIT_ID) { e.preventDefault(); e.returnValue = ""; } });
+
+// ---------- start ----------
+(async () => {
+  $("#addType").innerHTML = Object.entries(KSSite.SECTIONS).map(([k, v]) => `<option value="${k}">${KSKeepsake.esc(v.name)}</option>`).join("");
+  LOCK = KSLock.mount($("#lockBox"));
+  try { const r = await fetch("/api/customer-auth", { cache: "no-store" }); const j = await r.json(); USER = j.user || null; } catch (e) {}
+  const nav = $("#nav");
+  if (USER) nav.insertAdjacentHTML("beforeend", '<a class="chip" href="/dashboard">My memories</a>');
+  else nav.insertAdjacentHTML("beforeend", '<a class="chip" href="/account?next=%2Fbuilder%3Fresume%3D1">Log in</a>');
+  const q = new URLSearchParams(location.search), id = q.get("edit");
+  try { D = JSON.parse(localStorage.getItem(DRAFT) || "null"); } catch (e) { D = null; }
+  const want = KSKit.DEMO[q.get("tpl")] ? q.get("tpl") : "";
+  if (want && (!D || D.tpl !== want)) D = KSKit.clone(KSKit.DEMO[want]);
+  if (!D || !(D.tpl ? KSKit.DEMO[D.tpl] : Array.isArray(D.sections))) D = KSKit.clone(KSKit.DEMO.wildflower);
+  if (id && USER) {
+    try {
+      const r = await fetch("/api/customer-memories?id=" + encodeURIComponent(id), { cache: "no-store" }); const j = await r.json();
+      if (!r.ok || j.kind !== "site") throw new Error(j.error || "Website not found.");
+      D = j.data.tpl ? KSKit.withDefaults(j.data.tpl, j.data) : j.data; EDIT_ID = id; ACTIVE = j.active; LOCK.set(j.locked);
+      all();
+      if (j.active) live("/s/" + id); else checkout("activate");
+      status(j.active ? "Editing your live website. Save to update it." : "Editing your saved website. It isn't active yet.", "ok");
+      return;
+    } catch (e) { status(e.message, "bad"); }
+  }
+  all();
+  if (q.get("resume") && USER) { status("Welcome! Your work is still here. Tap Save website when you're ready.", "ok"); }
+})();
+})();
+</script>
+</body>
+</html>

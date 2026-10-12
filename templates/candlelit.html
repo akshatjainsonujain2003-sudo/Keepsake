@@ -1,0 +1,543 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#2a0207">
+<title>Meera &amp; Aarav · Candlelit · Keepsake</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Pinyon+Script&display=swap">
+<style>
+/* Candlelit: a Keepsake website template. Silk, wax, lace and old gold. */
+:root{
+  --wine:#3c0003;--deep:#1f0104;--cream:#F3E7D3;--ink:#3A0A12;--muted:#8a5a5f;--g2:#D2AE63;--g1:#F3DD9E;
+  --gold:linear-gradient(115deg,#8C6526 0%,#E8C978 22%,#FFF0BE 34%,#C9A04F 52%,#8C6526 70%,#E3C273 88%,#9B7330 100%);
+  --display:"Bodoni Moda",Didot,serif;--body:"EB Garamond",Garamond,serif;--script:"Pinyon Script",cursive;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--deep);color:var(--cream);font:400 19px/1.65 var(--body);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{display:block;max-width:100%}
+a{color:inherit}
+h1,h2,h3{font-weight:400;margin:0}
+.wrap{width:min(1080px,100% - 40px);margin:0 auto}
+.narrow{width:min(560px,100% - 40px);margin:0 auto}
+section{position:relative;padding:clamp(90px,12vw,150px) 0;overflow:hidden}
+:focus-visible{outline:2px solid var(--g2);outline-offset:3px}
+.goldtext{background:var(--gold);-webkit-background-clip:text;background-clip:text;color:transparent}
+.script{font-family:var(--script);font-weight:400;line-height:1.15}
+.kicker{font:400 italic 20px var(--display);color:var(--g2)}
+h2.title{font:400 clamp(44px,8vw,78px)/1.05 var(--display);letter-spacing:-.01em}
+h2.title em{font-family:var(--script);font-style:normal;font-size:1.15em;margin-left:.08em}
+.center{text-align:center}
+
+/* backgrounds made from the real textures */
+.silk{background:linear-gradient(#1f010499,#1f0104cc),url(/assets/candlelit/silk.webp) center/cover}
+.damask{background:url(/assets/candlelit/damask.webp) center/560px repeat,#3a0408}
+.paper{background:url(/assets/candlelit/paper.webp) center/cover,#efe0c6;color:var(--ink)}
+.lace-band{height:clamp(54px,9vw,90px);background:url(/assets/candlelit/lace.webp) center/auto 100% repeat-x;position:relative;z-index:3;margin:-1px 0;filter:drop-shadow(0 4px 6px #0006)}
+
+/* photos: black & white, or washed in wine */
+.bw{filter:grayscale(1) contrast(1.08) brightness(1.03)}
+.tint{position:relative;overflow:hidden}
+.tint img{filter:grayscale(1) contrast(1.1)}
+.tint::after{content:"";position:absolute;inset:0;background:#6d1222;mix-blend-mode:multiply;opacity:.75}
+
+/* a photo inside a real gold frame. --x/--y/--w/--h = the frame's opening */
+.gframe{position:relative}
+.gframe>.pic{position:absolute;left:var(--x);top:var(--y);width:var(--w);height:var(--h);overflow:hidden;background:#000}
+.gframe>.pic img:not([src]),.tv .screen img:not([src]),.ticket img:not([src]){visibility:hidden}
+#spot iframe{display:block;width:100%;max-width:460px;margin:16px auto 0;border:0;border-radius:12px}
+.ks-preview .gate{display:none!important}
+.gframe>.pic img{width:100%;height:100%;object-fit:cover}
+.gframe>.border{position:relative;z-index:2;width:100%;pointer-events:none;filter:drop-shadow(0 14px 22px #0008)}
+.rect{--x:28%;--y:23%;--w:45%;--h:52.5%}
+.ovalf{--x:19.5%;--y:21%;--w:60.5%;--h:61%}
+.ovalf>.pic{border-radius:50%}
+
+/* ---------- falling petals (whole page, very light) ---------- */
+.petals{position:fixed;inset:0;pointer-events:none;z-index:40;overflow:hidden}
+.petals img{position:absolute;top:-80px;width:var(--s);opacity:.75;animation:fall var(--d) linear var(--delay) infinite;will-change:transform}
+@keyframes fall{0%{transform:translate3d(0,-10vh,0) rotate(0)}25%{transform:translate3d(var(--sway),25vh,0) rotate(90deg)}50%{transform:translate3d(calc(var(--sway)*-1),55vh,0) rotate(200deg)}100%{transform:translate3d(var(--sway),115vh,0) rotate(400deg)}}
+
+/* ---------- hero ---------- */
+.hero{min-height:100svh;display:grid;place-items:center;padding:56px 0 64px;text-align:center}
+.hero h1{font-size:clamp(66px,15vw,150px);line-height:1.1;padding:0 .1em}
+.stage{position:relative;width:min(380px,86vw);margin:34px auto 0}
+.stage .bow{position:absolute;z-index:3;width:34%;left:33%;top:-11%}
+.stage .ring{position:absolute;z-index:3;width:30%;right:2%;bottom:6%;transform:rotate(-14deg);filter:drop-shadow(0 10px 12px #0009)}
+.hero .date{margin-top:22px;font:400 clamp(17px,2.4vw,21px) var(--display);letter-spacing:.06em}
+.hero .date span{display:inline-block;margin:0 12px;color:var(--g2)}
+.scroll-cue{margin-top:30px;font:400 italic 16px var(--display);color:#e8d4b8aa}
+@media (prefers-reduced-motion:no-preference){
+  .stage .gframe{animation:settle 1.5s cubic-bezier(.2,.7,.2,1) both}
+  .stage .bow{animation:drop 1.1s .7s cubic-bezier(.3,1.4,.5,1) both}
+  .stage .ring{animation:roll 1.3s 1s cubic-bezier(.2,.8,.3,1) both}
+  .hero h1{animation:fade 1.6s .1s both}.hero .date,.scroll-cue{animation:fade 1.2s 1.3s both}
+  .scroll-cue{animation:fade 1.2s 1.6s both,bob 2.4s 2.8s ease-in-out infinite}
+}
+@keyframes settle{from{opacity:0;transform:translateY(46px) rotate(-3deg) scale(.95)}}
+@keyframes drop{from{opacity:0;transform:translateY(-60px) rotate(-12deg)}}
+@keyframes roll{from{opacity:0;transform:translateX(90px) rotate(-200deg)}}
+@keyframes fade{from{opacity:0}}
+@keyframes bob{50%{transform:translateY(6px)}}
+
+/* ---------- the letter: it rises out of the envelope ---------- */
+.letter{background:var(--wine);text-align:center}
+.env{position:relative;width:min(420px,88vw);margin:30px auto 0;aspect-ratio:720/1280;cursor:pointer;border:0;padding:0;background:none;display:block}
+.env img{position:absolute;inset:0;width:100%;height:100%}
+.env .sheet{transition:transform 1.6s cubic-bezier(.2,.7,.2,1);transform:translateY(34%)}
+.env .pocket{z-index:2}
+.env .on-paper{position:absolute;left:16%;right:16%;top:31%;z-index:1;transition:transform 1.6s cubic-bezier(.2,.7,.2,1);transform:translateY(34%);color:var(--ink);text-align:center}
+.env .on-paper b{display:block;font:400 clamp(40px,10vw,58px)/1 var(--script);color:var(--wine)}
+.env .on-paper small{display:block;margin-top:10px;font:400 italic 16px var(--display);color:var(--muted)}
+.letter.seen .env .sheet,.letter.seen .env .on-paper{transform:translateY(0)}
+.letter .hint{margin-top:18px;font:400 italic 17px var(--display);color:#e8d4b8bb}
+.unfold{display:grid;grid-template-rows:0fr;transition:grid-template-rows 1.1s cubic-bezier(.2,.7,.2,1)}
+.unfold>div{overflow:hidden}
+.letter.open .unfold{grid-template-rows:1fr}
+.note{position:relative;margin:36px auto 0;width:min(520px,100% - 36px);text-align:left;padding:clamp(44px,8vw,64px) clamp(26px,7vw,56px);box-shadow:0 30px 60px #000a}
+.note h3{font:400 clamp(44px,9vw,62px)/1 var(--script);color:var(--wine);margin-bottom:16px}
+.note p{margin:0 0 1em}
+.note .sign{font:400 42px/1 var(--script);color:var(--wine);text-align:right;margin-top:20px}
+.note .rose{position:absolute;width:118px;right:-26px;top:-40px;transform:rotate(16deg);filter:drop-shadow(0 10px 10px #0007)}
+.note .seal{position:absolute;width:76px;left:22px;bottom:-26px;transform:rotate(-12deg);filter:drop-shadow(0 6px 6px #0007)}
+
+/* ---------- save the date ---------- */
+.card{position:relative;max-width:500px;margin:0 auto;text-align:center;padding:clamp(48px,9vw,70px) 28px;background:#2a0207e6;border:1px solid #d2ae6366;outline:1px solid #d2ae6366;outline-offset:-10px}
+.card .names{font-size:clamp(46px,9vw,64px)}
+.card .big{font:400 clamp(30px,5vw,40px)/1.2 var(--display);margin:18px 0 6px}
+.card .small{font:400 italic 20px var(--display);color:#e8d4b8}
+.orn{width:170px;margin:20px auto;display:block}
+.card .glasses{position:absolute;width:clamp(120px,30vw,170px);right:-34px;top:-90px;transform-origin:50% 90%;filter:drop-shadow(0 12px 14px #0008)}
+.datesec.seen .glasses{animation:clink 1.4s .3s cubic-bezier(.3,1.5,.5,1) both}
+@keyframes clink{0%{transform:rotate(18deg) translateY(30px);opacity:0}60%{transform:rotate(-6deg)}100%{transform:rotate(0)}}
+.card .toast{margin-top:22px;font:400 30px/1 var(--script);color:var(--g1)}
+
+/* ---------- candlelight still with a drifting film strip ---------- */
+.film{position:relative;overflow:hidden;padding:0;min-height:clamp(440px,70vw,720px);display:grid;place-items:end center;background:url(/assets/candlelit/candles.webp) center/cover}
+.film::before{content:"";position:absolute;inset:0;background:linear-gradient(#1f010400 40%,#1f0104ee)}
+.film .strip{position:absolute;width:min(760px,130vw);left:50%;top:8%;opacity:.85;transform:translateX(-50%) rotate(-6deg);filter:sepia(.4) brightness(1.1)}
+@media (prefers-reduced-motion:no-preference){.film .strip{animation:drift 14s ease-in-out infinite alternate}}
+@keyframes drift{to{transform:translateX(-42%) rotate(-3deg)}}
+.film figcaption{position:relative;z-index:2;margin-bottom:9%;text-align:center;font:400 clamp(44px,9vw,78px)/1.2 var(--script)}
+
+/* ---------- our story ---------- */
+.story .wrap{display:grid;grid-template-columns:1fr 1.1fr;gap:clamp(36px,7vw,90px);align-items:center}
+.duo{position:relative;aspect-ratio:1/1.08}
+.duo .ovalf{position:absolute;width:62%;left:0;top:0;transform:rotate(-3deg)}
+.duo .rect{position:absolute;width:62%;right:-4%;bottom:-2%;transform:rotate(4deg)}
+.duo .rose{position:absolute;width:30%;left:34%;bottom:2%;z-index:4;transform:rotate(-20deg);filter:drop-shadow(0 10px 10px #0006)}
+.story .kicker{color:#8C6526}
+.story h2{margin:6px 0 22px}
+.story p{margin:0 0 1em;max-width:38ch}
+.story p:first-of-type::first-letter{float:left;font:400 84px/.8 var(--display);color:var(--wine);margin:8px 10px 0 0}
+@media(max-width:820px){.story .wrap{grid-template-columns:1fr}.duo{max-width:440px;width:100%;margin:0 auto 20px}}
+
+/* ---------- the evening, on an old television ---------- */
+.sched .wrap{display:grid;grid-template-columns:1fr 1fr;gap:clamp(36px,7vw,90px);align-items:center}
+.tv{position:relative;max-width:460px;width:100%;margin:0 auto}
+.tv .screen{position:absolute;left:13%;top:28.1%;width:51.1%;height:40.7%;overflow:hidden;border-radius:12%/16%;background:#000}
+.tv .screen img{width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.15) brightness(1.08)}
+.tv .screen::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(#0000 0 2px,#0004 3px),radial-gradient(circle,#0000 50%,#000b)}
+@media (prefers-reduced-motion:no-preference){.tv .screen img{animation:flick 5s steps(1) infinite}}
+@keyframes flick{0%,100%{opacity:1}47%{opacity:.82}48%{opacity:1}73%{opacity:.9}}
+.tv .set{position:relative;z-index:2;width:100%;filter:drop-shadow(0 20px 26px #000b)}
+.sched ol{list-style:none;padding:0;margin:26px 0 0}
+.sched li{display:grid;grid-template-columns:92px 1fr;align-items:baseline;padding:18px 0;border-bottom:1px solid #d2ae6340}
+.sched li b{font:400 italic 22px var(--display);color:var(--g2)}
+.sched li span{font-size:22px}
+@media(max-width:820px){.sched .wrap{grid-template-columns:1fr}}
+
+/* ---------- moments in gold frames ---------- */
+.moments .sub{max-width:36ch;margin:16px auto 46px;color:#e8d4b8;font-style:italic}
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(6px,2vw,24px)}
+.tiles figure{margin:0}
+.tiles figure:nth-child(odd){transform:rotate(-2.4deg)}
+.tiles figure:nth-child(even){transform:rotate(2deg) translateY(16px)}
+.tiles figcaption{text-align:center;font:400 30px/1.1 var(--script);color:var(--g1);margin-top:-6px}
+@media(max-width:820px){.tiles{grid-template-columns:1fr 1fr}}
+
+/* ---------- our song ---------- */
+.ticket{display:grid;grid-template-columns:120px 1fr;gap:20px;align-items:center;text-align:left;max-width:460px;margin:40px auto 0;padding:18px;background:url(/assets/candlelit/paper.webp) center/cover,#f6ecdc;color:var(--ink);
+  -webkit-mask:radial-gradient(circle 12px at 0 50%,#0000 98%,#000) left/51% 100% no-repeat,radial-gradient(circle 12px at 100% 50%,#0000 98%,#000) right/51% 100% no-repeat;
+          mask:radial-gradient(circle 12px at 0 50%,#0000 98%,#000) left/51% 100% no-repeat,radial-gradient(circle 12px at 100% 50%,#0000 98%,#000) right/51% 100% no-repeat}
+.ticket .tint{aspect-ratio:1}
+.ticket .tint img{width:100%;height:100%;object-fit:cover}
+.ticket h3{font:400 26px/1.1 var(--display)}
+.ticket .by{font-style:italic;color:var(--muted)}
+.ticket button{margin-top:10px;display:inline-flex;align-items:center;gap:8px;border:0;border-radius:999px;padding:9px 16px;background:var(--wine);color:var(--cream);font:500 15px var(--body);cursor:pointer}
+
+/* ---------- ending ---------- */
+.end{text-align:center;padding-bottom:50px}
+.end .ovalf{width:min(300px,70vw);margin:0 auto 26px}
+.end h2{font-size:clamp(46px,12.5vw,120px);line-height:1.25;padding:0 .2em}
+.end .date{font:400 italic 21px var(--display);color:#e8d4b8;margin-top:10px}
+.end .seal{width:84px;margin:34px auto 0;filter:drop-shadow(0 6px 8px #0008)}
+.end .credit{margin-top:50px;font:400 14px var(--body);color:#e8d4b899}
+
+/* ---------- opening: break the wax seal, the curtains part ---------- */
+.gate{display:none}
+.js .gate{position:fixed;inset:0;z-index:100;display:grid;place-items:center;text-align:center;padding:24px}
+.js.entered .gate{pointer-events:none}
+.gate-l,.gate-r{position:absolute;top:0;bottom:0;width:50.5%;background:linear-gradient(#1f010455,#1f0104b0),url(/assets/candlelit/silk.webp) center/cover;transition:transform 1.7s cubic-bezier(.7,0,.2,1)}
+.gate-l{left:0;background-position:left center;box-shadow:inset -40px 0 50px -30px #000c}
+.gate-r{right:0;background-position:right center;box-shadow:inset 40px 0 50px -30px #000c}
+.gate-l::after{content:"";position:absolute;right:0;top:0;bottom:0;width:2px;background:linear-gradient(#0000,#d2ae63aa,#0000)}
+.gate-in{position:relative;z-index:2;transition:opacity .7s}
+.gate .gname{font-size:clamp(64px,17vw,120px)}
+.gseal:focus:not(:focus-visible){outline:none}
+.gseal{display:grid;width:150px;margin:24px auto 14px;border:0;padding:0;background:none;cursor:pointer;filter:drop-shadow(0 14px 18px #000b)}
+.gseal img{grid-area:1/1;width:100%;transition:transform 1s cubic-bezier(.3,.7,.3,1),opacity .9s .2s}
+.gseal .sl{clip-path:polygon(0 0,53% 0,46% 34%,55% 56%,47% 78%,52% 100%,0 100%)}
+.gseal .sr{clip-path:polygon(53% 0,100% 0,100% 100%,52% 100%,47% 78%,55% 56%,46% 34%)}
+@media (prefers-reduced-motion:no-preference){.gseal{animation:pulse 2.4s ease-in-out infinite}}
+@keyframes pulse{50%{transform:scale(1.05)}}
+.ghint{font:400 italic 18px var(--display);color:#e8d4b8cc}
+.opening .gseal{animation:none}
+.opening .gseal .sl{transform:translate(-34px,26px) rotate(-28deg);opacity:0}
+.opening .gseal .sr{transform:translate(34px,26px) rotate(28deg);opacity:0}
+.opening .gate-in{opacity:0;transition-delay:.45s}
+.opening .gate-l{transform:translateX(-101%);transition-delay:.6s}
+.opening .gate-r{transform:translateX(101%);transition-delay:.6s}
+html.locked{overflow:hidden}
+.js:not(.entered) .hero *{animation-play-state:paused!important}
+
+/* ---------- gold dust in the hero ---------- */
+.dust{position:absolute;inset:0;pointer-events:none;z-index:0}
+.dust i{position:absolute;border-radius:50%;background:radial-gradient(#fff6d6,#e8c978 45%,#0000 70%);opacity:0}
+@media (prefers-reduced-motion:no-preference){.dust i{animation:twinkle var(--d) ease-in-out var(--dl) infinite}}
+@keyframes twinkle{0%,100%{opacity:0;transform:translateY(0) scale(.5)}50%{opacity:1;transform:translateY(-18px) scale(1.4)}}
+.hero>div{position:relative;z-index:1}
+
+/* ---------- candle glow ---------- */
+.film .glow{position:absolute;left:52%;top:30%;width:min(80vw,620px);aspect-ratio:1;translate:-50% -50%;pointer-events:none;mix-blend-mode:screen;background:radial-gradient(circle,#ffc77a66,#ff9a3a26 35%,#0000 66%)}
+@media (prefers-reduced-motion:no-preference){.film .glow{animation:flicker 3.2s infinite}}
+@keyframes flicker{0%,100%{opacity:.85;scale:1}12%{opacity:.6;scale:.97}20%{opacity:.95;scale:1.02}41%{opacity:.7}55%{opacity:1;scale:1.03}73%{opacity:.65;scale:.98}86%{opacity:.9}}
+
+/* ---------- a band of gold script ---------- */
+.marq{overflow:hidden;background:#160003;border-block:1px solid #d2ae6340;padding:16px 0 10px}
+.mq-in{display:flex;width:max-content;align-items:center;gap:30px;font:400 clamp(40px,8vw,56px)/1.2 var(--script);white-space:nowrap}
+.mq-in span{background:var(--gold);-webkit-background-clip:text;background-clip:text;color:transparent;padding:0 .1em}
+.mq-in i{font:normal 18px/1 var(--display);color:var(--g2)}
+@media (prefers-reduced-motion:no-preference){.mq-in{animation:mq 44s linear infinite}}
+@keyframes mq{to{transform:translateX(-50%)}}
+
+/* ---------- open when... ---------- */
+.ow{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(22px,3.4vw,36px) clamp(16px,3vw,32px);margin-top:20px}
+.owe{border:0;background:none;padding:0;cursor:pointer;color:inherit;font:inherit;perspective:800px}
+.env2{display:block;position:relative;aspect-ratio:4/3;margin-top:58%}
+.env2 .back{position:absolute;inset:0;background:#4a0a14;border-radius:4px;box-shadow:0 16px 24px -14px #000c}
+.env2 .card2{position:absolute;left:7%;right:7%;bottom:6%;height:92%;z-index:1;display:grid;place-items:center;padding:10px 12px;text-align:center;background:url(/assets/candlelit/paper.webp) center/cover,#f3e7d3;color:var(--ink);font:400 italic clamp(14px,2.4vw,16px)/1.35 var(--body);box-shadow:0 -4px 10px #0003;transition:transform .9s .25s cubic-bezier(.2,.8,.3,1.1)}
+.env2 .front{position:absolute;inset:0;z-index:2;border-radius:4px;background:linear-gradient(160deg,#7a1626,#560c18);clip-path:polygon(0 0,50% 54%,100% 0,100% 100%,0 100%)}
+.env2 .front::after{content:"";position:absolute;inset:0;background:linear-gradient(20deg,#0000 48%,#ffffff12 50%,#0000 52%),linear-gradient(-20deg,#0000 48%,#ffffff12 50%,#0000 52%)}
+.env2 .flap{position:absolute;left:0;right:0;top:0;height:62%;z-index:3;background:linear-gradient(#8f1c2f,#64101c);clip-path:polygon(0 0,100% 0,50% 100%);transform-origin:top;transition:transform .7s cubic-bezier(.4,0,.2,1),z-index 0s .35s}
+.env2 .wseal{position:absolute;z-index:4;left:50%;top:58%;width:30%;translate:-50% -50%;transition:opacity .3s,transform .3s;filter:drop-shadow(0 3px 3px #0008)}
+.owe.on .flap{transform:rotateX(180deg);z-index:0}
+.owe.on .wseal{opacity:0;transform:scale(1.4)}
+.owe.on .card2{transform:translateY(-64%)}
+.owe .lbl{display:block;margin-top:12px;font:400 italic 15px var(--display);color:#e8d4b8}
+.owe .lbl b{display:block;font:400 27px/1.15 var(--script);color:var(--g1)}
+@media(max-width:820px){.ow{grid-template-columns:1fr 1fr}}
+
+/* ---------- the letter writes itself ---------- */
+.js .note .w{opacity:0;filter:blur(4px);transition:opacity .45s,filter .45s;transition-delay:calc(var(--i)*30ms + .9s)}
+.letter.open .note .w{opacity:1;filter:none}
+.letter:not(.open) .note .w{transition-delay:0s}
+.js .note .sign{clip-path:inset(0 100% 0 0);transition:clip-path 1.6s calc(var(--n,40)*30ms + 1.1s) ease-out}
+.letter.open .note .sign{clip-path:inset(0 0 0 0)}
+.letter:not(.open) .note .sign{transition-delay:0s}
+
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}.petals{display:none}.env .sheet,.env .on-paper{transform:none}}
+</style>
+<script src="/assets/ks-templates.v1.js"></script>
+</head>
+<body>
+<script>
+document.documentElement.classList.add("js","locked");
+if (/[?&]preview=1/.test(location.search)) document.documentElement.classList.add("entered");
+</script>
+<div class="petals" aria-hidden="true" id="petals"></div>
+
+<div class="gate" id="gate" role="dialog" aria-modal="true" aria-label="Open your keepsake">
+ <div class="gate-l"></div><div class="gate-r"></div>
+ <div class="gate-in">
+  <div class="kicker">a keepsake for</div>
+  <div class="gname script goldtext" id="recipient">Meera</div>
+  <button class="gseal" id="gseal" type="button" aria-label="Break the seal to open"><img class="sl" src="/assets/candlelit/seal.webp" alt=""><img class="sr" src="/assets/candlelit/seal.webp" alt=""></button>
+  <div class="ghint">tap the seal to open</div>
+ </div>
+</div>
+
+<main>
+<section class="hero silk" aria-label="The two of you">
+ <div class="dust" id="dust" aria-hidden="true"></div>
+ <div>
+  <div class="kicker" id="tagline">two hearts, one story</div>
+  <h1 class="script goldtext" data-names>Meera &amp; Aarav</h1>
+  <div class="stage">
+   <div class="gframe rect"><div class="pic"><img class="bw" data-ph="photos.hero" alt=""></div><img class="border" src="/assets/candlelit/frame.webp" alt=""></div>
+   <img class="bow" src="/assets/candlelit/bow.webp" alt="">
+   <img class="ring" src="/assets/candlelit/ring.webp" alt="">
+  </div>
+  <div class="date" id="heroDate"></div>
+  <div class="scroll-cue" id="cue">a letter is waiting for you</div>
+ </div>
+</section>
+
+<div class="lace-band" aria-hidden="true"></div>
+
+<section class="letter" id="letter" aria-label="A letter">
+ <div class="kicker">sealed with love</div>
+ <h2 class="title">For <em>you</em></h2>
+ <button class="env" type="button" id="envBtn" aria-expanded="false" aria-controls="note">
+  <img class="sheet" src="/assets/candlelit/env-letter.webp" alt="">
+  <span class="on-paper"><b data-greeting>Dear you,</b><small>tap to open</small></span>
+  <img class="pocket" src="/assets/candlelit/env-pocket.webp" alt="">
+ </button>
+ <div class="unfold"><div>
+  <article class="note paper" id="note">
+   <img class="rose" src="/assets/candlelit/rose.webp" alt="">
+   <h3 data-greeting>Dear you,</h3>
+   <div id="letterBody"></div>
+   <div class="sign" id="sign">Always yours, Aarav</div>
+   <img class="seal" src="/assets/candlelit/seal.webp" alt="">
+  </article>
+ </div></div>
+</section>
+
+<section class="datesec damask" aria-label="Our date">
+ <div class="wrap">
+  <div class="card">
+   <img class="glasses" src="/assets/candlelit/champagne.webp" alt="">
+   <div class="kicker">save the date</div>
+   <div class="names script goldtext" data-names>Meera &amp; Aarav</div>
+   <svg class="orn" viewBox="0 0 180 20" aria-hidden="true"><defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#8C6526"/><stop offset=".5" stop-color="#FFF0BE"/><stop offset="1" stop-color="#8C6526"/></linearGradient></defs><g fill="none" stroke="url(#g)" stroke-width="1.4"><path d="M0 10h70M110 10h70"/><path d="M90 2c-8 0-14 8-20 8 6 0 12 8 20 8s14-8 20-8c-6 0-12-8-20-8z"/></g><circle cx="90" cy="10" r="2.4" fill="#E8C978"/></svg>
+   <div class="big" id="weekday"></div>
+   <div class="small" id="timeText"></div>
+   <svg class="orn" viewBox="0 0 180 20" aria-hidden="true"><g fill="none" stroke="url(#g)" stroke-width="1.4"><path d="M0 10h70M110 10h70"/><path d="M90 2c-8 0-14 8-20 8 6 0 12 8 20 8s14-8 20-8c-6 0-12-8-20-8z"/></g><circle cx="90" cy="10" r="2.4" fill="#E8C978"/></svg>
+   <div class="small" id="place"></div>
+   <div class="toast" id="toast"></div>
+  </div>
+ </div>
+</section>
+
+<div class="marq" aria-hidden="true"><div class="mq-in" id="words"></div></div>
+
+<figure class="film" style="margin:0" aria-label="By candlelight">
+ <div class="glow" aria-hidden="true"></div>
+ <img class="strip" src="/assets/candlelit/filmstrip.webp" alt="">
+ <figcaption class="goldtext" id="filmCaption"></figcaption>
+</figure>
+
+<section class="story paper" aria-label="Our story">
+ <div class="wrap">
+  <div class="duo">
+   <div class="gframe ovalf"><div class="pic tint"><img data-ph="photos.storyA" alt=""></div><img class="border" src="/assets/candlelit/oval.webp" alt=""></div>
+   <div class="gframe rect"><div class="pic"><img class="bw" data-ph="photos.storyB" alt=""></div><img class="border" src="/assets/candlelit/frame.webp" alt=""></div>
+   <img class="rose" src="/assets/candlelit/rose.webp" alt="">
+  </div>
+  <div>
+   <div class="kicker" id="storyKicker"></div>
+   <h2 class="title">Our <em>story</em></h2>
+   <div id="storyBody"></div>
+  </div>
+ </div>
+</section>
+
+<section class="sched silk" id="evening" aria-label="The evening">
+ <div class="wrap">
+  <div class="tv"><div class="screen"><img data-ph="photos.tv" alt=""></div><img class="set" src="/assets/candlelit/tv.webp" alt=""></div>
+  <div>
+   <div class="kicker">the evening</div>
+   <h2 class="title">Tonight's <em>programme</em></h2>
+   <ol id="sched"></ol>
+  </div>
+ </div>
+</section>
+
+<div class="lace-band" aria-hidden="true"></div>
+
+<section class="moments damask center" id="momentsSec" aria-label="Moments so far">
+ <div class="wrap">
+  <h2 class="title">Moments <em>so far</em></h2>
+  <p class="sub" id="momentsIntro"></p>
+  <div class="tiles" id="tiles"></div>
+ </div>
+</section>
+
+<section class="openwhen silk center" id="owSec" aria-label="Open when">
+ <div class="wrap">
+  <div class="kicker">for the days you need me</div>
+  <h2 class="title">Open <em>when…</em></h2>
+  <div class="ow" id="ow"></div>
+ </div>
+</section>
+
+<div class="lace-band" aria-hidden="true"></div>
+
+<section class="song silk center" aria-label="Our song">
+ <div class="narrow">
+  <div class="kicker">press play</div>
+  <h2 class="title">Our <em>song</em></h2>
+  <div class="ticket" id="ticket">
+   <div class="tint"><img data-ph="photos.cover" alt="Album cover"></div>
+   <div><h3 id="songTitle"></h3><div class="by" id="songNote"></div><button type="button" id="spotBtn"><svg width="12" height="12" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6 4v16l14-8z"/></svg>Play on Spotify</button></div>
+  </div>
+  <div id="spot"></div>
+ </div>
+</section>
+
+<div class="lace-band" aria-hidden="true"></div>
+
+<section class="end damask" aria-label="Closing">
+ <div class="gframe ovalf"><div class="pic"><img class="bw" data-ph="photos.end" alt=""></div><img class="border" src="/assets/candlelit/oval.webp" alt=""></div>
+ <h2 class="script goldtext" data-names>Meera &amp; Aarav</h2>
+ <div class="date" id="endDate"></div>
+ <img class="seal" src="/assets/candlelit/seal.webp" alt="">
+ <div class="credit">Made with <a href="/">Keepsake</a></div>
+</section>
+</main>
+
+<script>
+
+
+const K = KSKit, $ = id => document.getElementById(id);
+const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+const FRAME = '<div class="gframe rect"><div class="pic"><img alt=""></div><img class="border" src="/assets/candlelit/frame.webp" alt=""></div>';
+
+function render(D) {
+  const a = K.str(D.a, 30), b = K.str(D.b, 30), d = K.date(D.date), names = `${a} & ${b}`;
+  document.title = `${names} · Keepsake`;
+  if ($("recipient")) $("recipient").textContent = K.str(D.recipient || a, 30);
+  $("tagline").textContent = K.str(D.tagline, 60);
+  document.querySelectorAll("[data-names]").forEach(e => e.textContent = names);
+  document.querySelectorAll("[data-ph]").forEach(i => K.setImg(i, K.get(D, i.dataset.ph)));
+  const hd = $("heroDate"); hd.textContent = "";
+  hd.append(String(d.getDate()), el("span", "", "❦"), K.fmt.month(d), el("span", "", "❦"), String(d.getFullYear()));
+  $("cue").textContent = K.str(D.cue, 60);
+
+  // letter, split into words so it can appear as if being written
+  document.querySelectorAll("[data-greeting]").forEach(e => e.textContent = K.str(D.greeting, 40));
+  $("sign").textContent = K.str(D.sign, 40);
+  const body = $("letterBody"); body.textContent = ""; let n = 0;
+  K.paras(D.letter).forEach(t => {
+    const p = el("p");
+    t.split(/(\s+)/).forEach(x => { if (/^\s+$/.test(x)) { p.append(x); return; } const s = el("span", "w", x); s.style.setProperty("--i", n++); p.appendChild(s); });
+    body.appendChild(p);
+  });
+  $("note").style.setProperty("--n", n);
+
+  // save the date
+  $("weekday").textContent = K.fmt.weekday(d);
+  $("timeText").textContent = K.str(D.timeText, 50);
+  $("place").textContent = K.str(D.place, 60);
+  $("toast").textContent = K.str(D.toast, 40);
+  const w = $("words"); w.textContent = "";
+  const list = K.words(D.words);
+  for (let r = 0; r < 2; r++) list.forEach(x => { w.appendChild(el("span", "", x)); w.appendChild(el("i", "", "❦")); });
+  $("filmCaption").textContent = K.str(D.filmCaption, 40);
+
+  // story
+  $("storyKicker").textContent = K.str(D.storyKicker, 60);
+  const sb = $("storyBody"); sb.textContent = "";
+  K.paras(D.story).forEach(t => sb.appendChild(el("p", "", t)));
+
+  // the evening
+  $("evening").hidden = D.showDay === false;
+  const ol = $("sched"); ol.textContent = "";
+  (D.schedule || []).filter(x => x.time || x.what).slice(0, 8).forEach(x => { const li = el("li"); li.appendChild(el("b", "", K.str(x.time, 10))); li.appendChild(el("span", "", K.str(x.what, 50))); ol.appendChild(li); });
+
+  // moments in gold frames; alternate black-and-white and wine-tinted photos
+  $("momentsIntro").textContent = K.str(D.momentsIntro, 140);
+  const tiles = $("tiles"); tiles.textContent = "";
+  (D.moments || []).filter(x => K.img(x.photo)).slice(0, 8).forEach((x, i) => {
+    const f = el("figure"); f.innerHTML = FRAME;
+    const pic = f.querySelector(".pic"), im = pic.querySelector("img");
+    if (i % 2) pic.classList.add("tint"); else im.className = "bw";
+    im.src = K.img(x.photo); im.alt = K.str(x.cap, 60);
+    f.appendChild(el("figcaption", "", K.str(x.cap, 60))); tiles.appendChild(f);
+  });
+  $("momentsSec").hidden = !tiles.children.length;
+
+  // open when...
+  const ow = $("ow"); ow.textContent = "";
+  (D.openWhen || []).filter(x => x.when && x.msg).slice(0, 8).forEach(x => {
+    const bt = el("button", "owe"); bt.type = "button"; bt.setAttribute("aria-expanded", "false");
+    bt.innerHTML = '<span class="env2"><span class="back"></span><span class="card2"></span><span class="front"></span><span class="flap"></span><img class="wseal" src="/assets/candlelit/seal.webp" alt=""></span><span class="lbl">open when<b></b></span>';
+    bt.querySelector(".card2").textContent = K.str(x.msg, 200); bt.querySelector(".lbl b").textContent = K.str(x.when, 30);
+    bt.setAttribute("aria-label", "Open when " + K.str(x.when, 30));
+    bt.onclick = () => { const on = bt.classList.toggle("on"); bt.setAttribute("aria-expanded", on); };
+    ow.appendChild(bt);
+  });
+  $("owSec").hidden = !ow.children.length;
+
+  // song: the ticket opens the real Spotify player
+  $("songTitle").textContent = K.str(D.song && D.song.title, 50);
+  $("songNote").textContent = K.str(D.song && D.song.note, 60);
+  const sp = K.spotify(D.song && D.song.url);
+  $("spotBtn").hidden = !sp; $("spot").textContent = "";
+  $("spotBtn").onclick = () => { if (!sp || $("spot").firstChild) return; const f = el("iframe"); f.src = sp.src; f.height = sp.h; f.allow = "autoplay; encrypted-media; clipboard-write"; f.title = "Our song on Spotify"; $("spot").appendChild(f); };
+
+  $("endDate").textContent = K.fmt.long(d) + (D.place ? ", " + K.str(D.place, 60) : "");
+}
+
+// opening: break the seal
+(function () {
+  const root = document.documentElement, gate = document.getElementById("gate");
+  // the builder preview skips the opening screen
+  if (/[?&]preview=1/.test(location.search)) { root.classList.remove("locked"); root.classList.add("js", "entered"); gate.remove(); return; }
+  root.classList.add("js", "locked");
+  const enter = () => {
+    gate.classList.add("opening"); root.classList.add("entered");
+    setTimeout(() => { root.classList.remove("locked"); gate.remove(); }, matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 2400);
+  };
+  document.getElementById("gseal").addEventListener("click", enter);
+})();
+
+// gold dust
+(function () {
+  const box = document.getElementById("dust"), n = innerWidth < 600 ? 22 : 40;
+  for (let i = 0; i < n; i++) {
+    const d = document.createElement("i"), z = 3 + Math.random() * 6;
+    d.style.cssText = `left:${Math.random() * 100}%;top:${Math.random() * 100}%;width:${z}px;height:${z}px;--d:${3 + Math.random() * 4}s;--dl:${-Math.random() * 6}s`;
+    box.appendChild(d);
+  }
+})();
+
+
+
+
+// rose petals drifting down the page
+(function () {
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const box = document.getElementById("petals"), srcs = [0,1,2,3,4,5,6].map(i => `/assets/candlelit/petal${i}.webp`);
+  const n = innerWidth < 600 ? 9 : 14;
+  for (let i = 0; i < n; i++) {
+    const p = new Image(); p.src = srcs[i % srcs.length]; p.alt = "";
+    p.style.left = (Math.random() * 100) + "vw";
+    p.style.setProperty("--s", (18 + Math.random() * 22) + "px");
+    p.style.setProperty("--d", (11 + Math.random() * 10) + "s");
+    p.style.setProperty("--delay", (-Math.random() * 20) + "s");
+    p.style.setProperty("--sway", ((Math.random() * 60) - 30) + "px");
+    box.appendChild(p);
+  }
+})();
+
+// moments that happen once, when a section comes into view
+const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("seen"); io.unobserve(e.target); } }), { threshold: .35 });
+document.querySelectorAll(".letter,.datesec").forEach(s => io.observe(s));
+
+// tap the envelope to unfold the letter
+const letter = document.getElementById("letter"), env = document.getElementById("envBtn");
+env.addEventListener("click", () => {
+  const open = !letter.classList.contains("open");
+  letter.classList.add("seen"); letter.classList.toggle("open", open); env.setAttribute("aria-expanded", open);
+  env.querySelector("small").textContent = open ? "tap to close" : "tap to open";
+  if (open) setTimeout(() => document.getElementById("note").scrollIntoView({ behavior: "smooth", block: "center" }), 450);
+});
+
+K.boot("candlelit", render);
+</script>
+</body>
+</html>
