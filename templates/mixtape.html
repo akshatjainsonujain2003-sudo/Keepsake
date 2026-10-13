@@ -71,22 +71,19 @@ section{position:relative;padding:clamp(80px,11vw,140px) 0}
 @keyframes drop{from{opacity:0;transform:translateY(-40px) rotate(-8deg)}}
 @keyframes up{from{opacity:0;transform:translateY(20px)}}
 
-/* a little instant camera: tap it, a photo slides out and develops */
-.camwrap{position:relative;height:380px;margin-top:34px}
-.cam{position:relative;width:min(250px,66vw);border:0;padding:0;background:none;cursor:pointer;display:block}
+/* the camera: tap it, the flash goes off and a photo slides out and develops */
+.camwrap{position:relative;height:400px;margin-top:30px}
+.cam{position:relative;width:min(300px,72vw);border:0;padding:0;background:none;cursor:pointer;display:block}
 .cam span{display:block}
-.cam .body{position:relative;z-index:2;height:144px;border-radius:22px 22px 14px 14px;background:linear-gradient(#f6efe3,#e3d7c4);box-shadow:inset 0 -12px 0 #d4c6ae,0 20px 30px -18px #2c1c1880}
-.cam .stripe{position:absolute;left:0;right:0;top:50px;height:20px;background:linear-gradient(90deg,#0000 0 70%,#0000),linear-gradient(#c8312c 0 25%,#e27a2c 0 50%,#e8b83a 0 75%,#4b8a59 0);clip-path:inset(0 62% 0 0)}
-.cam .lens{position:absolute;left:50%;top:20px;width:92px;height:92px;margin-left:-46px;border-radius:50%;background:radial-gradient(circle at 38% 36%,#7c8b9a 0 7%,#1a1c21 8% 36%,#3a3d44 37% 45%,#121315 46% 62%,#2b2b2b 63%);box-shadow:0 0 0 8px #2c2a28,0 6px 10px #0006}
-.cam .win{position:absolute;right:18px;top:16px;width:44px;height:24px;border-radius:6px;background:linear-gradient(#fff,#cdd5dc);box-shadow:inset 0 0 0 3px #2c2a28}
-.cam .shutter{position:absolute;left:24px;top:-9px;width:28px;height:12px;border-radius:7px 7px 0 0;background:var(--red)}
-.cam .slot{position:absolute;left:16%;right:16%;bottom:10px;height:6px;border-radius:3px;background:#2c2a28}
-.cam .print{position:absolute;z-index:1;left:15%;width:70%;top:96px;background:#fff;padding:8px 8px 34px;box-shadow:0 12px 22px -10px #0006;transition:transform 1.6s cubic-bezier(.2,.8,.3,1)}
+.cam .body{position:relative;z-index:2;width:100%;filter:drop-shadow(0 18px 22px #2c1c1855);transition:transform .15s}
+.cam:active .body{transform:scale(.97)}
+.cam .print{position:absolute;z-index:1;left:22%;width:50%;top:3%;background:#fff;padding:8px 8px 34px;box-shadow:0 12px 22px -10px #0006;transition:transform 1.6s cubic-bezier(.2,.8,.3,1),opacity .2s}
 .cam .print img{width:100%;aspect-ratio:1;object-fit:cover;filter:brightness(1.9) saturate(0) contrast(.35);transition:filter 4s 1.2s}
 .cam .print span{position:absolute;left:0;right:0;bottom:6px;text-align:center;font:700 20px/1 var(--hand);color:var(--ink)}
-.cam.shot .print{transform:translateY(150px) rotate(-5deg)}
+.cam.shot .print{transform:translateY(92%) rotate(-5deg)}
+.cam:not(.shot) .print{opacity:0;transition:transform 1.6s cubic-bezier(.2,.8,.3,1),opacity .3s .6s}
 .cam.shot .print img{filter:none}
-.camwrap .hint{position:absolute;left:min(260px,68vw);top:26px;font:700 26px/1.05 var(--hand);color:var(--red);rotate:-6deg;transition:opacity .4s}
+.camwrap .hint{position:absolute;left:min(310px,74vw);top:30px;font:700 26px/1.05 var(--hand);color:var(--red);rotate:-6deg;transition:opacity .4s}
 .camwrap .hint svg{display:block;width:48px;margin-top:4px;stroke:var(--red);fill:none;stroke-width:2;stroke-linecap:round}
 .camwrap.used .hint{opacity:0}
 .flash{position:fixed;inset:0;z-index:300;background:#fff;opacity:0;pointer-events:none}
@@ -252,7 +249,7 @@ section{position:relative;padding:clamp(80px,11vw,140px) 0}
    <div class="camwrap" id="camwrap">
     <button class="cam" id="cam" type="button" aria-label="Take a photo">
      <span class="print"><img data-ph="photos.hero2" alt=""><span>say cheese</span></span>
-     <span class="body"><span class="shutter"></span><span class="stripe"></span><span class="lens"></span><span class="win"></span><span class="slot"></span></span>
+     <img class="body" src="/assets/mixtape/camera.webp" alt="A vintage camera with a red bow">
     </button>
     <div class="hint">tap me<svg viewBox="0 0 48 30" aria-hidden="true"><path d="M44 4C30 2 12 8 6 24"/><path d="M2 16 6 25 15 22"/></svg></div>
    </div>
