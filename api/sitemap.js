@@ -1,4 +1,4 @@
-const pages = ["/", "/designs", "/builder", "/contact"];
+const pages = ["/", "/digital-gifts", "/gifts/girlfriend", "/gifts/boyfriend", "/gifts/anniversary", "/gifts/birthday", "/gifts/karva-chauth", "/gifts/long-distance", "/designs", "/builder", "/contact"];
 module.exports = (req, res) => {
   const base = "https://getkeepsake.in", day = new Date().toISOString().slice(0, 10);
   res.setHeader("Content-Type", "application/xml; charset=utf-8"); res.setHeader("Cache-Control", "public, max-age=3600");
