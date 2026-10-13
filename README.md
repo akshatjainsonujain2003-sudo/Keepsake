@@ -64,9 +64,14 @@ There is no build step and no npm dependencies.
    - `RESEND_API_KEY` and `RESEND_FROM_EMAIL`: for customer password reset emails
    - `RAZORPAY_KEY_ID` and `RAZORPAY_KEY_SECRET`: from Razorpay Dashboard → Account & Settings → API Keys
    - `RAZORPAY_WEBHOOK_SECRET`: a secret you choose when adding the webhook below
-   - Optional prices in rupees: `PRICE_TEMPLATE` (99), `PRICE_WEBSITE` (299), `PRICE_FRAME_QR` (399), `PRICE_FRAME_NFC` (599). Frames are added on top of the product price; adding a frame to an active keepsake costs only the frame.
+   - Optional prices in rupees: `PRICE_TEMPLATE` (forever, 149), `PRICE_TEMPLATE_30` (30 days, 49), `PRICE_WEBSITE` (forever, 399), `PRICE_WEBSITE_30` (30 days, 149), `PRICE_FRAME_QR` (5×7 frame, 599), `PRICE_FRAME_NFC` (5×7 frame, 899). Frames are added on top and always include forever. A 30-day keepsake can go forever by paying the difference, or add 30 more days.
+   - `META_PIXEL_ID`: optional Facebook (Meta) Pixel ID for ad measurement. It never runs on keepsake pages that recipients open.
 4. In Razorpay Dashboard → Webhooks, add `https://<your-domain>/api/razorpay-webhook` with the events `payment.captured` and `order.paid`, using the same webhook secret. Keep payment capture set to automatic.
 5. Use the production domain (not a preview URL) for QR codes and NFC tags. If scanners hit a Vercel login, turn off Deployment Protection in Project Settings.
+
+## Before launch
+
+Fill in the highlighted business details on `/terms`, `/privacy`, `/refunds`, `/shipping` and `/contact` (search the files for `mark class="fill"`). Razorpay checks these pages before approving live payments.
 
 ## Notes
 

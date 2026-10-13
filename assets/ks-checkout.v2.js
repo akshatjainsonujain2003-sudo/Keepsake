@@ -1,5 +1,6 @@
 /* Keepsake shared widgets, used by the template studio and the website builder.
-   KSCheckout: choose Digital / Photo frame with QR / Photo frame with NFC, what to print, address, pay with Razorpay.
+   KSCheckout: choose 30 days or Forever, Digital / 5x7 frame with QR / with NFC, what to print, address, pay with Razorpay.
+               KSCheckout.offer(): the next-step button on a live keepsake (keep it forever, or get a frame).
    KSLock:     optional password field for a card or website.
    KSUnlock:   password screen shown to people who scan or tap a locked keepsake.
    Files in /assets are cached for a year, so change the file name (v2, v3…) when editing this file. */
@@ -19,6 +20,10 @@
 .ksco .ks-opts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 .ksco .ks-opt{position:relative;display:flex;flex-direction:column;gap:4px;padding:14px;border:1px solid var(--line);border-radius:16px;cursor:pointer;background:#ffffff08;text-align:left;color:var(--ink);font:inherit}
 .ksco .ks-opt.on{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold)}
+.ksco .ks-terms{grid-template-columns:1fr 1fr}
+.ksco .ks-tag{position:absolute;top:-9px;right:12px;padding:3px 9px;border-radius:999px;background:var(--gold);color:#2a0409;font:700 10.5px/1.2 system-ui,sans-serif;letter-spacing:.06em;text-transform:uppercase}
+.ksco .ks-opt .ks-was{font-size:13px;color:var(--muted);text-decoration:line-through;margin-left:6px}
+.ksco .ks-hint{font-size:13px;color:var(--gold);margin:8px 0 0}
 .ksco .ks-opt b{font-size:15px}.ksco .ks-opt .ks-pp{font:500 26px/1.1 Georgia,serif;color:var(--gold)}.ksco .ks-opt small{color:var(--muted);font-size:12.5px;line-height:1.4}
 .ksco .ks-pills{display:flex;gap:8px;flex-wrap:wrap}
 .ksco .ks-pill{padding:10px 16px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--ink);font:inherit;cursor:pointer}
@@ -72,7 +77,7 @@
   async function catalog() {
     if (CATALOG) return CATALOG;
     try { CATALOG = await json("/api/checkout", { cache: "no-store" }); } catch (e) { CATALOG = null; }
-    return CATALOG || { products: { card: { name: "Template", price: 99 }, site: { name: "Custom website", price: 299 } }, delivery: { digital: { name: "Digital", price: 0, desc: "" }, frameQr: { name: "Photo frame with QR", price: 399, desc: "" }, frameNfc: { name: "Photo frame with NFC", price: 599, desc: "" } } };
+    return CATALOG || { products: { card: { name: "Template card", price: 149, price30: 49 }, site: { name: "Website", price: 399, price30: 149 } }, terms: { d30: { name: "30 days", desc: "" }, life: { name: "Forever", desc: "" } }, delivery: { digital: { name: "Digital", price: 0, desc: "" }, frameQr: { name: "5×7 photo frame with QR", price: 599, desc: "" }, frameNfc: { name: "5×7 photo frame with NFC", price: 899, desc: "" } } };
   }
 
   // opts: { kind: "card"|"site", getId(): string, customer(): {name, phone}|null, onPaid(result) }
@@ -80,7 +85,8 @@
     css();
     el.classList.add("ksco");
     el.innerHTML = `<h3 class="ks-title"></h3><p class="ks-note"></p>
-<div class="ks-step">How would you like it?</div><div class="ks-opts"></div>
+<div class="ks-tblock"><div class="ks-step ks-tq">How long should it stay live?</div><div class="ks-opts ks-terms"></div></div>
+<div class="ks-dblock"><div class="ks-step">How would you like it?</div><div class="ks-opts ks-deliv"></div><p class="ks-hint" hidden>Photo frames always come with a forever link.</p></div>
 <div class="ks-frame" hidden>
  <div class="ks-step">What should we print in the frame?</div>
  <div class="ks-pills"><button type="button" class="ks-pill" data-print="photo">My photo</button><button type="button" class="ks-pill" data-print="design">My card design</button></div>
@@ -97,33 +103,59 @@
  </div>
 </div>
 <button type="button" class="ks-pay">Pay</button><div class="ks-status" role="status"></div>
-<p class="ks-fine">Secure payment by Razorpay: UPI, cards, net banking and wallets.</p>`;
+<p class="ks-fine">Secure payment by Razorpay: UPI, cards, net banking and wallets. By paying you agree to our <a href="/terms" target="_blank" style="color:inherit">Terms</a> and <a href="/refunds" target="_blank" style="color:inherit">Refund policy</a>.</p>`;
     const $ = s => el.querySelector(s);
-    const state = { mode: "activate", plan: "digital", print: "", photo: "", cat: null };
+    const state = { mode: "activate", term: "life", plan: "digital", print: "", photo: "", cat: null, memory: null };
     const status = (t, cls) => { const s = $(".ks-status"); s.textContent = t || ""; s.className = "ks-status" + (cls ? " " + cls : ""); };
-    const total = plan => { const c = state.cat; if (!c) return 0; const base = state.mode === "upgrade" ? 0 : c.products[opts.kind].price; return base + c.delivery[plan].price; };
-
+    const isFr = p => p === "frameQr" || p === "frameNfc";
+    // Mirrors the server's pricing (api/_pay.js amountFor) so the buttons show the right amounts.
+    function total(term, plan) {
+      const c = state.cat; if (!c) return 0;
+      const P = c.products[opts.kind], fr = c.delivery[plan].price;
+      if (isFr(plan)) term = "life";
+      if (state.mode === "frame") return fr;
+      if (state.mode === "extend") return term === "life" ? Math.max(0, P.price - P.price30) + fr : P.price30;
+      return (term === "d30" ? P.price30 : P.price) + fr;
+    }
     function render() {
-      const c = state.cat, prod = c.products[opts.kind];
-      $(".ks-title").textContent = state.mode === "upgrade" ? "Get it in a photo frame" : "Activate your " + (opts.kind === "site" ? "website" : "keepsake");
-      $(".ks-note").textContent = state.mode === "upgrade"
-        ? "We'll print a photo frame for this keepsake and deliver it to you. Your link stays the same."
-        : `Your ${opts.kind === "site" ? "website" : "card"} is saved. Pay once to switch on its link, QR code and NFC link. It stays live for good, and you can keep editing it.`;
-      const plans = state.mode === "upgrade" ? ["frameQr", "frameNfc"] : ["digital", "frameQr", "frameNfc"];
+      const c = state.cat, m = state.memory, kindWord = opts.kind === "site" ? "website" : "card";
+      if (isFr(state.plan)) state.term = "life";
+      if (state.mode === "extend" && state.term === "d30") state.plan = "digital";
+      const ends = m && m.expiresAt ? new Date(m.expiresAt).toLocaleDateString("en-IN", { day: "numeric", month: "short" }) : "";
+      $(".ks-title").textContent = state.mode === "frame" ? "Get it in a 5×7 photo frame" : state.mode === "extend" ? "Keep it forever" : "Your " + kindWord + " is ready";
+      $(".ks-note").textContent = state.mode === "frame"
+        ? "We'll print a 5×7 photo frame for this keepsake and deliver it. Your link stays the same."
+        : state.mode === "extend"
+          ? (m && m.expired ? "Its 30 days are over, so the link is paused. Keep it forever, or add 30 more days. Nothing you made is lost." : "It's live until " + ends + ". Make it permanent now, or add 30 more days later.")
+          : `Choose how long it stays live, then pay once to switch on its link, QR code and NFC link. You can keep editing it after.`;
+      // How long
+      $(".ks-tblock").hidden = state.mode === "frame";
+      $(".ks-tq").textContent = state.mode === "extend" ? "What would you like?" : "How long should it stay live?";
+      const terms = [["life", state.mode === "extend" ? "Keep it forever" : "Forever", c.terms && c.terms.life.desc, "Best value"], ["d30", state.mode === "extend" ? "30 more days" : "30 days", c.terms && c.terms.d30.desc, ""]];
+      $(".ks-terms").innerHTML = terms.map(([t, name, desc, tag]) => `<button type="button" class="ks-opt${t === state.term ? " on" : ""}" data-term="${t}">${tag ? `<span class="ks-tag">${tag}</span>` : ""}<b>${esc(name)}</b><span class="ks-pp">${money(total(t, t === "d30" ? "digital" : state.plan))}</span><small>${esc(state.mode === "extend" && t === "life" ? "Pay the difference once and it stays live for good." : desc || "")}</small></button>`).join("");
+      // Delivery
+      const plans = state.mode === "frame" ? ["frameQr", "frameNfc"] : ["digital", "frameQr", "frameNfc"];
       if (!plans.includes(state.plan)) state.plan = plans[0];
-      $(".ks-opts").style.gridTemplateColumns = plans.length === 2 ? "1fr 1fr" : "";
-      $(".ks-opts").innerHTML = plans.map(p => { const d = c.delivery[p]; return `<button type="button" class="ks-opt${p === state.plan ? " on" : ""}" data-plan="${p}"><b>${esc(p === "digital" ? prod.name + " · Digital" : d.name)}</b><span class="ks-pp">${money(total(p))}</span><small>${esc(d.desc || "")}</small></button>`; }).join("");
-      const frame = state.plan !== "digital";
+      $(".ks-dblock").hidden = state.mode === "extend" && state.term === "d30";
+      $(".ks-deliv").style.gridTemplateColumns = plans.length === 2 ? "1fr 1fr" : "";
+      $(".ks-deliv").innerHTML = plans.map(p => { const d = c.delivery[p]; const extra = p === "digital" ? "Included" : (state.mode === "frame" ? money(d.price) : "+" + money(d.price)); return `<button type="button" class="ks-opt${p === state.plan ? " on" : ""}" data-plan="${p}"><b>${esc(d.name)}</b><span class="ks-pp">${extra}</span><small>${esc(d.desc || "")}</small></button>`; }).join("");
+      $(".ks-hint").hidden = !(isFr(state.plan) && state.mode !== "frame");
+      const frame = isFr(state.plan);
       $(".ks-frame").hidden = !frame;
       el.querySelectorAll(".ks-pill").forEach(b => b.classList.toggle("on", b.dataset.print === state.print));
       $(".ks-photo").hidden = state.print !== "photo";
       const img = $(".ks-photo img"); img.hidden = !state.photo; if (state.photo) img.src = state.photo;
       $(".ks-up").firstChild.textContent = state.photo ? "Change photo" : "Upload photo to print";
-      $(".ks-pay").textContent = "Pay " + money(total(state.plan)) + (state.mode === "upgrade" ? " & order frame" : " & activate");
+      const amt = money(total(state.term, state.plan));
+      $(".ks-pay").textContent = state.mode === "frame" ? `Pay ${amt} & order frame`
+        : state.mode === "extend" ? (state.term === "life" ? `Pay ${amt} & keep it forever` : `Pay ${amt} for 30 more days`)
+        : `Pay ${amt} & go live` + (state.term === "d30" ? " for 30 days" : "");
     }
 
     el.addEventListener("click", e => {
-      const o = e.target.closest(".ks-opt"); if (o) { state.plan = o.dataset.plan; status(""); render(); return; }
+      const o = e.target.closest(".ks-opt");
+      if (o && o.dataset.term) { state.term = o.dataset.term; if (state.term === "d30" && isFr(state.plan)) state.plan = "digital"; status(""); render(); return; }
+      if (o && o.dataset.plan) { state.plan = o.dataset.plan; status(""); render(); return; }
       const p = e.target.closest(".ks-pill"); if (p) { state.print = p.dataset.print; status(""); render(); }
     });
     $(".ks-photo input").addEventListener("change", async e => {
@@ -135,14 +167,15 @@
 
     async function pay() {
       const id = opts.getId(); if (!id) { status("Save first ♡", "bad"); return; }
-      const body = { action: "create", id, plan: state.plan };
-      if (state.plan !== "digital") {
+      const body = { action: "create", id, plan: state.plan, term: isFr(state.plan) ? "life" : state.term };
+      if (isFr(state.plan)) {
         if (!state.print) { status("Choose what to print in the frame.", "bad"); return; }
         if (state.print === "photo" && !state.photo) { status("Upload the photo you'd like printed.", "bad"); return; }
         body.print = state.print; body.photo = state.photo;
         body.address = {}; el.querySelectorAll("[data-a]").forEach(i => body.address[i.dataset.a] = i.value);
       }
       const btn = $(".ks-pay"); btn.disabled = true; status("Opening secure payment…");
+      track("InitiateCheckout", { value: total(state.term, state.plan), currency: "INR" });
       try {
         const o = await post("/api/checkout", body);
         await loadRazorpay();
@@ -150,7 +183,7 @@
           key: o.keyId, amount: o.amount, currency: o.currency, order_id: o.orderId, name: "Keepsake", description: o.description, prefill: o.prefill, theme: { color: "#42070f" },
           handler: async p => {
             status("Confirming your payment…");
-            try { const v = await post("/api/checkout", { action: "verify", ...p }); status(""); opts.onPaid && opts.onPaid(v); }
+            try { const v = await post("/api/checkout", { action: "verify", ...p }); status(""); track("Purchase", { value: v.amount || 0, currency: "INR", content_type: "product", content_ids: [opts.kind + "-" + (v.term || "life") + "-" + (v.plan || "digital")] }); opts.onPaid && opts.onPaid(v); }
             catch (x) { status((x.message || "Could not confirm the payment.") + " If money was taken, it will switch on within a few minutes; check My memories.", "bad"); }
             finally { btn.disabled = false; }
           },
@@ -162,16 +195,45 @@
     }
 
     return {
+      // mode is a hint; the saved keepsake decides: not paid -> activate, on 30 days -> extend, forever -> frame.
       async open(mode) {
-        state.mode = mode === "upgrade" ? "upgrade" : "activate";
-        if (state.mode === "upgrade" && state.plan === "digital") state.plan = "frameQr";
         state.cat = await catalog(); status("");
+        state.memory = await info(opts.getId());
+        const m = state.memory;
+        state.mode = !m || !m.paid ? "activate" : m.term === "d30" ? "extend" : "frame";
+        if (state.mode === "frame" && !isFr(state.plan)) state.plan = "frameQr";
+        if (state.mode !== "frame") state.term = "life";
         const cu = opts.customer && opts.customer();
         if (cu) { const n = el.querySelector('[data-a="name"]'), ph = el.querySelector('[data-a="phone"]'); if (!n.value) n.value = cu.name || ""; if (!ph.value) ph.value = cu.phone || ""; }
         render();
       }
     };
   }
+
+  // The saved keepsake's payment state (owner only). null if it isn't saved yet.
+  async function info(id) {
+    if (!id) return null;
+    try {
+      const r = await fetch("/api/customer-memories?id=" + encodeURIComponent(id), { cache: "no-store" }); const j = await r.json();
+      if (!r.ok) return null;
+      return { paid: j.active !== false || !!j.expired, term: j.term || "life", expiresAt: j.expiresAt || null, expired: !!j.expired };
+    } catch (e) { return null; }
+  }
+
+  // Next-step button under a live keepsake: "Keep it forever" for 30-day ones, otherwise "Get it in a 5x7 frame".
+  async function offer(el, id, onClick) {
+    const c = await catalog(), m = await info(id);
+    if (!m || !m.paid || c.free) { el.hidden = true; return; }
+    el.hidden = false;
+    const ends = m.expiresAt ? new Date(m.expiresAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) : "";
+    el.innerHTML = m.term === "d30"
+      ? `<p class="ks-offer-note" style="margin:0 0 8px;opacity:.85">${m.expired ? "Its 30 days are over, so the link is paused." : "Live until " + esc(ends) + "."}</p><button type="button" class="btn gold">Keep it forever</button>`
+      : `<button type="button" class="btn small ghost">Get it in a 5×7 photo frame (QR or NFC)</button>`;
+    el.querySelector("button").onclick = onClick;
+  }
+
+  // Facebook pixel events, when the pixel is set up (see /assets/ks-pixel.v1.js).
+  const track = (name, data) => { try { if (window.fbq) window.fbq("track", name, data || {}); } catch (e) {} };
 
   // Password field. value(): undefined = leave as is, false = remove, "text" = set new password.
   function lock(el) {
@@ -214,7 +276,7 @@
     let saved = ""; try { saved = sessionStorage.getItem(key) || ""; } catch (e) {}
     let r = await get(saved), j = await r.json().catch(() => ({}));
     if (r.ok) return j;
-    if (!(r.status === 401 && j.locked)) return { error: j.error || "Not found.", status: r.status, inactive: !!j.inactive };
+    if (!(r.status === 401 && j.locked)) return { error: j.error || "Not found.", status: r.status, inactive: !!j.inactive, expired: !!j.expired };
     return new Promise(done => {
       unlock({
         kind: j.kind, onTry: async pw => {
@@ -226,7 +288,7 @@
     });
   }
 
-  window.KSCheckout = { mount, catalog };
+  window.KSCheckout = { mount, catalog, offer, info, track };
   window.KSLock = { mount: lock };
   window.KSKeepsake = { fetch: fetchKeepsake, uploadPhoto, esc, money };
 })();

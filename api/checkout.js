@@ -1,7 +1,7 @@
 // Customer checkout with Razorpay.
 // GET                         -> prices and whether payments are set up (public)
-// POST {action:"create", id, plan, print?, photo?, address?} -> creates a Razorpay order for one of your memories
-//   plan: "digital" | "frameQr" | "frameNfc"; frames need a delivery address and what to print:
+// POST {action:"create", id, plan, term, print?, photo?, address?} -> creates a Razorpay order for one of your memories
+//   term: "d30" (30 days) | "life" (forever); plan: "digital" | "frameQr" | "frameNfc" (5x7 frames, always forever); frames need a delivery address and what to print:
 //   print "photo" (with an uploaded photo) or "design" (we print the card design)
 // POST {action:"verify", razorpay_order_id, razorpay_payment_id, razorpay_signature} -> activates it
 const db = require("./_db");
@@ -38,11 +38,11 @@ module.exports = async (req, res) => {
     const b = req.body || {};
 
     if (b.action === "create") {
-      const id = String(b.id || ""), plan = String(b.plan || "");
+      const id = String(b.id || ""), plan = String(b.plan || ""), term = String(b.term || "life");
       if (!/^[a-z0-9]{8,16}$/i.test(id)) return db.reply(res, 400, { error: "Save your card first." });
       const memory = await db.getj("customer-memory:" + id);
       if (!memory || memory.owner !== user.id) return db.reply(res, 404, { error: "Card not found in your account." });
-      const amt = pay.amountFor(memory, plan);
+      const amt = pay.amountFor(memory, plan, term);
       if (amt.error) return db.reply(res, 400, { error: amt.error });
       let address = null, frame = null;
       if (pay.isFrame(plan)) {
@@ -62,12 +62,12 @@ module.exports = async (req, res) => {
       const order = await pay.createOrder({ rupees: amt.rupees, receipt: "ks_" + id, notes: { memory: id, plan, customer: user.id } });
       await db.setj("order:" + order.id, {
         memory: id, title: memory.title || "", owner: user.id, name: user.name, email: user.email, phone: user.phone || "",
-        kind: pay.kindOf(memory), plan, frame, upgrade: amt.upgrade, amount: amt.rupees, address, status: "created", created: Date.now()
+        kind: pay.kindOf(memory), plan, term: amt.term, step: amt.step, frame, upgrade: amt.upgrade, amount: amt.rupees, address, status: "created", created: Date.now()
       }, "EX", 60 * 60 * 24 * 30);
       return db.reply(res, 200, {
         keyId: pay.keyId(), orderId: order.id, amount: order.amount, currency: order.currency,
         prefill: { name: user.name, email: user.email, contact: user.phone || (address && address.phone) || "" },
-        description: pay.describe(memory, plan, amt.upgrade)
+        description: pay.describe(memory, plan, amt), amountRupees: amt.rupees, term: amt.term, step: amt.step
       });
     }
 
@@ -78,7 +78,7 @@ module.exports = async (req, res) => {
       if (!order || order.owner !== user.id) return db.reply(res, 404, { error: "Order not found." });
       if (!pay.verifyPayment(orderId, paymentId, b.razorpay_signature)) return db.reply(res, 400, { error: "Payment could not be verified. If money was taken, contact us with your payment ID." });
       const done = await pay.markPaid(orderId, paymentId);
-      return db.reply(res, 200, { ok: true, id: done.memory, url: (done.kind === "site" ? "/s/" : "/m/") + done.memory, plan: done.plan });
+      return db.reply(res, 200, { ok: true, id: done.memory, url: (done.kind === "site" ? "/s/" : "/m/") + done.memory, plan: done.plan, term: done.term || "life", amount: done.amount });
     }
 
     return db.reply(res, 400, { error: "Unknown action." });

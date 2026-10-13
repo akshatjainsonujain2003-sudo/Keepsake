@@ -1,4 +1,4 @@
-const pages = ["/", "/designs", "/builder", "/contact"];
+const pages = ["/", "/designs", "/builder", "/contact", "/terms", "/privacy", "/refunds", "/shipping"];
 module.exports = (req, res) => {
   const host = req.headers["x-forwarded-host"] || req.headers.host, base = "https://" + host, day = new Date().toISOString().slice(0, 10);
   res.setHeader("Content-Type", "application/xml; charset=utf-8"); res.setHeader("Cache-Control", "public, max-age=3600");

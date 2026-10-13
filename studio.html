@@ -1440,8 +1440,8 @@ window.qrcode=function(typeNumber,errorLevel){
 })();
 </script>
 <style>.payPanel{max-width:760px;margin:0 auto 24px}.liveExtra{margin-top:12px}.lockField{margin-top:6px}</style>
-<script src="/assets/ks-checkout.v1.js"></script>
-</head>
+<script src="/assets/ks-checkout.v2.js"></script>
+<script src="/assets/ks-pixel.v1.js" defer></script></head>
 <body>
 <div class="topbar"><div class="wrap nav">
 <a class="brand" href="/">Keepsake</a>
@@ -1548,7 +1548,7 @@ window.qrcode=function(typeNumber,errorLevel){
 </section>
 
 <section class="section" id="mine" hidden><div class="wrap"><h2 id="mineHeading">Your cards</h2><p id="mineIntro">Your saved memories.</p><div id="mineList"></div></div></section>
-<footer class="footer"><div class="wrap footerIn"><span class="brand">Keepsake</span><span>Made for memories that deserve more than a camera roll.</span></div></footer>
+<footer class="footer"><div class="wrap footerIn"><span class="brand">Keepsake</span><span>Made for memories that deserve more than a camera roll.</span><span style="display:flex;gap:14px;flex-wrap:wrap"><a href="/terms">Terms</a><a href="/privacy">Privacy</a><a href="/refunds">Refunds</a><a href="/shipping">Shipping</a></span></div></footer>
 
 <div class="toast" id="toast"></div>
 <script>
@@ -2076,9 +2076,9 @@ function urlStart(){const q=new URLSearchParams(location.search),oc=(q.get("occa
  if(ds){const i=templates.findIndex(t=>t.id===ds);const b=$$("#templateGrid .template")[i];if(b)b.click()}
  if(oc&&PRESETS[oc]){const P=PRESETS[oc];d.c=structuredClone(P.c);$("#title").value=P.t;$("#quote").value=P.q;cSync();cChanged()}
  if(ds||oc)setTimeout(()=>$("#create")?.scrollIntoView({behavior:"smooth"}),400)}
-async function parseHash(){const pm=location.pathname.match(/^\/(c|m)\/([A-Za-z0-9]{4,16})\/?$/);if(pm){try{if(pm[1]==="m"){const j=await KSKeepsake.fetch(pm[2]);if(j.error){if(j.inactive)window.__inactive=true;d=null;return true}if(j.kind==="site"){location.replace("/s/"+pm[2]);await new Promise(()=>{})}d=unwire(j.data);currentTemplate=d.template;if(j.active===false)window.__preview=pm[2];return true}const r=await fetch("/api/card?id="+encodeURIComponent(pm[2]),{cache:"no-store"});if(r.ok){const j=await r.json();d=unwire(j.data);currentTemplate=d.template;window.__shop=j.shop;return true}}catch(e){}d=null;return true}const h=location.hash.slice(1);if(!h)return false;try{if(h[0]==="~"||h[0]==="."){const o=await unpack(h);d=unwire(o);currentTemplate=d.template;return true}const x=dec(h);if(x&&x.t&&Array.isArray(x.i)){d=x;currentTemplate=x.template||"laceAlbum";return true}}catch(e){}return false}
+async function parseHash(){const pm=location.pathname.match(/^\/(c|m)\/([A-Za-z0-9]{4,16})\/?$/);if(pm){try{if(pm[1]==="m"){const j=await KSKeepsake.fetch(pm[2]);if(j.error){if(j.inactive)window.__inactive=true;if(j.expired)window.__expired=true;d=null;return true}if(j.kind==="site"){location.replace("/s/"+pm[2]);await new Promise(()=>{})}d=unwire(j.data);currentTemplate=d.template;if(j.active===false)window.__preview=pm[2];return true}const r=await fetch("/api/card?id="+encodeURIComponent(pm[2]),{cache:"no-store"});if(r.ok){const j=await r.json();d=unwire(j.data);currentTemplate=d.template;window.__shop=j.shop;return true}}catch(e){}d=null;return true}const h=location.hash.slice(1);if(!h)return false;try{if(h[0]==="~"||h[0]==="."){const o=await unpack(h);d=unwire(o);currentTemplate=d.template;return true}const x=dec(h);if(x&&x.t&&Array.isArray(x.i)){d=x;currentTemplate=x.template||"laceAlbum";return true}}catch(e){}return false}
 function shopCta(){const sh=window.__shop;if(sh&&sh.name){const wa=(sh.whatsapp||"").replace(/\D/g,"");return `<div style="text-align:center;margin:14px;color:#f8f0df"><div style="font-family:Georgia,serif;font-size:1.1em">${esc(sh.name)}</div>${wa?`<a class="btn" style="display:block;margin-top:10px;text-decoration:none;text-align:center" href="https://wa.me/${wa}?text=${encodeURIComponent("Hi! I'd love a keepsake like this ♡")}">Order yours ♡</a>`:""}</div>`}return `<a href="/" class="btn" style="display:block;text-align:center;margin:14px;text-decoration:none">Make your own keepsake</a>`}
-function showViewer(){ if(!d){document.body.innerHTML='<div style="min-height:100vh;display:grid;place-items:center;background:#2a0409;color:#f8f0df;font:20px Georgia,serif;text-align:center;padding:30px">'+(window.__inactive?'<div>This keepsake isn’t active yet.<br><small style="font:15px system-ui,sans-serif;opacity:.8">If it’s yours, log in and activate it from My memories.</small></div>':'This card could not be found.')+'</div>';return} document.body.innerHTML=`<div class="hero" style="min-height:100vh;display:grid;place-items:center"><div class="phone" style="width:min(390px,92vw)"><div class="phoneScreen"><div class="memoryCard" id="viewer"></div></div>${shopCta()}</div></div><div class="toast" id="toast"></div>`;
+function showViewer(){ if(!d){document.body.innerHTML='<div style="min-height:100vh;display:grid;place-items:center;background:#2a0409;color:#f8f0df;font:20px Georgia,serif;text-align:center;padding:30px">'+(window.__expired?'<div>This keepsake’s 30 days are over.<br><small style="font:15px system-ui,sans-serif;opacity:.8">If it’s yours, log in and keep it forever from My memories. Nothing is lost.</small></div>':window.__inactive?'<div>This keepsake isn’t active yet.<br><small style="font:15px system-ui,sans-serif;opacity:.8">If it’s yours, log in and activate it from My memories.</small></div>':'This card could not be found.')+'</div>';return} document.body.innerHTML=`<div class="hero" style="min-height:100vh;display:grid;place-items:center"><div class="phone" style="width:min(390px,92vw)"><div class="phoneScreen"><div class="memoryCard" id="viewer"></div></div>${shopCta()}</div></div><div class="toast" id="toast"></div>`;
  renderCard($("#viewer"),d);
  if(window.__preview)document.body.insertAdjacentHTML("afterbegin",`<div style="position:sticky;top:0;z-index:50;background:#d6b06a;color:#2a0409;padding:10px 14px;text-align:center;font:600 14px system-ui,sans-serif">Preview: only you can see this until it’s activated. <a style="color:#2a0409" href="/studio?edit=${encodeURIComponent(window.__preview)}#link">Activate it</a></div>`);
 }
@@ -2090,9 +2090,9 @@ let EDIT_ID=null,CHECKOUT=null,LOCK=null;
 function setEdit(id){EDIT_ID=id||null;try{const u=new URL(location.href);if(EDIT_ID)u.searchParams.set("edit",EDIT_ID);else u.searchParams.delete("edit");u.searchParams.delete("resume");u.searchParams.delete("account");history.replaceState(null,"",u.pathname+u.search+u.hash)}catch(e){}}
 function saveMemory(){const body={data:wire(d)};if(EDIT_ID)body.id=EDIT_ID;const lk=LOCK&&LOCK.value();if(lk!==undefined)body.lock=lk;return fetch("/api/customer-memories",{method:EDIT_ID?"PUT":"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)})}
 function showLive(url){short=location.origin+url;longLink=short;$("#shortLink").textContent=short;badge(short);$("#payPanel").hidden=true;$("#linkGrid").hidden=false;setStatus("#linkStatus","Your keepsake is live. Share the link, print the QR or write it to an NFC tag.",true);drawQR();upgradeOffer();$("#link").scrollIntoView({behavior:"smooth",block:"start"})}
-function upgradeOffer(){let x=$("#nfcUpsell");if(!x){x=document.createElement("div");x.id="nfcUpsell";x.className="liveExtra";$("#linkStatus").after(x)}x.innerHTML='<button class="btn small ghost" type="button" id="orderFrame">Get it in a photo frame (QR or NFC)</button>';$("#orderFrame").onclick=()=>showCheckout("upgrade");KSCheckout.catalog().then(c=>{if(c.free)x.hidden=true})}
+function upgradeOffer(){let x=$("#nfcUpsell");if(!x){x=document.createElement("div");x.id="nfcUpsell";x.className="liveExtra";$("#linkStatus").after(x)}KSCheckout.offer(x,EDIT_ID,()=>showCheckout("upgrade"))}
 function showCheckout(mode){
- if(!CHECKOUT)CHECKOUT=KSCheckout.mount($("#payPanel"),{kind:"card",getId:()=>EDIT_ID,customer:()=>CUSTOMER,onPaid:v=>{showLive(v.url);const fr=v.plan==="frameQr"||v.plan==="frameNfc";toast(fr?"Paid ♡ Your photo frame is on its way":"Paid ♡ Your keepsake is live");setStatus("#linkStatus",fr?"Paid. Your keepsake is live and we'll ship your photo frame soon.":"Paid. Your keepsake is live.",true)}});
+ if(!CHECKOUT)CHECKOUT=KSCheckout.mount($("#payPanel"),{kind:"card",getId:()=>EDIT_ID,customer:()=>CUSTOMER,onPaid:v=>{showLive(v.url);const fr=v.plan==="frameQr"||v.plan==="frameNfc";toast(fr?"Paid ♡ Your photo frame is on its way":"Paid ♡ Your keepsake is live");setStatus("#linkStatus",fr?"Paid. Your keepsake is live forever and we'll ship your 5×7 frame soon.":v.term==="d30"?"Paid. Your keepsake is live for 30 days.":"Paid. Your keepsake is live forever.",true)}});
  $("#payPanel").hidden=false;if(mode!=="upgrade")$("#linkGrid").hidden=true;CHECKOUT.open(mode).then(()=>$("#payPanel").scrollIntoView({behavior:"smooth",block:"start"}));
 }
 async function openForEdit(){
@@ -2101,7 +2101,7 @@ async function openForEdit(){
  if(!id||!CUSTOMER)return;
  try{const r=await fetch("/api/customer-memories?id="+encodeURIComponent(id),{cache:"no-store"});const j=await r.json();if(!r.ok||!j.data)throw new Error(j.error||"Card not found.");
   d=unwire(j.data);currentTemplate=d.template;hydrateForm();$$("#templateGrid .template").forEach(b=>b.classList.toggle("active",b.dataset.template===currentTemplate));$("#heroImg").src=getTemplate().th;renderPreview();setEdit(id);if(LOCK)LOCK.set(j.locked);
-  if(j.active===false){setStatus("#generateStatus","Editing your saved card. It isn't active yet.",true);showCheckout("activate")}
+  if(j.active===false){setStatus("#generateStatus",j.expired?"Its 30 days are over. Keep it forever to switch the link back on.":"Editing your saved card. It isn't active yet.",true);showCheckout("activate")}
   else{showLive("/m/"+id);setStatus("#generateStatus","Editing your live card. Save to update it.",true);if(location.hash!=="#link")setTimeout(()=>$("#create")?.scrollIntoView({behavior:"smooth"}),300)}
  }catch(e){setEdit(null);toast(e.message||"Could not open that card.")}
 }

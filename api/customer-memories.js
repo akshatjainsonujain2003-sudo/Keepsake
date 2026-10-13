@@ -49,10 +49,16 @@ module.exports = async (req, res) => {
       // Cards saved before payments existed have no "paid" field and stay active.
       const active = memory.paid !== false;
       const viewer = await auth.currentUser(req), isOwner = !!viewer && viewer.id === memory.owner;
-      const kind = kindOf(memory.kind), base = { id, kind, created: memory.created, locked: !!memory.lock };
+      const kind = kindOf(memory.kind), base = { id, kind, created: memory.created, locked: !!memory.lock, term: memory.term || "life", expiresAt: memory.expiresAt || null };
+      const expired = active && pay.isExpired(memory);
       if (!active) {
         if (!isOwner) return db.reply(res, 402, { error: "This keepsake isn't active yet.", inactive: true });
         return db.reply(res, 200, { ...base, data: memory.data, title: memory.title, active: false, owner: true });
+      }
+      // A 30-day keepsake that has run out: only its owner can still open it (to keep it forever).
+      if (expired) {
+        if (!isOwner) return db.reply(res, 410, { error: "This keepsake's 30 days are over.", expired: true });
+        return db.reply(res, 200, { ...base, data: memory.data, title: memory.title, active: false, expired: true, owner: true });
       }
       if (memory.lock && !isOwner) {
         const pw = String(req.headers["x-card-password"] || "");
@@ -73,7 +79,7 @@ module.exports = async (req, res) => {
       const memories = (await Promise.all(ids.map(async id => {
         const m = await db.getj("customer-memory:" + id);
         if (!m || m.owner !== user.id) return null;
-        return { id, title: m.title || "Our Memories", created: m.created, updated: m.updated || m.created, views: +(await db.cmd("GET", "customer-memory-views:" + id)) || 0, active: m.paid !== false, plan: m.plan || "", ship: await shipStatus(m), kind: kindOf(m.kind), locked: !!m.lock };
+        return { id, title: m.title || "Our Memories", created: m.created, updated: m.updated || m.created, views: +(await db.cmd("GET", "customer-memory-views:" + id)) || 0, active: m.paid !== false && !pay.isExpired(m), paid: m.paid !== false, term: m.term || "life", expiresAt: m.expiresAt || null, expired: m.paid !== false && pay.isExpired(m), plan: m.plan || "", ship: await shipStatus(m), kind: kindOf(m.kind), locked: !!m.lock };
       }))).filter(Boolean).sort((a, b) => b.created - a.created);
       return db.reply(res, 200, { memories });
     }
@@ -104,7 +110,7 @@ module.exports = async (req, res) => {
       const lockErr = setLock(memory, b.lock); if (lockErr) return db.reply(res, 400, { error: lockErr });
       memory.data = data; memory.title = clip(data.t || "Our Memories", 80) || "Our Memories"; memory.updated = Date.now();
       await db.setj(key, memory);
-      return db.reply(res, 200, { id, kind, url: (kind === "site" ? "/s/" : "/m/") + id, title: memory.title, updated: memory.updated, active: memory.paid !== false, locked: !!memory.lock });
+      return db.reply(res, 200, { id, kind, url: (kind === "site" ? "/s/" : "/m/") + id, title: memory.title, updated: memory.updated, active: memory.paid !== false && !pay.isExpired(memory), term: memory.term || "life", expiresAt: memory.expiresAt || null, expired: memory.paid !== false && pay.isExpired(memory), locked: !!memory.lock });
     }
     if (req.method === "DELETE") {
       const id = String(q.id || (req.body || {}).id || "");

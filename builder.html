@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,500&family=DM+Sans:wght@400;500;700&display=swap">
 <link rel="stylesheet" href="/assets/site-themes.v1.css">
-<script src="/assets/ks-checkout.v1.js"></script>
+<script src="/assets/ks-checkout.v2.js"></script>
 <script src="/assets/site-render.v1.js"></script>
 <script src="/assets/ks-templates.v2.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js" defer></script>
@@ -114,7 +114,7 @@ textarea.in{min-height:110px;resize:vertical;line-height:1.5}
 .tglrow{display:flex;gap:10px;align-items:center;margin:0 0 14px;color:var(--ink);font-size:15px;cursor:pointer}
 .tglrow input{width:20px;height:20px;accent-color:#d6b06a}
 </style>
-</head>
+<script src="/assets/ks-pixel.v1.js" defer></script></head>
 <body>
 <header class="top"><a class="brand" href="/">Keepsake</a><nav id="nav"><a class="chip" href="/studio">Templates</a></nav></header>
 <div class="layout">
@@ -150,7 +150,7 @@ textarea.in{min-height:110px;resize:vertical;line-height:1.5}
     <div class="linkbox" id="liveLink"></div>
     <div class="acts"><button class="btn line" type="button" id="copyBtn">Copy link</button><a class="btn line" id="openBtn" target="_blank" rel="noopener">Open</a><button class="btn line" type="button" id="shareBtn">Share</button></div>
     <div class="qr"><div class="code" id="qrCode" aria-label="QR code for your website"></div><div><button class="btn line" type="button" id="qrPng">Download QR</button><p class="status" style="max-width:220px">Print it, or write the link to any NFC tag.</p></div></div>
-    <button class="btn gold" type="button" id="frameBtn" style="margin-top:14px">Get it in a photo frame</button>
+    <div id="nextStep" style="margin-top:14px" hidden></div>
    </div>
   </section>
  </main>
@@ -406,7 +406,7 @@ async function saveSite() {
 }
 function setEdit(id) { EDIT_ID = id; const u = new URL(location.href); u.searchParams.set("edit", id); u.searchParams.delete("resume"); history.replaceState(null, "", u.pathname + u.search + u.hash); }
 function checkout(mode) {
-  if (!CHECKOUT) CHECKOUT = KSCheckout.mount($("#payPanel"), { kind: "site", getId: () => EDIT_ID, customer: () => USER, onPaid: v => { ACTIVE = true; live(v.url); const fr = v.plan === "frameQr" || v.plan === "frameNfc"; status(fr ? "Paid. Your website is live and we'll ship your photo frame soon." : "Paid. Your website is live ♡", "ok"); } });
+  if (!CHECKOUT) CHECKOUT = KSCheckout.mount($("#payPanel"), { kind: "site", getId: () => EDIT_ID, customer: () => USER, onPaid: v => { ACTIVE = true; live(v.url); const fr = v.plan === "frameQr" || v.plan === "frameNfc"; status(fr ? "Paid. Your website is live forever and we'll ship your 5×7 frame soon." : v.term === "d30" ? "Paid. Your website is live for 30 days ♡" : "Paid. Your website is live forever ♡", "ok"); } });
   $("#payPanel").hidden = false; if (mode !== "upgrade") $("#livePanel").hidden = true;
   CHECKOUT.open(mode).then(() => $("#payPanel").scrollIntoView({ behavior: "smooth", block: "start" }));
 }
@@ -415,6 +415,7 @@ function live(path) {
   $("#payPanel").hidden = true; $("#livePanel").hidden = false;
   $("#liveLink").textContent = url; $("#openBtn").href = path;
   drawQR(url);
+  KSCheckout.offer($("#nextStep"), EDIT_ID, () => checkout("upgrade"));
   $("#livePanel").scrollIntoView({ behavior: "smooth", block: "start" });
 }
 function drawQR(url) {
@@ -430,8 +431,6 @@ $("#qrPng").onclick = () => {
   const img = new Image(); img.onload = () => { const c = document.createElement("canvas"); c.width = c.height = 1200; const x = c.getContext("2d"); x.fillStyle = "#fffaf0"; x.fillRect(0, 0, 1200, 1200); x.drawImage(img, 0, 0, 1200, 1200); const a = document.createElement("a"); a.download = "keepsake-qr.png"; a.href = c.toDataURL("image/png"); a.click(); };
   img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(new XMLSerializer().serializeToString(svg));
 };
-$("#frameBtn").onclick = () => checkout("upgrade");
-KSCheckout.catalog().then(c => { if (c.free) $("#frameBtn").hidden = true; });
 $("#saveBtn").onclick = saveSite;
 $("#addBtn").onclick = () => { const t = $("#addType").value; D.sections.push(blank[t]()); changed(); sections(); const last = $$("#sections details").pop(); if (last) { last.open = true; last.scrollIntoView({ behavior: "smooth", block: "center" }); } };
 $("#previewBtn").onclick = () => { $("#overlay").classList.add("open"); document.body.style.overflow = "hidden"; if (isTpl()) openBig(); else { $("#previewFull").style.height = ""; KSSite.render($("#previewFull"), D, { editing: true }); } };
@@ -457,8 +456,8 @@ window.addEventListener("beforeunload", e => { if (dirty && EDIT_ID) { e.prevent
       if (!r.ok || j.kind !== "site") throw new Error(j.error || "Website not found.");
       D = j.data.tpl ? KSKit.withDefaults(j.data.tpl, j.data) : j.data; EDIT_ID = id; ACTIVE = j.active; LOCK.set(j.locked);
       all();
-      if (j.active) live("/s/" + id); else checkout("activate");
-      status(j.active ? "Editing your live website. Save to update it." : "Editing your saved website. It isn't active yet.", "ok");
+      if (j.active) { live("/s/" + id); if (location.hash === "#publish" && j.term === "d30") checkout("upgrade"); } else checkout("activate");
+      status(j.active ? "Editing your live website. Save to update it." : j.expired ? "Its 30 days are over. Keep it forever to switch the link back on." : "Editing your saved website. It isn't active yet.", "ok");
       return;
     } catch (e) { status(e.message, "bad"); }
   }

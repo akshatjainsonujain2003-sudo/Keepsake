@@ -122,7 +122,7 @@
         { key: "calnote", label: "Handwritten line under the calendar", type: "text", max: 50 },
         { key: "photos.oval", label: "Picture in the gold oval (a painted pond shows if empty)", type: "photo" },
         { key: "quote", label: "Quote", type: "area", max: 220 },
-        { key: "song.url", label: "Spotify song link", type: "text", max: 300, placeholder: "https://open.spotify.com/track/…" },
+        { key: "song.url", label: "Spotify song link (they hear a 30-second preview unless logged into Spotify)", type: "text", max: 300, placeholder: "https://open.spotify.com/track/…" },
         { key: "song.title", label: "Song name", type: "text", max: 50 },
         { key: "song.cap", label: "Line under the player", type: "text", max: 90 },
         { key: "photos.cover", label: "Album cover photo", type: "photo" },
@@ -180,7 +180,7 @@
       { group: "Open when…", fields: [
         { key: "openWhen", label: "Envelopes", type: "list", max: 8, add: "Add an envelope", of: [{ key: "when", label: "Open when…", type: "text", max: 30 }, { key: "msg", label: "Note inside", type: "area", max: 200 }] } ] },
       { group: "Song & ending", fields: [
-        { key: "song.url", label: "Spotify song link", type: "text", max: 300, placeholder: "https://open.spotify.com/track/…" },
+        { key: "song.url", label: "Spotify song link (they hear a 30-second preview unless logged into Spotify)", type: "text", max: 300, placeholder: "https://open.spotify.com/track/…" },
         { key: "song.title", label: "Song name", type: "text", max: 50 },
         { key: "song.note", label: "Note about it", type: "text", max: 60 },
         { key: "photos.cover", label: "Album cover photo", type: "photo" },
@@ -204,7 +204,7 @@
         { key: "filmIntro", label: "Intro line", type: "text", max: 90 },
         PHOTO_LIST("moments", "Photos on the film strips (4 per strip)", 8) ] },
       { group: "Mixtape", fields: [
-        { key: "song.url", label: "Spotify song or playlist link", type: "text", max: 300, placeholder: "https://open.spotify.com/track/…" },
+        { key: "song.url", label: "Spotify song or playlist link (30-second preview unless they’re logged into Spotify)", type: "text", max: 300, placeholder: "https://open.spotify.com/track/…" },
         { key: "song.title", label: "Written on the cassette", type: "text", max: 50 },
         { key: "song.note", label: "Second line on the cassette", type: "text", max: 50 },
         { key: "photos.cover", label: "Photo in the middle of the record", type: "photo" },
@@ -273,9 +273,14 @@
     if (window.KS_META && window.KS_META.ownerPreview) {
       const b = document.createElement("div");
       b.style.cssText = "position:sticky;top:0;z-index:200;background:#d6b06a;color:#2a0409;padding:10px 14px;text-align:center;font:600 14px/1.4 system-ui,sans-serif";
-      b.append("Preview: only you can see this until it’s activated. ");
-      const a = document.createElement("a"); a.href = "/builder?edit=" + encodeURIComponent(window.KS_META.id) + "#publish"; a.textContent = "Activate it"; a.style.color = "#2a0409"; b.append(a);
+      b.append(window.KS_META.expired ? "Its 30 days are over, so only you can see it. " : "Preview: only you can see this until it’s activated. ");
+      const a = document.createElement("a"); a.href = "/builder?edit=" + encodeURIComponent(window.KS_META.id) + "#publish"; a.textContent = window.KS_META.expired ? "Keep it forever" : "Activate it"; a.style.color = "#2a0409"; b.append(a);
       document.body.prepend(b);
+    }
+    // Anyone can report a public keepsake page.
+    if (window.KS_META && window.KS_META.id && !preview) {
+      const cr = document.querySelector(".credit");
+      if (cr) { const r = document.createElement("a"); r.href = "/contact?report=" + encodeURIComponent(window.KS_META.id); r.textContent = "Report"; r.rel = "nofollow"; cr.append(" · ", r); }
     }
     if (preview) window.addEventListener("message", e => {
       if (e.origin !== location.origin || !e.data || e.data.type !== "ks-preview") return;

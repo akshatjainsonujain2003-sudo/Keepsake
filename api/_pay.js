@@ -5,39 +5,59 @@ const db = require("./_db");
 const env = process.env;
 const rupees = (v, d) => { const n = Math.round(+v); return n >= 1 ? n : d; };
 
-// Everything sold is: a product (template card or custom website) + how it's delivered
-// (digital only, or a printed photo frame with a QR code or an NFC chip).
+// Everything sold is: a product (template card or custom website), for how long its link stays live
+// (30 days or forever), and how it's delivered (digital, or a printed 5x7 photo frame with a QR code
+// or an NFC chip). Frames always come with a forever link.
 // Prices are in rupees and can be changed in Vercel without code changes.
+const TERMS = ["d30", "life"];
+const DAY = 864e5;
 function catalog() {
   return {
     products: {
-      card: { name: "Template", price: rupees(env.PRICE_TEMPLATE, 99), desc: "One beautiful memory card from our designs." },
-      site: { name: "Custom website", price: rupees(env.PRICE_WEBSITE, 299), desc: "A full page for your story: photos, videos, songs, timeline and letters." }
+      card: { name: "Template card", price: rupees(env.PRICE_TEMPLATE, 149), price30: rupees(env.PRICE_TEMPLATE_30, 49), desc: "One beautiful memory card from our designs." },
+      site: { name: "Website", price: rupees(env.PRICE_WEBSITE, 399), price30: rupees(env.PRICE_WEBSITE_30, 149), desc: "A full page for your story: photos, your song, letters and little surprises." }
+    },
+    terms: {
+      d30: { name: "30 days", desc: "Live for 30 days. Perfect for a birthday or anniversary surprise. Keep it forever any time." },
+      life: { name: "Forever", desc: "One payment, live for good. Best for gifts they'll keep." }
     },
     delivery: {
-      digital: { name: "Digital", price: 0, desc: "Short link, QR code and NFC-ready link to share or print." },
-      frameQr: { name: "Photo frame with QR", price: rupees(env.PRICE_FRAME_QR, 399), desc: "A printed photo frame with a scannable QR code, delivered to you." },
-      frameNfc: { name: "Photo frame with NFC", price: rupees(env.PRICE_FRAME_NFC, 599), desc: "A printed photo frame with a hidden NFC chip. Tap a phone to open.", }
+      digital: { name: "Digital", price: 0, desc: "Link, QR code and NFC-ready link to share or print yourself." },
+      frameQr: { name: "5×7 photo frame with QR", price: rupees(env.PRICE_FRAME_QR, 599), desc: "Your photo or design printed in a 5×7 frame with a scannable QR code, delivered to you." },
+      frameNfc: { name: "5×7 photo frame with NFC", price: rupees(env.PRICE_FRAME_NFC, 899), desc: "A 5×7 printed frame with a hidden NFC chip. Tap a phone to open." }
     }
   };
 }
 const isFrame = plan => plan === "frameQr" || plan === "frameNfc";
 const kindOf = memory => (memory.kind === "site" ? "site" : "card");
+const isThirty = memory => memory.term === "d30";
+const isExpired = (memory, now) => isThirty(memory) && !!memory.expiresAt && memory.expiresAt <= (now || Date.now());
 
-// What this customer pays for a delivery option on this memory.
-// An already-active memory only pays for the frame.
-function amountFor(memory, plan) {
+// What this customer pays. plan = delivery, term = "d30" | "life".
+// - Not active yet: the product for that term, plus any frame.
+// - Active on 30 days: keep it forever (pay the difference) or add 30 more days; frames need forever.
+// - Active forever: only a frame.
+function amountFor(memory, plan, term) {
   const c = catalog();
   if (!c.delivery[plan]) return { error: "Choose how you'd like it delivered." };
-  const active = memory.paid !== false, base = c.products[kindOf(memory)].price;
-  if (active && !isFrame(plan)) return { error: "This keepsake is already active." };
-  const total = (active ? 0 : base) + c.delivery[plan].price;
-  return { rupees: total, upgrade: active };
+  if (!TERMS.includes(term)) term = "life";
+  if (isFrame(plan)) term = "life";
+  const P = c.products[kindOf(memory)], active = memory.paid !== false, frame = c.delivery[plan].price;
+  if (!active) return { rupees: (term === "d30" ? P.price30 : P.price) + frame, upgrade: false, term, step: "activate" };
+  if (isThirty(memory)) {
+    if (term === "life") return { rupees: Math.max(0, P.price - P.price30) + frame, upgrade: true, term, step: "forever" };
+    return { rupees: P.price30, upgrade: true, term, step: "extend" };
+  }
+  if (!isFrame(plan)) return { error: "This keepsake is already live forever." };
+  return { rupees: frame, upgrade: true, term: "life", step: "frame" };
 }
-function describe(memory, plan, upgrade) {
+function describe(memory, plan, amt) {
   const c = catalog(), product = c.products[kindOf(memory)].name;
-  if (upgrade) return c.delivery[plan].name;
-  return isFrame(plan) ? `${product} + ${c.delivery[plan].name.toLowerCase()}` : `${product} (digital)`;
+  if (amt.step === "frame") return c.delivery[plan].name;
+  if (amt.step === "extend") return product + " · 30 more days";
+  const when = amt.term === "d30" ? "30 days" : "forever";
+  const what = amt.step === "forever" ? product + " · keep it forever" : product + " · " + when;
+  return isFrame(plan) ? what + " + " + c.delivery[plan].name : what;
 }
 
 const keyId = () => env.RAZORPAY_KEY_ID || "";
@@ -90,6 +110,8 @@ async function markPaid(orderId, paymentId) {
     if (memory) {
       memory.paid = true; memory.activatedAt = memory.activatedAt || order.paidAt;
       memory.plan = isFrame(order.plan) ? order.plan : (memory.plan || "digital");
+      if (order.term === "d30") { memory.term = "d30"; memory.expiresAt = Math.max(Date.now(), memory.expiresAt || 0) + 30 * DAY; }
+      else { memory.term = "life"; delete memory.expiresAt; }
       memory.orders = [...(memory.orders || []), orderId].slice(-20);
       await db.setj(mk, memory);
     }
@@ -100,4 +122,4 @@ async function markPaid(orderId, paymentId) {
   }
 }
 
-module.exports = { catalog, amountFor, describe, isFrame, kindOf, keyId, configured, createOrder, verifyPayment, verifyWebhook, markPaid };
+module.exports = { catalog, amountFor, describe, isFrame, kindOf, isThirty, isExpired, keyId, configured, createOrder, verifyPayment, verifyWebhook, markPaid };
