@@ -72,7 +72,7 @@ There is no build step and no npm dependencies.
 
 - **Free mode:** while `RAZORPAY_KEY_ID`/`RAZORPAY_KEY_SECRET` are missing, new cards and websites go live straight away and photo-frame offers are hidden. Adding the keys turns the paywall on with no code change.
 - Templates open with `?preview=1` in the builder and update live via `postMessage`. Customer text is only set with `textContent`, and links are checked before use.
-- The template demos use Figma-hosted photos that expire on 20 October 2026; replace them with files in `assets/` before then.
+- Template demo photos live in `assets/demo/`. Before launch, make sure you have the rights to every photo there (or swap in licensed stock).
 - New cards start inactive (once payments are on). Only their owner can preview them until paid. Cards saved before payments were added stay live.
 - Only files in `api/` run as server functions. Files elsewhere are served as static files.
 - Every page loads images, CSS and JS from `/assets/`, which is cached for a year. When changing an asset, rename it so visitors get the new version.

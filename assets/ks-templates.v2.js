@@ -7,36 +7,34 @@
    Files in /assets are cached for a year: rename (v2…) when changing. */
 (function () {
   const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-    const FIG = id => "https://www.figma.com/api/mcp/asset/" + id + ".png";
+    const D = n => "/assets/demo/" + n + ".webp", W = n => "/assets/wildflower/" + n + ".webp";
   const P = {
-    heroTall: FIG("2748263e-1118-431f-8025-5089c39cd40f"), heroWide: FIG("a5cd53e9-c42f-472a-935c-e8b8e877ac18"),
-    sunset: FIG("0a49e7a2-43b4-4aa2-a557-72993a4d18b4"),
-    cafe: FIG("8b78f683-febb-442d-bdb3-1ad52739579c"), hands: FIG("1066ea2d-ff10-44cd-8786-09b55f985aaa"),
-    seaside: FIG("93aa1a90-ca0d-4fa6-9f5d-28e2c63175a4"), steps: FIG("80c674ab-7ebb-4641-8f49-43aad59c2563"),
-    rain: FIG("76f33412-7a51-4a97-9fee-948756d562c6"), wheat: FIG("c98f48dd-1f8b-4159-9d49-224f2df2f134"),
-    lakedance: "/assets/wildflower/lakedance.webp", lotus: "/assets/wildflower/lotus.webp", twirl: "/assets/wildflower/twirl.webp"
+    sunflower: D("sunflower"), lawn: D("lawn"), street: D("street"), gallery: D("gallery"), temple: D("temple"),
+    flowers: D("flowers"), hands: D("hands"), selfie: D("selfie"), cafe: D("cafe"), rain: D("rain"),
+    car: D("car"), records: D("records"), night: D("night"),
+    lakedance: W("lakedance"), lotus: W("lotus"), twirl: W("twirl")
   };
   const DEMO = {
     wildflower: {
       v: 2, tpl: "wildflower", a: "Meera", b: "Aarav", tagline: "Five years, and counting",
       date: "2021-03-12T18:30", place: "a tiny café in Udaipur", note: "us, obviously",
-      photos: { hero: P.heroTall, hero2: P.lakedance, calendar: P.cafe, cover: P.sunset, someday: P.wheat, oval: "", end: P.twirl },
+      photos: { hero: P.sunflower, hero2: P.lakedance, calendar: P.cafe, cover: P.flowers, someday: P.street, oval: "", end: P.twirl },
       calnote: "the day you sat across from me", firstDate: "two coffees, gone cold",
       quote: "Somewhere between the first coffee and the last train home, you became my favourite place.",
       song: { url: "", title: "Slow Mornings", cap: "Press play. It's the one from our first drive." },
       countdown: true,
       words: "my person, home, still you, us, every day, always, my favourite, you",
       story: [
-        { title: "The beginning", text: "A borrowed table at a crowded café, two coffees going cold, and a conversation neither of us wanted to end.", when: "March 2021", photo: P.steps },
-        { title: "The first trip", text: "Salt in our hair, the wrong ferry twice, and the moment we knew we travelled well together.", when: "August 2022", photo: P.seaside },
+        { title: "The beginning", text: "A borrowed table at a crowded café, two coffees going cold, and a conversation neither of us wanted to end.", when: "March 2021", photo: P.gallery },
+        { title: "The first trip", text: "Windows down, the wrong turn twice, and the moment we knew we travelled well together.", when: "August 2022", photo: P.car },
         { title: "Our little home", text: "Two keys, one wobbly table, and a balcony just big enough for both of us and too many plants.", when: "December 2024", photo: P.lotus },
         { title: "Still choosing you", text: "Every ordinary evening, every small win, every quiet Sunday. This is the chapter we're writing now.", when: "Today", photo: P.lakedance }
       ],
       momentsIntro: "The glances, the detours, the days we didn't want to end.",
       moments: [
-        { photo: P.twirl, cap: "One more spin" }, { photo: P.wheat, cap: "The long drive to nowhere" },
-        { photo: P.rain, cap: "One umbrella, two people" }, { photo: P.sunset, cap: "That sunset we almost missed" },
-        { photo: P.heroWide, cap: "Your hand in mine" }
+        { photo: P.twirl, cap: "One more spin" }, { photo: P.street, cap: "Walking home the long way" },
+        { photo: P.rain, cap: "One umbrella, two people" }, { photo: P.flowers, cap: "Running through the flowers" },
+        { photo: P.lawn, cap: "Golden hour, your hand in mine" }
       ],
       love: ["The way you hum when you cook.", "How you always save me the last bite.", "Your terrible jokes. Every single one.", "That you remember my coffee order.", "How safe I feel when you hold my hand.", "You, on a lazy Sunday morning."],
       letterTitle: "Open when you miss me", greeting: "My love,",
@@ -52,7 +50,7 @@
     candlelit: {
       v: 2, tpl: "candlelit", a: "Meera", b: "Aarav", recipient: "Meera", tagline: "two hearts, one story",
       date: "2021-03-12T18:30", place: "Udaipur", cue: "a letter is waiting for you",
-      photos: { hero: P.heroTall, storyA: P.cafe, storyB: P.steps, tv: P.rain, cover: P.sunset, end: P.steps },
+      photos: { hero: P.lawn, storyA: P.cafe, storyB: P.gallery, tv: P.rain, cover: P.flowers, end: P.sunflower },
       greeting: "Dear you,",
       letter: "Five years ago a crowded café gave me the best seat in the house: the one across from you. Since then you've turned rainy days into stories and ordinary evenings into the parts of life I want to keep.\n\nThis page holds a few of them, so you can open it whenever you miss me, and remember that I'd choose you again, every single time.",
       sign: "Always yours, Aarav",
@@ -62,20 +60,20 @@
       words: "only you, my love, home, every day, my person, always",
       filmCaption: "by candlelight, always",
       storyKicker: "chapter one, and every one since",
-      story: "Once upon a time, two people reached for the last free table at the same café. Neither of us gave it up, so we shared it, and talked until they stacked the chairs.\n\nThen came the wrong ferry, the right umbrella, a hundred late-night drives and more inside jokes than anyone should be allowed. Somehow, it still feels like the beginning.",
+      story: "Once upon a time, two people reached for the last free table at the same café. Neither of us gave it up, so we shared it, and talked until they stacked the chairs.\n\nThen came the wrong turn, the right umbrella, a hundred late-night drives and more inside jokes than anyone should be allowed. Somehow, it still feels like the beginning.",
       showTv: true,
       reruns: [
-        { title: "The wrong ferry", note: "Twice. Same day. We still don't talk about it." },
+        { title: "The wrong turn", note: "Twice. Same day. We still don't talk about it." },
         { title: "The great biryani disaster", note: "The smoke alarm was on your side." },
         { title: "Sunday, 2 a.m.", note: "Maggi on the balcony and the whole city asleep." },
         { title: "You, singing in the car", note: "Every word wrong. Every time perfect." }
       ],
       momentsIntro: "The glances, journeys and quiet little nights that made us, us.",
-      moments: [{ photo: P.hands, cap: "your hand" }, { photo: P.seaside, cap: "wrong ferry" }, { photo: P.sunset, cap: "that sunset" }, { photo: P.wheat, cap: "long walks" }],
+      moments: [{ photo: P.hands, cap: "your hand" }, { photo: P.car, cap: "wrong turn" }, { photo: P.flowers, cap: "the flower field" }, { photo: P.temple, cap: "temple mornings" }],
       openWhen: [
         { when: "you miss me", msg: "Close your eyes. I'm thinking of you right now, I promise." },
         { when: "you can't sleep", msg: "Count every time I said I love you today. Then add one more." },
-        { when: "you need a smile", msg: "Remember the wrong ferry? I still laugh about it." },
+        { when: "you need a smile", msg: "Remember the wrong turn? I still laugh about it." },
         { when: "we've had a fight", msg: "I'm already sorry. Let's get chai and start over." }
       ],
       song: { url: "", title: "Slow Mornings", note: "the one from our first drive" }
@@ -83,14 +81,14 @@
     mixtape: {
       v: 1, tpl: "mixtape", a: "Meera", b: "Aarav", tagline: "my favourite person",
       date: "2021-03-12T18:30", place: "a tiny café in Udaipur",
-      photos: { hero: P.heroTall, hero2: P.rain, first: P.cafe, cover: P.sunset, end: P.steps },
+      photos: { hero: P.street, hero2: P.selfie, first: P.cafe, cover: P.records, end: P.night },
       words: "my person, 2am talks, home, always you, inside jokes, us",
       firstDate: "two coffees, gone cold", firstNote: "you ordered for me. you got it wrong. i didn't mind one bit.",
       countdown: true,
       filmIntro: "every frame, a little bit of us.",
       moments: [
-        { photo: P.twirl, cap: "one more spin" }, { photo: P.seaside, cap: "the wrong ferry" }, { photo: P.rain, cap: "one umbrella" }, { photo: P.hands, cap: "your hand" },
-        { photo: P.wheat, cap: "the long drive" }, { photo: P.lakedance, cap: "dancing badly" }, { photo: P.heroWide, cap: "sunday walks" }, { photo: P.sunset, cap: "that sunset" }
+        { photo: P.twirl, cap: "one more spin" }, { photo: P.car, cap: "the wrong turn" }, { photo: P.rain, cap: "one umbrella" }, { photo: P.hands, cap: "your hand" },
+        { photo: P.night, cap: "city lights" }, { photo: P.selfie, cap: "too close, always" }, { photo: P.lawn, cap: "golden hour" }, { photo: P.flowers, cap: "the flower field" }
       ],
       song: { url: "", title: "I think of you in every song", note: "they all belong to you" },
       tracks: ["the one from our first drive", "the one you always sing wrong", "our kitchen dance song", "3am, windows down", "the one that made you cry"],
@@ -99,7 +97,7 @@
       openWhen: [
         { when: "you miss me", msg: "close your eyes. i'm thinking of you right now, promise." },
         { when: "you can't sleep", msg: "call me. i don't care what time it is." },
-        { when: "you need a laugh", msg: "remember the wrong ferry? twice. same day." }
+        { when: "you need a laugh", msg: "remember the wrong turn? twice. same day." }
       ],
       greeting: "hey you,",
       letter: "I don't say it enough, so here it is, written down where you can find it whenever you want: you are my favourite person. My favourite voice, my favourite hand to hold, my favourite place to come home to.\n\nThank you for every 2am talk, every bad joke and every ordinary day you made feel like something worth keeping. I'd choose you again, every single time.",
