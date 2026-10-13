@@ -103,16 +103,19 @@ h2.title em{font-family:var(--script);font-style:normal;font-size:1.15em;margin-
 .note .rose{position:absolute;width:118px;right:-26px;top:-40px;transform:rotate(16deg);filter:drop-shadow(0 10px 10px #0007)}
 .note .seal{position:absolute;width:76px;left:22px;bottom:-26px;transform:rotate(-12deg);filter:drop-shadow(0 6px 6px #0007)}
 
-/* ---------- save the date ---------- */
-.card{position:relative;max-width:500px;margin:0 auto;text-align:center;padding:clamp(48px,9vw,70px) 28px;background:#2a0207e6;border:1px solid #d2ae6366;outline:1px solid #d2ae6366;outline-offset:-10px}
+/* ---------- reasons I love you, on a gold-edged card ---------- */
+.card{position:relative;max-width:540px;margin:0 auto;text-align:center;padding:clamp(48px,9vw,70px) clamp(24px,6vw,48px);background:#2a0207e6;border:1px solid #d2ae6366;outline:1px solid #d2ae6366;outline-offset:-10px}
 .card .names{font-size:clamp(46px,9vw,64px)}
-.card .big{font:400 clamp(30px,5vw,40px)/1.2 var(--display);margin:18px 0 6px}
-.card .small{font:400 italic 20px var(--display);color:#e8d4b8}
 .orn{width:170px;margin:20px auto;display:block}
-.card .glasses{position:absolute;width:clamp(120px,30vw,170px);right:-34px;top:-90px;transform-origin:50% 90%;filter:drop-shadow(0 12px 14px #0008)}
-.datesec.seen .glasses{animation:clink 1.4s .3s cubic-bezier(.3,1.5,.5,1) both}
-@keyframes clink{0%{transform:rotate(18deg) translateY(30px);opacity:0}60%{transform:rotate(-6deg)}100%{transform:rotate(0)}}
-.card .toast{margin-top:22px;font:400 30px/1 var(--script);color:var(--g1)}
+.card .crose{position:absolute;width:clamp(110px,26vw,150px);right:-40px;top:-70px;transform-origin:50% 90%;filter:drop-shadow(0 12px 14px #0008)}
+.datesec.seen .crose{animation:bloom 1.4s .3s cubic-bezier(.3,1.5,.5,1) both}
+@keyframes bloom{0%{transform:rotate(30deg) scale(.6);opacity:0}60%{transform:rotate(-6deg)}100%{transform:rotate(8deg)}}
+.reasons{list-style:none;margin:0;padding:0;text-align:left}
+.reasons li{display:grid;grid-template-columns:52px 1fr;align-items:baseline;padding:12px 0;border-bottom:1px solid #d2ae6326;font-size:20px;transition:opacity .8s calc(var(--i)*.18s + .2s),transform .8s calc(var(--i)*.18s + .2s)}
+.reasons li:last-child{border-bottom:0}
+.reasons b{font:400 italic 22px var(--display);color:var(--g2)}
+.js .datesec:not(.seen) .reasons li{opacity:0;transform:translateY(14px)}
+.card .toast{margin-top:6px;font:400 34px/1 var(--script);color:var(--g1)}
 
 /* ---------- candlelight still with a drifting film strip ---------- */
 .film{position:relative;overflow:hidden;padding:0;min-height:clamp(440px,70vw,720px);display:grid;place-items:end center;background:url(/assets/candlelit/candles.webp) center/cover}
@@ -134,7 +137,7 @@ h2.title em{font-family:var(--script);font-style:normal;font-size:1.15em;margin-
 .story p:first-of-type::first-letter{float:left;font:400 84px/.8 var(--display);color:var(--wine);margin:8px 10px 0 0}
 @media(max-width:820px){.story .wrap{grid-template-columns:1fr}.duo{max-width:440px;width:100%;margin:0 auto 20px}}
 
-/* ---------- the evening, on an old television ---------- */
+/* ---------- our favourite reruns, on an old television ---------- */
 .sched .wrap{display:grid;grid-template-columns:1fr 1fr;gap:clamp(36px,7vw,90px);align-items:center}
 .tv{position:relative;max-width:460px;width:100%;margin:0 auto}
 .tv .screen{position:absolute;left:13%;top:28.1%;width:51.1%;height:40.7%;overflow:hidden;border-radius:12%/16%;background:#000}
@@ -144,9 +147,14 @@ h2.title em{font-family:var(--script);font-style:normal;font-size:1.15em;margin-
 @keyframes flick{0%,100%{opacity:1}47%{opacity:.82}48%{opacity:1}73%{opacity:.9}}
 .tv .set{position:relative;z-index:2;width:100%;filter:drop-shadow(0 20px 26px #000b)}
 .sched ol{list-style:none;padding:0;margin:26px 0 0}
-.sched li{display:grid;grid-template-columns:92px 1fr;align-items:baseline;padding:18px 0;border-bottom:1px solid #d2ae6340}
-.sched li b{font:400 italic 22px var(--display);color:var(--g2)}
-.sched li span{font-size:22px}
+.sched li{display:grid;grid-template-columns:76px 1fr;align-items:baseline;padding:16px 0;border-bottom:1px solid #d2ae6340}
+.sched li b{font:400 italic 19px var(--display);color:var(--g2)}
+.sched li strong{display:block;font:400 24px/1.2 var(--display)}
+.sched li small{display:block;margin-top:4px;font:400 italic 18px/1.4 var(--body);color:#e8d4b8cc}
+.onair{display:inline-flex;align-items:center;gap:8px;margin-bottom:10px;padding:5px 12px;border:1px solid #d2ae6366;border-radius:999px;font:500 12px/1 var(--body);letter-spacing:.2em;text-transform:uppercase;color:var(--g1)}
+.onair::before{content:"";width:8px;height:8px;border-radius:50%;background:#e2443c;box-shadow:0 0 10px #e2443c}
+@media (prefers-reduced-motion:no-preference){.onair::before{animation:rec 1.6s steps(1) infinite}}
+@keyframes rec{50%{opacity:.25}}
 @media(max-width:820px){.sched .wrap{grid-template-columns:1fr}}
 
 /* ---------- moments in gold frames ---------- */
@@ -173,6 +181,7 @@ h2.title em{font-family:var(--script);font-style:normal;font-size:1.15em;margin-
 .end .ovalf{width:min(300px,70vw);margin:0 auto 26px}
 .end h2{font-size:clamp(46px,12.5vw,120px);line-height:1.25;padding:0 .2em}
 .end .date{font:400 italic 21px var(--display);color:#e8d4b8;margin-top:10px}
+.end .days{margin-top:6px;font:400 clamp(30px,6vw,40px)/1.2 var(--script);color:var(--g1)}
 .end .seal{width:84px;margin:34px auto 0;filter:drop-shadow(0 6px 8px #0008)}
 .end .credit{margin-top:50px;font:400 14px var(--body);color:#e8d4b899}
 
@@ -250,7 +259,7 @@ html.locked{overflow:hidden}
 
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}.petals{display:none}.env .sheet,.env .on-paper{transform:none}}
 </style>
-<script src="/assets/ks-templates.v1.js"></script>
+<script src="/assets/ks-templates.v2.js"></script>
 </head>
 <body>
 <script>
@@ -262,7 +271,7 @@ if (/[?&]preview=1/.test(location.search)) document.documentElement.classList.ad
 <div class="gate" id="gate" role="dialog" aria-modal="true" aria-label="Open your keepsake">
  <div class="gate-l"></div><div class="gate-r"></div>
  <div class="gate-in">
-  <div class="kicker">a keepsake for</div>
+  <div class="kicker">a love letter for</div>
   <div class="gname script goldtext" id="recipient">Meera</div>
   <button class="gseal" id="gseal" type="button" aria-label="Break the seal to open"><img class="sl" src="/assets/candlelit/seal.webp" alt=""><img class="sr" src="/assets/candlelit/seal.webp" alt=""></button>
   <div class="ghint">tap the seal to open</div>
@@ -278,7 +287,6 @@ if (/[?&]preview=1/.test(location.search)) document.documentElement.classList.ad
   <div class="stage">
    <div class="gframe rect"><div class="pic"><img class="bw" data-ph="photos.hero" alt=""></div><img class="border" src="/assets/candlelit/frame.webp" alt=""></div>
    <img class="bow" src="/assets/candlelit/bow.webp" alt="">
-   <img class="ring" src="/assets/candlelit/ring.webp" alt="">
   </div>
   <div class="date" id="heroDate"></div>
   <div class="scroll-cue" id="cue">a letter is waiting for you</div>
@@ -306,18 +314,16 @@ if (/[?&]preview=1/.test(location.search)) document.documentElement.classList.ad
  </div></div>
 </section>
 
-<section class="datesec damask" aria-label="Our date">
+<section class="datesec damask" id="reasonsSec" aria-label="Reasons I love you">
  <div class="wrap">
   <div class="card">
-   <img class="glasses" src="/assets/candlelit/champagne.webp" alt="">
-   <div class="kicker">save the date</div>
-   <div class="names script goldtext" data-names>Meera &amp; Aarav</div>
+   <img class="crose" src="/assets/candlelit/rose.webp" alt="">
+   <div class="kicker">just a few of the</div>
+   <h2 class="names script goldtext" id="reasonsTitle">reasons I love you</h2>
    <svg class="orn" viewBox="0 0 180 20" aria-hidden="true"><defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#8C6526"/><stop offset=".5" stop-color="#FFF0BE"/><stop offset="1" stop-color="#8C6526"/></linearGradient></defs><g fill="none" stroke="url(#g)" stroke-width="1.4"><path d="M0 10h70M110 10h70"/><path d="M90 2c-8 0-14 8-20 8 6 0 12 8 20 8s14-8 20-8c-6 0-12-8-20-8z"/></g><circle cx="90" cy="10" r="2.4" fill="#E8C978"/></svg>
-   <div class="big" id="weekday"></div>
-   <div class="small" id="timeText"></div>
+   <ol class="reasons" id="reasons"></ol>
    <svg class="orn" viewBox="0 0 180 20" aria-hidden="true"><g fill="none" stroke="url(#g)" stroke-width="1.4"><path d="M0 10h70M110 10h70"/><path d="M90 2c-8 0-14 8-20 8 6 0 12 8 20 8s14-8 20-8c-6 0-12-8-20-8z"/></g><circle cx="90" cy="10" r="2.4" fill="#E8C978"/></svg>
-   <div class="small" id="place"></div>
-   <div class="toast" id="toast"></div>
+   <div class="toast" id="reasonsEnd"></div>
   </div>
  </div>
 </section>
@@ -345,12 +351,12 @@ if (/[?&]preview=1/.test(location.search)) document.documentElement.classList.ad
  </div>
 </section>
 
-<section class="sched silk" id="evening" aria-label="The evening">
+<section class="sched silk" id="reruns" aria-label="Our favourite reruns">
  <div class="wrap">
   <div class="tv"><div class="screen"><img data-ph="photos.tv" alt=""></div><img class="set" src="/assets/candlelit/tv.webp" alt=""></div>
   <div>
-   <div class="kicker">the evening</div>
-   <h2 class="title">Tonight's <em>programme</em></h2>
+   <div class="onair">now showing</div>
+   <h2 class="title">Our favourite <em>reruns</em></h2>
    <ol id="sched"></ol>
   </div>
  </div>
@@ -394,6 +400,7 @@ if (/[?&]preview=1/.test(location.search)) document.documentElement.classList.ad
  <div class="gframe ovalf"><div class="pic"><img class="bw" data-ph="photos.end" alt=""></div><img class="border" src="/assets/candlelit/oval.webp" alt=""></div>
  <h2 class="script goldtext" data-names>Meera &amp; Aarav</h2>
  <div class="date" id="endDate"></div>
+ <div class="days" id="endDays"></div>
  <img class="seal" src="/assets/candlelit/seal.webp" alt="">
  <div class="credit">Made with <a href="/">Keepsake</a></div>
 </section>
@@ -414,7 +421,9 @@ function render(D) {
   document.querySelectorAll("[data-names]").forEach(e => e.textContent = names);
   document.querySelectorAll("[data-ph]").forEach(i => K.setImg(i, K.get(D, i.dataset.ph)));
   const hd = $("heroDate"); hd.textContent = "";
-  hd.append(String(d.getDate()), el("span", "", "❦"), K.fmt.month(d), el("span", "", "❦"), String(d.getFullYear()));
+  const ahead = d > Date.now();
+  if (ahead) hd.append(String(d.getDate()), el("span", "", "❦"), K.fmt.month(d), el("span", "", "❦"), String(d.getFullYear()));
+  else hd.append("since", el("span", "", "❦"), K.fmt.monthYear(d));
   $("cue").textContent = K.str(D.cue, 60);
 
   // letter, split into words so it can appear as if being written
@@ -428,11 +437,14 @@ function render(D) {
   });
   $("note").style.setProperty("--n", n);
 
-  // save the date
-  $("weekday").textContent = K.fmt.weekday(d);
-  $("timeText").textContent = K.str(D.timeText, 50);
-  $("place").textContent = K.str(D.place, 60);
-  $("toast").textContent = K.str(D.toast, 40);
+  // reasons I love you
+  $("reasonsTitle").textContent = K.str(D.reasonsTitle, 40);
+  $("reasonsEnd").textContent = K.str(D.reasonsEnd, 40);
+  const rs = $("reasons"); rs.textContent = "";
+  (D.reasons || []).map(t => K.str(t, 90)).filter(Boolean).slice(0, 8).forEach((t, i) => {
+    const li = el("li"); li.style.setProperty("--i", i); li.appendChild(el("b", "", K.roman(i) + ".")); li.appendChild(el("span", "", t)); rs.appendChild(li);
+  });
+  $("reasonsSec").hidden = !rs.children.length;
   const w = $("words"); w.textContent = "";
   const list = K.words(D.words);
   for (let r = 0; r < 2; r++) list.forEach(x => { w.appendChild(el("span", "", x)); w.appendChild(el("i", "", "❦")); });
@@ -443,10 +455,14 @@ function render(D) {
   const sb = $("storyBody"); sb.textContent = "";
   K.paras(D.story).forEach(t => sb.appendChild(el("p", "", t)));
 
-  // the evening
-  $("evening").hidden = D.showDay === false;
+  // our favourite reruns
   const ol = $("sched"); ol.textContent = "";
-  (D.schedule || []).filter(x => x.time || x.what).slice(0, 8).forEach(x => { const li = el("li"); li.appendChild(el("b", "", K.str(x.time, 10))); li.appendChild(el("span", "", K.str(x.what, 50))); ol.appendChild(li); });
+  (D.reruns || []).filter(x => x && (x.title || x.note)).slice(0, 8).forEach((x, i) => {
+    const li = el("li"), box = el("div"); li.appendChild(el("b", "", "Ep. " + K.roman(i)));
+    box.appendChild(el("strong", "", K.str(x.title, 40))); if (x.note) box.appendChild(el("small", "", K.str(x.note, 90)));
+    li.appendChild(box); ol.appendChild(li);
+  });
+  $("reruns").hidden = D.showTv === false || !ol.children.length;
 
   // moments in gold frames; alternate black-and-white and wine-tinted photos
   $("momentsIntro").textContent = K.str(D.momentsIntro, 140);
@@ -479,7 +495,8 @@ function render(D) {
   $("spotBtn").hidden = !sp; $("spot").textContent = "";
   $("spotBtn").onclick = () => { if (!sp || $("spot").firstChild) return; const f = el("iframe"); f.src = sp.src; f.height = sp.h; f.allow = "autoplay; encrypted-media; clipboard-write"; f.title = "Our song on Spotify"; $("spot").appendChild(f); };
 
-  $("endDate").textContent = K.fmt.long(d) + (D.place ? ", " + K.str(D.place, 60) : "");
+  $("endDate").textContent = ahead ? K.fmt.long(d) : "together since " + K.fmt.long(d);
+  const t = K.since(d); $("endDays").textContent = ahead ? "" : t.days.toLocaleString("en-IN") + " days of us, and counting";
 }
 
 // opening: break the seal

@@ -8,7 +8,7 @@ const MAX = { card: 30000, site: 90000 };
 const kindOf = v => (v === "site" ? "site" : "card");
 const tooBig = (data, kind) => JSON.stringify(data).length > MAX[kind];
 // A website is either section-based (older themes) or one of the designed templates.
-const TEMPLATES = ["wildflower", "candlelit"];
+const TEMPLATES = ["wildflower", "candlelit", "mixtape"];
 const validData = (data, kind) => !!data && (kind === "site" ? (Array.isArray(data.sections) || TEMPLATES.includes(data.tpl)) : Array.isArray(data.i));
 
 // Optional password lock. Only a salted hash is stored; the card's content is never sent until it matches.

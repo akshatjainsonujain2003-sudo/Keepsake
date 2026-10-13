@@ -11,7 +11,7 @@
 <link rel="stylesheet" href="/assets/site-themes.v1.css">
 <script src="/assets/ks-checkout.v1.js"></script>
 <script src="/assets/site-render.v1.js"></script>
-<script src="/assets/ks-templates.v1.js"></script>
+<script src="/assets/ks-templates.v2.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js" defer></script>
 <style>
 :root{--bg:#240409;--panel:#33100f;--panel2:#3d1517;--line:#6b3a35;--ink:#f8f0df;--muted:#c9b99a;--gold:#e4c680;--field:#1a0206;--bad:#ff9aa8;--ok:#9ad8b0}
@@ -104,6 +104,9 @@ textarea.in{min-height:110px;resize:vertical;line-height:1.5}
 .art.cl{background:linear-gradient(#1f010466,#1f0104aa),url(/assets/candlelit/silk.webp) center/cover}
 .art.cl .seal{width:44%;filter:drop-shadow(0 8px 10px #000a)}
 .art.cl .nm{position:absolute;bottom:10px;font:italic 26px/1 "Cormorant Garamond",Georgia,serif;color:#e8c978}
+.art.mx{background:url(/assets/mixtape/gingham.webp) center/200px}
+.art.mx .tp{width:66%;rotate:-6deg;filter:drop-shadow(0 8px 10px #0005)}
+.art.mx .pn{position:absolute;right:8%;top:8%;width:26%;rotate:20deg}
 .legacy-note{font-size:13px;color:var(--muted);margin:10px 0 0}
 .phone-in iframe,.overlay iframe{display:block;width:100%;height:100%;border:0;background:#fff}
 .overlay .scroll iframe{height:100%}
@@ -210,7 +213,8 @@ function openBig() {
 function designs() {
   const box = $("#designs"); box.textContent = "";
   [["wildflower", '<div class="art wf"><div class="pol"><img class="ph" src="/assets/wildflower/lakedance.webp" alt=""><img class="edge" src="/assets/wildflower/polaroid.webp" alt=""></div><img class="fl" src="/assets/wildflower/pressed.webp" alt=""></div>'],
-   ["candlelit", '<div class="art cl"><img class="seal" src="/assets/candlelit/seal.webp" alt=""><span class="nm">for you</span></div>']].forEach(([k, art]) => {
+   ["candlelit", '<div class="art cl"><img class="seal" src="/assets/candlelit/seal.webp" alt=""><span class="nm">for you</span></div>'],
+   ["mixtape", '<div class="art mx"><img class="tp" src="/assets/mixtape/cassette.webp" alt=""><img class="pn" src="/assets/mixtape/heartpin.webp" alt=""></div>']].forEach(([k, art]) => {
     const b = document.createElement("button"); b.type = "button"; b.className = "design" + (D.tpl === k ? " on" : "");
     b.innerHTML = art + "<b></b><small></small>"; b.querySelector("b").textContent = KSKit.NAMES[k]; b.querySelector("small").textContent = KSKit.HINTS[k];
     b.onclick = () => switchTo(k); box.appendChild(b);
@@ -269,7 +273,7 @@ function listEl(f, arr) {
     });
     if (arr.length < (f.max || 10)) {
       const a = document.createElement("button"); a.type = "button"; a.className = "btn line"; a.textContent = f.add || "Add";
-      a.onclick = () => { if (f.type === "strings") arr.push(""); else { const o = {}; f.of.forEach(sf => o[sf.key] = ""); arr.push(o); } changed(); draw(); };
+      a.onclick = () => { if (f.type === "strings") arr.push(""); else { const o = {}; f.of.forEach(sf => o[sf.key] = sf.type === "toggle" ? false : ""); arr.push(o); } changed(); draw(); };
       box.appendChild(a);
     }
   };
