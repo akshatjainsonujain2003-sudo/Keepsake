@@ -484,7 +484,7 @@ function render(D, first) {
 (function () {
   if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   let raf = 0;
-  const move = () => { raf = 0; document.querySelectorAll(".strip").forEach((s, i) => { const r = s.parentNode.getBoundingClientRect(); const off = (r.top + r.height / 2 - innerHeight / 2) * (i % 2 ? -.12 : .1); s.style.transform = `translateY(${off.toFixed(1)}px)`; }); };
+  const move = () => { raf = 0; document.querySelectorAll(".strip").forEach((s, i) => { const r = s.parentNode.getBoundingClientRect(); const off = Math.max(-40, Math.min(40, (r.top + r.height / 2 - innerHeight / 2) * (i % 2 ? -.12 : .1))); s.style.transform = `translateY(${off.toFixed(1)}px)`; }); };
   addEventListener("scroll", () => { if (!raf) raf = requestAnimationFrame(move); }, { passive: true }); move();
 })();
 
