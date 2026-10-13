@@ -20,7 +20,7 @@
     wildflower: {
       v: 2, tpl: "wildflower", a: "Meera", b: "Aarav", tagline: "Five years, and counting",
       date: "2021-03-12T18:30", place: "a tiny café in Udaipur", note: "us, obviously",
-      photos: { hero: P.heroTall, hero2: P.lakedance, calendar: P.cafe, cover: P.sunset, someday: P.wheat },
+      photos: { hero: P.heroTall, hero2: P.lakedance, calendar: P.cafe, cover: P.sunset, someday: P.wheat, oval: "", end: P.twirl },
       calnote: "the day you sat across from me", firstDate: "two coffees, gone cold",
       quote: "Somewhere between the first coffee and the last train home, you became my favourite place.",
       song: { url: "", title: "Slow Mornings", cap: "Press play. It's the one from our first drive." },
@@ -97,6 +97,7 @@
         { key: "photos.calendar", label: "Photo beside the calendar", type: "photo" },
         { key: "firstDate", label: "On the ticket: what you did that day", type: "text", max: 40 },
         { key: "calnote", label: "Handwritten line under the calendar", type: "text", max: 50 },
+        { key: "photos.oval", label: "Picture in the gold oval (a painted pond shows if empty)", type: "photo" },
         { key: "quote", label: "Quote", type: "area", max: 220 },
         { key: "song.url", label: "Spotify song link", type: "text", max: 300, placeholder: "https://open.spotify.com/track/…" },
         { key: "song.title", label: "Song name", type: "text", max: 50 },
@@ -117,7 +118,8 @@
         { key: "letterTitle", label: "Heading", type: "text", max: 50 },
         { key: "greeting", label: "Greeting", type: "text", max: 40 },
         { key: "letter", label: "Your letter (leave a blank line between paragraphs)", type: "area", max: 2000 },
-        { key: "sign", label: "Signed", type: "text", max: 40 } ] },
+        { key: "sign", label: "Signed", type: "text", max: 40 },
+        { key: "photos.end", label: "Photo in the closing gold oval", type: "photo" } ] },
       { group: "Our someday list", fields: [
         { key: "showSomeday", label: "Show this section", type: "toggle" },
         { key: "somedayTitle", label: "Heading", type: "text", max: 40 },

@@ -165,7 +165,7 @@ section{position:relative;padding:clamp(80px,12vw,150px) 0}
 .strip::-webkit-scrollbar{display:none}
 .strip figure{flex:0 0 auto;margin:0;scroll-snap-align:start;background:#fffdf8;padding:12px 12px 14px;box-shadow:0 14px 30px -16px #2a292266}
 .strip figure:nth-child(odd){rotate:-1.6deg}.strip figure:nth-child(even){rotate:1.4deg}
-.strip img{height:min(52vh,420px);max-width:min(78vw,620px);width:auto;aspect-ratio:auto 3/4;object-fit:cover}
+.strip .mp{height:min(52vh,420px);max-width:min(78vw,620px);width:auto;aspect-ratio:auto 3/4;object-fit:cover}
 .strip figcaption{margin-top:10px;font:400 italic 17px var(--serif);color:var(--soft)}
 
 /* ---------- a letter in a flower envelope ---------- */
@@ -299,29 +299,103 @@ section{position:relative;padding:clamp(80px,12vw,150px) 0}
 .letter.open .note .sig{clip-path:inset(0 0 0 0)}
 .letter:not(.open) .note .sig{transition-delay:0s}
 
-@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}.js .chapter:not(.seen) .pf{opacity:1;transform:none}}
+/* ---------- storybook: vines that grow, charms, a painted scene in gold ---------- */
+.js .grow{clip-path:inset(0 0 100% 0)}
+.js .grow.on{animation:growin 2.8s cubic-bezier(.3,.6,.3,1) forwards}
+@keyframes growin{from{clip-path:inset(0 0 100% 0)}to{clip-path:inset(0 0 -5% 0)}}
+@media (prefers-reduced-motion:no-preference){
+  .twinkle{animation:tw 3.4s ease-in-out var(--d,0s) infinite}
+  .turn{animation:spin 80s linear infinite}
+  .bob{animation:bob 5s ease-in-out infinite alternate}
+  .swing{animation:swing 4s ease-in-out infinite alternate;transform-origin:50% 0}
+}
+@keyframes tw{0%,100%{opacity:.4;transform:scale(.75)}50%{opacity:1;transform:scale(1.08) rotate(18deg)}}
+@keyframes bob{to{transform:translateY(-14px) rotate(-5deg)}}
+@keyframes swing{from{rotate:-2deg}to{rotate:2deg}}
+
+.hero .hv{right:-2%;top:-30px;width:min(250px,34vw);z-index:9;transform:scaleX(-1)}
+.hero .daisy{left:-6%;bottom:-8%;width:30%;z-index:4;rotate:-10deg}
+.hero-text{position:relative}
+.hero .st1{right:6%;top:-12%;width:44px;--d:.4s}.hero .st2{right:20%;top:30%;width:26px;--d:1.6s}
+.cal .pclip{left:24px;top:-58px;width:58px;z-index:3;rotate:-6deg}
+
+.scene{position:relative;width:min(400px,62vw);margin:0 auto 70px}
+.oval{position:relative;z-index:2}
+.oval .pic{position:absolute;left:16.5%;top:18.8%;width:66.5%;height:65.6%;border-radius:50%;overflow:hidden;background:#cfd6c0}
+.oval .pic img{width:100%;height:100%;object-fit:cover}
+.oval .fr{position:relative;z-index:2;width:100%;filter:drop-shadow(0 18px 26px #3a332455)}
+.scene .sun{left:-30%;top:-4%;width:38%;z-index:1}
+.scene .moon{right:-32%;bottom:4%;width:40%;z-index:3}
+.scene .ivyL{left:-13%;top:6%;height:92%;z-index:3}
+.scene .ivyR{right:-11%;top:-6%;height:70%;z-index:3;transform:scaleX(-1)}
+.scene .lbow{left:50%;bottom:-7%;width:36%;margin-left:-18%;z-index:4}
+.scene .s1{left:-18%;top:52%;width:30px;--d:.2s}.scene .s2{right:-6%;top:6%;width:46px;--d:1.1s}.scene .s3{left:8%;top:-8%;width:24px;--d:2s}
+.dove{position:absolute;z-index:6;width:min(110px,22vw);top:8%;left:0;pointer-events:none}
+@media (prefers-reduced-motion:no-preference){.dove{animation:dove 16s linear infinite}}
+@keyframes dove{0%{transform:translate(-30vw,60px) scale(.8);opacity:0}8%{opacity:1}50%{transform:translate(45vw,-10px) scale(1)}92%{opacity:1}100%{transform:translate(115vw,30px) scale(.85);opacity:0}}
+@media (prefers-reduced-motion:reduce){.dove{display:none}}
+
+.strip{padding-top:52px}
+.strip figure{position:relative}
+.strip .clip{position:absolute;top:-34px;left:50%;width:92px;margin-left:-46px;z-index:2;filter:drop-shadow(0 5px 5px #0003)}
+.strip .tuck{position:absolute;z-index:3;width:110px;right:-24px;bottom:-22px;rotate:12deg;pointer-events:none}
+.strip figure:nth-child(3n+2) .tuck{width:84px;left:-18px;right:auto;bottom:auto;top:40%;rotate:-14deg}
+
+.love{background:url(/assets/wildflower/crumpled.webp) center/cover,#efe8dc;background-blend-mode:multiply}
+.love .lily{left:-40px;top:20px;width:min(190px,34vw);rotate:-18deg}
+.love .clem{right:-30px;bottom:30px;width:min(170px,30vw);rotate:20deg}
+.love .ptl{right:12%;top:60px;width:min(70px,14vw);rotate:30deg}
+
+.letter .fv{left:-10px;top:-10px;width:min(240px,36vw);z-index:1}
+.note .lbow2{left:50%;top:-56px;width:120px;margin-left:-60px}
+.note .pstamp{position:absolute;right:-24px;top:-36px;width:92px;aspect-ratio:618/897;padding:11%;rotate:9deg;background:url(/assets/wildflower/stampblank.webp) center/100% 100%;filter:drop-shadow(0 6px 8px #3a33243d)}
+.note .pstamp img{width:100%;height:100%;object-fit:cover}
+.note .dfl{left:-38px;bottom:-30px;width:90px;rotate:-20deg}
+
+.someday .listwrap{background:url(/assets/wildflower/parchment.webp) center/100% 100% no-repeat;padding:clamp(96px,13vw,124px) clamp(34px,6vw,64px) clamp(56px,8vw,76px)}
+.someday .scrawl{margin-left:clamp(40px,8vw,70px)}
+@media(max-width:620px){.someday .listwrap{padding:150px 34px 84px 40px}.someday li{font-size:18px;padding:10px 0}.someday .scrawl{font-size:34px}}
+.someday li{border-top-color:#5b3f2433}
+.someday .ph{position:relative}
+.someday .ink{position:absolute;z-index:0;left:-14%;top:-10%;width:70%;mix-blend-mode:multiply;opacity:.75}
+.someday .blue{position:absolute;z-index:3;right:-6%;bottom:-8%;width:40%;rotate:8deg}
+.someday .ph .pf{z-index:2}
+
+.end .scene{width:min(300px,58vw);margin-bottom:40px}
+.end .scene .sun{width:34%;left:-34%;top:10%}
+.end .scene .moon{width:36%;right:-36%;bottom:12%}
+
+.drift{position:fixed;inset:0;pointer-events:none;z-index:25;overflow:hidden}
+.drift img{position:absolute;top:-90px;width:var(--s);opacity:.85;animation:fall var(--t) linear var(--dl) infinite}
+@keyframes fall{0%{transform:translate3d(0,-10vh,0) rotate(0)}30%{transform:translate3d(var(--x),30vh,0) rotate(120deg)}60%{transform:translate3d(calc(var(--x)*-1),65vh,0) rotate(220deg)}100%{transform:translate3d(var(--x),115vh,0) rotate(380deg)}}
+@media (prefers-reduced-motion:reduce){.drift{display:none}}
+
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}.js .chapter:not(.seen) .pf{opacity:1;transform:none}.js .grow{clip-path:none}}
 </style>
 <script src="/assets/ks-templates.v2.js"></script>
 </head>
 <body>
 <script>document.documentElement.classList.add("js");</script>
+<div class="drift" id="drift" aria-hidden="true"></div>
 
 <header class="bar"><div class="wrap"><b id="initials">M &amp; A</b><nav aria-label="Sections"><a href="#story">Our story</a><a href="#moments">Moments</a><a href="#letter">A letter</a><a href="#someday">Someday</a></nav></div></header>
 
 <main>
 <section class="hero" aria-label="The two of you">
  <svg class="bfly b1" viewBox="0 0 60 44" aria-hidden="true"><g class="w wl"><path d="M29 20C24 4 6 0 4 12c-1 9 12 12 25 9z" fill="#d9a46b"/><path d="M29 23C19 25 8 34 13 40c5 4 13-5 16-17z" fill="#e8bd86"/><circle cx="14" cy="12" r="2.4" fill="#fff8ec"/></g><g class="w wr"><path d="M31 20C36 4 54 0 56 12c1 9-12 12-25 9z" fill="#d9a46b"/><path d="M31 23C41 25 52 34 47 40c-5 4-13-5-16-17z" fill="#e8bd86"/><circle cx="46" cy="12" r="2.4" fill="#fff8ec"/></g><path d="M30 12v22" stroke="#5b4630" stroke-width="2.4" stroke-linecap="round"/><path d="M30 12c-2-5-5-7-7-8M30 12c2-5 5-7 7-8" stroke="#5b4630" stroke-width="1" fill="none"/></svg><svg class="bfly b2" viewBox="0 0 60 44" aria-hidden="true"><g class="w wl"><path d="M29 20C24 4 6 0 4 12c-1 9 12 12 25 9z" fill="#d9a46b"/><path d="M29 23C19 25 8 34 13 40c5 4 13-5 16-17z" fill="#e8bd86"/><circle cx="14" cy="12" r="2.4" fill="#fff8ec"/></g><g class="w wr"><path d="M31 20C36 4 54 0 56 12c1 9-12 12-25 9z" fill="#d9a46b"/><path d="M31 23C41 25 52 34 47 40c-5 4-13-5-16-17z" fill="#e8bd86"/><circle cx="46" cy="12" r="2.4" fill="#fff8ec"/></g><path d="M30 12v22" stroke="#5b4630" stroke-width="2.4" stroke-linecap="round"/><path d="M30 12c-2-5-5-7-7-8M30 12c2-5 5-7 7-8" stroke="#5b4630" stroke-width="1" fill="none"/></svg>
+ <img class="deco hv grow on" src="/assets/wildflower/heartvine.webp" alt="">
  <div class="wrap">
   <div class="collage">
    <img class="deco plume sway" src="/assets/wildflower/plume.webp" alt="">
    <div class="pf ribbon tallf"><div class="pic"><img data-ph="photos.hero" alt=""></div><img class="edge" src="/assets/wildflower/ribbonframe.webp" alt=""></div>
    <div class="pf polaroid wide"><div class="pic"><img data-ph="photos.hero2" alt=""></div><img class="edge" src="/assets/wildflower/polaroid.webp" alt=""></div>
    <img class="deco stamp" src="/assets/wildflower/stamp.webp" alt="">
-   <img class="deco gyp sway slow" src="/assets/wildflower/gyp.webp" alt="">
+   <img class="deco daisy sway slow" src="/assets/wildflower/daisies.webp" alt="">
    <svg class="doodle arrow draw" viewBox="0 0 74 60" style="--len:120;--at:1.5s" aria-hidden="true"><path d="M70 52C52 54 26 46 14 18"/><path d="M8 26 13 16 24 20"/></svg>
    <span class="anno write" id="anno" style="--at:1.9s">us, obviously</span>
   </div>
   <div class="hero-text">
+   <img class="deco st1 twinkle" src="/assets/wildflower/star.webp" alt=""><img class="deco st2 twinkle" src="/assets/wildflower/star.webp" alt="">
    <div class="label" id="tagline">Five years, and counting</div>
    <h1><span id="nA">Meera</span><span class="amp">&amp;</span><span id="nB">Aarav</span></h1>
    <div class="when"><span id="dSince">since <span id="dDots">12.03.2021</span></span><i><span id="place">a tiny café in Udaipur</span><svg class="doodle hrt draw" viewBox="0 0 30 28" style="--len:90;--at:2.4s" aria-hidden="true"><path d="M15 25C5 18 2 12 4 7c2-5 9-5 11 1 2-6 9-6 11-1 2 5-1 11-11 18z"/></svg></i></div>
@@ -336,6 +410,7 @@ section{position:relative;padding:clamp(80px,12vw,150px) 0}
   </div>
   <div class="sheet">
    <img class="deco olive" src="/assets/wildflower/olive.webp" alt="">
+   <img class="deco pclip" src="/assets/wildflower/paperclip.webp" alt="">
    <div class="label" id="calLabel">The day it all began</div>
    <div class="month"><span id="month">February</span> <small id="year">2027</small></div>
    <div class="grid" id="grid"></div>
@@ -345,7 +420,16 @@ section{position:relative;padding:clamp(80px,12vw,150px) 0}
 </section>
 
 <section class="song" aria-label="Our song">
+ <img class="dove" src="/assets/wildflower/dove.webp" alt="">
  <div class="narrow">
+  <div class="scene">
+   <img class="deco sun turn" src="/assets/wildflower/sun.webp" alt="">
+   <img class="deco s1 twinkle" src="/assets/wildflower/star.webp" alt=""><img class="deco s2 twinkle" src="/assets/wildflower/star.webp" alt=""><img class="deco s3 twinkle" src="/assets/wildflower/star.webp" alt="">
+   <img class="deco ivyL grow" src="/assets/wildflower/ivy.webp" alt=""><img class="deco ivyR grow" src="/assets/wildflower/ivy.webp" alt="">
+   <div class="oval"><div class="pic"><img data-ph="photos.oval" alt="" loading="lazy"></div><img class="fr" src="/assets/wildflower/oval.webp" alt=""></div>
+   <img class="deco lbow" src="/assets/wildflower/lacebow.webp" alt="">
+   <img class="deco moon bob" src="/assets/wildflower/moon.webp" alt="">
+  </div>
   <blockquote id="quote"></blockquote>
   <div class="player" id="player">
    <img class="deco lilies" src="/assets/wildflower/lilies.webp" alt="">
@@ -391,6 +475,7 @@ section{position:relative;padding:clamp(80px,12vw,150px) 0}
 </section>
 
 <section class="love" id="love">
+ <img class="deco lily sway slow" src="/assets/wildflower/lilypeach.webp" alt=""><img class="deco clem sway" src="/assets/wildflower/clematis.webp" alt=""><img class="deco ptl bob" src="/assets/wildflower/petal.webp" alt="">
  <div class="wrap">
   <div class="label">A few of my favourite things</div>
   <h2>Little things I love about you</h2>
@@ -400,12 +485,15 @@ section{position:relative;padding:clamp(80px,12vw,150px) 0}
 </section>
 
 <section class="letter" id="letter">
+ <img class="deco fv grow" src="/assets/wildflower/flowervine.webp" alt="">
  <div class="label">For you, from me</div>
  <h2 id="letterTitle">Open when you miss me</h2>
  <div class="stack">
   <img class="handletter" src="/assets/wildflower/loveletter.webp" alt="">
   <article class="note" id="note">
-   <img class="deco stamp" src="/assets/wildflower/stamp.webp" alt="">
+   <img class="deco lbow2" src="/assets/wildflower/lacebow.webp" alt="">
+   <div class="pstamp"><img data-ph="photos.hero2" alt=""></div>
+   <img class="deco dfl" src="/assets/wildflower/driedflower.webp" alt="">
    <h3 id="greeting">My love,</h3>
    <div id="letterBody"></div>
    <div class="sig" id="sign">Yours, Aarav</div>
@@ -418,19 +506,25 @@ section{position:relative;padding:clamp(80px,12vw,150px) 0}
 <section class="someday" id="someday">
  <div class="wrap">
   <div class="listwrap">
-   <img class="deco olive sway slow" src="/assets/wildflower/olive.webp" alt="">
    <div class="label">Our bucket list</div>
    <h2 id="somedayTitle">Someday, with you</h2>
    <ul id="somedayList"></ul>
    <p class="scrawl">…and everything after</p>
   </div>
-  <div class="ph"><div class="pf polaroid"><div class="pic"><img data-ph="photos.someday" alt="" loading="lazy"></div><img class="edge" src="/assets/wildflower/polaroid.webp" alt=""></div></div>
+  <div class="ph"><img class="ink" src="/assets/wildflower/inkflowers.webp" alt=""><div class="pf polaroid"><div class="pic"><img data-ph="photos.someday" alt="" loading="lazy"></div><img class="edge" src="/assets/wildflower/polaroid.webp" alt=""></div><img class="blue sway slow" src="/assets/wildflower/bluestem.webp" alt=""></div>
  </div>
 </section>
 
 <section class="end" aria-label="Closing">
  <img class="deco dried sway" src="/assets/wildflower/dried.webp" alt="">
  <img class="deco plume sway slow" src="/assets/wildflower/plume.webp" alt="">
+ <div class="scene">
+   <img class="deco sun turn" src="/assets/wildflower/sun.webp" alt="">
+   <img class="deco s1 twinkle" src="/assets/wildflower/star.webp" alt=""><img class="deco s2 twinkle" src="/assets/wildflower/star.webp" alt=""><img class="deco s3 twinkle" src="/assets/wildflower/star.webp" alt="">
+   <img class="deco ivyL grow" src="/assets/wildflower/ivy.webp" alt=""><img class="deco ivyR grow" src="/assets/wildflower/ivy.webp" alt="">
+   <div class="oval"><div class="pic"><img data-ph="photos.end" alt="" loading="lazy"></div><img class="fr" src="/assets/wildflower/oval.webp" alt=""></div>
+   <img class="deco moon bob" src="/assets/wildflower/moon.webp" alt="">
+  </div>
  <h2 id="endNames"></h2>
  <div class="label" id="endLabel"></div>
  <div class="credit">Made with <a href="/">Keepsake</a></div>
@@ -443,6 +537,10 @@ let DATE = new Date();
 const HEART = '<svg viewBox="0 0 30 28" aria-hidden="true"><path d="M15 25C5 18 2 12 4 7c2-5 9-5 11 1 2-6 9-6 11-1 2 5-1 11-11 18z" fill="none" stroke="currentColor" stroke-width="2"/></svg>';
 const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("seen"); io.unobserve(e.target); } }), { threshold: .3 });
 document.querySelectorAll(".cal,.someday").forEach(x => io.observe(x));
+// vines grow when they come into view
+// (watch the section, not the vine: a fully clipped vine never counts as visible)
+const vio = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.querySelectorAll(".grow").forEach(g => g.classList.add("on")); vio.unobserve(e.target); } }), { threshold: .2 });
+new Set([...document.querySelectorAll(".grow:not(.on)")].map(g => g.closest("section"))).forEach(x => vio.observe(x));
 const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
 
 function render(D, first) {
@@ -457,6 +555,8 @@ function render(D, first) {
   $("dDots").textContent = K.fmt.dots(DATE); $("place").textContent = K.str(D.place, 60);
   $("anno").textContent = K.str(D.note, 30); $("anno").hidden = !D.note;
   document.querySelectorAll("[data-ph]").forEach(i => K.setImg(i, K.get(D, i.dataset.ph)));
+  // the gold oval shows a painted pond until they add their own picture
+  const ov = document.querySelector('[data-ph="photos.oval"]'); if (!K.img(K.get(D, "photos.oval"))) K.setImg(ov, "/assets/wildflower/pond.webp");
 
   // calendar
   $("month").textContent = K.fmt.month(DATE); $("year").textContent = DATE.getFullYear();
@@ -506,8 +606,11 @@ function render(D, first) {
   // moments
   $("momentsIntro").textContent = K.str(D.momentsIntro, 120);
   const st = $("strip"); st.textContent = "";
-  (D.moments || []).filter(x => K.img(x.photo)).slice(0, 10).forEach(x => {
-    const f = el("figure"), im = el("img"); im.alt = K.str(x.cap, 60); im.loading = "lazy"; im.src = K.img(x.photo);
+  (D.moments || []).filter(x => K.img(x.photo)).slice(0, 10).forEach((x, i) => {
+    const f = el("figure"), im = el("img", "mp"); im.alt = K.str(x.cap, 60); im.loading = "lazy"; im.src = K.img(x.photo);
+    const cl = el("img", "clip"); cl.src = "/assets/wildflower/clip.webp"; cl.alt = ""; f.appendChild(cl);
+    const tk = ["gerbera", "crocus", "lilyred", "daisies", "driedflower"][i % 5];
+    if (i % 2 === 0) { const t = el("img", "tuck"); t.src = `/assets/wildflower/${tk}.webp`; t.alt = ""; t.loading = "lazy"; f.appendChild(t); }
     f.appendChild(im); f.appendChild(el("figcaption", "", K.str(x.cap, 60))); st.appendChild(f);
   });
   $("moments").hidden = !st.children.length;
@@ -582,6 +685,19 @@ function render(D, first) {
   const set = open => { sec.classList.toggle("open", open); env.setAttribute("aria-expanded", open); if (open) setTimeout(() => $("note").scrollIntoView({ behavior: "smooth", block: "center" }), 500); };
   env.onclick = () => set(true);
   $("reclose").onclick = () => set(false);
+})();
+
+// a few leaves and petals drifting down
+(function () {
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const box = $("drift"), srcs = ["ivyleaf", "petal", "ivyleaf", "driedflower", "petal", "ivyleaf"], n = innerWidth < 600 ? 4 : 6;
+  for (let i = 0; i < n; i++) {
+    const p = new Image(); p.src = `/assets/wildflower/${srcs[i]}.webp`; p.alt = "";
+    p.style.left = (5 + Math.random() * 90) + "vw";
+    p.style.setProperty("--s", (22 + Math.random() * 20) + "px"); p.style.setProperty("--t", (18 + Math.random() * 12) + "s");
+    p.style.setProperty("--dl", (-Math.random() * 28) + "s"); p.style.setProperty("--x", ((Math.random() * 80) - 40) + "px");
+    box.appendChild(p);
+  }
 })();
 
 K.boot("wildflower", render);
