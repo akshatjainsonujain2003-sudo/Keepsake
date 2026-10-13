@@ -352,9 +352,9 @@ section{position:relative;padding:clamp(80px,12vw,150px) 0}
 .note .pstamp img{width:100%;height:100%;object-fit:cover}
 .note .dfl{left:-38px;bottom:-30px;width:90px;rotate:-20deg}
 
-.someday .listwrap{background:url(/assets/wildflower/parchment.webp) center/100% 100% no-repeat;padding:clamp(96px,13vw,124px) clamp(34px,6vw,64px) clamp(56px,8vw,76px)}
-.someday .scrawl{margin-left:clamp(40px,8vw,70px)}
-@media(max-width:620px){.someday .listwrap{padding:150px 34px 84px 40px}.someday li{font-size:18px;padding:10px 0}.someday .scrawl{font-size:34px}}
+.someday .listwrap{background:url(/assets/wildflower/crumpled.webp) center/cover,var(--paper);background-blend-mode:multiply;padding:clamp(44px,6vw,60px) clamp(24px,5vw,50px) clamp(34px,5vw,46px);rotate:-1deg;box-shadow:0 1px 0 var(--rule),0 28px 46px -28px #2a292277}
+.someday .listwrap::before{content:"";position:absolute;top:-13px;left:50%;width:120px;height:28px;margin-left:-60px;rotate:3deg;background:repeating-linear-gradient(45deg,#ffffff55 0 6px,#0000 6px 12px),#c9d3b8;opacity:.92}
+@media(max-width:620px){.someday li{font-size:18px;padding:11px 0}.someday .scrawl{font-size:34px}}
 .someday li{border-top-color:#5b3f2433}
 .someday .ph{position:relative}
 .someday .ink{position:absolute;z-index:0;left:-14%;top:-10%;width:70%;mix-blend-mode:multiply;opacity:.75}
