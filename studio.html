@@ -1465,7 +1465,7 @@ window.qrcode=function(typeNumber,errorLevel){
 
 <section class="section" id="templates">
 <div class="wrap">
-<div class="sectionHead reveal"><div class="script">choose your paper</div><h2>Ten little worlds.</h2></div>
+<div class="sectionHead reveal"><div class="script">choose your paper</div><h2>Sixteen little worlds.</h2></div>
 <div class="templates" id="templateGrid"></div>
 </div>
 </section>
@@ -1480,9 +1480,9 @@ window.qrcode=function(typeNumber,errorLevel){
 <div class="field"><label>Heading</label><input id="title" value="Our Memories" maxlength="50"></div>
 <div class="field"><label>Quote</label><textarea id="quote" maxlength="180">Every moment with you is a beautiful memory.</textarea></div>
 <div class="field"><label>Cover image</label><div class="upload">Choose a photo from your phone<input id="coverFile" type="file" accept="image/*"></div></div>
-<div class="field"><label>Cover photo link (optional)</label><input id="coverUrl" type="url" placeholder="https://.../photo.jpg"></div><div class="mediaHint" id="mediaStatus">Photos from your phone show in the preview only. For the QR/link, paste a hosted photo link so the code stays small and easy to scan.</div>
+<div class="field"><label>Or paste a photo link (optional)</label><input id="coverUrl" type="url" placeholder="https://.../photo.jpg"></div><div class="mediaHint" id="mediaStatus">Pick a photo from your phone. It is saved with your card.</div>
 <div class="field stdF"><label>Memories</label>
-<div class="row2"><input id="label0" value="Photo gallery" placeholder="Button name"><input id="value0" placeholder="Image URLs separated by spaces"></div>
+<div class="row2"><input id="label0" value="Photo gallery" placeholder="Button name"><input id="value0" placeholder="Photo links, or add photos below"></div><label class="upload" style="margin-top:8px">+ Add photos to the gallery<input id="galleryFile" type="file" accept="image/*" multiple></label>
 <div class="row2" style="margin-top:10px"><input id="label1" value="Watch our video"><input id="value1" placeholder="YouTube / MP4 link"></div>
 <div class="row2" style="margin-top:10px"><input id="label2" value="Our song"><input id="value2" placeholder="Spotify / MP3 link"></div>
 <div class="row2" style="margin-top:10px"><input id="label3" value="A special message"><textarea id="value3" placeholder="Write a private message"></textarea></div>
@@ -1710,11 +1710,17 @@ async function optimizeCoverFile(file){
 }
 function bindLive(){
  ["title","quote","coverUrl","label0","value0","label1","value1","label2","value2","label3","value3"].forEach(id=>$("#"+id).addEventListener("input",()=>{short="";longLink="";renderPreview();persistDraft();}));
- $("#coverFile").onchange=async e=>{const f=e.target.files?.[0];if(!f)return;const input=e.target;input.disabled=true;toast("Optimizing your photo…");$("#mediaStatus").textContent="Optimizing a high-resolution original for a fast, elegant keepsake…";try{localCover=await optimizeCoverFile(f);localThumb=await makeThumb(f);longLink="";d.p=localCover;$("#coverUrl").value="";if(SHOP){try{const u=await uploadData(localCover);d.p=u;$("#coverUrl").value=u;localCover="";toast("Photo saved with your card ♡")}catch(x){toast(x.message||"Upload failed.")}}short="";renderPreview();persistDraft();toast("Large photo optimized beautifully ♡");$("#mediaStatus").textContent="Photo optimized locally • original quality preserved as closely as possible within a shareable web format."}catch(err){toast(err?.message||"Could not process that image");$("#mediaStatus").textContent=err?.message||"Could not process that image.";input.value=""}finally{input.disabled=false}};
+ $("#galleryFile").onchange=e=>{const fs=[...(e.target.files||[])];e.target.value="";if(fs.length)addGallery(fs)};
+ $("#coverFile").onchange=async e=>{const f=e.target.files?.[0];if(!f)return;const input=e.target;input.disabled=true;toast("Optimizing your photo…");$("#mediaStatus").textContent="Optimizing a high-resolution original for a fast, elegant keepsake…";try{localCover=await optimizeCoverFile(f);localThumb=await makeThumb(f);longLink="";d.p=localCover;$("#coverUrl").value="";if(SHOP||CUSTOMER){try{const u=await uploadData(localCover);d.p=u;$("#coverUrl").value=u;localCover="";toast("Photo saved with your card ♡")}catch(x){toast(x.message||"Upload failed.")}}short="";renderPreview();persistDraft();toast("Large photo optimized beautifully ♡");$("#mediaStatus").textContent=(SHOP||CUSTOMER)?"Photo added to your card ♡":"Photo added. It will be saved with your card when you tap Save."}catch(err){toast(err?.message||"Could not process that image");$("#mediaStatus").textContent=err?.message||"Could not process that image.";input.value=""}finally{input.disabled=false}};
  $$("#styleOptions .pill").forEach(b=>b.onclick=()=>{$$("#styleOptions .pill").forEach(x=>x.classList.remove("active"));b.classList.add("active");renderPreview();persistDraft()});
 }
-function persistDraft(){try{localStorage.setItem("keepsake-draft-v18",JSON.stringify({d,currentTemplate,qrStyle,heart,quickStyle:$("#styleOptions .active")?.dataset.style||"classic"}))}catch(e){}}
-function restoreDraft(){try{const x=JSON.parse(localStorage.getItem("keepsake-draft-v18")||"null");if(!x?.d)return;d=x.d;currentTemplate=x.currentTemplate||currentTemplate;qrStyle=x.qrStyle||qrStyle;heart=x.heart!==false;const sb=$("#styleOptions [data-style=\""+(x.quickStyle||"classic")+"\"]");if(sb){$$("#styleOptions .pill").forEach(b=>b.classList.remove("active"));sb.classList.add("active")}}catch(e){}}
+async function addGallery(files){
+ if(!SHOP&&!CUSTOMER){persistDraft();toast("Log in or create a free account to add photos ♡");setTimeout(()=>location.href="/account?next="+encodeURIComponent("/studio?resume=1"),1400);return}
+ const inp=$("#value0");let n=0;
+ for(const f of [...files].slice(0,12)){toast("Adding photo "+(n+1)+"…");try{const u=await uploadData(await fileToData(f));inp.value=(inp.value.trim()+" "+location.origin+u).trim();n++}catch(x){toast(x.message||"Upload failed.");break}}
+ if(n){inp.dispatchEvent(new Event("input"));toast(n===1?"Photo added ♡":n+" photos added ♡")}}
+function persistDraft(){const x={d,currentTemplate,qrStyle,heart,quickStyle:$("#styleOptions .active")?.dataset.style||"classic"};try{localStorage.setItem("keepsake-draft-v18",JSON.stringify({...x,lc:localCover||""}))}catch(e){try{localStorage.setItem("keepsake-draft-v18",JSON.stringify(x))}catch(e2){}}}
+function restoreDraft(){try{const x=JSON.parse(localStorage.getItem("keepsake-draft-v18")||"null");if(!x?.d)return;d=x.d;if(/^data:image\//i.test(x.lc||""))localCover=x.lc;else if(/^data:image\//i.test(d.p||""))localCover=d.p;currentTemplate=x.currentTemplate||currentTemplate;qrStyle=x.qrStyle||qrStyle;heart=x.heart!==false;const sb=$("#styleOptions [data-style=\""+(x.quickStyle||"classic")+"\"]");if(sb){$$("#styleOptions .pill").forEach(b=>b.classList.remove("active"));sb.classList.add("active")}}catch(e){}}
 function hydrateForm(){ if(typeof cSync==="function")cSync();try{$("#title").value=d.t||DEF.t;$("#quote").value=d.q||DEF.q;$("#coverUrl").value=d.p||"";for(let i=0;i<4;i++){if($("#label"+i))$("#label"+i).value=d.i?.[i]?.l||DEF.i[i].l;if($("#value"+i))$("#value"+i).value=d.i?.[i]?.v||""}}catch(e){}}
 async function fetchText(url,ms=7000,opt={}){const c=new AbortController();const t=setTimeout(()=>c.abort(),ms);try{const r=await fetch(url,{mode:"cors",signal:c.signal,cache:"no-store",...opt});if(!r.ok)throw new Error(String(r.status));return await r.text()}finally{clearTimeout(t)}}
 async function shortenVia(host,u){
@@ -1785,10 +1791,11 @@ async function publishSite(){
 }
 function needHost(msg){setStatus("#linkStatus",msg,false);const dt=document.querySelector("#link details");if(dt)dt.open=true;const f=$("#siteUrl");if(f){f.scrollIntoView({behavior:"smooth",block:"center"});f.focus({preventScroll:true})}}
 async function generate(){
+ const pend=localCover||(/^data:image\//i.test(d.p||"")?d.p:"");
  const btn=$("#generateBtn");btn.disabled=true;syncForm();persistDraft();short="";longLink="";
  try{
  if(!CUSTOMER&&!SHOP){persistDraft();setStatus("#generateStatus","Log in or create a free account to save your card…",true);location.href="/account?next="+encodeURIComponent("/studio?resume=1");return}
- if(CUSTOMER){const le=LOCK&&LOCK.check();if(le)throw new Error(le);setStatus("#generateStatus","Saving to your account…",true);let r=await saveMemory();if(r.status===404&&EDIT_ID){EDIT_ID=null;r=await saveMemory()}const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||"Could not save this memory.");setEdit(j.id);if(LOCK)LOCK.set(j.locked);persistDraft();btn.disabled=false;
+ if(CUSTOMER){const le=LOCK&&LOCK.check();if(le)throw new Error(le);if(pend&&!/^(https?:\/\/|\/api\/img)/i.test($("#coverUrl").value.trim())){setStatus("#generateStatus","Uploading your photo…",true);const u=await uploadData(pend);$("#coverUrl").value=u;d.p=u;localCover="";persistDraft()}setStatus("#generateStatus","Saving to your account…",true);let r=await saveMemory();if(r.status===404&&EDIT_ID){EDIT_ID=null;r=await saveMemory()}const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||"Could not save this memory.");setEdit(j.id);if(LOCK)LOCK.set(j.locked);persistDraft();btn.disabled=false;
   if(j.active){showLive(j.url);setStatus("#generateStatus","Saved. Your live card is updated ♡",true);toast("Changes saved ♡")}else{setStatus("#generateStatus","Saved to your account. Choose how to activate it below.",true);showCheckout("activate")}return}
  if(SHOP){setStatus("#generateStatus","Saving your card…",true);const r=await fetch("/api/card",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({key:SHOP.key,data:wire(d)})});const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||"Could not save the card.");short=location.origin+"/c/"+j.id;longLink=short;$("#shortLink").textContent=short;badge(short);setStatus("#linkStatus","Saved. This short link is ready for QR and NFC.",true);setStatus("#generateStatus","Ready ♡",true);drawQR();btn.disabled=false;$("#link").scrollIntoView({behavior:"smooth",block:"start"});toast("Card saved ♡");loadMine();return}
 
