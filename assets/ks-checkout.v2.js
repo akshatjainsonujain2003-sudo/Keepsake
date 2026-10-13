@@ -134,9 +134,9 @@
       const terms = [["life", state.mode === "extend" ? "Keep it forever" : "Forever", c.terms && c.terms.life.desc, "Best value"], ["d30", state.mode === "extend" ? "30 more days" : "30 days", c.terms && c.terms.d30.desc, ""]];
       $(".ks-terms").innerHTML = terms.map(([t, name, desc, tag]) => `<button type="button" class="ks-opt${t === state.term ? " on" : ""}" data-term="${t}">${tag ? `<span class="ks-tag">${tag}</span>` : ""}<b>${esc(name)}</b><span class="ks-pp">${money(total(t, t === "d30" ? "digital" : state.plan))}</span><small>${esc(state.mode === "extend" && t === "life" ? "Pay the difference once and it stays live for good." : desc || "")}</small></button>`).join("");
       // Delivery
-      const plans = state.mode === "frame" ? ["frameQr", "frameNfc"] : ["digital", "frameQr", "frameNfc"];
+      const plans = (state.mode === "frame" ? ["frameQr", "frameNfc"] : ["digital", "frameQr", "frameNfc"]).filter(p => c.delivery[p]);
       if (!plans.includes(state.plan)) state.plan = plans[0];
-      $(".ks-dblock").hidden = state.mode === "extend" && state.term === "d30";
+      $(".ks-dblock").hidden = (state.mode === "extend" && state.term === "d30") || plans.length < 2;
       $(".ks-deliv").style.gridTemplateColumns = plans.length === 2 ? "1fr 1fr" : "";
       $(".ks-deliv").innerHTML = plans.map(p => { const d = c.delivery[p]; const extra = p === "digital" ? "Included" : (state.mode === "frame" ? money(d.price) : "+" + money(d.price)); return `<button type="button" class="ks-opt${p === state.plan ? " on" : ""}" data-plan="${p}"><b>${esc(d.name)}</b><span class="ks-pp">${extra}</span><small>${esc(d.desc || "")}</small></button>`; }).join("");
       $(".ks-hint").hidden = !(isFr(state.plan) && state.mode !== "frame");
@@ -223,7 +223,7 @@
   // Next-step button under a live keepsake: "Keep it forever" for 30-day ones, otherwise "Get it in a 5x7 frame".
   async function offer(el, id, onClick) {
     const c = await catalog(), m = await info(id);
-    if (!m || !m.paid || c.free) { el.hidden = true; return; }
+    if (!m || !m.paid || c.free || (m.term !== "d30" && !c.delivery.frameQr)) { el.hidden = true; return; }
     el.hidden = false;
     const ends = m.expiresAt ? new Date(m.expiresAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) : "";
     el.innerHTML = m.term === "d30"
