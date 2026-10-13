@@ -1,12 +1,14 @@
 // Customer checkout with Razorpay.
 // GET                         -> prices and whether payments are set up (public)
-// POST {action:"create", id, plan, term, print?, photo?, address?} -> creates a Razorpay order for one of your memories
+// GET ?code=X                -> { code: { code, discount } } if X is an active creator code
+// POST {action:"create", id, plan, term, ref?, print?, photo?, address?} -> creates a Razorpay order for one of your memories
 //   term: "d30" (30 days) | "life" (forever); plan: "digital" | "frameQr" | "frameNfc" (5x7 frames, always forever); frames need a delivery address and what to print:
 //   print "photo" (with an uploaded photo) or "design" (we print the card design)
 // POST {action:"verify", razorpay_order_id, razorpay_payment_id, razorpay_signature} -> activates it
 const db = require("./_db");
 const pay = require("./_pay");
 const auth = require("./customer-auth");
+const ref = require("./_ref");
 
 const clip = (v, n) => String(v == null ? "" : v).replace(/[<>]/g, "").replace(/\s+/g, " ").trim().slice(0, n);
 
@@ -27,6 +29,12 @@ function readAddress(a) {
 
 module.exports = async (req, res) => {
   try {
+    if (req.method === "GET" && (req.query || {}).code) {
+      if (!db.ok()) return db.reply(res, 404, { error: "That code isn't valid." });
+      const r = await ref.active(req.query.code);
+      if (!r) return db.reply(res, 404, { error: "That code isn't valid." });
+      return db.reply(res, 200, { code: { code: r.code, discount: r.discount } });
+    }
     if (req.method === "GET") {
       return db.reply(res, 200, { ready: pay.configured() && db.ok(), free: !pay.configured(), currency: "INR", ...pay.catalog() });
     }
@@ -44,6 +52,12 @@ module.exports = async (req, res) => {
       if (!memory || memory.owner !== user.id) return db.reply(res, 404, { error: "Card not found in your account." });
       const amt = pay.amountFor(memory, plan, term);
       if (amt.error) return db.reply(res, 400, { error: amt.error });
+      // A creator's code takes a discount off the digital part and records their commission.
+      let code = null, off = 0, commission = 0;
+      if (b.ref) {
+        code = await ref.active(b.ref);
+        if (code) { const x = ref.apply(code, amt.rupees, amt.frame); off = x.discount; commission = x.commission; amt.rupees = x.rupees; }
+      }
       let address = null, frame = null;
       if (pay.isFrame(plan)) {
         const a = readAddress(b.address); if (a.error) return db.reply(res, 400, { error: a.error }); address = a.addr;
@@ -62,12 +76,13 @@ module.exports = async (req, res) => {
       const order = await pay.createOrder({ rupees: amt.rupees, receipt: "ks_" + id, notes: { memory: id, plan, customer: user.id } });
       await db.setj("order:" + order.id, {
         memory: id, title: memory.title || "", owner: user.id, name: user.name, email: user.email, phone: user.phone || "",
-        kind: pay.kindOf(memory), plan, term: amt.term, step: amt.step, frame, upgrade: amt.upgrade, amount: amt.rupees, address, status: "created", created: Date.now()
+        kind: pay.kindOf(memory), plan, term: amt.term, step: amt.step, frame, upgrade: amt.upgrade, amount: amt.rupees,
+        ...(code ? { ref: code.code, refDiscount: off, commission } : {}), address, status: "created", created: Date.now()
       }, "EX", 60 * 60 * 24 * 30);
       return db.reply(res, 200, {
         keyId: pay.keyId(), orderId: order.id, amount: order.amount, currency: order.currency,
         prefill: { name: user.name, email: user.email, contact: user.phone || (address && address.phone) || "" },
-        description: pay.describe(memory, plan, amt), amountRupees: amt.rupees, term: amt.term, step: amt.step
+        description: pay.describe(memory, plan, amt) + (code ? " (code " + code.code + ")" : ""), amountRupees: amt.rupees, term: amt.term, step: amt.step, ref: code ? code.code : null
       });
     }
 

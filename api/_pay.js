@@ -17,7 +17,7 @@ function catalog() {
   const c = {
     products: {
       card: { name: "Template card", price: rupees(env.PRICE_TEMPLATE, 149), price30: rupees(env.PRICE_TEMPLATE_30, 49), desc: "One beautiful memory card from our designs." },
-      site: { name: "Website", price: rupees(env.PRICE_WEBSITE, 399), price30: rupees(env.PRICE_WEBSITE_30, 149), desc: "A full page for your story: photos, your song, letters and little surprises." }
+      site: { name: "Website", price: rupees(env.PRICE_WEBSITE, 499), price30: rupees(env.PRICE_WEBSITE_30, 199), desc: "A full page for your story: photos, your song, letters and little surprises." }
     },
     terms: {
       d30: { name: "30 days", desc: "Live for 30 days. Perfect for a birthday or anniversary surprise. Keep it forever any time." },
@@ -48,13 +48,13 @@ function amountFor(memory, plan, term) {
   if (!TERMS.includes(term)) term = "life";
   if (isFrame(plan)) term = "life";
   const P = c.products[kindOf(memory)], active = memory.paid !== false, frame = c.delivery[plan].price;
-  if (!active) return { rupees: (term === "d30" ? P.price30 : P.price) + frame, upgrade: false, term, step: "activate" };
+  if (!active) return { rupees: (term === "d30" ? P.price30 : P.price) + frame, frame, upgrade: false, term, step: "activate" };
   if (isThirty(memory)) {
-    if (term === "life") return { rupees: Math.max(0, P.price - P.price30) + frame, upgrade: true, term, step: "forever" };
-    return { rupees: P.price30, upgrade: true, term, step: "extend" };
+    if (term === "life") return { rupees: Math.max(0, P.price - P.price30) + frame, frame, upgrade: true, term, step: "forever" };
+    return { rupees: P.price30, frame: 0, upgrade: true, term, step: "extend" };
   }
   if (!isFrame(plan)) return { error: "This keepsake is already live forever." };
-  return { rupees: frame, upgrade: true, term: "life", step: "frame" };
+  return { rupees: frame, frame, upgrade: true, term: "life", step: "frame" };
 }
 function describe(memory, plan, amt) {
   const c = catalog(), product = c.products[kindOf(memory)].name;
@@ -121,6 +121,7 @@ async function markPaid(orderId, paymentId) {
       await db.setj(mk, memory);
     }
     await db.cmd("ZADD", "orders-paid", order.paidAt, orderId);
+    if (order.ref) await db.cmd("ZADD", "ref-orders:" + order.ref, order.paidAt, orderId);
     return order;
   } finally {
     await db.cmd("DEL", "order-lock:" + orderId);

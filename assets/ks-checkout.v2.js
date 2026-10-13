@@ -38,6 +38,10 @@
 .ksco .ks-pay:disabled{opacity:.6;cursor:wait}
 .ksco .ks-status{min-height:1.3em;margin-top:10px;font-size:14px}.ksco .ks-status.bad{color:#ff9aa8}.ksco .ks-status.ok{color:#9ad8b0}
 .ksco [hidden]{display:none!important}
+.ksco .ks-code{margin-top:14px;font-size:14px}.ksco .ks-code a,.ksco .ks-code button.ks-link{color:var(--gold);background:none;border:0;padding:0;font:inherit;cursor:pointer;text-decoration:underline}
+.ksco .ks-crow{display:flex;gap:8px;margin-top:8px}.ksco .ks-crow input{flex:1;text-transform:uppercase}
+.ksco .ks-crow button{padding:0 18px;border-radius:12px;border:1px solid var(--gold);background:transparent;color:var(--gold);font:inherit;cursor:pointer}
+.ksco .ks-on{color:#9ad8b0}
 @media(max-width:620px){.ksco .ks-opts,.ksco .ks-grid{grid-template-columns:1fr}}
 .kslock{display:flex;flex-direction:column;gap:8px}.kslock .kl-row{display:flex;gap:10px;align-items:center;cursor:pointer}
 .kslock input[type=checkbox]{width:20px;height:20px;accent-color:#d6b06a}
@@ -73,11 +77,17 @@
     return window.Razorpay ? Promise.resolve() : new Promise((ok, no) => { const sc = document.createElement("script"); sc.src = "https://checkout.razorpay.com/v1/checkout.js"; sc.onload = ok; sc.onerror = () => no(new Error("Could not load the payment window. Check your connection and try again.")); document.head.appendChild(sc); });
   }
 
+  // Creator codes: ks-ref.v1.js saves ?ref=CODE from the link someone clicked; it's applied here at checkout.
+  const REF_KEY = "ks-ref", REF_DAYS = 30;
+  function savedCode() { try { const r = JSON.parse(localStorage.getItem(REF_KEY) || "null"); return r && r.code && Date.now() - r.at < REF_DAYS * 864e5 ? r.code : ""; } catch (e) { return ""; } }
+  function saveCode(code) { try { code ? localStorage.setItem(REF_KEY, JSON.stringify({ code, at: Date.now() })) : localStorage.removeItem(REF_KEY); } catch (e) {} }
+  async function checkCode(v) { try { const j = await json("/api/checkout?code=" + encodeURIComponent(v), { cache: "no-store" }); return j.code || null; } catch (e) { return null; } }
+
   let CATALOG = null;
   async function catalog() {
     if (CATALOG) return CATALOG;
     try { CATALOG = await json("/api/checkout", { cache: "no-store" }); } catch (e) { CATALOG = null; }
-    return CATALOG || { products: { card: { name: "Template card", price: 149, price30: 49 }, site: { name: "Website", price: 399, price30: 149 } }, terms: { d30: { name: "30 days", desc: "" }, life: { name: "Forever", desc: "" } }, delivery: { digital: { name: "Digital", price: 0, desc: "" }, frameQr: { name: "5×7 photo frame with QR", price: 599, desc: "" }, frameNfc: { name: "5×7 photo frame with NFC", price: 899, desc: "" } } };
+    return CATALOG || { products: { card: { name: "Template card", price: 149, price30: 49 }, site: { name: "Website", price: 499, price30: 199 } }, terms: { d30: { name: "30 days", desc: "" }, life: { name: "Forever", desc: "" } }, delivery: { digital: { name: "Digital", price: 0, desc: "" }, frameQr: { name: "5×7 photo frame with QR", price: 599, desc: "" }, frameNfc: { name: "5×7 photo frame with NFC", price: 899, desc: "" } } };
   }
 
   // opts: { kind: "card"|"site", getId(): string, customer(): {name, phone}|null, onPaid(result) }
@@ -102,21 +112,28 @@
   <label class="ks-f">PIN code<input class="ks-in" data-a="pincode" inputmode="numeric" autocomplete="postal-code" maxlength="6"></label>
  </div>
 </div>
+<div class="ks-code"><span class="ks-con" hidden></span><button type="button" class="ks-link ks-cask">Have a code?</button><div class="ks-crow" hidden><input class="ks-in ks-cin" maxlength="20" autocomplete="off" placeholder="Enter code" aria-label="Discount code"><button type="button" class="ks-capply">Apply</button></div></div>
 <button type="button" class="ks-pay">Pay</button><div class="ks-status" role="status"></div>
 <p class="ks-fine">Secure payment by Razorpay: UPI, cards, net banking and wallets. By paying you agree to our <a href="/terms" target="_blank" style="color:inherit">Terms</a> and <a href="/refunds" target="_blank" style="color:inherit">Refund policy</a>.</p>`;
     const $ = s => el.querySelector(s);
-    const state = { mode: "activate", term: "life", plan: "digital", print: "", photo: "", cat: null, memory: null };
+    const state = { mode: "activate", term: "life", plan: "digital", print: "", photo: "", cat: null, memory: null, code: null };
     const status = (t, cls) => { const s = $(".ks-status"); s.textContent = t || ""; s.className = "ks-status" + (cls ? " " + cls : ""); };
     const isFr = p => p === "frameQr" || p === "frameNfc";
     // Mirrors the server's pricing (api/_pay.js amountFor) so the buttons show the right amounts.
-    function total(term, plan) {
-      const c = state.cat; if (!c) return 0;
+    function full(term, plan) {
+      const c = state.cat; if (!c) return { sum: 0, frame: 0 };
       const P = c.products[opts.kind], fr = c.delivery[plan].price;
       if (isFr(plan)) term = "life";
-      if (state.mode === "frame") return fr;
-      if (state.mode === "extend") return term === "life" ? Math.max(0, P.price - P.price30) + fr : P.price30;
-      return (term === "d30" ? P.price30 : P.price) + fr;
+      if (state.mode === "frame") return { sum: fr, frame: fr };
+      if (state.mode === "extend") return term === "life" ? { sum: Math.max(0, P.price - P.price30) + fr, frame: fr } : { sum: P.price30, frame: 0 };
+      return { sum: (term === "d30" ? P.price30 : P.price) + fr, frame: fr };
     }
+    // A creator's code takes its discount off the keepsake itself, never the frame (same as api/_ref.js).
+    function total(term, plan) {
+      const f = full(term, plan); if (!state.code) return f.sum;
+      return f.sum - Math.round(Math.max(0, f.sum - f.frame) * state.code.discount / 100);
+    }
+    const was = (term, plan) => { const a = full(term, plan).sum, b = total(term, plan); return b < a ? `<span class="ks-was">${money(a)}</span>` : ""; };
     function render() {
       const c = state.cat, m = state.memory, kindWord = opts.kind === "site" ? "website" : "card";
       if (isFr(state.plan)) state.term = "life";
@@ -132,7 +149,7 @@
       $(".ks-tblock").hidden = state.mode === "frame";
       $(".ks-tq").textContent = state.mode === "extend" ? "What would you like?" : "How long should it stay live?";
       const terms = [["life", state.mode === "extend" ? "Keep it forever" : "Forever", c.terms && c.terms.life.desc, "Best value"], ["d30", state.mode === "extend" ? "30 more days" : "30 days", c.terms && c.terms.d30.desc, ""]];
-      $(".ks-terms").innerHTML = terms.map(([t, name, desc, tag]) => `<button type="button" class="ks-opt${t === state.term ? " on" : ""}" data-term="${t}">${tag ? `<span class="ks-tag">${tag}</span>` : ""}<b>${esc(name)}</b><span class="ks-pp">${money(total(t, t === "d30" ? "digital" : state.plan))}</span><small>${esc(state.mode === "extend" && t === "life" ? "Pay the difference once and it stays live for good." : desc || "")}</small></button>`).join("");
+      $(".ks-terms").innerHTML = terms.map(([t, name, desc, tag]) => `<button type="button" class="ks-opt${t === state.term ? " on" : ""}" data-term="${t}">${tag ? `<span class="ks-tag">${tag}</span>` : ""}<b>${esc(name)}</b><span class="ks-pp">${money(total(t, t === "d30" ? "digital" : state.plan))}${was(t, t === "d30" ? "digital" : state.plan)}</span><small>${esc(state.mode === "extend" && t === "life" ? "Pay the difference once and it stays live for good." : desc || "")}</small></button>`).join("");
       // Delivery
       const plans = (state.mode === "frame" ? ["frameQr", "frameNfc"] : ["digital", "frameQr", "frameNfc"]).filter(p => c.delivery[p]);
       if (!plans.includes(state.plan)) state.plan = plans[0];
@@ -146,6 +163,12 @@
       $(".ks-photo").hidden = state.print !== "photo";
       const img = $(".ks-photo img"); img.hidden = !state.photo; if (state.photo) img.src = state.photo;
       $(".ks-up").firstChild.textContent = state.photo ? "Change photo" : "Upload photo to print";
+      // Creator code
+      const cd = state.code, off = cd && full(state.term, state.plan).sum - total(state.term, state.plan);
+      $(".ks-code").hidden = state.mode === "frame";
+      $(".ks-con").hidden = !cd; $(".ks-cask").hidden = !!cd;
+      if (cd) $(".ks-con").innerHTML = `<span class="ks-on">✓ Code ${esc(cd.code)} applied: ${cd.discount}% off${off ? " (you save " + money(off) + ")" : ""}</span> · <button type="button" class="ks-link ks-cdel">Remove</button>`;
+      if (cd) $(".ks-crow").hidden = true;
       const amt = money(total(state.term, state.plan));
       $(".ks-pay").textContent = state.mode === "frame" ? `Pay ${amt} & order frame`
         : state.mode === "extend" ? (state.term === "life" ? `Pay ${amt} & keep it forever` : `Pay ${amt} for 30 more days`)
@@ -156,8 +179,19 @@
       const o = e.target.closest(".ks-opt");
       if (o && o.dataset.term) { state.term = o.dataset.term; if (state.term === "d30" && isFr(state.plan)) state.plan = "digital"; status(""); render(); return; }
       if (o && o.dataset.plan) { state.plan = o.dataset.plan; status(""); render(); return; }
-      const p = e.target.closest(".ks-pill"); if (p) { state.print = p.dataset.print; status(""); render(); }
+      const p = e.target.closest(".ks-pill"); if (p) { state.print = p.dataset.print; status(""); render(); return; }
+      if (e.target.closest(".ks-cask")) { $(".ks-crow").hidden = false; $(".ks-cask").hidden = true; $(".ks-cin").focus(); return; }
+      if (e.target.closest(".ks-cdel")) { state.code = null; saveCode(null); status(""); render(); return; }
+      if (e.target.closest(".ks-capply")) applyCode($(".ks-cin").value, true);
     });
+    $(".ks-cin").addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); applyCode(e.target.value, true); } });
+    async function applyCode(v, loud) {
+      v = String(v || "").trim(); if (!v) { if (loud) status("Enter a code first.", "bad"); return; }
+      const c = await checkCode(v);
+      if (c) { state.code = c; saveCode(c.code); if (loud) status(""); render(); }
+      else if (loud) status("That code isn't valid.", "bad");
+      else saveCode(null);
+    }
     $(".ks-photo input").addEventListener("change", async e => {
       const f = e.target.files && e.target.files[0]; e.target.value = ""; if (!f) return;
       status("Uploading your photo…");
@@ -168,6 +202,7 @@
     async function pay() {
       const id = opts.getId(); if (!id) { status("Save first ♡", "bad"); return; }
       const body = { action: "create", id, plan: state.plan, term: isFr(state.plan) ? "life" : state.term };
+      if (state.code && state.mode !== "frame") body.ref = state.code.code;
       if (isFr(state.plan)) {
         if (!state.print) { status("Choose what to print in the frame.", "bad"); return; }
         if (state.print === "photo" && !state.photo) { status("Upload the photo you'd like printed.", "bad"); return; }
@@ -203,6 +238,7 @@
         state.mode = !m || !m.paid ? "activate" : m.term === "d30" ? "extend" : "frame";
         if (state.mode === "frame" && !isFr(state.plan)) state.plan = "frameQr";
         if (state.mode !== "frame") state.term = "life";
+        if (!state.code && state.mode !== "frame") { const saved = savedCode(); if (saved) await applyCode(saved, false); }
         const cu = opts.customer && opts.customer();
         if (cu) { const n = el.querySelector('[data-a="name"]'), ph = el.querySelector('[data-a="phone"]'); if (!n.value) n.value = cu.name || ""; if (!ph.value) ph.value = cu.phone || ""; }
         render();

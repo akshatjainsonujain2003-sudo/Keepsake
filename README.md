@@ -64,11 +64,21 @@ There is no build step and no npm dependencies.
    - `RESEND_API_KEY` and `RESEND_FROM_EMAIL`: for customer password reset emails
    - `RAZORPAY_KEY_ID` and `RAZORPAY_KEY_SECRET`: from Razorpay Dashboard → Account & Settings → API Keys
    - `RAZORPAY_WEBHOOK_SECRET`: a secret you choose when adding the webhook below
-   - Optional prices in rupees: `PRICE_TEMPLATE` (forever, 149), `PRICE_TEMPLATE_30` (30 days, 49), `PRICE_WEBSITE` (forever, 399), `PRICE_WEBSITE_30` (30 days, 149), `PRICE_FRAME_QR` (5×7 frame, 599), `PRICE_FRAME_NFC` (5×7 frame, 899). Frames are added on top and always include forever. A 30-day keepsake can go forever by paying the difference, or add 30 more days.
+   - Optional prices in rupees: `PRICE_TEMPLATE` (forever, 149), `PRICE_TEMPLATE_30` (30 days, 49), `PRICE_WEBSITE` (forever, 499), `PRICE_WEBSITE_30` (30 days, 199), `PRICE_FRAME_QR` (5×7 frame, 599), `PRICE_FRAME_NFC` (5×7 frame, 899). Frames are added on top and always include forever. A 30-day keepsake can go forever by paying the difference, or add 30 more days.
    - `FRAMES`: set to `off` to pause photo-frame orders (digital keeps selling).
    - `META_PIXEL_ID`: optional Facebook (Meta) Pixel ID for ad measurement. It never runs on keepsake pages that recipients open.
 4. In Razorpay Dashboard → Webhooks, add `https://<your-domain>/api/razorpay-webhook` with the events `payment.captured` and `order.paid`, using the same webhook secret. Keep payment capture set to automatic.
 5. Use the production domain (not a preview URL) for QR codes and NFC tags. If scanners hit a Vercel login, turn off Deployment Protection in Project Settings.
+
+## Creator codes
+
+Give creators and influencers their own code (for example `PRIYA10`) from **/admin → Creator codes**.
+
+- Buyers get the creator's discount (10% by default) on the keepsake itself. Frames are never discounted.
+- The creator earns a commission (25% by default) on what the buyer paid for the keepsake.
+- Share link: `https://getkeepsake.in/?ref=PRIYA10`. The code is remembered for 30 days and applied at checkout automatically. Buyers can also type it in under "Have a code?".
+- Each creator gets a private stats page (`/creator?code=…&key=…`, copy it from admin) showing their sales and what they're owed, without any customer details.
+- Pay creators yourself (UPI) and record each payout in admin so "owed" stays correct. Pause a code any time.
 
 ## Before launch
 
