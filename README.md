@@ -31,7 +31,7 @@ templates/      Designed website templates, filled from saved data
   admin         Admin panel: paid orders, NFC cards to ship, enquiries, shops
 assets/         Theme images (name.webp), thumbnails (t-name.webp), CSS and JS
   ks-checkout.v1.js    Shared checkout, password field and unlock screen
-  ks-templates.v1.js   Template kit: demo content, builder fields, safe rendering helpers
+  ks-templates.v2.js   Template kit: demo content, builder fields, safe rendering helpers
   wildflower/, candlelit/   Cut-out decorations for the templates
   site-render.v1.js    Older section-based websites (kept for sites saved before the templates)
   site-themes.v1.css   Their four themes
