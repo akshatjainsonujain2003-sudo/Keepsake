@@ -79,6 +79,31 @@
         { when: "we've had a fight", msg: "I'm already sorry. Let's get chai and start over." }
       ],
       song: { url: "", title: "Slow Mornings", note: "the one from our first drive" }
+    },
+    mixtape: {
+      v: 1, tpl: "mixtape", a: "Meera", b: "Aarav", tagline: "my favourite person",
+      date: "2021-03-12T18:30", place: "a tiny café in Udaipur",
+      photos: { hero: P.heroTall, hero2: P.rain, first: P.cafe, cover: P.sunset, end: P.steps },
+      words: "my person, 2am talks, home, always you, inside jokes, us",
+      firstDate: "two coffees, gone cold", firstNote: "you ordered for me. you got it wrong. i didn't mind one bit.",
+      countdown: true,
+      filmIntro: "every frame, a little bit of us.",
+      moments: [
+        { photo: P.twirl, cap: "one more spin" }, { photo: P.seaside, cap: "the wrong ferry" }, { photo: P.rain, cap: "one umbrella" }, { photo: P.hands, cap: "your hand" },
+        { photo: P.wheat, cap: "the long drive" }, { photo: P.lakedance, cap: "dancing badly" }, { photo: P.heroWide, cap: "sunday walks" }, { photo: P.sunset, cap: "that sunset" }
+      ],
+      song: { url: "", title: "I think of you in every song", note: "they all belong to you" },
+      tracks: ["the one from our first drive", "the one you always sing wrong", "our kitchen dance song", "3am, windows down", "the one that made you cry"],
+      love: ["the way you steal my hoodies", "how you laugh at your own jokes first", "your sleepy voice on calls", "that you remember how i take my chai", "the way you hold my hand in crowds", "you, just you"],
+      sorry: "i'm sorry. you matter more than being right. let's get chai and start over?",
+      openWhen: [
+        { when: "you miss me", msg: "close your eyes. i'm thinking of you right now, promise." },
+        { when: "you can't sleep", msg: "call me. i don't care what time it is." },
+        { when: "you need a laugh", msg: "remember the wrong ferry? twice. same day." }
+      ],
+      greeting: "hey you,",
+      letter: "I don't say it enough, so here it is, written down where you can find it whenever you want: you are my favourite person. My favourite voice, my favourite hand to hold, my favourite place to come home to.\n\nThank you for every 2am talk, every bad joke and every ordinary day you made feel like something worth keeping. I'd choose you again, every single time.",
+      sign: "yours, always · Aarav"
     }
   };
 
@@ -162,10 +187,44 @@
         { key: "song.note", label: "Note about it", type: "text", max: 60 },
         { key: "photos.cover", label: "Album cover photo", type: "photo" },
         { key: "photos.end", label: "Closing portrait", type: "photo" } ] }
+    ],
+    mixtape: [
+      { group: "The two of you", fields: [
+        { key: "a", label: "First name", type: "text", max: 30 }, { key: "b", label: "Second name", type: "text", max: 30 },
+        { key: "tagline", label: "On the tag (e.g. my favourite person)", type: "text", max: 40 },
+        { key: "date", label: "The day it all began (first date, anniversary…)", type: "date" },
+        { key: "place", label: "Where it began", type: "text", max: 60 },
+        { key: "photos.hero", label: "Main photo (in the gingham frame)", type: "photo" },
+        { key: "photos.hero2", label: "Photo that comes out of the camera", type: "photo" } ] },
+      { group: "Where it started", fields: [
+        { key: "photos.first", label: "First-date photo", type: "photo" },
+        { key: "firstDate", label: "On the ticket: what you did", type: "text", max: 40 },
+        { key: "firstNote", label: "Handwritten line", type: "text", max: 140 },
+        { key: "words", label: "Words on the red band (separate with commas)", type: "text", max: 160 },
+        { key: "countdown", label: "Show how many days you've been together", type: "toggle" } ] },
+      { group: "Our film", fields: [
+        { key: "filmIntro", label: "Intro line", type: "text", max: 90 },
+        PHOTO_LIST("moments", "Photos on the film strips (4 per strip)", 8) ] },
+      { group: "Mixtape", fields: [
+        { key: "song.url", label: "Spotify song or playlist link", type: "text", max: 300, placeholder: "https://open.spotify.com/track/…" },
+        { key: "song.title", label: "Written on the cassette", type: "text", max: 50 },
+        { key: "song.note", label: "Second line on the cassette", type: "text", max: 50 },
+        { key: "photos.cover", label: "Photo in the middle of the record", type: "photo" },
+        { key: "tracks", label: "Tracklist", type: "strings", max: 8, item: "Song", add: "Add a song", itemMax: 60 } ] },
+      { group: "Things I love about you", fields: [
+        { key: "love", label: "Pinned notes", type: "strings", max: 9, item: "Something you love about them", add: "Add a note", itemMax: 90 } ] },
+      { group: "For the hard days", fields: [
+        { key: "sorry", label: "Shown when they mend the broken heart", type: "area", max: 300 },
+        { key: "openWhen", label: "Open when…", type: "list", max: 6, add: "Add a note", of: [{ key: "when", label: "Open when…", type: "text", max: 30 }, { key: "msg", label: "Note inside", type: "area", max: 200 }] } ] },
+      { group: "The letter", fields: [
+        { key: "greeting", label: "Greeting", type: "text", max: 40 },
+        { key: "letter", label: "Your letter (leave a blank line between paragraphs)", type: "area", max: 2000 },
+        { key: "sign", label: "Signed", type: "text", max: 40 },
+        { key: "photos.end", label: "Closing photo", type: "photo" } ] }
     ]
   };
-  const NAMES = { wildflower: "Wildflower", candlelit: "Candlelit" };
-  const HINTS = { wildflower: "A pressed-flower scrapbook of your story", candlelit: "A candlelit love letter, sealed in wax" };
+  const NAMES = { wildflower: "Wildflower", candlelit: "Candlelit", mixtape: "Mixtape" };
+  const HINTS = { wildflower: "A pressed-flower scrapbook of your story", candlelit: "A candlelit love letter, sealed in wax", mixtape: "Gingham, film strips and a mixtape for your favourite person" };
 
   // ---------- helpers ----------
   const str = (v, n) => String(v == null ? "" : v).slice(0, n || 4000);

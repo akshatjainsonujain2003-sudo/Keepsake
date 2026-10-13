@@ -2,7 +2,7 @@
 
 NFC and QR keepsakes for the people you love. Customers design for free, then pay once to activate (until Razorpay keys are added, everything goes live for free; see Notes):
 
-- **Template card** (studio) or **Custom website** (builder) in one of two designed templates, **Wildflower** or **Candlelit**, with the couple's own photos, Spotify song, letter, story, moments and more
+- **Template card** (studio) or **Custom website** (builder) in one of three designed templates, **Wildflower**, **Candlelit** or **Mixtape**, with the couple's own photos, Spotify song, letter, story, moments and more
 - delivered **Digital** (link, QR, NFC-ready link), or as a printed **Photo frame with QR** or **Photo frame with NFC**, printing either their photo or their card design
 - with an optional **password** that's checked on the server before anything is shown
 
@@ -27,12 +27,13 @@ Live: https://keepsake-h4ed.vercel.app
 templates/      Designed website templates, filled from saved data
   wildflower    Light, floral, scrapbook style
   candlelit     Dark, candlelit, wax-seal opening
+  mixtape       Red gingham, film strips, cassette
   dashboard     Customer's saved memories: live or not, edit, activate
   admin         Admin panel: paid orders, NFC cards to ship, enquiries, shops
 assets/         Theme images (name.webp), thumbnails (t-name.webp), CSS and JS
   ks-checkout.v1.js    Shared checkout, password field and unlock screen
   ks-templates.v2.js   Template kit: demo content, builder fields, safe rendering helpers
-  wildflower/, candlelit/   Cut-out decorations for the templates
+  wildflower/, candlelit/, mixtape/   Cut-out decorations for the templates
   site-render.v1.js    Older section-based websites (kept for sites saved before the templates)
   site-themes.v1.css   Their four themes
 api/            Vercel serverless functions
