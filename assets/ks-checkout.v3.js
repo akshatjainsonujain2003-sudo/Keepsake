@@ -3,7 +3,7 @@
                KSCheckout.offer(): the next-step button on a live keepsake (keep it forever, or get a frame).
    KSLock:     optional password field for a card or website.
    KSUnlock:   password screen shown to people who scan or tap a locked keepsake.
-   Files in /assets are cached for a year, so change the file name (v2, v3…) when editing this file. */
+   Files in /assets are cached for a year, so change the file name (v3, v4…) when editing this file. */
 (function () {
   const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const money = n => "₹" + Number(n || 0).toLocaleString("en-IN");
