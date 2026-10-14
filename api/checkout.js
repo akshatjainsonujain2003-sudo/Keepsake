@@ -1,5 +1,6 @@
 // Customer checkout with Razorpay.
 // GET                         -> prices and whether payments are set up (public)
+// GET ?creator=X&key=K     -> a creator's sales page data
 // GET ?code=X                -> { code: { code, discount } } if X is an active creator code
 // POST {action:"create", id, plan, term, ref?, print?, photo?, address?} -> creates a Razorpay order for one of your memories
 //   term: "d30" (30 days) | "life" (forever); plan: "digital" | "frameQr" | "frameNfc" (5x7 frames, always forever); frames need a delivery address and what to print:
@@ -9,6 +10,7 @@ const db = require("./_db");
 const pay = require("./_pay");
 const auth = require("./customer-auth");
 const ref = require("./_ref");
+const sameKey = (a, b) => { const x = Buffer.from(String(a || "")), y = Buffer.from(String(b || "")); return x.length === y.length && require("crypto").timingSafeEqual(x, y); };
 
 const clip = (v, n) => String(v == null ? "" : v).replace(/[<>]/g, "").replace(/\s+/g, " ").trim().slice(0, n);
 
@@ -29,6 +31,14 @@ function readAddress(a) {
 
 module.exports = async (req, res) => {
   try {
+    // A creator's own sales page: GET ?creator=CODE&key=K -> sales, revenue, commission owed (no customer details)
+    if (req.method === "GET" && (req.query || {}).creator) {
+      if (!db.ok()) return db.reply(res, 501, { error: "Storage is not configured yet." });
+      const q = req.query, r = await ref.get(q.creator);
+      if (!r || !sameKey(r.key, q.key)) return db.reply(res, 404, { error: "This link isn't valid. Ask Keepsake for your creator link." });
+      const s = await ref.stats(r);
+      return db.reply(res, 200, { code: r.code, name: r.name, discount: r.discount, commission: r.commission, active: r.active !== false, ...s });
+    }
     if (req.method === "GET" && (req.query || {}).code) {
       if (!db.ok()) return db.reply(res, 404, { error: "That code isn't valid." });
       const r = await ref.active(req.query.code);

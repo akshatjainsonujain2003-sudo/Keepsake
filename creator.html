@@ -21,7 +21,7 @@
  var q=new URLSearchParams(location.search),el=document.getElementById("cr");
  var esc=function(t){return String(t==null?"":t).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})};
  var rs=function(n){return"₹"+Number(n||0).toLocaleString("en-IN")};
- fetch("/api/ref?code="+encodeURIComponent(q.get("code")||"")+"&key="+encodeURIComponent(q.get("key")||""),{cache:"no-store"}).then(function(r){return r.ok?r.json():Promise.reject()}).then(function(d){
+ fetch("/api/checkout?creator="+encodeURIComponent(q.get("code")||"")+"&key="+encodeURIComponent(q.get("key")||""),{cache:"no-store"}).then(function(r){return r.ok?r.json():Promise.reject()}).then(function(d){
   var link=location.origin+"/?ref="+d.code;
   el.innerHTML='<h1>Hi '+esc(d.name)+' ♡</h1><p class="sub">Your code <b>'+esc(d.code)+'</b> gives your followers '+d.discount+'% off, and you earn '+d.commission+'% of every sale.'+(d.active?'':' <b style="color:#ff9aa8">This code is paused right now.</b>')+'</p>'
    +'<div class="grid"><div><b>'+d.sales+'</b><span>sales</span></div><div><b>'+rs(d.earned)+'</b><span>earned</span></div><div><b>'+rs(d.paidOut)+'</b><span>paid to you</span></div><div><b>'+rs(d.owed)+'</b><span>to be paid</span></div></div>'
