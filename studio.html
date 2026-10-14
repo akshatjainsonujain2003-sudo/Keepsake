@@ -4,8 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#3b0710">
-<title>Keepsake Studio</title><meta property="og:type" content="website"><meta property="og:site_name" content="Keepsake"><meta property="og:title" content="A keepsake made for you ♡"><meta property="og:description" content="Open it to see the photos, the song and the words someone made just for you."><meta property="og:image" content="https://getkeepsake.in/assets/og-image.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image">
-<meta name="robots" content="noindex,nofollow">
+<title>Memory Card Studio (₹99) — Design a Digital Keepsake Card | Keepsake</title>
+<link rel="canonical" href="https://getkeepsake.in/studio">
+<meta name="description" content="Design a personalised digital memory card with your photos, Spotify song, video and private note for ₹99. Share by link, QR code, NFC or printed photo frame.">
+<meta property="og:type" content="website"><meta property="og:site_name" content="Keepsake"><meta property="og:title" content="A keepsake made for you ♡"><meta property="og:description" content="Open it to see the photos, the song and the words someone made just for you."><meta property="og:image" content="https://getkeepsake.in/assets/og-image.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image">
+<meta name="robots" content="index,follow">
+<script>/* customers' own cards (/m/…, /c/…) use this page too: keep those out of search */if(/^\/(m|c)\//.test(location.pathname)){document.querySelector('meta[name=robots]').content="noindex,nofollow";document.querySelector('link[rel=canonical]').remove()}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&family=Parisienne&display=swap" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&family=Parisienne&display=swap"></noscript>
 <style>
@@ -1445,7 +1449,7 @@ window.qrcode=function(typeNumber,errorLevel){
 <body>
 <div class="topbar"><div class="wrap nav">
 <a class="brand" href="/">Keepsake</a>
-<nav class="navlinks"><a href="/">Home</a><a href="/business">Business</a><a href="#create">Create</a><a href="#link">NFC + QR</a></nav>
+<nav class="navlinks"><a href="/">Home</a><a href="/builder">Love-Story Websites (₹299)</a><a href="#create">Create Card (₹99)</a><a href="#link">Get Link &amp; QR</a></nav>
 <div class="navactions"><button class="iconbtn" id="themeBtn" title="Toggle theme">☼</button></div>
 </div></div>
 
@@ -1502,7 +1506,8 @@ window.qrcode=function(typeNumber,errorLevel){
  <div class="mediaHint">Use “Cover photo link” above for a logo or photo. For Google reviews: open your business on Google Maps → Share → paste that link as a Link button.</div>
 </div>
 <div class="field lockField"><label>Password (optional)</label><div id="lockBox"></div></div>
-<button class="btn" id="generateBtn" style="width:100%;margin-top:8px">Save &amp; get my link</button>
+<button class="btn" id="generateBtn" style="width:100%;margin-top:8px">Save &amp; Get My Card Link (₹99)</button>
+<div class="mediaHint" style="margin-top:8px;text-align:center">✨ Free to design &amp; preview. One-time ₹99 UPI payment to activate.</div>
 <div class="status" id="generateStatus"></div>
 </div>
 
@@ -1523,8 +1528,15 @@ window.qrcode=function(typeNumber,errorLevel){
 <div class="darkPanel reveal">
 <h3>Your memory link</h3>
 
-<div class="field" hidden><label style="color:#c9b99a">Page the QR opens (this site's address)</label><input id="siteUrl" type="url" placeholder="https://yourname.github.io/keepsake/"></div><div class="linkBox" id="shortLink">Save your card first.</div><div class="badge" id="byteBadge"></div>
-<div class="heroBtns"><button class="btn small" id="shortenBtn" hidden>Shorten link</button><button class="btn small ghost" id="copyBtn">Copy link</button><button class="btn small ghost" id="shareBtn">Share</button><button class="btn small ghost" id="writeBtn">Write NFC</button><button class="btn small ghost" id="testBtn">Test</button></div>
+<div class="field" hidden><label style="color:#c9b99a">Page the QR opens (this site's address)</label><input id="siteUrl" type="url" placeholder="https://yourname.github.io/keepsake/"></div><div class="linkBox" id="shortLink">Save your card above to unlock your private link &amp; QR code.</div>
+<div class="heroBtns">
+  <button class="btn small" id="shareBtn">Share on WhatsApp</button>
+  <button class="btn small ghost" id="copyBtn">Copy link</button>
+  <button class="btn small ghost" id="testBtn">Open card ↗</button>
+  <button class="btn small ghost" id="writeBtn" title="Program a physical NFC tag">Write to NFC tag</button>
+  <button class="btn small" id="shortenBtn" hidden>Shorten link</button>
+</div>
+<div class="badge" id="byteBadge" hidden></div>
 <div class="status" id="linkStatus"></div>
 <details hidden style="margin-top:14px"><summary>Host this site free — publish in one tap</summary>
 <p>Publishes this page to your own free GitHub Pages site and fills in the address for you. Your token is used only to talk to GitHub and is never saved.</p>
@@ -1889,8 +1901,7 @@ async function copyLink(){
 }
 async function shareLink(){
  const u=await ensureLink();if(!u)return;
- if(navigator.share){try{await navigator.share(isWeb(u)?{title:d.t||"Keepsake memory",text:d.q||"A memory for you ♡",url:u}:{title:d.t||"Keepsake memory",text:u});return}catch(e){if(e.name==="AbortError")return}}
- await copyLink();
+ window.open("https://wa.me/?text="+encodeURIComponent((isWeb(u)?"I made something for you ♡ ":"")+u),"_blank","noopener");
 }
 async function writeNFC(){ let u=finalLink(); if(!u){await ensureLink();return} if(isWeb(u)&&!short&&byteLen(u)>=100&&byteLen(u)<5000){try{setStatus("#linkStatus","Shortening for the tag…",true);short=await shorten(u);u=short;$("#shortLink").textContent=u;badge(u);drawQR()}catch(e){setStatus("#linkStatus","Couldn't shorten the link, so it's over 100 bytes. Check your connection and press Shorten link again.",false);return}}
  if(!u||byteLen(u)>=1000){$("#linkStatus").textContent="This memory link is large for an NFC tag. Publish the page and use a shorter page URL before writing NFC.";$("#linkStatus").className="status err";toast("NFC link is too large");return}
