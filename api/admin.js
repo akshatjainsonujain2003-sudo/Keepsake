@@ -1,4 +1,6 @@
 const db = require("./_db");
+const pp = require("./_prepaid");
+const ref = require("./_ref");
 module.exports = async (req, res) => {
   if (!db.ok()) return db.reply(res, 501, { error: "Storage not configured. Add Upstash Redis in Vercel → Storage." });
   const ak = process.env.ADMIN_KEY;
@@ -41,6 +43,31 @@ module.exports = async (req, res) => {
       o.ship = b.undo ? "to-ship" : "shipped"; o.tracking = String(b.tracking || o.tracking || "").slice(0, 120); o.shippedAt = b.undo ? null : Date.now();
       await db.setj("order:" + id, o); return db.reply(res, 200, { ok: true });
     }
+    // Creator referral codes
+    if (b.action === "codes") {
+      const codes = await db.cmd("SMEMBERS", "refcodes");
+      const rows = (await Promise.all(codes.map(async c => { const r = await ref.get(c); return r && { ...r, ...(await ref.stats(r)), recent: undefined }; }))).filter(Boolean);
+      return db.reply(res, 200, { codes: rows.sort((a, b) => b.revenue - a.revenue || b.created - a.created) });
+    }
+    if (b.action === "code-create") {
+      const x = await ref.create(b); if (x.error) return db.reply(res, 400, { error: x.error });
+      return db.reply(res, 200, { code: x.rec });
+    }
+    if (b.action === "code-toggle" || b.action === "code-payout") {
+      const r = await ref.get(b.code); if (!r) return db.reply(res, 404, { error: "Code not found." });
+      if (b.action === "code-toggle") r.active = r.active === false;
+      else { const n = Math.round(+b.amount); if (!(n > 0 && n < 10000000)) return db.reply(res, 400, { error: "Enter the amount you paid." }); r.paidOut = (+r.paidOut || 0) + n; r.payouts = [...(r.payouts || []), { at: Date.now(), amount: n }].slice(-100); }
+      await db.setj("refcode:" + r.code, r); return db.reply(res, 200, { ok: true });
+    }
+    // Prepaid QR codes for shops
+    if (b.action === "prepaid-create") {
+      const tier = b.tier === "vip" ? "site" : b.tier;
+      const x = await pp.createBatch({ count: b.count, tier, shop: b.shop, note: b.note }); if (x.error) return db.reply(res, 400, { error: x.error });
+      return db.reply(res, 200, { batch: { id: x.batch.id, count: x.batch.count } });
+    }
+    if (b.action === "prepaid-unlock") { const r = await pp.unlock(b.code); return r ? db.reply(res, 200, { ok: true, code: r.code }) : db.reply(res, 404, { error: "Code not found." }); }
+    if (b.action === "prepaid-batches") return db.reply(res, 200, { batches: await pp.batches() });
+    if (b.action === "prepaid-batch") { const x = await pp.batchCodes(b.id); return x ? db.reply(res, 200, { batch: x }) : db.reply(res, 404, { error: "Batch not found." }); }
     if (b.action === "leads") {
       const rows = (await db.cmd("LRANGE", "leads", 0, 99)).map(x => { try { return JSON.parse(x); } catch (e) { return null; } }).filter(Boolean);
       return db.reply(res, 200, { leads: rows });

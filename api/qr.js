@@ -1,0 +1,33 @@
+// Prepaid QR codes.
+// GET  /k/CODE (rewritten to ?code=CODE)  -> opens the keepsake if the code is used, otherwise the studio/builder to make one
+// GET  ?code=CODE&info=1                   -> { code, tier, status } (never the PIN)
+// POST { code, pin, id }                   -> claims the code for one of your keepsakes (must be logged in)
+const db = require("./_db");
+const auth = require("./customer-auth");
+const pp = require("./_prepaid");
+const ip = req => String(req.headers["x-forwarded-for"] || req.socket?.remoteAddress || "").split(",")[0].trim();
+const page = (res, code, title, text) => { res.setHeader("Content-Type", "text/html; charset=utf-8"); res.setHeader("Cache-Control", "no-store"); res.status(code).send(`<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>${title} · Keepsake</title><style>body{margin:0;min-height:100vh;display:grid;place-items:center;background:radial-gradient(ellipse at top,#5a0f17,#1b0306 70%);color:#f8f0df;font:17px/1.6 system-ui,sans-serif;text-align:center;padding:24px}h1{font:500 34px/1.2 Georgia,serif;color:#e4c680;margin:0 0 10px}a{display:inline-block;margin:8px 6px 0;padding:12px 22px;border-radius:999px;background:#d6b06a;color:#2a0409;font-weight:700;text-decoration:none}a.l{background:none;border:1px solid #e4c68088;color:#f8f0df}</style></head><body><div><h1>${title}</h1><p>${text}</p><a href="https://wa.me/916377547759">WhatsApp us</a><a class="l" href="/">Keepsake home</a></div></body></html>`); };
+
+module.exports = async (req, res) => {
+  if (!db.ok()) return db.reply(res, 501, { error: "Storage is not configured yet." });
+  try {
+    const q = req.query || {};
+    if (req.method === "GET") {
+      const rec = await pp.get(q.code);
+      if (q.info) return rec ? db.reply(res, 200, { code: rec.code, tier: rec.tier, status: rec.status, locked: !!rec.locked }) : db.reply(res, 404, { error: "That code isn't valid." });
+      if (!rec) return page(res, 404, "This code isn't valid", "Please check the card, or message us and we'll sort it out.");
+      if (rec.status === "claimed" && rec.memory) { res.setHeader("Cache-Control", "no-store"); return res.redirect(302, (rec.kind === "site" ? "/s/" : "/m/") + rec.memory); }
+      res.setHeader("Cache-Control", "no-store");
+      return res.redirect(302, (rec.tier === "site" ? "/builder" : "/studio") + "?claim=" + rec.code);
+    }
+    if (req.method !== "POST") { res.setHeader("Allow", "GET, POST"); return db.reply(res, 405, { error: "Method not allowed." }); }
+    const user = await auth.currentUser(req);
+    if (!user) return db.reply(res, 401, { error: "Please log in to activate your code." });
+    const b = req.body || {};
+    const r = await pp.claim({ code: b.code, pin: b.pin, id: b.id, user, ip: ip(req) });
+    if (r.error) return db.reply(res, r.status || 400, { error: r.error });
+    return db.reply(res, 200, r);
+  } catch (e) {
+    return db.reply(res, 500, { error: "Could not process the code. Please try again." });
+  }
+};

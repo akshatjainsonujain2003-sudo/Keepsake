@@ -4,8 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#3b0710">
-<title>Keepsake Studio</title><meta property="og:type" content="website"><meta property="og:site_name" content="Keepsake"><meta property="og:title" content="A keepsake made for you ♡"><meta property="og:description" content="Open it to see the photos, the song and the words someone made just for you."><meta property="og:image" content="https://getkeepsake.in/assets/og-image.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image">
-<meta name="robots" content="noindex,nofollow">
+<title>Memory Card Studio (₹99) — Design a Digital Keepsake Card | Keepsake</title>
+<link rel="canonical" href="https://getkeepsake.in/studio">
+<meta name="description" content="Design a personalised digital memory card with your photos, Spotify song, video and private note for ₹99. Share by link, QR code or NFC tap.">
+<meta property="og:type" content="website"><meta property="og:site_name" content="Keepsake"><meta property="og:title" content="A keepsake made for you ♡"><meta property="og:description" content="Open it to see the photos, the song and the words someone made just for you."><meta property="og:image" content="https://getkeepsake.in/assets/og-image.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image">
+<meta name="robots" content="index,follow">
+<script>/* customers' own cards (/m/…, /c/…) use this page too: keep those out of search */if(/^\/(m|c)\//.test(location.pathname)){document.querySelector('meta[name=robots]').content="noindex,nofollow";document.querySelector('link[rel=canonical]').remove()}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&family=Parisienne&display=swap" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&family=Parisienne&display=swap"></noscript>
 <style>
@@ -1440,12 +1444,20 @@ window.qrcode=function(typeNumber,errorLevel){
 })();
 </script>
 <style>.payPanel{max-width:760px;margin:0 auto 24px}.liveExtra{margin-top:12px}.lockField{margin-top:6px}</style>
-<script src="/assets/ks-checkout.v1.js"></script>
-<link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/svg+xml" href="/assets/icon.svg"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest"></head>
+<script src="/assets/ks-checkout.v4.js"></script><script src="/assets/ks-claim.v1.js"></script>
+<link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/svg+xml" href="/assets/icon.svg"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest"><style>
+/* phones: smaller theme tiles so the form is closer */
+@media(max-width:600px){#templates .templates{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:8px!important}#templates .template .meta b{font-size:11.5px}#templates .template .index{transform:scale(.8);transform-origin:top left}#templates .template.active::before,#templates .template.active::after{display:none!important}}
+/* no sample QR before saving */
+#qrPanel .qrBox{position:relative}
+#qrPanel.locked .qrBox img{filter:blur(7px);opacity:.35}
+#qrPanel.locked .qrBox::after{content:"Your QR code appears here after you save";position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:14px;font:600 14px/1.35 system-ui,sans-serif;color:#2a0409}
+</style>
+<script src="/assets/ks-pixel.v1.js" defer></script><script src="/assets/ks-ref.v1.js" defer></script></head>
 <body>
 <div class="topbar"><div class="wrap nav">
 <a class="brand" href="/">Keepsake</a>
-<nav class="navlinks"><a href="/">Home</a><a href="/business">Business</a><a href="#create">Create</a><a href="#link">NFC + QR</a></nav>
+<nav class="navlinks"><a href="/">Home</a><a href="/builder">Love-Story Websites (₹299)</a><a href="#create">Create Card (₹99)</a><a href="#link">Get Link &amp; QR</a></nav>
 <div class="navactions"><button class="iconbtn" id="themeBtn" title="Toggle theme">☼</button></div>
 </div></div>
 
@@ -1502,7 +1514,8 @@ window.qrcode=function(typeNumber,errorLevel){
  <div class="mediaHint">Use “Cover photo link” above for a logo or photo. For Google reviews: open your business on Google Maps → Share → paste that link as a Link button.</div>
 </div>
 <div class="field lockField"><label>Password (optional)</label><div id="lockBox"></div></div>
-<button class="btn" id="generateBtn" style="width:100%;margin-top:8px">Save &amp; get my link</button>
+<button class="btn" id="generateBtn" style="width:100%;margin-top:8px">Save &amp; Get My Card Link (₹99)</button>
+<div class="mediaHint" style="margin-top:8px;text-align:center">✨ Free to design &amp; preview. One-time ₹99 UPI payment to activate.</div>
 <div class="status" id="generateStatus"></div>
 </div>
 
@@ -1523,8 +1536,15 @@ window.qrcode=function(typeNumber,errorLevel){
 <div class="darkPanel reveal">
 <h3>Your memory link</h3>
 
-<div class="field" hidden><label style="color:#c9b99a">Page the QR opens (this site's address)</label><input id="siteUrl" type="url" placeholder="https://yourname.github.io/keepsake/"></div><div class="linkBox" id="shortLink">Save your card first.</div><div class="badge" id="byteBadge"></div>
-<div class="heroBtns"><button class="btn small" id="shortenBtn" hidden>Shorten link</button><button class="btn small ghost" id="copyBtn">Copy link</button><button class="btn small ghost" id="shareBtn">Share</button><button class="btn small ghost" id="writeBtn">Write NFC</button><button class="btn small ghost" id="testBtn">Test</button></div>
+<div class="field" hidden><label style="color:#c9b99a">Page the QR opens (this site's address)</label><input id="siteUrl" type="url" placeholder="https://yourname.github.io/keepsake/"></div><div class="linkBox" id="shortLink">Save your card above to unlock your private link &amp; QR code.</div>
+<div class="heroBtns">
+  <button class="btn small" id="shareBtn">Share on WhatsApp</button>
+  <button class="btn small ghost" id="copyBtn">Copy link</button>
+  <button class="btn small ghost" id="testBtn">Open card ↗</button>
+  <button class="btn small ghost" id="writeBtn" title="Program a physical NFC tag">Write to NFC tag</button>
+  <button class="btn small" id="shortenBtn" hidden>Shorten link</button>
+</div>
+<div class="badge" id="byteBadge" hidden></div>
 <div class="status" id="linkStatus"></div>
 <details hidden style="margin-top:14px"><summary>Host this site free — publish in one tap</summary>
 <p>Publishes this page to your own free GitHub Pages site and fills in the address for you. Your token is used only to talk to GitHub and is never saved.</p>
@@ -1533,7 +1553,7 @@ window.qrcode=function(typeNumber,errorLevel){
 <div class="heroBtns"><button class="btn small" id="publishBtn">Publish my site</button><button class="btn small ghost" id="siteBtn">Download page</button></div>
 <div class="status" id="pubStatus"></div></details>
 </div>
-<div class="darkPanel reveal">
+<div class="darkPanel reveal locked" id="qrPanel">
 <h3>Your QR code</h3>
 <div class="qrWrap"><div class="qrBox"><img id="qrImg" alt="Memory QR code"></div><div>
 
@@ -1548,7 +1568,7 @@ window.qrcode=function(typeNumber,errorLevel){
 </section>
 
 <section class="section" id="mine" hidden><div class="wrap"><h2 id="mineHeading">Your cards</h2><p id="mineIntro">Your saved memories.</p><div id="mineList"></div></div></section>
-<footer class="footer"><div class="wrap footerIn"><span class="brand">Keepsake</span><span>Made for memories that deserve more than a camera roll.</span></div></footer>
+<footer class="footer"><div class="wrap footerIn"><span class="brand">Keepsake</span><span>Made for memories that deserve more than a camera roll.</span><span style="font-size:12px"><a href="/terms" style="color:inherit">Terms</a> · <a href="/privacy" style="color:inherit">Privacy</a> · <a href="/refunds" style="color:inherit">Refunds</a></span></div></footer>
 
 <div class="toast" id="toast"></div>
 <script>
@@ -1796,7 +1816,7 @@ async function generate(){
  try{
  if(!CUSTOMER&&!SHOP){persistDraft();setStatus("#generateStatus","Log in or create a free account to save your card…",true);location.href="/account?next="+encodeURIComponent("/studio?resume=1");return}
  if(CUSTOMER){const le=LOCK&&LOCK.check();if(le)throw new Error(le);if(pend&&!/^(https?:\/\/|\/api\/img)/i.test($("#coverUrl").value.trim())){setStatus("#generateStatus","Uploading your photo…",true);const u=await uploadData(pend);$("#coverUrl").value=u;d.p=u;localCover="";persistDraft()}setStatus("#generateStatus","Saving to your account…",true);let r=await saveMemory();if(r.status===404&&EDIT_ID){EDIT_ID=null;r=await saveMemory()}const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||"Could not save this memory.");setEdit(j.id);if(LOCK)LOCK.set(j.locked);persistDraft();btn.disabled=false;
-  if(j.active){showLive(j.url);setStatus("#generateStatus","Saved. Your live card is updated ♡",true);toast("Changes saved ♡")}else{setStatus("#generateStatus","Saved to your account. Choose how to activate it below.",true);showCheckout("activate")}return}
+  if(window.KS_CLAIM){showClaim();return}if(j.active){showLive(j.url);setStatus("#generateStatus","Saved. Your live card is updated ♡",true);toast("Changes saved ♡")}else{setStatus("#generateStatus","Saved to your account. Choose how to activate it below.",true);showCheckout("activate")}return}
  if(SHOP){setStatus("#generateStatus","Saving your card…",true);const r=await fetch("/api/card",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({key:SHOP.key,data:wire(d)})});const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||"Could not save the card.");short=location.origin+"/c/"+j.id;longLink=short;$("#shortLink").textContent=short;badge(short);setStatus("#linkStatus","Saved. This short link is ready for QR and NFC.",true);setStatus("#generateStatus","Ready ♡",true);drawQR();btn.disabled=false;$("#link").scrollIntoView({behavior:"smooth",block:"start"});toast("Card saved ♡");loadMine();return}
 
    const base=forceSelf?"":siteBase();
@@ -1859,7 +1879,7 @@ function qrSvg(u){
 function qrApiUrl(u,format="png"){
  return "";
 }
-function drawQR(){
+function drawQR(){$("#qrPanel")?.classList.toggle("locked",!(short||longLink));
  const u=finalLink()||"https://keepsake.example";qrFallbackUrl="";
  try{qrSVG=qrSvg(u);$("#qrImg").src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(qrSVG);
   setStatus("#qrStatus",`${byteLen(u)} bytes · ${short?"short link":!isWeb(u)&&longLink?"text card · no website needed":longLink?"full link (long QR)":"sample QR — generate your card"}`,!!(short||!longLink))}
@@ -1889,8 +1909,7 @@ async function copyLink(){
 }
 async function shareLink(){
  const u=await ensureLink();if(!u)return;
- if(navigator.share){try{await navigator.share(isWeb(u)?{title:d.t||"Keepsake memory",text:d.q||"A memory for you ♡",url:u}:{title:d.t||"Keepsake memory",text:u});return}catch(e){if(e.name==="AbortError")return}}
- await copyLink();
+ window.open("https://wa.me/?text="+encodeURIComponent((isWeb(u)?"I made something for you ♡ ":"")+u),"_blank","noopener");
 }
 async function writeNFC(){ let u=finalLink(); if(!u){await ensureLink();return} if(isWeb(u)&&!short&&byteLen(u)>=100&&byteLen(u)<5000){try{setStatus("#linkStatus","Shortening for the tag…",true);short=await shorten(u);u=short;$("#shortLink").textContent=u;badge(u);drawQR()}catch(e){setStatus("#linkStatus","Couldn't shorten the link, so it's over 100 bytes. Check your connection and press Shorten link again.",false);return}}
  if(!u||byteLen(u)>=1000){$("#linkStatus").textContent="This memory link is large for an NFC tag. Publish the page and use a shorter page URL before writing NFC.";$("#linkStatus").className="status err";toast("NFC link is too large");return}
@@ -2097,7 +2116,8 @@ let EDIT_ID=null,CHECKOUT=null,LOCK=null;
 function setEdit(id){EDIT_ID=id||null;try{const u=new URL(location.href);if(EDIT_ID)u.searchParams.set("edit",EDIT_ID);else u.searchParams.delete("edit");u.searchParams.delete("resume");u.searchParams.delete("account");history.replaceState(null,"",u.pathname+u.search+u.hash)}catch(e){}}
 function saveMemory(){const body={data:wire(d)};if(EDIT_ID)body.id=EDIT_ID;const lk=LOCK&&LOCK.value();if(lk!==undefined)body.lock=lk;return fetch("/api/customer-memories",{method:EDIT_ID?"PUT":"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)})}
 function showLive(url){short=location.origin+url;longLink=short;$("#shortLink").textContent=short;badge(short);$("#payPanel").hidden=true;$("#linkGrid").hidden=false;setStatus("#linkStatus","Your keepsake is live. Share the link, print the QR or write it to an NFC tag.",true);drawQR();upgradeOffer();$("#link").scrollIntoView({behavior:"smooth",block:"start"})}
-function upgradeOffer(){let x=$("#nfcUpsell");if(!x){x=document.createElement("div");x.id="nfcUpsell";x.className="liveExtra";$("#linkStatus").after(x)}x.innerHTML='<button class="btn small ghost" type="button" id="orderFrame">Get it in a photo frame (QR or NFC)</button>';$("#orderFrame").onclick=()=>showCheckout("upgrade");KSCheckout.catalog().then(c=>{if(c.free)x.hidden=true})}
+function upgradeOffer(){let x=$("#nfcUpsell");if(!x){x=document.createElement("div");x.id="nfcUpsell";x.className="liveExtra";$("#linkStatus").after(x)}x.hidden=true;x.innerHTML='<button class="btn small ghost" type="button" id="orderFrame">Get it in a photo frame (QR or NFC)</button>';$("#orderFrame").onclick=()=>showCheckout("upgrade");KSCheckout.catalog().then(c=>{if(c.free||!c.frames)x.hidden=true})}
+function showClaim(){setStatus("#generateStatus","Saved. Enter your PIN below to activate it.",true);$("#linkGrid").hidden=true;KSClaim.panel($("#payPanel"),{code:window.KS_CLAIM.code,getId:()=>EDIT_ID,onDone:url=>{window.KS_CLAIM=null;$("#ksClaimBanner")?.remove();showLive(url);toast("Activated ♡ Your keepsake is live");setStatus("#linkStatus","Activated with your prepaid code. Your keepsake is live.",true)}})}
 function showCheckout(mode){
  if(!CHECKOUT)CHECKOUT=KSCheckout.mount($("#payPanel"),{kind:"card",getId:()=>EDIT_ID,customer:()=>CUSTOMER,onPaid:v=>{showLive(v.url);const fr=v.plan==="frameQr"||v.plan==="frameNfc";toast(fr?"Paid ♡ Your photo frame is on its way":"Paid ♡ Your keepsake is live");setStatus("#linkStatus",fr?"Paid. Your keepsake is live and we'll ship your photo frame soon.":"Paid. Your keepsake is live.",true)}});
  $("#payPanel").hidden=false;if(mode!=="upgrade")$("#linkGrid").hidden=true;CHECKOUT.open(mode).then(()=>$("#payPanel").scrollIntoView({behavior:"smooth",block:"start"}));
@@ -2108,7 +2128,7 @@ async function openForEdit(){
  if(!id||!CUSTOMER)return;
  try{const r=await fetch("/api/customer-memories?id="+encodeURIComponent(id),{cache:"no-store"});const j=await r.json();if(!r.ok||!j.data)throw new Error(j.error||"Card not found.");
   d=unwire(j.data);currentTemplate=d.template;hydrateForm();$$("#templateGrid .template").forEach(b=>b.classList.toggle("active",b.dataset.template===currentTemplate));$("#heroImg").src=getTemplate().th;renderPreview();setEdit(id);if(LOCK)LOCK.set(j.locked);
-  if(j.active===false){setStatus("#generateStatus","Editing your saved card. It isn't active yet.",true);showCheckout("activate")}
+  if(j.active===false){setStatus("#generateStatus","Editing your saved card. It isn't active yet.",true);if(window.KS_CLAIM)showClaim();else showCheckout("activate")}
   else{showLive("/m/"+id);setStatus("#generateStatus","Editing your live card. Save to update it.",true);if(location.hash!=="#link")setTimeout(()=>$("#create")?.scrollIntoView({behavior:"smooth"}),300)}
  }catch(e){setEdit(null);toast(e.message||"Could not open that card.")}
 }
@@ -2165,5 +2185,6 @@ async function init(){ if(await parseHash()){showViewer();return} await licence(
 }
 init();
 </script>
+<script>if(!/^\/(m|c)\//.test(location.pathname))KSClaim.init({kind:"card",before:document.querySelector("section")}).then(c=>{window.KS_CLAIM=c})</script>
 </body>
 </html>

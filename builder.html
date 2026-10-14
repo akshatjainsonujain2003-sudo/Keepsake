@@ -4,14 +4,28 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#240409">
-<title>Make a Love-Story Website · Keepsake</title><link rel="canonical" href="https://getkeepsake.in/builder"><meta property="og:type" content="website"><meta property="og:site_name" content="Keepsake"><meta property="og:title" content="Make a Love-Story Website · Keepsake"><meta property="og:description" content="Build a website for your story with photos, videos, Spotify songs, a timeline and letters. Share it by link, QR code, NFC or a printed photo frame."><meta property="og:url" content="https://getkeepsake.in/builder"><meta property="og:locale" content="en_IN"><meta property="og:image" content="https://getkeepsake.in/assets/og-image.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="Keepsake: love-story websites and memory cards"><meta name="twitter:image" content="https://getkeepsake.in/assets/og-image.jpg"><meta name="twitter:card" content="summary_large_image">
-<meta name="description" content="Build a website for your story with photos, videos, Spotify songs, a timeline and letters. Share it by link, QR code, NFC or a printed photo frame.">
+<title>Make a Love-Story Website (₹299) · Keepsake</title>
+<link rel="canonical" href="https://getkeepsake.in/builder">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Keepsake">
+<meta property="og:title" content="Make a Love-Story Website · Keepsake">
+<meta property="og:description" content="Build a love-story website in 10 minutes with photos, Spotify songs, a relationship timer and open-when letters. Share by link, QR code or NFC tap.">
+<meta property="og:url" content="https://getkeepsake.in/builder">
+<meta property="og:locale" content="en_IN">
+<meta property="og:image" content="https://getkeepsake.in/assets/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Keepsake: love-story websites and memory cards">
+<meta name="twitter:image" content="https://getkeepsake.in/assets/og-image.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="description" content="Build a website for your story with photos, videos, Spotify songs, a timeline and letters. Share it by link, QR code or NFC tap.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,500&family=DM+Sans:wght@400;500;700&display=swap">
 <link rel="stylesheet" href="/assets/site-themes.v1.css">
-<script src="/assets/ks-checkout.v1.js"></script>
+<script src="/assets/ks-checkout.v4.js"></script>
+<script src="/assets/ks-claim.v1.js"></script>
 <script src="/assets/site-render.v1.js"></script>
-<script src="/assets/ks-templates.v2.js"></script>
+<script src="/assets/ks-templates.v3.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js" defer></script>
 <style>
 :root{--bg:#240409;--panel:#33100f;--panel2:#3d1517;--line:#6b3a35;--ink:#f8f0df;--muted:#c9b99a;--gold:#e4c680;--field:#1a0206;--bad:#ff9aa8;--ok:#9ad8b0}
@@ -22,15 +36,16 @@ button,input,textarea,select{font:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 .top{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:12px;justify-content:space-between;padding:12px 18px;background:#240409f2;border-bottom:1px solid #ffffff14;backdrop-filter:blur(8px)}
 .brand{font:italic 500 28px/1 "Cormorant Garamond",Georgia,serif;color:var(--gold);text-decoration:none}
-.top nav{display:flex;gap:8px;align-items:center}
-.chip{padding:8px 14px;border-radius:999px;border:1px solid var(--line);text-decoration:none;color:var(--ink);font-size:14px;background:none;cursor:pointer}
+.top nav{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.chip{padding:8px 14px;border-radius:999px;border:1px solid var(--line);text-decoration:none;color:var(--ink);font-size:13.5px;background:none;cursor:pointer}
 .layout{display:grid;grid-template-columns:minmax(0,460px) minmax(0,1fr);gap:0;min-height:calc(100svh - 60px)}
 .editor{padding:26px 22px 120px;border-right:1px solid #ffffff14}
 .stage{position:sticky;top:60px;height:calc(100svh - 60px);display:grid;place-items:center;padding:24px;background:radial-gradient(ellipse at 50% 30%,#4a0f15,#1b0306 75%)}
 .phone{width:390px;height:min(780px,calc(100svh - 120px));border-radius:42px;border:10px solid #120204;overflow:hidden;box-shadow:0 30px 80px #0009;background:#000}
 .phone-in{height:100%;overflow-y:auto;overscroll-behavior:contain}
-h1.page{font:500 clamp(38px,6vw,50px)/1.05 "Cormorant Garamond",Georgia,serif;margin:0 0 6px}
-.lede{color:var(--muted);margin:0 0 26px}
+h1.page{font:500 clamp(36px,6vw,48px)/1.05 "Cormorant Garamond",Georgia,serif;margin:0 0 6px}
+.lede{color:var(--muted);margin:0 0 18px;font-size:15px}
+.free-pill{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;background:rgba(228,198,128,0.12);border:1px solid rgba(228,198,128,0.35);color:var(--gold);font-size:12.5px;font-weight:500;margin-bottom:14px}
 .block{border-top:1px solid #ffffff14;padding:22px 0}
 .block>h2{font:500 26px/1.1 "Cormorant Garamond",Georgia,serif;margin:0 0 14px}
 .themes{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -43,7 +58,7 @@ label.f{display:flex;flex-direction:column;gap:6px;margin:0 0 14px;font-size:14p
 .in{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--field);color:var(--ink);font-size:16px}
 textarea.in{min-height:110px;resize:vertical;line-height:1.5}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.photo{display:flex;gap:12px;align-items:center;margin:4px 0 14px}
+.photo{display:flex;gap:12px;align-items:center;margin:4px 0 14px;flex-wrap:wrap}
 .photo img{width:64px;height:64px;object-fit:cover;border-radius:10px;border:1px solid var(--line)}
 .upl{display:inline-flex;align-items:center;gap:6px;padding:10px 16px;border-radius:999px;border:1px dashed var(--gold);color:var(--gold);cursor:pointer;font-size:14px}
 .upl input{display:none}
@@ -76,6 +91,9 @@ textarea.in{min-height:110px;resize:vertical;line-height:1.5}
 .qr{display:flex;gap:16px;align-items:center;margin-top:16px;flex-wrap:wrap}
 .qr .code{width:150px;height:150px;background:#fffaf0;border-radius:14px;padding:10px}
 .qr .code svg{width:100%;height:100%;display:block}
+.frame-upsell-box{margin-top:18px;padding:16px;border-radius:16px;border:1px solid rgba(228,198,128,0.4);background:linear-gradient(145deg,rgba(228,198,128,0.12),rgba(0,0,0,0.2))}
+.frame-upsell-box b{display:block;color:var(--gold);font-size:15px;margin-bottom:4px}
+.frame-upsell-box p{margin:0 0 12px;font-size:13.5px;color:var(--muted)}
 .fab{display:none}
 .overlay{position:fixed;inset:0;z-index:60;background:#000;display:none}
 .overlay.open{display:block}
@@ -85,7 +103,7 @@ textarea.in{min-height:110px;resize:vertical;line-height:1.5}
  .layout{grid-template-columns:1fr}
  .stage{display:none}
  .editor{border-right:0;padding:22px 16px 120px}
- .fab{display:inline-flex;position:fixed;left:50%;transform:translateX(-50%);bottom:calc(18px + env(safe-area-inset-bottom));z-index:30;box-shadow:0 10px 30px #000a}
+ .fab{display:inline-flex;position:fixed;left:50%;transform:translateX(-50%);bottom:calc(18px + env(safe-area-inset-bottom));z-index:30;box-shadow:0 10px 30px #000c;padding:12px 24px}
 }
 @media (max-width:420px){.themes{grid-template-columns:1fr 1fr}.row2{grid-template-columns:1fr}}
 
@@ -113,16 +131,28 @@ textarea.in{min-height:110px;resize:vertical;line-height:1.5}
 .tplf .grp>summary .name{font-weight:700}
 .tglrow{display:flex;gap:10px;align-items:center;margin:0 0 14px;color:var(--ink);font-size:15px;cursor:pointer}
 .tglrow input{width:20px;height:20px;accent-color:#d6b06a}
+.save-hint{font-size:13px;color:var(--muted);margin:8px 0 0;text-align:center}
 </style>
-<link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/svg+xml" href="/assets/icon.svg"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest"></head>
+<link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/svg+xml" href="/assets/icon.svg"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest"><script src="/assets/ks-pixel.v1.js" defer></script><script src="/assets/ks-ref.v1.js" defer></script></head>
 <body>
-<header class="top"><a class="brand" href="/">Keepsake</a><nav id="nav"><a class="chip" href="/studio">Templates</a></nav></header>
+<header class="top">
+  <a class="brand" href="/">Keepsake</a>
+  <nav id="nav">
+    <a class="chip" href="/studio">₹99 Memory Cards</a>
+  </nav>
+</header>
 <div class="layout">
  <main class="editor">
-  <h1 class="page">Your website</h1>
-  <p class="lede">Pick a design, then make it yours with your photos, song and words. Everything you change shows in the preview.</p>
+  <div class="free-pill">✨ Free to design &amp; preview · One-time ₹299 to publish</div>
+  <h1 class="page">Your love-story website</h1>
+  <p class="lede">Pick a design below, then make it yours with your photos, Spotify song and words. Everything updates live in the preview.</p>
 
-  <section class="block"><h2>Design</h2><div class="designs" id="designs"></div><div class="themes" id="themes" hidden></div><p class="legacy-note" id="legacyNote" hidden>This website uses one of our earlier looks. Pick a design above to switch to it (your names, date and letter come with you).</p></section>
+  <section class="block">
+    <h2>1. Choose a Design</h2>
+    <div class="designs" id="designs"></div>
+    <div class="themes" id="themes" hidden></div>
+    <p class="legacy-note" id="legacyNote" hidden>This website uses one of our earlier looks. Pick a design above to switch to it (your names, date and letter come with you).</p>
+  </section>
 
   <div id="tplEditor" class="tplf" hidden></div>
 
@@ -139,25 +169,40 @@ textarea.in{min-height:110px;resize:vertical;line-height:1.5}
    <div class="addsec"><select class="in" id="addType" aria-label="Section to add"></select><button class="btn line" type="button" id="addBtn">Add</button></div>
   </section>
 
-  <section class="block"><h2>Privacy</h2><div id="lockBox"></div></section>
+  <section class="block"><h2>Privacy Lock (Optional)</h2><div id="lockBox"></div></section>
 
-  <section class="block" id="publish"><h2>Publish</h2>
-   <button class="btn gold wide" type="button" id="saveBtn">Save website</button>
+  <section class="block" id="publish"><h2>Save &amp; Publish</h2>
+   <button class="btn gold wide" type="button" id="saveBtn">Save &amp; Get Website Link</button>
+   <p class="save-hint">🔒 Your progress is saved automatically. Pay once via UPI when you're ready to share.</p>
    <div class="status" id="saveStatus" role="status"></div>
    <div class="panel" id="payPanel" hidden></div>
    <div class="panel" id="livePanel" hidden>
-    <h3 style="margin:0 0 10px;font:500 26px/1.1 'Cormorant Garamond',Georgia,serif">Your website is live</h3>
+    <h3 style="margin:0 0 10px;font:500 26px/1.1 'Cormorant Garamond',Georgia,serif">Your website is live ♡</h3>
     <div class="linkbox" id="liveLink"></div>
-    <div class="acts"><button class="btn line" type="button" id="copyBtn">Copy link</button><a class="btn line" id="openBtn" target="_blank" rel="noopener">Open</a><button class="btn line" type="button" id="shareBtn">Share</button></div>
-    <div class="qr"><div class="code" id="qrCode" aria-label="QR code for your website"></div><div><button class="btn line" type="button" id="qrPng">Download QR</button><p class="status" style="max-width:220px">Print it, or write the link to any NFC tag.</p></div></div>
-    <button class="btn gold" type="button" id="frameBtn" style="margin-top:14px">Get it in a photo frame</button>
+    <div class="acts">
+      <button class="btn gold" type="button" id="shareBtn">Share on WhatsApp</button>
+      <button class="btn line" type="button" id="copyBtn">Copy link</button>
+      <a class="btn line" id="openBtn" target="_blank" rel="noopener">Open website ↗</a>
+    </div>
+    <div class="qr">
+      <div class="code" id="qrCode" aria-label="QR code for your website"></div>
+      <div>
+        <button class="btn line" type="button" id="qrPng">Download High-Res QR</button>
+        <p class="status" style="max-width:220px">Print it on a card, or write the link to any NFC tag.</p>
+      </div>
+    </div>
+    <div class="frame-upsell-box" id="frameUpsellBox" hidden>
+      <b>🎁 Want something physical for them to unwrap?</b>
+      <p>We'll print your photo or cover design and ship it in a premium frame with your QR code (+₹399) or tap-to-open NFC chip (+₹599).</p>
+      <button class="btn gold wide" type="button" id="frameBtn">Order a Printed Photo Frame</button>
+    </div>
    </div>
   </section>
  </main>
  <aside class="stage" aria-label="Preview"><div class="phone"><div class="phone-in"><div id="preview"></div></div></div></aside>
 </div>
-<button class="btn gold fab" type="button" id="previewBtn">Preview</button>
-<div class="overlay" id="overlay" role="dialog" aria-label="Preview"><div class="bar"><button class="btn gold" type="button" id="closePreview">Back to editing</button></div><div class="scroll"><div id="previewFull"></div></div></div>
+<button class="btn gold fab" type="button" id="previewBtn">👁️ Live Preview</button>
+<div class="overlay" id="overlay" role="dialog" aria-label="Preview"><div class="bar"><button class="btn gold" type="button" id="closePreview">← Back to editing</button></div><div class="scroll"><div id="previewFull"></div></div></div>
 
 <script>
 (() => {
@@ -177,7 +222,7 @@ function changed() { dirty = true; save(); preview(); }
 
 // ---------- photos ----------
 async function upload(file) {
-  if (!USER) { save(); status("Log in to add your own photos. Your work so far is kept.", "bad"); setTimeout(() => location.href = "/account?next=" + encodeURIComponent("/builder?resume=1"), 1400); throw new Error("login"); }
+  if (!USER) { save(); status("Create a quick free account to upload your photos. Your design is saved!", "bad"); setTimeout(() => location.href = "/account?next=" + encodeURIComponent("/builder?resume=1"), 1400); throw new Error("login"); }
   status("Uploading photo…");
   const u = await KSKeepsake.uploadPhoto(file, "web"); status("Photo added ♡", "ok"); return u;
 }
@@ -185,14 +230,13 @@ function photoField(holder, get, set) {
   holder.textContent = "";
   const u = get();
   if (KSSite.imgUrl(u) || KSKit.img(u)) { const i = document.createElement("img"); i.src = u; i.alt = ""; holder.appendChild(i); }
-  const l = document.createElement("label"); l.className = "upl"; l.textContent = u ? "Change photo" : "Add photo";
+  const l = document.createElement("label"); l.className = "upl"; l.textContent = u ? "Change photo" : "+ Add photo";
   const inp = document.createElement("input"); inp.type = "file"; inp.accept = "image/*"; l.appendChild(inp); holder.appendChild(l);
   inp.onchange = async () => { const f = inp.files[0]; inp.value = ""; if (!f) return; try { set(await upload(f)); changed(); photoField(holder, get, set); } catch (e) { if (e.message !== "login") status(e.message, "bad"); } };
   if (u) { const r = document.createElement("button"); r.type = "button"; r.className = "link-btn"; r.textContent = "Remove"; r.onclick = () => { set(""); changed(); photoField(holder, get, set); }; holder.appendChild(r); }
 }
 
-
-// ---------- designed templates (Wildflower, Candlelit) ----------
+// ---------- designed templates (Wildflower, Candlelit, Mixtape) ----------
 const isTpl = () => !!(D && D.tpl && KSKit.DEMO[D.tpl]);
 let FRAME = null, FRAME_TPL = "", BIG = null, postT = 0;
 function post(frame) { try { frame && frame.contentWindow && frame.contentWindow.postMessage({ type: "ks-preview", data: D }, location.origin); } catch (e) {} }
@@ -400,11 +444,14 @@ async function saveSite() {
     let j = await r.json().catch(() => ({}));
     if (!r.ok) throw new Error(j.error || "Could not save your website.");
     setEdit(j.id); LOCK.set(j.locked); dirty = false; ACTIVE = j.active; try { localStorage.removeItem(DRAFT); } catch (e) {}
-    if (j.active) { status("Saved. Your live website is updated ♡", "ok"); live(j.url); }
+    if (CLAIM) { status("Saved. Enter your PIN below to activate it.", "ok"); claimPanel(); }
+    else if (j.active) { status("Saved. Your live website is updated ♡", "ok"); live(j.url); }
     else { status("Saved. Choose how to activate it below.", "ok"); checkout("activate"); }
   } catch (e) { status(e.message, "bad"); } finally { btn.disabled = false; }
 }
 function setEdit(id) { EDIT_ID = id; const u = new URL(location.href); u.searchParams.set("edit", id); u.searchParams.delete("resume"); history.replaceState(null, "", u.pathname + u.search + u.hash); }
+let CLAIM = null;
+function claimPanel() { $("#livePanel").hidden = true; KSClaim.panel($("#payPanel"), { code: CLAIM.code, getId: () => EDIT_ID, onDone: url => { CLAIM = null; ACTIVE = true; const bn = $("#ksClaimBanner"); if (bn) bn.remove(); live(url); status("Activated with your prepaid code. Your website is live ♡", "ok"); } }); }
 function checkout(mode) {
   if (!CHECKOUT) CHECKOUT = KSCheckout.mount($("#payPanel"), { kind: "site", getId: () => EDIT_ID, customer: () => USER, onPaid: v => { ACTIVE = true; live(v.url); const fr = v.plan === "frameQr" || v.plan === "frameNfc"; status(fr ? "Paid. Your website is live and we'll ship your photo frame soon." : "Paid. Your website is live ♡", "ok"); } });
   $("#payPanel").hidden = false; if (mode !== "upgrade") $("#livePanel").hidden = true;
@@ -424,14 +471,14 @@ function drawQR(url) {
   box.innerHTML = q.createSvgTag({ cellSize: 4, margin: 2, scalable: true }).replace(/fill="#000000"/g, 'fill="#42070f"').replace(/fill="#ffffff"/g, 'fill="#fffaf0"');
 }
 $("#copyBtn").onclick = async () => { const u = $("#liveLink").textContent; try { await navigator.clipboard.writeText(u); status("Link copied ♡", "ok"); } catch (e) { prompt("Copy your link:", u); } };
-$("#shareBtn").onclick = async () => { const u = $("#liveLink").textContent; if (navigator.share) { try { await navigator.share({ title: D.t || "Our story", url: u }); } catch (e) {} } else $("#copyBtn").click(); };
+$("#shareBtn").onclick = () => { const u = $("#liveLink").textContent; window.open("https://wa.me/?text=" + encodeURIComponent("I made something for you ♡ " + u), "_blank", "noopener"); };
 $("#qrPng").onclick = () => {
   const svg = $("#qrCode svg"); if (!svg) return;
   const img = new Image(); img.onload = () => { const c = document.createElement("canvas"); c.width = c.height = 1200; const x = c.getContext("2d"); x.fillStyle = "#fffaf0"; x.fillRect(0, 0, 1200, 1200); x.drawImage(img, 0, 0, 1200, 1200); const a = document.createElement("a"); a.download = "keepsake-qr.png"; a.href = c.toDataURL("image/png"); a.click(); };
   img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(new XMLSerializer().serializeToString(svg));
 };
 $("#frameBtn").onclick = () => checkout("upgrade");
-KSCheckout.catalog().then(c => { if (c.free) $("#frameBtn").hidden = true; });
+KSCheckout.catalog().then(c => { $("#frameUpsellBox").hidden = c.free || !c.frames; });
 $("#saveBtn").onclick = saveSite;
 $("#addBtn").onclick = () => { const t = $("#addType").value; D.sections.push(blank[t]()); changed(); sections(); const last = $$("#sections details").pop(); if (last) { last.open = true; last.scrollIntoView({ behavior: "smooth", block: "center" }); } };
 $("#previewBtn").onclick = () => { $("#overlay").classList.add("open"); document.body.style.overflow = "hidden"; if (isTpl()) openBig(); else { $("#previewFull").style.height = ""; KSSite.render($("#previewFull"), D, { editing: true }); } };
@@ -442,6 +489,7 @@ window.addEventListener("beforeunload", e => { if (dirty && EDIT_ID) { e.prevent
 (async () => {
   $("#addType").innerHTML = Object.entries(KSSite.SECTIONS).map(([k, v]) => `<option value="${k}">${KSKeepsake.esc(v.name)}</option>`).join("");
   LOCK = KSLock.mount($("#lockBox"));
+  CLAIM = await KSClaim.init({ kind: "site", before: $("h1.page") });
   try { const r = await fetch("/api/customer-auth", { cache: "no-store" }); const j = await r.json(); USER = j.user || null; } catch (e) {}
   const nav = $("#nav");
   if (USER) nav.insertAdjacentHTML("beforeend", '<a class="chip" href="/dashboard">My memories</a>');
@@ -457,7 +505,7 @@ window.addEventListener("beforeunload", e => { if (dirty && EDIT_ID) { e.prevent
       if (!r.ok || j.kind !== "site") throw new Error(j.error || "Website not found.");
       D = j.data.tpl ? KSKit.withDefaults(j.data.tpl, j.data) : j.data; EDIT_ID = id; ACTIVE = j.active; LOCK.set(j.locked);
       all();
-      if (j.active) live("/s/" + id); else checkout("activate");
+      if (j.active) live("/s/" + id); else if (CLAIM) claimPanel(); else checkout("activate");
       status(j.active ? "Editing your live website. Save to update it." : "Editing your saved website. It isn't active yet.", "ok");
       return;
     } catch (e) { status(e.message, "bad"); }

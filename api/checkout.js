@@ -7,6 +7,8 @@
 const db = require("./_db");
 const pay = require("./_pay");
 const auth = require("./customer-auth");
+const ref = require("./_ref");
+const sameKey = (a, b) => { const x = Buffer.from(String(a || "")), y = Buffer.from(String(b || "")); return x.length === y.length && require("crypto").timingSafeEqual(x, y); };
 
 const clip = (v, n) => String(v == null ? "" : v).replace(/[<>]/g, "").replace(/\s+/g, " ").trim().slice(0, n);
 
@@ -27,6 +29,21 @@ function readAddress(a) {
 
 module.exports = async (req, res) => {
   try {
+    // Creator codes. GET ?code=X -> { code: { code, discount } } when X is an active code
+    if (req.method === "GET" && (req.query || {}).code) {
+      if (!db.ok()) return db.reply(res, 404, { error: "That code isn't valid." });
+      const r = await ref.active(req.query.code);
+      if (!r) return db.reply(res, 404, { error: "That code isn't valid." });
+      return db.reply(res, 200, { code: { code: r.code, discount: r.discount } });
+    }
+    // A creator's own sales page: GET ?creator=CODE&key=K -> sales, earned, owed (no customer details)
+    if (req.method === "GET" && (req.query || {}).creator) {
+      if (!db.ok()) return db.reply(res, 501, { error: "Storage is not configured yet." });
+      const q = req.query, r = await ref.get(q.creator);
+      if (!r || !sameKey(r.key, q.key)) return db.reply(res, 404, { error: "This link isn't valid. Ask Keepsake for your creator link." });
+      const s = await ref.stats(r);
+      return db.reply(res, 200, { code: r.code, name: r.name, discount: r.discount, commission: r.commission, active: r.active !== false, ...s });
+    }
     if (req.method === "GET") {
       return db.reply(res, 200, { ready: pay.configured() && db.ok(), free: !pay.configured(), currency: "INR", ...pay.catalog() });
     }
@@ -44,6 +61,12 @@ module.exports = async (req, res) => {
       if (!memory || memory.owner !== user.id) return db.reply(res, 404, { error: "Card not found in your account." });
       const amt = pay.amountFor(memory, plan);
       if (amt.error) return db.reply(res, 400, { error: amt.error });
+      // A creator's code takes a discount off the keepsake (never a frame) and records their commission.
+      let code = null, off = 0, commission = 0;
+      if (b.ref) {
+        code = await ref.active(b.ref);
+        if (code) { const fr = pay.isFrame(plan) ? (pay.catalog().delivery[plan] || {}).price || 0 : 0; const x = ref.apply(code, amt.rupees, fr); off = x.discount; commission = x.commission; amt.rupees = x.rupees; }
+      }
       let address = null, frame = null;
       if (pay.isFrame(plan)) {
         const a = readAddress(b.address); if (a.error) return db.reply(res, 400, { error: a.error }); address = a.addr;
@@ -62,12 +85,12 @@ module.exports = async (req, res) => {
       const order = await pay.createOrder({ rupees: amt.rupees, receipt: "ks_" + id, notes: { memory: id, plan, customer: user.id } });
       await db.setj("order:" + order.id, {
         memory: id, title: memory.title || "", owner: user.id, name: user.name, email: user.email, phone: user.phone || "",
-        kind: pay.kindOf(memory), plan, frame, upgrade: amt.upgrade, amount: amt.rupees, address, status: "created", created: Date.now()
+        kind: pay.kindOf(memory), plan, frame, upgrade: amt.upgrade, amount: amt.rupees, ...(code ? { ref: code.code, refDiscount: off, commission } : {}), address, status: "created", created: Date.now()
       }, "EX", 60 * 60 * 24 * 30);
       return db.reply(res, 200, {
         keyId: pay.keyId(), orderId: order.id, amount: order.amount, currency: order.currency,
         prefill: { name: user.name, email: user.email, contact: user.phone || (address && address.phone) || "" },
-        description: pay.describe(memory, plan, amt.upgrade)
+        description: pay.describe(memory, plan, amt.upgrade) + (code ? " (code " + code.code + ")" : ""), amountRupees: amt.rupees, ref: code ? code.code : null
       });
     }
 
@@ -78,7 +101,7 @@ module.exports = async (req, res) => {
       if (!order || order.owner !== user.id) return db.reply(res, 404, { error: "Order not found." });
       if (!pay.verifyPayment(orderId, paymentId, b.razorpay_signature)) return db.reply(res, 400, { error: "Payment could not be verified. If money was taken, contact us with your payment ID." });
       const done = await pay.markPaid(orderId, paymentId);
-      return db.reply(res, 200, { ok: true, id: done.memory, url: (done.kind === "site" ? "/s/" : "/m/") + done.memory, plan: done.plan });
+      return db.reply(res, 200, { ok: true, id: done.memory, url: (done.kind === "site" ? "/s/" : "/m/") + done.memory, plan: done.plan, amount: done.amount });
     }
 
     return db.reply(res, 400, { error: "Unknown action." });
