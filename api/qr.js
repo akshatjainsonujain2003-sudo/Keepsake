@@ -14,7 +14,7 @@ module.exports = async (req, res) => {
     const q = req.query || {};
     if (req.method === "GET") {
       const rec = await pp.get(q.code);
-      if (q.info) return rec ? db.reply(res, 200, { code: rec.code, tier: rec.tier, status: rec.status }) : db.reply(res, 404, { error: "That code isn't valid." });
+      if (q.info) return rec ? db.reply(res, 200, { code: rec.code, tier: rec.tier, status: rec.status, locked: !!rec.locked }) : db.reply(res, 404, { error: "That code isn't valid." });
       if (!rec) return page(res, 404, "This code isn't valid", "Please check the card, or message us and we'll sort it out.");
       if (rec.status === "claimed" && rec.memory) { res.setHeader("Cache-Control", "no-store"); return res.redirect(302, (rec.kind === "site" ? "/s/" : "/m/") + rec.memory); }
       res.setHeader("Cache-Control", "no-store");

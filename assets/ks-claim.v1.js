@@ -13,7 +13,7 @@
 .kscl b{color:#2a0409;font-weight:700}.kscl a{color:#2a0409;font-weight:700}.kscl .i{font-size:22px;line-height:1}.kscl.bad{background:#2a0409;border:1px solid #ff9aa888;color:#f8f0df}.kscl.bad a{color:#e4c680}
 .ksclp{padding:20px;border-radius:20px;background:#2a0409;border:1px solid #e4c68088;color:#f8f0df;font:15px/1.5 system-ui,-apple-system,"DM Sans",sans-serif}
 .ksclp h3{margin:0 0 6px;font:500 26px/1.15 Georgia,serif;color:#e4c680}.ksclp p{margin:0 0 12px;color:#e2d0b4}
-.ksclp .row{display:flex;gap:10px}.ksclp input{flex:1;min-width:0;font-size:22px;letter-spacing:.3em;text-align:center;padding:12px;border-radius:12px;border:1px solid #6b3a35;background:#1a0206;color:#f8f0df}
+.ksclp .row{display:flex;gap:10px}.ksclp input{flex:1;min-width:0;font-size:22px;letter-spacing:.22em;text-align:center;padding:12px;border-radius:12px;border:1px solid #6b3a35;background:#1a0206;color:#f8f0df}
 .ksclp button{padding:12px 20px;border:0;border-radius:999px;background:linear-gradient(135deg,#e8cf8e,#b88a3e);color:#2a0409;font-weight:700;font-size:16px;cursor:pointer}.ksclp button:disabled{opacity:.6}
 .ksclp .st{min-height:1.4em;margin-top:10px;font-size:14px}.ksclp .st.bad{color:#ff9aa8}.ksclp .st.ok{color:#9ad8b0}`;
     document.head.appendChild(s);
@@ -33,10 +33,11 @@
     let info = null;
     try { const r = await fetch("/api/qr?info=1&code=" + encodeURIComponent(code), { cache: "no-store" }); if (r.ok) info = await r.json(); } catch (e) {}
     if (!info) { clear(); banner(opts.before, "That Keepsake code isn't valid. Please check your card, or WhatsApp us on <a href=\"https://wa.me/916377547759\">+91 63775 47759</a>.", true); return null; }
+    if (info.locked) { banner(opts.before, "This Keepsake code is locked after too many wrong PINs. WhatsApp us on <a href=\"https://wa.me/916377547759\">+91 63775 47759</a> with a photo of your card and we'll unlock it.", true); return null; }
     if (info.status !== "new") { clear(); banner(opts.before, "This prepaid code has already been used. If that wasn't you, WhatsApp us on <a href=\"https://wa.me/916377547759\">+91 63775 47759</a>.", true); return null; }
     if (info.tier === "card" && opts.kind === "site") { banner(opts.before, "Your prepaid code is for a <b>memory card</b>. <a href=\"/studio\">Make your card here →</a>"); return null; }
     const what = opts.kind === "site" ? "website" : "card";
-    banner(opts.before, `Retail Keepsake Box <b>#${esc(info.code)}</b> detected! Your ${info.tier === "site" ? "VIP website" : "digital card"} is prepaid. Design your memories below, then tap Save and enter the 4-digit PIN from inside your box. <b>No payment needed.</b>` + (info.tier === "site" && opts.kind === "site" ? ` <span style="opacity:.8">(Prefer a simple card? <a href="/studio">Use it for a card instead</a>.)</span>` : ""));
+    banner(opts.before, `Retail Keepsake Box <b>#${esc(info.code)}</b> detected! Your ${info.tier === "site" ? "VIP website" : "digital card"} is prepaid. Design your memories below, then tap Save and enter the 6-digit PIN from inside your box. <b>No payment needed.</b>` + (info.tier === "site" && opts.kind === "site" ? ` <span style="opacity:.8">(Prefer a simple card? <a href="/studio">Use it for a card instead</a>.)</span>` : ""));
     // prepaid: no prices on the save buttons
     const gb = document.getElementById("generateBtn"); if (gb) { gb.textContent = "Save & Activate with my Code"; const h = gb.nextElementSibling; if (h && h.classList.contains("mediaHint")) h.textContent = "🎁 Prepaid: no payment needed. You'll enter the PIN from your box after saving."; }
     const sb = document.getElementById("saveBtn"); if (sb) sb.textContent = "Save & Activate with my Code";
@@ -45,10 +46,10 @@
     return { code: info.code, tier: info.tier };
   }
   function panel(el, o) {
-    css(); el.hidden = false; el.innerHTML = `<div class="ksclp"><h3>Activate with your prepaid code</h3><p>Enter the 4-digit PIN printed inside your Keepsake pack. Your ${"keepsake"} goes live straight away. No payment needed.</p><div class="row"><input inputmode="numeric" maxlength="4" autocomplete="one-time-code" placeholder="••••" aria-label="4-digit PIN"><button type="button">Activate</button></div><div class="st" role="status"></div><p style="margin:10px 0 0;font-size:13px;opacity:.75">Code ${esc(o.code)} · Lost your PIN? WhatsApp <a style="color:#e4c680" href="https://wa.me/916377547759">+91 63775 47759</a></p></div>`;
+    css(); el.hidden = false; el.innerHTML = `<div class="ksclp"><h3>Activate with your prepaid code</h3><p>Enter the 6-digit PIN printed inside your Keepsake box. Your ${"keepsake"} goes live straight away. No payment needed.</p><div class="row"><input inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="••••••" aria-label="6-digit PIN"><button type="button">Activate</button></div><div class="st" role="status"></div><p style="margin:10px 0 0;font-size:13px;opacity:.75">Code ${esc(o.code)} · Lost your PIN? WhatsApp <a style="color:#e4c680" href="https://wa.me/916377547759">+91 63775 47759</a></p></div>`;
     const inp = el.querySelector("input"), btn = el.querySelector("button"), st = el.querySelector(".st");
     const go = async () => {
-      const pin = inp.value.replace(/\D/g, ""); if (pin.length !== 4) { st.textContent = "Enter the 4 digits from your pack."; st.className = "st bad"; return; }
+      const pin = inp.value.replace(/\D/g, ""); if (pin.length !== 6) { st.textContent = "Enter the 6 digits from your box."; st.className = "st bad"; return; }
       btn.disabled = true; st.textContent = "Activating…"; st.className = "st";
       try {
         const r = await fetch("/api/qr", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ code: o.code, pin, id: o.getId() }) });

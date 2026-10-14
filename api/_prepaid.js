@@ -1,7 +1,8 @@
 // Prepaid QR codes sold through shops. Not a route.
-// Each printed card has a code (in its QR: getkeepsake.in/k/CODE) and a 4-digit PIN inside the pack.
+// Each printed card has a code (in its QR: getkeepsake.in/k/CODE) and its own 6-digit PIN inside the pack.
+// After 10 wrong PINs in total a code locks until the owner unlocks it in admin.
 // The buyer scans, makes their keepsake, enters the PIN, and it goes live with no online payment.
-// pcode:<CODE>   = { code, pin, tier: "card"|"site", batch, status: "new"|"claimed", memory, kind, owner, claimedAt }
+// pcode:<CODE>   = { code, pin, tier: "card"|"site", batch, status: "new"|"claimed", fails, locked, memory, kind, owner, claimedAt }
 // pbatch:<ID>    = { id, shop, tier, count, note, created, codes: [CODE...] }
 // pbatches       = sorted set of batch ids (score = created)
 // pbatch-claimed:<ID> = number of claimed codes in the batch
@@ -12,7 +13,8 @@ const ALPHA = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // no 0/O, 1/I
 const norm = c => String(c || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
 const valid = c => /^KS[A-HJ-NP-Z2-9]{8}$/.test(c);
 const newCode = () => "KS" + [...crypto.randomBytes(8)].map(b => ALPHA[b % 32]).join("");
-const newPin = () => String(crypto.randomInt(0, 10000)).padStart(4, "0");
+const newPin = () => String(crypto.randomInt(0, 1000000)).padStart(6, "0");
+const MAX_FAILS = 10, HOURLY = Math.max(1, +process.env.PCLAIM_HOURLY || 8);
 const TIERS = { card: "Memory card", site: "Love-story website" };
 const same = (a, b) => { const x = Buffer.from(String(a || "")), y = Buffer.from(String(b || "")); return x.length === y.length && crypto.timingSafeEqual(x, y); };
 
@@ -21,10 +23,11 @@ async function get(code) { code = norm(code); return valid(code) ? await db.getj
 async function createBatch({ count, tier, shop, note }) {
   count = Math.round(+count); if (!(count >= 1 && count <= 200)) return { error: "Make between 1 and 200 codes at a time." };
   if (!TIERS[tier]) return { error: "Choose card or website codes." };
-  const id = db.rid(8), created = Date.now(), codes = [];
+  const id = db.rid(8), created = Date.now(), codes = [], pins = new Set();
   while (codes.length < count) {
     const code = newCode();
-    const rec = { code, pin: newPin(), tier, batch: id, status: "new", created };
+    let pin = newPin(); while (pins.has(pin)) pin = newPin(); // every card in a batch has a different PIN
+    const rec = { code, pin, tier, batch: id, status: "new", fails: 0, created };
     if ((await db.cmd("SET", "pcode:" + code, JSON.stringify(rec), "NX")) === "OK") codes.push(code);
   }
   const batch = { id, shop: String(shop || "").slice(0, 60) || "Direct", tier, count, note: String(note || "").slice(0, 120), created, codes };
@@ -33,6 +36,12 @@ async function createBatch({ count, tier, shop, note }) {
   return { batch };
 }
 
+// Admin: unlock a code that was locked by wrong PINs.
+async function unlock(code) {
+  const rec = await get(code); if (!rec) return null;
+  rec.fails = 0; rec.locked = false; await db.setj("pcode:" + rec.code, rec);
+  await db.cmd("DEL", "pclaim-tries:" + rec.code); return rec;
+}
 async function batches() {
   const ids = await db.cmd("ZRANGE", "pbatches", 0, -1, "REV");
   return (await Promise.all(ids.map(async id => {
@@ -43,7 +52,7 @@ async function batches() {
 async function batchCodes(id) {
   const b = await db.getj("pbatch:" + String(id || "").slice(0, 20)); if (!b) return null;
   const codes = (await Promise.all(b.codes.map(c => db.getj("pcode:" + c)))).filter(Boolean)
-    .map(r => ({ code: r.code, pin: r.pin, status: r.status, kind: r.kind || "", claimedAt: r.claimedAt || null }));
+    .map(r => ({ code: r.code, pin: r.pin, status: r.status, locked: !!r.locked, fails: r.fails || 0, kind: r.kind || "", claimedAt: r.claimedAt || null }));
   return { ...b, codes };
 }
 
@@ -54,7 +63,7 @@ async function claim({ code, pin, id, user, ip }) {
   if (n1 > 30) return { status: 429, error: "Too many tries. Please wait an hour and try again." };
   if (!valid(code)) return { status: 404, error: "That code isn't valid. Check the card in your pack." };
   const tk = "pclaim-tries:" + code, n2 = await db.cmd("INCR", tk); if (n2 === 1) await db.cmd("EXPIRE", tk, 3600);
-  if (n2 > 8) return { status: 429, error: "Too many wrong PINs for this code. Please wait an hour, or WhatsApp us on +91 63775 47759." };
+  if (n2 > HOURLY) return { status: 429, error: "Too many wrong PINs for this code. Please wait an hour, or WhatsApp us on +91 63775 47759." };
   const rec = await db.getj("pcode:" + code);
   if (!rec) return { status: 404, error: "That code isn't valid. Check the card in your pack." };
   if (!/^[a-z0-9]{8,16}$/i.test(String(id || ""))) return { status: 400, error: "Save your keepsake first." };
@@ -62,7 +71,13 @@ async function claim({ code, pin, id, user, ip }) {
     if (rec.memory === id && rec.owner === user.id) return { ok: true, url: (rec.kind === "site" ? "/s/" : "/m/") + id };
     return { status: 409, error: "This code has already been used." };
   }
-  if (!same(rec.pin, String(pin || "").replace(/\D/g, ""))) return { status: 401, error: "That PIN isn't right. It's the 4-digit number printed inside your pack." };
+  if (rec.locked) return { status: 423, error: "This code is locked after too many wrong PINs. WhatsApp us on +91 63775 47759 with a photo of your card and we'll unlock it." };
+  if (!same(rec.pin, String(pin || "").replace(/\D/g, ""))) {
+    rec.fails = (rec.fails || 0) + 1; if (rec.fails >= MAX_FAILS) rec.locked = true;
+    await db.setj("pcode:" + code, rec);
+    if (rec.locked) return { status: 423, error: "Too many wrong PINs, so this code is now locked. WhatsApp us on +91 63775 47759 with a photo of your card and we'll unlock it." };
+    return { status: 401, error: `That PIN isn't right. It's the 6-digit number printed inside your box (${MAX_FAILS - rec.fails} tries left).` };
+  }
   const mk = "customer-memory:" + id, memory = await db.getj(mk);
   if (!memory || memory.owner !== user.id) return { status: 404, error: "Keepsake not found in your account." };
   const kind = memory.kind === "site" ? "site" : "card";
@@ -84,4 +99,4 @@ async function claim({ code, pin, id, user, ip }) {
   } finally { await db.cmd("DEL", "pclaim-lock:" + code); }
 }
 
-module.exports = { norm, valid, get, createBatch, batches, batchCodes, claim, TIERS };
+module.exports = { norm, valid, get, createBatch, batches, batchCodes, claim, unlock, TIERS };
