@@ -1,0 +1,36 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Prepaid code sheet · Keepsake</title>
+<link rel="icon" href="/favicon.ico" sizes="any">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#eee;font-family:system-ui,-apple-system,sans-serif;color:#2a0409}
+.bar{position:sticky;top:0;z-index:2;display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:12px 16px;background:#2a0409;color:#f8f0df}
+.bar b{color:#e4c680}.bar button{padding:9px 16px;border-radius:999px;border:0;background:#d6b06a;color:#2a0409;font-weight:700;cursor:pointer}.bar button.l{background:none;border:1px solid #e4c68088;color:#f8f0df}
+.bar small{opacity:.8}
+.sheet{width:210mm;margin:12px auto;background:#fff;padding:8mm 7.5mm;display:grid;grid-template-columns:repeat(3,63mm);gap:3mm;justify-content:center}
+.c{width:63mm;height:88mm;border:0.3mm dashed #b9a;display:grid;grid-template-rows:1fr 1fr;page-break-inside:avoid;break-inside:avoid;position:relative}
+.f{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2.5mm;text-align:center;background:#fffaf2}
+.f .k{font:italic 600 5.2mm/1 Georgia,serif;color:#7a1420}.f .q{width:27mm;height:27mm;margin:1.5mm 0}.f .q svg{width:100%;height:100%;display:block}
+.f .s{font-size:2.5mm;font-weight:700;letter-spacing:.03em}.f .t{font-size:2.1mm;opacity:.7;margin-top:.6mm}
+.in{border-top:0.3mm dashed #c9a45a;display:flex;flex-direction:column;justify-content:center;padding:3mm 4mm;font-size:2.4mm;line-height:1.45}
+.in .p{font:700 7mm/1 ui-monospace,Menlo,monospace;letter-spacing:1.6mm;color:#7a1420;margin:1mm 0 1.5mm}
+.in ol{margin:0;padding-left:3.6mm}.in .h{font-weight:700;font-size:2.7mm}
+.used{position:absolute;inset:0;background:#fff9;display:grid;place-items:center;font-weight:800;color:#a00;font-size:4mm;transform:rotate(-20deg)}
+@media print{body{background:#fff}.bar{display:none}.sheet{margin:0;padding:6mm 7.5mm}@page{size:A4;margin:0}}
+</style></head><body>
+<div class="bar"><span id="title">Loading…</span><span style="flex:1"></span><small>Print on A4 at 100%. Cut on the dashed border, then cut along the gold line: the QR half goes on the outside of the pack, the PIN half goes inside.</small><button id="csv" class="l">Download codes (CSV)</button><button onclick="print()">Print</button></div>
+<div id="out"></div>
+<script>
+(async()=>{
+ const q=new URLSearchParams(location.search),id=q.get("batch");let key="";try{key=sessionStorage.ak||""}catch(e){}
+ if(!key)key=prompt("Admin key")||"";
+ const r=await fetch("/api/admin",{method:"POST",headers:{"Content-Type":"application/json","x-admin-key":key},body:JSON.stringify({action:"prepaid-batch",id})});
+ const j=await r.json().catch(()=>({}));if(!r.ok){document.getElementById("title").textContent=j.error||"Could not load the batch.";return}
+ const b=j.batch,esc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])),site=b.tier==="site";
+ document.getElementById("title").innerHTML=`<b>${esc(b.shop)}</b> · ${site?"VIP website":"Template card"} · ${b.codes.length} codes`;
+ const base="https://getkeepsake.in";
+ const qr=u=>{const x=qrcode(0,"M");x.addData(u);x.make();return x.createSvgTag({cellSize:3,margin:1,scalable:true}).replace(/fill="#000000"/g,'fill="#42070f"')};
+ const cards=b.codes.map(c=>`<div class="c"><div class="f"><div class="k">Keepsake</div><div class="q">${qr(base+"/k/"+c.code)}</div><div class="s">Scan to make your ${site?"love-story website":"memory card"}</div><div class="t">${esc(b.shop)} · ${c.code}</div></div><div class="in"><div class="h">Your activation PIN · keep inside the pack</div><div class="p">${c.pin}</div><ol><li>Scan the QR on the front</li><li>Add your photos, song &amp; words</li><li>Tap Save, enter this PIN</li></ol><div style="margin-top:1mm;opacity:.7">For code ${c.code} · Prepaid, no online payment<br>Help: WhatsApp +91 63775 47759</div></div>${c.status==="claimed"?'<div class="used">USED</div>':""}</div>`);
+ const out=document.getElementById("out");for(let i=0;i<cards.length;i+=9)out.insertAdjacentHTML("beforeend",`<div class="sheet">${cards.slice(i,i+9).join("")}</div>`);
+ document.getElementById("csv").onclick=()=>{const rows=[["code","pin","link","status","batch","tier"],...b.codes.map(c=>[c.code,c.pin,base+"/k/"+c.code,c.status,b.shop,b.tier])];const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([rows.map(r=>r.join(",")).join("\n")],{type:"text/csv"}));a.download="keepsake-codes-"+b.id+".csv";a.click()};
+})();
+</script></body></html>

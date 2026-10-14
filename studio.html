@@ -1440,7 +1440,7 @@ window.qrcode=function(typeNumber,errorLevel){
 })();
 </script>
 <style>.payPanel{max-width:760px;margin:0 auto 24px}.liveExtra{margin-top:12px}.lockField{margin-top:6px}</style>
-<script src="/assets/ks-checkout.v1.js"></script>
+<script src="/assets/ks-checkout.v1.js"></script><script src="/assets/ks-claim.v1.js"></script>
 <link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/svg+xml" href="/assets/icon.svg"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest"></head>
 <body>
 <div class="topbar"><div class="wrap nav">
@@ -1796,7 +1796,7 @@ async function generate(){
  try{
  if(!CUSTOMER&&!SHOP){persistDraft();setStatus("#generateStatus","Log in or create a free account to save your card…",true);location.href="/account?next="+encodeURIComponent("/studio?resume=1");return}
  if(CUSTOMER){const le=LOCK&&LOCK.check();if(le)throw new Error(le);if(pend&&!/^(https?:\/\/|\/api\/img)/i.test($("#coverUrl").value.trim())){setStatus("#generateStatus","Uploading your photo…",true);const u=await uploadData(pend);$("#coverUrl").value=u;d.p=u;localCover="";persistDraft()}setStatus("#generateStatus","Saving to your account…",true);let r=await saveMemory();if(r.status===404&&EDIT_ID){EDIT_ID=null;r=await saveMemory()}const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||"Could not save this memory.");setEdit(j.id);if(LOCK)LOCK.set(j.locked);persistDraft();btn.disabled=false;
-  if(j.active){showLive(j.url);setStatus("#generateStatus","Saved. Your live card is updated ♡",true);toast("Changes saved ♡")}else{setStatus("#generateStatus","Saved to your account. Choose how to activate it below.",true);showCheckout("activate")}return}
+  if(window.KS_CLAIM){showClaim();return}if(j.active){showLive(j.url);setStatus("#generateStatus","Saved. Your live card is updated ♡",true);toast("Changes saved ♡")}else{setStatus("#generateStatus","Saved to your account. Choose how to activate it below.",true);showCheckout("activate")}return}
  if(SHOP){setStatus("#generateStatus","Saving your card…",true);const r=await fetch("/api/card",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({key:SHOP.key,data:wire(d)})});const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||"Could not save the card.");short=location.origin+"/c/"+j.id;longLink=short;$("#shortLink").textContent=short;badge(short);setStatus("#linkStatus","Saved. This short link is ready for QR and NFC.",true);setStatus("#generateStatus","Ready ♡",true);drawQR();btn.disabled=false;$("#link").scrollIntoView({behavior:"smooth",block:"start"});toast("Card saved ♡");loadMine();return}
 
    const base=forceSelf?"":siteBase();
@@ -2098,6 +2098,7 @@ function setEdit(id){EDIT_ID=id||null;try{const u=new URL(location.href);if(EDIT
 function saveMemory(){const body={data:wire(d)};if(EDIT_ID)body.id=EDIT_ID;const lk=LOCK&&LOCK.value();if(lk!==undefined)body.lock=lk;return fetch("/api/customer-memories",{method:EDIT_ID?"PUT":"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)})}
 function showLive(url){short=location.origin+url;longLink=short;$("#shortLink").textContent=short;badge(short);$("#payPanel").hidden=true;$("#linkGrid").hidden=false;setStatus("#linkStatus","Your keepsake is live. Share the link, print the QR or write it to an NFC tag.",true);drawQR();upgradeOffer();$("#link").scrollIntoView({behavior:"smooth",block:"start"})}
 function upgradeOffer(){let x=$("#nfcUpsell");if(!x){x=document.createElement("div");x.id="nfcUpsell";x.className="liveExtra";$("#linkStatus").after(x)}x.innerHTML='<button class="btn small ghost" type="button" id="orderFrame">Get it in a photo frame (QR or NFC)</button>';$("#orderFrame").onclick=()=>showCheckout("upgrade");KSCheckout.catalog().then(c=>{if(c.free)x.hidden=true})}
+function showClaim(){setStatus("#generateStatus","Saved. Enter your PIN below to activate it.",true);$("#linkGrid").hidden=true;KSClaim.panel($("#payPanel"),{code:window.KS_CLAIM.code,getId:()=>EDIT_ID,onDone:url=>{window.KS_CLAIM=null;$("#ksClaimBanner")?.remove();showLive(url);toast("Activated ♡ Your keepsake is live");setStatus("#linkStatus","Activated with your prepaid code. Your keepsake is live.",true)}})}
 function showCheckout(mode){
  if(!CHECKOUT)CHECKOUT=KSCheckout.mount($("#payPanel"),{kind:"card",getId:()=>EDIT_ID,customer:()=>CUSTOMER,onPaid:v=>{showLive(v.url);const fr=v.plan==="frameQr"||v.plan==="frameNfc";toast(fr?"Paid ♡ Your photo frame is on its way":"Paid ♡ Your keepsake is live");setStatus("#linkStatus",fr?"Paid. Your keepsake is live and we'll ship your photo frame soon.":"Paid. Your keepsake is live.",true)}});
  $("#payPanel").hidden=false;if(mode!=="upgrade")$("#linkGrid").hidden=true;CHECKOUT.open(mode).then(()=>$("#payPanel").scrollIntoView({behavior:"smooth",block:"start"}));
@@ -2108,7 +2109,7 @@ async function openForEdit(){
  if(!id||!CUSTOMER)return;
  try{const r=await fetch("/api/customer-memories?id="+encodeURIComponent(id),{cache:"no-store"});const j=await r.json();if(!r.ok||!j.data)throw new Error(j.error||"Card not found.");
   d=unwire(j.data);currentTemplate=d.template;hydrateForm();$$("#templateGrid .template").forEach(b=>b.classList.toggle("active",b.dataset.template===currentTemplate));$("#heroImg").src=getTemplate().th;renderPreview();setEdit(id);if(LOCK)LOCK.set(j.locked);
-  if(j.active===false){setStatus("#generateStatus","Editing your saved card. It isn't active yet.",true);showCheckout("activate")}
+  if(j.active===false){setStatus("#generateStatus","Editing your saved card. It isn't active yet.",true);if(window.KS_CLAIM)showClaim();else showCheckout("activate")}
   else{showLive("/m/"+id);setStatus("#generateStatus","Editing your live card. Save to update it.",true);if(location.hash!=="#link")setTimeout(()=>$("#create")?.scrollIntoView({behavior:"smooth"}),300)}
  }catch(e){setEdit(null);toast(e.message||"Could not open that card.")}
 }
@@ -2165,5 +2166,6 @@ async function init(){ if(await parseHash()){showViewer();return} await licence(
 }
 init();
 </script>
+<script>if(!/^\/(m|c)\//.test(location.pathname))KSClaim.init({kind:"card",before:document.querySelector("section")}).then(c=>{window.KS_CLAIM=c})</script>
 </body>
 </html>

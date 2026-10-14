@@ -10,6 +10,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,500&family=DM+Sans:wght@400;500;700&display=swap">
 <link rel="stylesheet" href="/assets/site-themes.v1.css">
 <script src="/assets/ks-checkout.v1.js"></script>
+<script src="/assets/ks-claim.v1.js"></script>
 <script src="/assets/site-render.v1.js"></script>
 <script src="/assets/ks-templates.v2.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js" defer></script>
@@ -400,11 +401,14 @@ async function saveSite() {
     let j = await r.json().catch(() => ({}));
     if (!r.ok) throw new Error(j.error || "Could not save your website.");
     setEdit(j.id); LOCK.set(j.locked); dirty = false; ACTIVE = j.active; try { localStorage.removeItem(DRAFT); } catch (e) {}
-    if (j.active) { status("Saved. Your live website is updated ♡", "ok"); live(j.url); }
+    if (CLAIM) { status("Saved. Enter your PIN below to activate it.", "ok"); claimPanel(); }
+    else if (j.active) { status("Saved. Your live website is updated ♡", "ok"); live(j.url); }
     else { status("Saved. Choose how to activate it below.", "ok"); checkout("activate"); }
   } catch (e) { status(e.message, "bad"); } finally { btn.disabled = false; }
 }
 function setEdit(id) { EDIT_ID = id; const u = new URL(location.href); u.searchParams.set("edit", id); u.searchParams.delete("resume"); history.replaceState(null, "", u.pathname + u.search + u.hash); }
+let CLAIM = null;
+function claimPanel() { $("#livePanel").hidden = true; KSClaim.panel($("#payPanel"), { code: CLAIM.code, getId: () => EDIT_ID, onDone: url => { CLAIM = null; ACTIVE = true; const bn = $("#ksClaimBanner"); if (bn) bn.remove(); live(url); status("Activated with your prepaid code. Your website is live ♡", "ok"); } }); }
 function checkout(mode) {
   if (!CHECKOUT) CHECKOUT = KSCheckout.mount($("#payPanel"), { kind: "site", getId: () => EDIT_ID, customer: () => USER, onPaid: v => { ACTIVE = true; live(v.url); const fr = v.plan === "frameQr" || v.plan === "frameNfc"; status(fr ? "Paid. Your website is live and we'll ship your photo frame soon." : "Paid. Your website is live ♡", "ok"); } });
   $("#payPanel").hidden = false; if (mode !== "upgrade") $("#livePanel").hidden = true;
@@ -442,6 +446,7 @@ window.addEventListener("beforeunload", e => { if (dirty && EDIT_ID) { e.prevent
 (async () => {
   $("#addType").innerHTML = Object.entries(KSSite.SECTIONS).map(([k, v]) => `<option value="${k}">${KSKeepsake.esc(v.name)}</option>`).join("");
   LOCK = KSLock.mount($("#lockBox"));
+  CLAIM = await KSClaim.init({ kind: "site", before: $("h1.page") });
   try { const r = await fetch("/api/customer-auth", { cache: "no-store" }); const j = await r.json(); USER = j.user || null; } catch (e) {}
   const nav = $("#nav");
   if (USER) nav.insertAdjacentHTML("beforeend", '<a class="chip" href="/dashboard">My memories</a>');
@@ -457,7 +462,7 @@ window.addEventListener("beforeunload", e => { if (dirty && EDIT_ID) { e.prevent
       if (!r.ok || j.kind !== "site") throw new Error(j.error || "Website not found.");
       D = j.data.tpl ? KSKit.withDefaults(j.data.tpl, j.data) : j.data; EDIT_ID = id; ACTIVE = j.active; LOCK.set(j.locked);
       all();
-      if (j.active) live("/s/" + id); else checkout("activate");
+      if (j.active) live("/s/" + id); else if (CLAIM) claimPanel(); else checkout("activate");
       status(j.active ? "Editing your live website. Save to update it." : "Editing your saved website. It isn't active yet.", "ok");
       return;
     } catch (e) { status(e.message, "bad"); }

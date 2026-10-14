@@ -9,6 +9,10 @@
   ],
   "rewrites": [
     {
+      "source": "/k/:code",
+      "destination": "/api/qr?code=:code"
+    },
+    {
       "source": "/c/:id",
       "destination": "/studio"
     },
@@ -22,11 +26,11 @@
     },
     {
       "source": "/sitemap.xml",
-      "destination": "/api/sitemap"
+      "destination": "/api/seo?f=sitemap"
     },
     {
       "source": "/robots.txt",
-      "destination": "/api/robots"
+      "destination": "/api/seo?f=robots"
     }
   ],
   "headers": [
