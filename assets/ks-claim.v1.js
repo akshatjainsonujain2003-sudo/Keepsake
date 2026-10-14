@@ -9,8 +9,8 @@
   function css() {
     if (document.getElementById("ks-claim-css")) return;
     const s = document.createElement("style"); s.id = "ks-claim-css";
-    s.textContent = `.kscl{margin:14px auto;max-width:1100px;padding:14px 18px;border-radius:16px;background:#2a0409;border:1px solid #e4c68088;color:#f8f0df;font:15px/1.5 system-ui,-apple-system,"DM Sans",sans-serif;display:flex;gap:12px;align-items:flex-start;box-shadow:0 10px 30px #0003}
-.kscl b{color:#e4c680}.kscl a{color:#e4c680}.kscl .i{font-size:22px;line-height:1}.kscl.bad{border-color:#ff9aa888}
+    s.textContent = `.kscl{margin:14px auto;max-width:1100px;padding:12px 18px;border-radius:14px;background:linear-gradient(135deg,#e8cf8e,#b88a3e);border:0;color:#2a0409;font-weight:500;font:15px/1.5 system-ui,-apple-system,"DM Sans",sans-serif;display:flex;gap:12px;align-items:flex-start;box-shadow:0 10px 30px #0003}
+.kscl b{color:#2a0409;font-weight:700}.kscl a{color:#2a0409;font-weight:700}.kscl .i{font-size:22px;line-height:1}.kscl.bad{background:#2a0409;border:1px solid #ff9aa888;color:#f8f0df}.kscl.bad a{color:#e4c680}
 .ksclp{padding:20px;border-radius:20px;background:#2a0409;border:1px solid #e4c68088;color:#f8f0df;font:15px/1.5 system-ui,-apple-system,"DM Sans",sans-serif}
 .ksclp h3{margin:0 0 6px;font:500 26px/1.15 Georgia,serif;color:#e4c680}.ksclp p{margin:0 0 12px;color:#e2d0b4}
 .ksclp .row{display:flex;gap:10px}.ksclp input{flex:1;min-width:0;font-size:22px;letter-spacing:.3em;text-align:center;padding:12px;border-radius:12px;border:1px solid #6b3a35;background:#1a0206;color:#f8f0df}
@@ -36,7 +36,7 @@
     if (info.status !== "new") { clear(); banner(opts.before, "This prepaid code has already been used. If that wasn't you, WhatsApp us on <a href=\"https://wa.me/916377547759\">+91 63775 47759</a>.", true); return null; }
     if (info.tier === "card" && opts.kind === "site") { banner(opts.before, "Your prepaid code is for a <b>memory card</b>. <a href=\"/studio\">Make your card here →</a>"); return null; }
     const what = opts.kind === "site" ? "website" : "card";
-    banner(opts.before, `<b>Your prepaid Keepsake is ready.</b> Make your ${what} below, then tap Save and enter the 4-digit PIN from inside your pack. <b>No payment needed.</b>` + (info.tier === "site" && opts.kind === "site" ? ` <span style="opacity:.8">(Prefer a simple card? <a href="/studio">Use it for a card instead</a>.)</span>` : ""));
+    banner(opts.before, `Retail Keepsake Box <b>#${esc(info.code)}</b> detected! Your ${info.tier === "site" ? "VIP website" : "digital card"} is prepaid. Design your memories below, then tap Save and enter the 4-digit PIN from inside your box. <b>No payment needed.</b>` + (info.tier === "site" && opts.kind === "site" ? ` <span style="opacity:.8">(Prefer a simple card? <a href="/studio">Use it for a card instead</a>.)</span>` : ""));
     return { code: info.code, tier: info.tier };
   }
   function panel(el, o) {
