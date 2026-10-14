@@ -1,4 +1,5 @@
 const db = require("./_db");
+const pp = require("./_prepaid");
 module.exports = async (req, res) => {
   if (!db.ok()) return db.reply(res, 501, { error: "Storage not configured. Add Upstash Redis in Vercel → Storage." });
   const ak = process.env.ADMIN_KEY;
@@ -41,6 +42,14 @@ module.exports = async (req, res) => {
       o.ship = b.undo ? "to-ship" : "shipped"; o.tracking = String(b.tracking || o.tracking || "").slice(0, 120); o.shippedAt = b.undo ? null : Date.now();
       await db.setj("order:" + id, o); return db.reply(res, 200, { ok: true });
     }
+    // Prepaid QR codes for shops
+    if (b.action === "prepaid-create") {
+      const tier = b.tier === "vip" ? "site" : b.tier;
+      const x = await pp.createBatch({ count: b.count, tier, shop: b.shop, note: b.note }); if (x.error) return db.reply(res, 400, { error: x.error });
+      return db.reply(res, 200, { batch: { id: x.batch.id, count: x.batch.count } });
+    }
+    if (b.action === "prepaid-batches") return db.reply(res, 200, { batches: await pp.batches() });
+    if (b.action === "prepaid-batch") { const x = await pp.batchCodes(b.id); return x ? db.reply(res, 200, { batch: x }) : db.reply(res, 404, { error: "Batch not found." }); }
     if (b.action === "leads") {
       const rows = (await db.cmd("LRANGE", "leads", 0, 99)).map(x => { try { return JSON.parse(x); } catch (e) { return null; } }).filter(Boolean);
       return db.reply(res, 200, { leads: rows });
