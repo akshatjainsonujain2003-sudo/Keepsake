@@ -8,8 +8,10 @@ const rupees = (v, d) => { const n = Math.round(+v); return n >= 1 ? n : d; };
 // Everything sold is: a product (template card or custom website) + how it's delivered
 // (digital only, or a printed photo frame with a QR code or an NFC chip).
 // Prices are in rupees and can be changed in Vercel without code changes.
+// Photo frames are paused: they are only sold when FRAMES=on is set in Vercel.
+const framesOn = () => String(env.FRAMES || "").toLowerCase() === "on";
 function catalog() {
-  return {
+  const c = {
     products: {
       card: { name: "Template", price: rupees(env.PRICE_TEMPLATE, 99), desc: "One beautiful memory card from our designs." },
       site: { name: "Custom website", price: rupees(env.PRICE_WEBSITE, 299), desc: "A full page for your story: photos, videos, songs, timeline and letters." }
@@ -18,8 +20,11 @@ function catalog() {
       digital: { name: "Digital", price: 0, desc: "Short link, QR code and NFC-ready link to share or print." },
       frameQr: { name: "Photo frame with QR", price: rupees(env.PRICE_FRAME_QR, 399), desc: "A printed photo frame with a scannable QR code, delivered to you." },
       frameNfc: { name: "Photo frame with NFC", price: rupees(env.PRICE_FRAME_NFC, 599), desc: "A printed photo frame with a hidden NFC chip. Tap a phone to open.", }
-    }
+    },
+    frames: framesOn()
   };
+  if (!c.frames) { delete c.delivery.frameQr; delete c.delivery.frameNfc; }
+  return c;
 }
 const isFrame = plan => plan === "frameQr" || plan === "frameNfc";
 const kindOf = memory => (memory.kind === "site" ? "site" : "card");

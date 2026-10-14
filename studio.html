@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#3b0710">
 <title>Memory Card Studio (₹99) — Design a Digital Keepsake Card | Keepsake</title>
 <link rel="canonical" href="https://getkeepsake.in/studio">
-<meta name="description" content="Design a personalised digital memory card with your photos, Spotify song, video and private note for ₹99. Share by link, QR code, NFC or printed photo frame.">
+<meta name="description" content="Design a personalised digital memory card with your photos, Spotify song, video and private note for ₹99. Share by link, QR code or NFC tap.">
 <meta property="og:type" content="website"><meta property="og:site_name" content="Keepsake"><meta property="og:title" content="A keepsake made for you ♡"><meta property="og:description" content="Open it to see the photos, the song and the words someone made just for you."><meta property="og:image" content="https://getkeepsake.in/assets/og-image.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image">
 <meta name="robots" content="index,follow">
 <script>/* customers' own cards (/m/…, /c/…) use this page too: keep those out of search */if(/^\/(m|c)\//.test(location.pathname)){document.querySelector('meta[name=robots]').content="noindex,nofollow";document.querySelector('link[rel=canonical]').remove()}</script>
@@ -1444,7 +1444,7 @@ window.qrcode=function(typeNumber,errorLevel){
 })();
 </script>
 <style>.payPanel{max-width:760px;margin:0 auto 24px}.liveExtra{margin-top:12px}.lockField{margin-top:6px}</style>
-<script src="/assets/ks-checkout.v1.js"></script><script src="/assets/ks-claim.v1.js"></script>
+<script src="/assets/ks-checkout.v4.js"></script><script src="/assets/ks-claim.v1.js"></script>
 <link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/svg+xml" href="/assets/icon.svg"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest"><style>
 /* phones: smaller theme tiles so the form is closer */
 @media(max-width:600px){#templates .templates{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:8px!important}#templates .template .meta b{font-size:11.5px}#templates .template .index{transform:scale(.8);transform-origin:top left}#templates .template.active::before,#templates .template.active::after{display:none!important}}
@@ -2116,7 +2116,7 @@ let EDIT_ID=null,CHECKOUT=null,LOCK=null;
 function setEdit(id){EDIT_ID=id||null;try{const u=new URL(location.href);if(EDIT_ID)u.searchParams.set("edit",EDIT_ID);else u.searchParams.delete("edit");u.searchParams.delete("resume");u.searchParams.delete("account");history.replaceState(null,"",u.pathname+u.search+u.hash)}catch(e){}}
 function saveMemory(){const body={data:wire(d)};if(EDIT_ID)body.id=EDIT_ID;const lk=LOCK&&LOCK.value();if(lk!==undefined)body.lock=lk;return fetch("/api/customer-memories",{method:EDIT_ID?"PUT":"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)})}
 function showLive(url){short=location.origin+url;longLink=short;$("#shortLink").textContent=short;badge(short);$("#payPanel").hidden=true;$("#linkGrid").hidden=false;setStatus("#linkStatus","Your keepsake is live. Share the link, print the QR or write it to an NFC tag.",true);drawQR();upgradeOffer();$("#link").scrollIntoView({behavior:"smooth",block:"start"})}
-function upgradeOffer(){let x=$("#nfcUpsell");if(!x){x=document.createElement("div");x.id="nfcUpsell";x.className="liveExtra";$("#linkStatus").after(x)}x.innerHTML='<button class="btn small ghost" type="button" id="orderFrame">Get it in a photo frame (QR or NFC)</button>';$("#orderFrame").onclick=()=>showCheckout("upgrade");KSCheckout.catalog().then(c=>{if(c.free)x.hidden=true})}
+function upgradeOffer(){let x=$("#nfcUpsell");if(!x){x=document.createElement("div");x.id="nfcUpsell";x.className="liveExtra";$("#linkStatus").after(x)}x.hidden=true;x.innerHTML='<button class="btn small ghost" type="button" id="orderFrame">Get it in a photo frame (QR or NFC)</button>';$("#orderFrame").onclick=()=>showCheckout("upgrade");KSCheckout.catalog().then(c=>{if(c.free||!c.frames)x.hidden=true})}
 function showClaim(){setStatus("#generateStatus","Saved. Enter your PIN below to activate it.",true);$("#linkGrid").hidden=true;KSClaim.panel($("#payPanel"),{code:window.KS_CLAIM.code,getId:()=>EDIT_ID,onDone:url=>{window.KS_CLAIM=null;$("#ksClaimBanner")?.remove();showLive(url);toast("Activated ♡ Your keepsake is live");setStatus("#linkStatus","Activated with your prepaid code. Your keepsake is live.",true)}})}
 function showCheckout(mode){
  if(!CHECKOUT)CHECKOUT=KSCheckout.mount($("#payPanel"),{kind:"card",getId:()=>EDIT_ID,customer:()=>CUSTOMER,onPaid:v=>{showLive(v.url);const fr=v.plan==="frameQr"||v.plan==="frameNfc";toast(fr?"Paid ♡ Your photo frame is on its way":"Paid ♡ Your keepsake is live");setStatus("#linkStatus",fr?"Paid. Your keepsake is live and we'll ship your photo frame soon.":"Paid. Your keepsake is live.",true)}});
