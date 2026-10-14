@@ -31,6 +31,10 @@
     {
       "source": "/robots.txt",
       "destination": "/api/seo?f=robots"
+    },
+    {
+      "source": "/api/config",
+      "destination": "/api/seo?f=config"
     }
   ],
   "headers": [

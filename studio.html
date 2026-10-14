@@ -1453,7 +1453,7 @@ window.qrcode=function(typeNumber,errorLevel){
 #qrPanel.locked .qrBox img{filter:blur(7px);opacity:.35}
 #qrPanel.locked .qrBox::after{content:"Your QR code appears here after you save";position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:14px;font:600 14px/1.35 system-ui,sans-serif;color:#2a0409}
 </style>
-</head>
+<script src="/assets/ks-pixel.v1.js" defer></script><script src="/assets/ks-ref.v1.js" defer></script></head>
 <body>
 <div class="topbar"><div class="wrap nav">
 <a class="brand" href="/">Keepsake</a>
@@ -1568,7 +1568,7 @@ window.qrcode=function(typeNumber,errorLevel){
 </section>
 
 <section class="section" id="mine" hidden><div class="wrap"><h2 id="mineHeading">Your cards</h2><p id="mineIntro">Your saved memories.</p><div id="mineList"></div></div></section>
-<footer class="footer"><div class="wrap footerIn"><span class="brand">Keepsake</span><span>Made for memories that deserve more than a camera roll.</span></div></footer>
+<footer class="footer"><div class="wrap footerIn"><span class="brand">Keepsake</span><span>Made for memories that deserve more than a camera roll.</span><span style="font-size:12px"><a href="/terms" style="color:inherit">Terms</a> · <a href="/privacy" style="color:inherit">Privacy</a> · <a href="/refunds" style="color:inherit">Refunds</a></span></div></footer>
 
 <div class="toast" id="toast"></div>
 <script>

@@ -41,6 +41,7 @@ html,body{margin:0;background:#2b060b}
     return;
   }
   KSSite.render(root, j.data);
+  { const r = document.createElement("p"); r.style.cssText = "text-align:center;font:13px system-ui,sans-serif;opacity:.7;margin:30px 0"; const l = document.createElement("a"); l.href = "/contact?report=" + m[1]; l.textContent = "Report this page"; l.rel = "nofollow"; l.style.color = "inherit"; r.appendChild(l); document.body.appendChild(r); }
   document.title = (j.data.t || "Our story") + " · Keepsake";
   const tc = getComputedStyle(root).getPropertyValue("--bg").trim(); if (tc) { document.querySelector('meta[name=theme-color]').content = tc; document.body.style.background = tc; }
   if (j.active === false) {

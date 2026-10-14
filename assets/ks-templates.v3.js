@@ -4,7 +4,7 @@
    - KSKit.boot(tpl, render): runs a template with the customer's data (or the demo),
      and re-renders live when the builder sends new data.
    Customer text is only ever set with textContent. Links are checked before use.
-   Files in /assets are cached for a year: rename (v2…) when changing. */
+   Files in /assets are cached for a year: rename (v3…) when changing. */
 (function () {
   const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     const D = n => "/assets/demo/" + n + ".webp", W = n => "/assets/wildflower/" + n + ".webp";
@@ -276,6 +276,11 @@
       b.append("Preview: only you can see this until it’s activated. ");
       const a = document.createElement("a"); a.href = "/builder?edit=" + encodeURIComponent(window.KS_META.id) + "#publish"; a.textContent = "Activate it"; a.style.color = "#2a0409"; b.append(a);
       document.body.prepend(b);
+    }
+    // Anyone can report a public keepsake page.
+    if (window.KS_META && window.KS_META.id && !preview && !window.KS_META.ownerPreview) {
+      const cr = document.querySelector(".credit");
+      if (cr) { const r = document.createElement("a"); r.href = "/contact?report=" + encodeURIComponent(window.KS_META.id); r.textContent = "Report"; r.rel = "nofollow"; cr.append(" · ", r); }
     }
     if (preview) window.addEventListener("message", e => {
       if (e.origin !== location.origin || !e.data || e.data.type !== "ks-preview") return;

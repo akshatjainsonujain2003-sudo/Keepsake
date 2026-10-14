@@ -44,7 +44,12 @@
 .ksun h1{font:400 26px/1.25 Georgia,serif;margin:18px 0 6px}.ksun p{opacity:.8;margin:0 0 20px;text-wrap:balance}
 .ksun input{width:100%;box-sizing:border-box;padding:15px 16px;border-radius:14px;border:1px solid #6b3a35;background:#1a0206;color:#f8f0df;font-size:17px;text-align:center}
 .ksun button{width:100%;margin-top:10px;padding:15px;border:0;border-radius:999px;background:#d6b06a;color:#2a0409;font-weight:700;font-size:16px;cursor:pointer}
-.ksun .ku-msg{min-height:1.3em;margin-top:12px;color:#ff9aa8;font-size:14px}`;
+.ksun .ku-msg{min-height:1.3em;margin-top:12px;color:#ff9aa8;font-size:14px}
+.ksco .ks-code{margin-top:14px;font-size:14px}.ksco .ks-code button.ks-link{color:var(--gold,#e4c680);background:none;border:0;padding:0;font:inherit;cursor:pointer;text-decoration:underline}
+.ksco .ks-crow{display:flex;gap:8px;margin-top:8px}.ksco .ks-crow input{flex:1;min-width:0;text-transform:uppercase;font:inherit;font-size:16px;padding:12px 14px;border-radius:12px;border:1px solid #6b3a35;background:#1a0206;color:#f8f0df}
+.ksco .ks-crow button{padding:0 18px;border-radius:12px;border:1px solid #e4c680;background:transparent;color:#e4c680;font:inherit;cursor:pointer}
+.ksco .ks-on{color:#9ad8b0}.ksco .ks-was{font-size:13px;opacity:.7;text-decoration:line-through;margin-left:6px}
+.ksco [hidden]{display:none!important}`;
     document.head.appendChild(st);
   }
 
@@ -68,6 +73,14 @@
   function loadRazorpay() {
     return window.Razorpay ? Promise.resolve() : new Promise((ok, no) => { const sc = document.createElement("script"); sc.src = "https://checkout.razorpay.com/v1/checkout.js"; sc.onload = ok; sc.onerror = () => no(new Error("Could not load the payment window. Check your connection and try again.")); document.head.appendChild(sc); });
   }
+
+  // Creator codes: ks-ref.v1.js saves ?ref=CODE from the link someone clicked; it is applied here at checkout.
+  const REF_KEY = "ks-ref", REF_DAYS = 30;
+  function savedCode() { try { const r = JSON.parse(localStorage.getItem(REF_KEY) || "null"); return r && r.code && Date.now() - r.at < REF_DAYS * 864e5 ? r.code : ""; } catch (e) { return ""; } }
+  function saveCode(code) { try { code ? localStorage.setItem(REF_KEY, JSON.stringify({ code, at: Date.now() })) : localStorage.removeItem(REF_KEY); } catch (e) {} }
+  async function checkCode(v) { try { const r = await fetch("/api/checkout?code=" + encodeURIComponent(v), { cache: "no-store" }); const j = await r.json().catch(() => ({})); return r.ok && j.code ? j.code : null; } catch (e) { return null; } }
+  // Facebook Pixel events (only when the pixel is on; see ks-pixel.v1.js)
+  const track = (name, data) => { try { if (window.fbq) window.fbq("track", name, data || {}); } catch (e) {} };
 
   let CATALOG = null;
   async function catalog() {
@@ -97,12 +110,15 @@
   <label class="ks-f">PIN code<input class="ks-in" data-a="pincode" inputmode="numeric" autocomplete="postal-code" maxlength="6"></label>
  </div>
 </div>
+<div class="ks-code"><span class="ks-con" hidden></span><button type="button" class="ks-link ks-cask">Have a code?</button><div class="ks-crow" hidden><input class="ks-cin" maxlength="20" autocomplete="off" placeholder="Enter code" aria-label="Discount code"><button type="button" class="ks-capply">Apply</button></div></div>
 <button type="button" class="ks-pay">Pay</button><div class="ks-status" role="status"></div>
 <p class="ks-fine">Secure payment by Razorpay: UPI, cards, net banking and wallets.</p>`;
     const $ = s => el.querySelector(s);
-    const state = { mode: "activate", plan: "digital", print: "", photo: "", cat: null };
+    const state = { mode: "activate", plan: "digital", print: "", photo: "", cat: null, code: null };
     const status = (t, cls) => { const s = $(".ks-status"); s.textContent = t || ""; s.className = "ks-status" + (cls ? " " + cls : ""); };
-    const total = plan => { const c = state.cat; if (!c) return 0; const base = state.mode === "upgrade" ? 0 : c.products[opts.kind].price; return base + c.delivery[plan].price; };
+    const full = plan => { const c = state.cat; if (!c || !c.delivery[plan]) return { sum: 0, frame: 0 }; const base = state.mode === "upgrade" ? 0 : c.products[opts.kind].price, fr = c.delivery[plan].price; return { sum: base + fr, frame: fr }; };
+    // A creator's code takes its discount off the keepsake itself, never a frame (same as api/_ref.js).
+    const total = plan => { const f = full(plan); if (!state.code) return f.sum; return f.sum - Math.round(Math.max(0, f.sum - f.frame) * state.code.discount / 100); };
 
     function render() {
       const c = state.cat, prod = c.products[opts.kind];
@@ -121,13 +137,26 @@
       $(".ks-photo").hidden = state.print !== "photo";
       const img = $(".ks-photo img"); img.hidden = !state.photo; if (state.photo) img.src = state.photo;
       $(".ks-up").firstChild.textContent = state.photo ? "Change photo" : "Upload photo to print";
-      $(".ks-pay").textContent = "Pay " + money(total(state.plan)) + (state.mode === "upgrade" ? " & order frame" : " & activate");
+      const cd = state.code, off = cd ? full(state.plan).sum - total(state.plan) : 0;
+      $(".ks-code").hidden = state.mode === "upgrade"; $(".ks-con").hidden = !cd; $(".ks-cask").hidden = !!cd; if (cd) $(".ks-crow").hidden = true;
+      if (cd) $(".ks-con").innerHTML = `<span class="ks-on">✓ Code ${esc(cd.code)} applied: ${cd.discount}% off${off ? " (you save " + money(off) + ")" : ""}</span> · <button type="button" class="ks-link ks-cdel">Remove</button>`;
+      $(".ks-pay").innerHTML = "Pay " + money(total(state.plan)) + (off ? `<span class="ks-was">${money(full(state.plan).sum)}</span>` : "") + (state.mode === "upgrade" ? " & order frame" : " & activate");
     }
 
     el.addEventListener("click", e => {
       const o = e.target.closest(".ks-opt"); if (o) { state.plan = o.dataset.plan; status(""); render(); return; }
-      const p = e.target.closest(".ks-pill"); if (p) { state.print = p.dataset.print; status(""); render(); }
+      const p = e.target.closest(".ks-pill"); if (p) { state.print = p.dataset.print; status(""); render(); return; }
+      if (e.target.closest(".ks-cask")) { $(".ks-crow").hidden = false; $(".ks-cask").hidden = true; $(".ks-cin").focus(); return; }
+      if (e.target.closest(".ks-cdel")) { state.code = null; saveCode(null); status(""); render(); return; }
+      if (e.target.closest(".ks-capply")) applyCode($(".ks-cin").value, true);
     });
+    $(".ks-cin").addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); applyCode(e.target.value, true); } });
+    async function applyCode(v, loud) {
+      v = String(v || "").trim(); if (!v) { if (loud) status("Enter a code first.", "bad"); return; }
+      const c = await checkCode(v);
+      if (c) { state.code = c; saveCode(c.code); if (loud) status(""); render(); }
+      else if (loud) status("That code isn't valid.", "bad"); else saveCode(null);
+    }
     $(".ks-photo input").addEventListener("change", async e => {
       const f = e.target.files && e.target.files[0]; e.target.value = ""; if (!f) return;
       status("Uploading your photo…");
@@ -138,6 +167,7 @@
     async function pay() {
       const id = opts.getId(); if (!id) { status("Save first ♡", "bad"); return; }
       const body = { action: "create", id, plan: state.plan };
+      if (state.code && state.mode !== "upgrade") body.ref = state.code.code;
       if (state.plan !== "digital") {
         if (!state.print) { status("Choose what to print in the frame.", "bad"); return; }
         if (state.print === "photo" && !state.photo) { status("Upload the photo you'd like printed.", "bad"); return; }
@@ -145,6 +175,7 @@
         body.address = {}; el.querySelectorAll("[data-a]").forEach(i => body.address[i.dataset.a] = i.value);
       }
       const btn = $(".ks-pay"); btn.disabled = true; status("Opening secure payment…");
+      track("InitiateCheckout", { value: total(state.plan), currency: "INR" });
       try {
         const o = await post("/api/checkout", body);
         await loadRazorpay();
@@ -152,7 +183,7 @@
           key: o.keyId, amount: o.amount, currency: o.currency, order_id: o.orderId, name: "Keepsake", description: o.description, prefill: o.prefill, theme: { color: "#42070f" },
           handler: async p => {
             status("Confirming your payment…");
-            try { const v = await post("/api/checkout", { action: "verify", ...p }); status(""); opts.onPaid && opts.onPaid(v); }
+            try { const v = await post("/api/checkout", { action: "verify", ...p }); status(""); track("Purchase", { value: v.amount || 0, currency: "INR", content_type: "product", content_ids: [opts.kind + "-" + (v.plan || "digital")] }); opts.onPaid && opts.onPaid(v); }
             catch (x) { status((x.message || "Could not confirm the payment.") + " If money was taken, it will switch on within a few minutes; check My memories.", "bad"); }
             finally { btn.disabled = false; }
           },
@@ -168,6 +199,7 @@
         state.mode = mode === "upgrade" ? "upgrade" : "activate";
         if (state.mode === "upgrade" && state.plan === "digital") state.plan = "frameQr";
         state.cat = await catalog(); status("");
+        if (!state.code && state.mode !== "upgrade") { const saved = savedCode(); if (saved) await applyCode(saved, false); }
         const cu = opts.customer && opts.customer();
         if (cu) { const n = el.querySelector('[data-a="name"]'), ph = el.querySelector('[data-a="phone"]'); if (!n.value) n.value = cu.name || ""; if (!ph.value) ph.value = cu.phone || ""; }
         render();

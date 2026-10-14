@@ -1,0 +1,35 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#240409"><title>Creator dashboard · Keepsake</title><meta name="robots" content="noindex,nofollow"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=DM+Sans:wght@400;500;600;700&family=Parisienne&display=swap"><link rel="stylesheet" href="/assets/ks3.css"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/svg+xml" href="/assets/icon.svg"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest"><script src="/assets/ks-pixel.v1.js" defer></script><script src="/assets/ks-ref.v1.js" defer></script></head><body>
+<header class="nav"><div class="nav-in"><a class="brand" href="/">Keepsake</a><a class="btn gold sm nav-cta" href="/builder">Make a website</a><button class="menu-btn" aria-expanded="false" aria-controls="menu" aria-label="Menu"><span></span><span></span></button><nav id="menu" class="nav-links" aria-label="Main"><a href="/designs#websites">Websites</a><a href="/designs#cards">Cards</a><a href="/#pricing">Pricing</a><a href="/contact">Contact</a><a href="/account">My account</a><a class="btn gold sm" href="/builder">Make a website</a></nav></div></header><style>
+.cr{width:min(760px,100% - 32px);margin:0 auto;padding:clamp(36px,6vw,70px) 0 90px}
+.cr h1{font:500 clamp(38px,7vw,58px)/1.05 "Cormorant Garamond",Georgia,serif;margin:0 0 6px}
+.cr .sub{opacity:.75;margin:0 0 26px}
+.cr .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.cr .grid div{border:1px solid #2a040922;border-radius:18px;padding:16px;background:#fff}
+.cr .grid b{display:block;font:600 34px/1.1 "Cormorant Garamond",Georgia,serif;color:#7a1420}
+.cr .grid span{font-size:13px;opacity:.75}
+.cr .link{display:flex;gap:8px;margin:22px 0 6px;flex-wrap:wrap}
+.cr .link code{flex:1;min-width:0;overflow-wrap:anywhere;padding:12px 14px;border-radius:12px;border:1px solid #2a040922;background:#fff;font-size:14px}
+.cr h2{font:600 26px/1.2 "Cormorant Garamond",Georgia,serif;margin:34px 0 10px}
+.cr table{width:100%;border-collapse:collapse;font-size:15px}.cr td,.cr th{text-align:left;padding:10px 6px;border-bottom:1px solid #2a040918}.cr th{font-weight:500;opacity:.7;font-size:13px}
+.cr .msg{padding:40px 0;opacity:.85}
+.cr ul{padding-left:20px;line-height:1.8}
+@media(max-width:620px){.cr .grid{grid-template-columns:1fr 1fr}}
+</style>
+<main><section class="cr" id="cr"><p class="msg">Loading your sales…</p></section></main>
+<footer><div class="wrap"><div class="foot"><div><a class="brand" href="/">Keepsake</a><p>Love-story websites and memory cards for the people you love, shared by link, QR or NFC.</p></div><nav aria-label="Footer"><a href="/digital-gifts">Digital gifts</a><a href="/designs">Designs</a><a href="/designs#websites">Websites</a><a href="/#pricing">Pricing</a><a href="/contact">Contact</a><a href="/account">My account</a><a href="/studio">Studio</a></nav></div><div class="fine">Call or WhatsApp <a href="tel:+916377547759">+91 63775 47759</a> · <a href="https://wa.me/916377547759?text=Hi%20Keepsake%2C%20I%20have%20a%20question" target="_blank" rel="noopener">Chat on WhatsApp</a></div><div class="fine">&copy; 2026 Keepsake · <a href="/terms">Terms</a> · <a href="/privacy">Privacy</a> · <a href="/refunds">Refunds</a> · <a href="/shipping">Delivery</a></div></div></footer><script>
+(function(){
+ var q=new URLSearchParams(location.search),el=document.getElementById("cr");
+ var esc=function(t){return String(t==null?"":t).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})};
+ var rs=function(n){return"₹"+Number(n||0).toLocaleString("en-IN")};
+ fetch("/api/checkout?creator="+encodeURIComponent(q.get("code")||"")+"&key="+encodeURIComponent(q.get("key")||""),{cache:"no-store"}).then(function(r){return r.ok?r.json():Promise.reject()}).then(function(d){
+  var link=location.origin+"/?ref="+d.code;
+  el.innerHTML='<h1>Hi '+esc(d.name)+' ♡</h1><p class="sub">Your code <b>'+esc(d.code)+'</b> gives your followers '+d.discount+'% off, and you earn '+d.commission+'% of every sale.'+(d.active?'':' <b style="color:#ff9aa8">This code is paused right now.</b>')+'</p>'
+   +'<div class="grid"><div><b>'+d.sales+'</b><span>sales</span></div><div><b>'+rs(d.earned)+'</b><span>earned</span></div><div><b>'+rs(d.paidOut)+'</b><span>paid to you</span></div><div><b>'+rs(d.owed)+'</b><span>to be paid</span></div></div>'
+   +'<div class="link"><code>'+esc(link)+'</code><button class="btn gold sm" id="cp" type="button">Copy link</button></div><p style="opacity:.75;font-size:14px;margin:0">Share this link, or ask people to type <b>'+esc(d.code)+'</b> at checkout. The link remembers your code for 30 days.</p>'
+   +'<h2>Recent sales</h2>'+(d.recent.length?'<table><tr><th>Date</th><th>What</th><th>Sale</th><th>You earn</th></tr>'+d.recent.map(function(o){return'<tr><td>'+new Date(o.at).toLocaleDateString("en-IN",{day:"numeric",month:"short"})+'</td><td>'+esc(o.what)+'</td><td>'+rs(o.amount)+'</td><td>'+rs(o.commission)+'</td></tr>'}).join("")+'</table>':'<p style="opacity:.75">No sales yet. Your first one will show up here as soon as it is paid.</p>')
+   +'<h2>Ideas that work</h2><ul><li>Make a Keepsake for your own partner or best friend and show them opening it.</li><li>Post the reaction as a Reel with your link in your bio or story.</li><li>Birthdays and anniversaries: remind people a 30-day page costs less than a bouquet.</li></ul>';
+  document.getElementById("cp").onclick=function(){navigator.clipboard.writeText(link);this.textContent="Copied ✓"};
+ }).catch(function(){el.innerHTML='<h1>Creator dashboard</h1><p class="msg">This link isn\'t valid. Please use the exact link Keepsake sent you, or <a href="/contact">contact us</a>.</p>'});
+})();
+</script>
+<script src="/assets/ks2.js" defer></script></body></html>
