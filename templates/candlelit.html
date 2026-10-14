@@ -3,430 +3,427 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#2a0207">
-<title>Meera &amp; Aarav · Candlelit · GetKeepsake</title><meta name="robots" content="noindex,follow">
+<meta name="theme-color" content="#6e1220">
+<title>Meera &amp; Aarav · Red Letter · GetKeepsake</title><meta name="robots" content="noindex,follow">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Pinyon+Script&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500&display=swap">
 <style>
-/* Candlelit: a Keepsake website template. Silk, wax, lace and old gold. */
+/* Red Letter: a GetKeepsake website template. Wine and ivory, letters, stamps, playing cards and lace. */
 :root{
-  --wine:#3c0003;--deep:#1f0104;--cream:#F3E7D3;--ink:#3A0A12;--muted:#8a5a5f;--g2:#D2AE63;--g1:#F3DD9E;
-  --gold:linear-gradient(115deg,#8C6526 0%,#E8C978 22%,#FFF0BE 34%,#C9A04F 52%,#8C6526 70%,#E3C273 88%,#9B7330 100%);
-  --display:"Bodoni Moda",Didot,serif;--body:"EB Garamond",Garamond,serif;--script:"Pinyon Script",cursive;
+  --wine:#7a1524;--wine2:#5b0d18;--wine3:#3f0811;--ivory:#f8f2e8;--ink:#3b0d15;--soft:#8c5a60;--gold:#c8a052;--gold2:#ead7a4;
+  --script:"Pinyon Script",cursive;--serif:"Cormorant Garamond",Georgia,serif;--sans:"Jost",system-ui,sans-serif;
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{margin:0;background:var(--deep);color:var(--cream);font:400 19px/1.65 var(--body);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body{margin:0;background:var(--wine3);color:var(--ink);font:300 16px/1.7 var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden}
 img{display:block;max-width:100%}
 a{color:inherit}
-h1,h2,h3{font-weight:400;margin:0}
-.wrap{width:min(1080px,100% - 40px);margin:0 auto}
-.narrow{width:min(560px,100% - 40px);margin:0 auto}
-section{position:relative;padding:clamp(90px,12vw,150px) 0;overflow:hidden}
-:focus-visible{outline:2px solid var(--g2);outline-offset:3px}
-.goldtext{background:var(--gold);-webkit-background-clip:text;background-clip:text;color:transparent}
-.script{font-family:var(--script);font-weight:400;line-height:1.15}
-.kicker{font:400 italic 20px var(--display);color:var(--g2)}
-h2.title{font:400 clamp(44px,8vw,78px)/1.05 var(--display);letter-spacing:-.01em}
-h2.title em{font-family:var(--script);font-style:normal;font-size:1.15em;margin-left:.08em}
+h1,h2,h3{margin:0;font-weight:400}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+/* one tall column, like a letter; wine shows either side on wide screens */
+main{max-width:520px;margin:0 auto;background:var(--ivory);box-shadow:0 0 80px #0009;overflow:hidden}
+section{position:relative;padding:72px 26px;overflow:hidden}
+.cream{background:var(--ivory)}
+.wine{background:radial-gradient(120% 70% at 50% 0,var(--wine),var(--wine2) 70%);color:var(--ivory)}
+/* faint handwriting behind a section */
+.hand{position:absolute;inset:-10px -20px;z-index:0;pointer-events:none;font:400 30px/1.55 var(--script);color:var(--wine);opacity:.07;transform:rotate(-4deg);word-spacing:6px;overflow:hidden}
+.wine .hand{color:var(--ivory);opacity:.06}
+section>*:not(.hand){position:relative}
+.caps{font:500 12px/1.4 var(--sans);letter-spacing:.32em;text-transform:uppercase}
+.kick{font:italic 400 18px var(--serif);color:var(--soft)}
+.wine .kick{color:var(--gold2)}
+.h2{font:400 clamp(46px,13vw,64px)/1.05 var(--script);color:var(--wine)}
+.wine .h2{color:var(--ivory)}
 .center{text-align:center}
+img:not([src]){visibility:hidden}
+.warm{filter:sepia(.12) saturate(1.04) contrast(1.03)}
 
-/* backgrounds made from the real textures */
-.silk{background:linear-gradient(#1f010499,#1f0104cc),url(/assets/candlelit/silk.webp) center/cover}
-.damask{background:url(/assets/candlelit/damask.webp) center/560px repeat,#3a0408}
-.paper{background:url(/assets/candlelit/paper.webp) center/cover,#efe0c6;color:var(--ink)}
-.lace-band{height:clamp(54px,9vw,90px);background:url(/assets/candlelit/lace.webp) center/auto 100% repeat-x;position:relative;z-index:3;margin:-1px 0;filter:drop-shadow(0 4px 6px #0006)}
-
-/* photos: black & white, or washed in wine */
-.bw{filter:grayscale(1) contrast(1.08) brightness(1.03)}
-.tint{position:relative;overflow:hidden}
-.tint img{filter:grayscale(1) contrast(1.1)}
-.tint::after{content:"";position:absolute;inset:0;background:#6d1222;mix-blend-mode:multiply;opacity:.75}
-
-/* a photo inside a real gold frame. --x/--y/--w/--h = the frame's opening */
-.gframe{position:relative}
-.gframe>.pic{position:absolute;left:var(--x);top:var(--y);width:var(--w);height:var(--h);overflow:hidden;background:#000}
-.gframe>.pic img:not([src]),.tv .screen img:not([src]),.ticket img:not([src]){visibility:hidden}
-#spot iframe{display:block;width:100%;max-width:460px;margin:16px auto 0;border:0;border-radius:12px}
+/* ---------- opening: an envelope on wine ---------- */
+.gate{display:none}
+.js .gate{position:fixed;inset:0;z-index:100;display:grid;place-items:center;text-align:center;padding:24px;background:radial-gradient(90% 70% at 50% 40%,var(--wine),var(--wine3));color:var(--ivory);transition:opacity 1s .9s,visibility 0s 1.9s}
+.js.entered .gate{opacity:0;visibility:hidden;pointer-events:none}
 .ks-preview .gate{display:none!important}
-.gframe>.pic img{width:100%;height:100%;object-fit:cover}
-.gframe>.border{position:relative;z-index:2;width:100%;pointer-events:none;filter:drop-shadow(0 14px 22px #0008)}
-.rect{--x:28%;--y:23%;--w:45%;--h:52.5%}
-.ovalf{--x:19.5%;--y:21%;--w:60.5%;--h:61%}
-.ovalf>.pic{border-radius:50%}
-
-/* ---------- falling petals (whole page, very light) ---------- */
-.petals{position:fixed;inset:0;pointer-events:none;z-index:40;overflow:hidden}
-.petals img{position:absolute;top:-80px;width:var(--s);opacity:.75;animation:fall var(--d) linear var(--delay) infinite;will-change:transform}
-@keyframes fall{0%{transform:translate3d(0,-10vh,0) rotate(0)}25%{transform:translate3d(var(--sway),25vh,0) rotate(90deg)}50%{transform:translate3d(calc(var(--sway)*-1),55vh,0) rotate(200deg)}100%{transform:translate3d(var(--sway),115vh,0) rotate(400deg)}}
+.gate .for{font:italic 400 18px var(--serif);color:var(--gold2)}
+.gate .who{font:400 clamp(58px,17vw,96px)/1.1 var(--script);margin:2px 0 18px}
+.genv{position:relative;width:min(300px,78vw);aspect-ratio:3/2;margin:0 auto;border:0;padding:0;background:none;cursor:pointer;display:block}
+.genv .b{position:absolute;inset:0;background:linear-gradient(#f7efe2,#e9dcc6);border-radius:4px;box-shadow:0 24px 40px #0007}
+.genv .f{position:absolute;inset:0;background:linear-gradient(170deg,#f2e8d6,#e2d2b8);clip-path:polygon(0 0,50% 58%,100% 0,100% 100%,0 100%);border-radius:4px;z-index:2}
+.genv .fl{position:absolute;left:0;right:0;top:0;height:60%;background:linear-gradient(#efe3cf,#dccab0);clip-path:polygon(0 0,100% 0,50% 100%);transform-origin:top;z-index:3;transition:transform .8s cubic-bezier(.4,0,.2,1)}
+.genv .s{position:absolute;left:50%;top:50%;width:30%;translate:-50% -50%;z-index:4;filter:drop-shadow(0 4px 5px #0007);transition:transform .5s,opacity .5s}
+.genv .addr{position:absolute;left:0;right:0;bottom:3%;z-index:3;font:400 22px var(--script);color:var(--wine)}
+.gate .hint{margin-top:22px;font:italic 400 16px var(--serif);color:#f3e2c8bb}
+@media (prefers-reduced-motion:no-preference){.genv .s{animation:pulse 2.4s ease-in-out infinite}}
+@keyframes pulse{50%{transform:scale(1.07)}}
+.opening .genv .fl{transform:rotateX(180deg);z-index:1}
+.opening .genv .s{opacity:0;transform:scale(1.5);animation:none}
+html.locked{overflow:hidden}
 
 /* ---------- hero ---------- */
-.hero{min-height:100svh;display:grid;place-items:center;padding:56px 0 64px;text-align:center}
-.hero h1{font-size:clamp(66px,15vw,150px);line-height:1.1;padding:0 .1em}
-.stage{position:relative;width:min(380px,86vw);margin:34px auto 0}
-.stage .bow{position:absolute;z-index:3;width:34%;left:33%;top:-11%}
-.stage .ring{position:absolute;z-index:3;width:30%;right:2%;bottom:6%;transform:rotate(-14deg);filter:drop-shadow(0 10px 12px #0009)}
-.hero .date{margin-top:22px;font:400 clamp(17px,2.4vw,21px) var(--display);letter-spacing:.06em}
-.hero .date span{display:inline-block;margin:0 12px;color:var(--g2)}
-.scroll-cue{margin-top:30px;font:400 italic 16px var(--display);color:#e8d4b8aa}
+.hero{padding:56px 22px 60px;text-align:center}
+.hero .names{z-index:3}
+.hero .caps{color:var(--soft)}
+.names{position:relative;z-index:3;font:400 clamp(64px,19vw,104px)/.9 var(--script);color:var(--wine);margin:18px 0 -16px;text-shadow:0 2px 0 var(--ivory),0 0 12px var(--ivory)}
+.names .a{display:block;text-align:left;padding-left:4%}
+.names .amp{display:block;font-size:.45em;line-height:1;margin:2px 0 -4px}
+.names .b{display:block;text-align:right;padding-right:4%}
+.hpic{position:relative;width:86%;margin:0 auto;aspect-ratio:4/5;border-radius:14px;overflow:hidden;box-shadow:0 22px 40px #3b0d1555;background:#e9dccb;
+  -webkit-mask:radial-gradient(circle 30px at 50% 100%,#0000 98%,#000);mask:radial-gradient(circle 30px at 50% 100%,#0000 98%,#000)}
+.hpic img{width:100%;height:100%;object-fit:cover}
+.hbtn{position:relative;z-index:3;width:50px;height:50px;margin:-25px auto 0;border-radius:50%;background:var(--wine);display:grid;place-items:center;color:var(--ivory);font-size:20px;box-shadow:0 6px 14px #3b0d1555}
+.sticker{position:absolute;z-index:4;width:30%;left:0;top:30%;transform:rotate(-12deg);filter:drop-shadow(0 6px 8px #0004)}
+.tag{position:absolute;z-index:4;right:2%;top:74%;width:36%;transform:rotate(-6deg)}
+.tag .plate{display:grid;place-items:center;aspect-ratio:2.1/1;border-radius:6px;background:linear-gradient(135deg,#6e6150,#2e261d 40%,#4a3e30 70%,#1f1914);border:3px solid #c9a961;box-shadow:inset 0 0 0 2px #3a2f22,0 10px 16px #0006;font:400 clamp(20px,6vw,28px) var(--script);color:#e9cf8d;text-shadow:0 1px 0 #000}
+.tag .ring{position:absolute;left:-12%;top:30%;width:22%;aspect-ratio:1;border-radius:50%;border:4px solid #c9a961;box-shadow:0 2px 4px #0006}
+.hdate{margin-top:26px;font:500 13px/1.4 var(--sans);letter-spacing:.3em;text-transform:uppercase;color:var(--wine)}
+.hdate i{font-style:normal;color:var(--gold);margin:0 8px}
+.cue{margin-top:10px;font:italic 400 17px var(--serif);color:var(--soft)}
 @media (prefers-reduced-motion:no-preference){
-  .stage .gframe{animation:settle 1.5s cubic-bezier(.2,.7,.2,1) both}
-  .stage .bow{animation:drop 1.1s .7s cubic-bezier(.3,1.4,.5,1) both}
-  .stage .ring{animation:roll 1.3s 1s cubic-bezier(.2,.8,.3,1) both}
-  .hero h1{animation:fade 1.6s .1s both}.hero .date,.scroll-cue{animation:fade 1.2s 1.3s both}
-  .scroll-cue{animation:fade 1.2s 1.6s both,bob 2.4s 2.8s ease-in-out infinite}
+ .entered .names{animation:rise 1.2s .2s both}.entered .hpic{animation:rise 1.2s .45s both}.entered .sticker{animation:pop .8s 1.2s cubic-bezier(.3,1.6,.5,1) both}.entered .tag{animation:swing 1.4s 1.4s both}
 }
-@keyframes settle{from{opacity:0;transform:translateY(46px) rotate(-3deg) scale(.95)}}
-@keyframes drop{from{opacity:0;transform:translateY(-60px) rotate(-12deg)}}
-@keyframes roll{from{opacity:0;transform:translateX(90px) rotate(-200deg)}}
-@keyframes fade{from{opacity:0}}
-@keyframes bob{50%{transform:translateY(6px)}}
+@keyframes rise{from{opacity:0;transform:translateY(26px)}}
+@keyframes pop{from{opacity:0;transform:rotate(-30deg) scale(.4)}}
+@keyframes swing{0%{opacity:0;transform:rotate(18deg) translateY(-20px)}50%{opacity:1;transform:rotate(-12deg)}75%{transform:rotate(-3deg)}100%{transform:rotate(-6deg)}}
 
-/* ---------- the letter: it rises out of the envelope ---------- */
-.letter{background:var(--wine);text-align:center}
-.env{position:relative;width:min(420px,88vw);margin:30px auto 0;aspect-ratio:720/1280;cursor:pointer;border:0;padding:0;background:none;display:block}
-.env img{position:absolute;inset:0;width:100%;height:100%}
-.env .sheet{transition:transform 1.6s cubic-bezier(.2,.7,.2,1);transform:translateY(34%)}
-.env .pocket{z-index:2}
-.env .on-paper{position:absolute;left:16%;right:16%;top:31%;z-index:1;transition:transform 1.6s cubic-bezier(.2,.7,.2,1);transform:translateY(34%);color:var(--ink);text-align:center}
-.env .on-paper b{display:block;font:400 clamp(40px,10vw,58px)/1 var(--script);color:var(--wine)}
-.env .on-paper small{display:block;margin-top:10px;font:400 italic 16px var(--display);color:var(--muted)}
-.letter.seen .env .sheet,.letter.seen .env .on-paper{transform:translateY(0)}
-.letter .hint{margin-top:18px;font:400 italic 17px var(--display);color:#e8d4b8bb}
+/* ---------- the day it all began: a calendar with a heart drawn round the date ---------- */
+.cal{text-align:center;padding-top:20px}
+.cal .mon{font:400 52px/1 var(--script);color:var(--wine)}
+.cal .yr{font:500 12px var(--sans);letter-spacing:.4em;color:var(--soft)}
+.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px 0;max-width:340px;margin:20px auto 0;font:400 15px/2.3 var(--sans);color:var(--ink)}
+.grid .wd{font:500 11px/2 var(--sans);letter-spacing:.12em;color:var(--soft)}
+.grid .day{position:relative}
+.grid .day.hit{color:var(--wine);font-weight:500}
+.grid .day.hit svg{position:absolute;left:50%;top:50%;width:175%;transform:translate(-50%,-50%);overflow:visible}
+.grid .day.hit path{fill:none;stroke:var(--wine);stroke-width:2.2;stroke-linecap:round;stroke-dasharray:260;stroke-dashoffset:260;transition:stroke-dashoffset 1.8s .3s ease}
+.cal.seen .grid .day.hit path{stroke-dashoffset:0}
+.cal .place{margin-top:26px;font:italic 400 19px/1.4 var(--serif);color:var(--soft)}
+.cal .place b{display:block;font:400 34px/1.2 var(--script);color:var(--wine)}
+
+/* ---------- the letter ---------- */
+.letter{text-align:center}
+.env{position:relative;width:min(330px,84vw);aspect-ratio:3/2;margin:46px auto 0;border:0;padding:0;background:none;cursor:pointer;display:block}
+.env .b,.env .f,.env .fl{position:absolute;inset:0;border-radius:4px}
+.env .b{background:linear-gradient(#f7efe2,#eadcc4);box-shadow:0 24px 40px #0008}
+.env .card{position:absolute;left:8%;right:8%;top:8%;height:84%;background:var(--ivory);z-index:1;display:grid;place-items:center;font:400 34px var(--script);color:var(--wine);transition:transform 1.1s .2s cubic-bezier(.2,.8,.3,1)}
+.env .f{background:linear-gradient(170deg,#f3e9d8,#e0cfb3);clip-path:polygon(0 0,50% 56%,100% 0,100% 100%,0 100%);z-index:2}
+.env .fl{bottom:auto;height:58%;background:linear-gradient(#efe3cf,#d9c6aa);clip-path:polygon(0 0,100% 0,50% 100%);transform-origin:top;z-index:3;transition:transform .7s cubic-bezier(.4,0,.2,1),z-index 0s .35s}
+.env .s{position:absolute;left:50%;top:55%;width:24%;translate:-50% -50%;z-index:4;transition:opacity .4s,transform .4s;filter:drop-shadow(0 3px 4px #0007)}
+.env .bow{position:absolute;z-index:5;width:34%;right:-9%;top:-16%;transform:rotate(18deg);filter:drop-shadow(0 6px 6px #0006)}
+.letter.open .env .fl{transform:rotateX(180deg);z-index:0}
+.letter.open .env .s{opacity:0;transform:scale(1.4)}
+.letter.open .env .card{transform:translateY(-46%)}
+.letter .hint{margin-top:16px;font:italic 400 16px var(--serif);color:#f3e2c8cc}
 .unfold{display:grid;grid-template-rows:0fr;transition:grid-template-rows 1.1s cubic-bezier(.2,.7,.2,1)}
 .unfold>div{overflow:hidden}
 .letter.open .unfold{grid-template-rows:1fr}
-.note{position:relative;margin:36px auto 0;width:min(520px,100% - 36px);text-align:left;padding:clamp(44px,8vw,64px) clamp(26px,7vw,56px);box-shadow:0 30px 60px #000a}
-.note h3{font:400 clamp(44px,9vw,62px)/1 var(--script);color:var(--wine);margin-bottom:16px}
-.note p{margin:0 0 1em}
-.note .sign{font:400 42px/1 var(--script);color:var(--wine);text-align:right;margin-top:20px}
-.note .rose{position:absolute;width:118px;right:-26px;top:-40px;transform:rotate(16deg);filter:drop-shadow(0 10px 10px #0007)}
-.note .seal{position:absolute;width:76px;left:22px;bottom:-26px;transform:rotate(-12deg);filter:drop-shadow(0 6px 6px #0007)}
+/* the note: ivory card with a perforated top and bottom */
+.note{position:relative;margin:40px 4px 10px;padding:46px 26px 40px;text-align:left;background:var(--ivory);color:var(--ink);
+  -webkit-mask:radial-gradient(circle 6px at 9px 0,#0000 97%,#000) 0 0/18px 51% repeat-x,radial-gradient(circle 6px at 9px 100%,#0000 97%,#000) 0 100%/18px 51% repeat-x;
+          mask:radial-gradient(circle 6px at 9px 0,#0000 97%,#000) 0 0/18px 51% repeat-x,radial-gradient(circle 6px at 9px 100%,#0000 97%,#000) 0 100%/18px 51% repeat-x}
+.note::before{content:"";position:absolute;inset:14px;border:1px solid #c8a05266;pointer-events:none}
+.note h3{font:400 44px/1 var(--script);color:var(--wine);margin-bottom:14px}
+.note p{margin:0 0 1em;font:400 19px/1.6 var(--serif)}
+.note .sign{font:400 36px/1 var(--script);color:var(--wine);text-align:right;margin-top:16px}
+.js .note .w{opacity:0;transition:opacity .5s;transition-delay:calc(var(--i)*28ms + .9s)}
+.letter.open .note .w{opacity:1}
+.letter:not(.open) .note .w{transition-delay:0s}
 
-/* ---------- reasons I love you, on a gold-edged card ---------- */
-.card{position:relative;max-width:540px;margin:0 auto;text-align:center;padding:clamp(48px,9vw,70px) clamp(24px,6vw,48px);background:#2a0207e6;border:1px solid #d2ae6366;outline:1px solid #d2ae6366;outline-offset:-10px}
-.card .names{font-size:clamp(46px,9vw,64px)}
-.orn{width:170px;margin:20px auto;display:block}
-.card .crose{position:absolute;width:clamp(110px,26vw,150px);right:-40px;top:-70px;transform-origin:50% 90%;filter:drop-shadow(0 12px 14px #0008)}
-.datesec.seen .crose{animation:bloom 1.4s .3s cubic-bezier(.3,1.5,.5,1) both}
-@keyframes bloom{0%{transform:rotate(30deg) scale(.6);opacity:0}60%{transform:rotate(-6deg)}100%{transform:rotate(8deg)}}
-.reasons{list-style:none;margin:0;padding:0;text-align:left}
-.reasons li{display:grid;grid-template-columns:52px 1fr;align-items:baseline;padding:12px 0;border-bottom:1px solid #d2ae6326;font-size:20px;transition:opacity .8s calc(var(--i)*.18s + .2s),transform .8s calc(var(--i)*.18s + .2s)}
-.reasons li:last-child{border-bottom:0}
-.reasons b{font:400 italic 22px var(--display);color:var(--g2)}
-.js .datesec:not(.seen) .reasons li{opacity:0;transform:translateY(14px)}
-.card .toast{margin-top:6px;font:400 34px/1 var(--script);color:var(--g1)}
+/* ---------- reasons, on a hand of playing cards ---------- */
+.reasons{text-align:center;padding-left:0;padding-right:0}
+.reasons .h2,.reasons .kick,.reasons .toast,.reasons .swipe{padding:0 24px}
+.deck{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;padding:26px 19% 30px;scrollbar-width:none}
+.deck::-webkit-scrollbar{display:none}
+.pc{flex:none;width:62%;max-width:250px;aspect-ratio:5/7;scroll-snap-align:center;position:relative;border-radius:14px;background:#fffdf8;box-shadow:0 14px 26px #3b0d1533,0 0 0 1px #3b0d1514;display:grid;place-items:center;padding:30px 22px;color:var(--ink)}
+.pc::before{content:"";position:absolute;inset:9px;border:1px solid #7a152433;border-radius:8px}
+.pc .r{position:absolute;font:600 22px/1 var(--serif);color:var(--wine);text-align:center}
+.pc .r small{display:block;font-size:17px}
+.pc .r.t{left:14px;top:14px}.pc .r.bt{right:14px;bottom:14px;transform:rotate(180deg)}
+.pc p{margin:0;font:italic 400 21px/1.35 var(--serif);text-align:center}
+.pc:nth-child(odd){transform:rotate(-2deg)}.pc:nth-child(even){transform:rotate(2deg)}
+.swipe{font:500 11px var(--sans);letter-spacing:.3em;text-transform:uppercase;color:var(--soft)}
+.reasons .toast{margin-top:6px;font:400 34px var(--script);color:var(--wine)}
 
-/* ---------- candlelight still with a drifting film strip ---------- */
-.film{position:relative;overflow:hidden;padding:0;min-height:clamp(440px,70vw,720px);display:grid;place-items:end center;background:url(/assets/candlelit/candles.webp) center/cover}
-.film::before{content:"";position:absolute;inset:0;background:linear-gradient(#1f010400 40%,#1f0104ee)}
-.film .strip{position:absolute;width:min(760px,130vw);left:50%;top:8%;opacity:.85;transform:translateX(-50%) rotate(-6deg);filter:sepia(.4) brightness(1.1)}
-@media (prefers-reduced-motion:no-preference){.film .strip{animation:drift 14s ease-in-out infinite alternate}}
-@keyframes drift{to{transform:translateX(-42%) rotate(-3deg)}}
-.film figcaption{position:relative;z-index:2;margin-bottom:9%;text-align:center;font:400 clamp(44px,9vw,78px)/1.2 var(--script)}
-
-/* ---------- our story ---------- */
-.story .wrap{display:grid;grid-template-columns:1fr 1.1fr;gap:clamp(36px,7vw,90px);align-items:center}
-.duo{position:relative;aspect-ratio:1/1.08}
-.duo .ovalf{position:absolute;width:62%;left:0;top:0;transform:rotate(-3deg)}
-.duo .rect{position:absolute;width:62%;right:-4%;bottom:-2%;transform:rotate(4deg)}
-.duo .rose{position:absolute;width:30%;left:34%;bottom:2%;z-index:4;transform:rotate(-20deg);filter:drop-shadow(0 10px 10px #0006)}
-.story .kicker{color:#8C6526}
-.story h2{margin:6px 0 22px}
-.story p{margin:0 0 1em;max-width:38ch}
-.story p:first-of-type::first-letter{float:left;font:400 84px/.8 var(--display);color:var(--wine);margin:8px 10px 0 0}
-@media(max-width:820px){.story .wrap{grid-template-columns:1fr}.duo{max-width:440px;width:100%;margin:0 auto 20px}}
-
-/* ---------- our favourite reruns, on an old television ---------- */
-.sched .wrap{display:grid;grid-template-columns:1fr 1fr;gap:clamp(36px,7vw,90px);align-items:center}
-.tv{position:relative;max-width:460px;width:100%;margin:0 auto}
-.tv .screen{position:absolute;left:13%;top:28.1%;width:51.1%;height:40.7%;overflow:hidden;border-radius:12%/16%;background:#000}
-.tv .screen img{width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.15) brightness(1.08)}
-.tv .screen::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(#0000 0 2px,#0004 3px),radial-gradient(circle,#0000 50%,#000b)}
-@media (prefers-reduced-motion:no-preference){.tv .screen img{animation:flick 5s steps(1) infinite}}
-@keyframes flick{0%,100%{opacity:1}47%{opacity:.82}48%{opacity:1}73%{opacity:.9}}
-.tv .set{position:relative;z-index:2;width:100%;filter:drop-shadow(0 20px 26px #000b)}
-.sched ol{list-style:none;padding:0;margin:26px 0 0}
-.sched li{display:grid;grid-template-columns:76px 1fr;align-items:baseline;padding:16px 0;border-bottom:1px solid #d2ae6340}
-.sched li b{font:400 italic 19px var(--display);color:var(--g2)}
-.sched li strong{display:block;font:400 24px/1.2 var(--display)}
-.sched li small{display:block;margin-top:4px;font:400 italic 18px/1.4 var(--body);color:#e8d4b8cc}
-.onair{display:inline-flex;align-items:center;gap:8px;margin-bottom:10px;padding:5px 12px;border:1px solid #d2ae6366;border-radius:999px;font:500 12px/1 var(--body);letter-spacing:.2em;text-transform:uppercase;color:var(--g1)}
-.onair::before{content:"";width:8px;height:8px;border-radius:50%;background:#e2443c;box-shadow:0 0 10px #e2443c}
-@media (prefers-reduced-motion:no-preference){.onair::before{animation:rec 1.6s steps(1) infinite}}
-@keyframes rec{50%{opacity:.25}}
-@media(max-width:820px){.sched .wrap{grid-template-columns:1fr}}
-
-/* ---------- moments in gold frames ---------- */
-.moments .sub{max-width:36ch;margin:16px auto 46px;color:#e8d4b8;font-style:italic}
-.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(6px,2vw,24px)}
-.tiles figure{margin:0}
-.tiles figure:nth-child(odd){transform:rotate(-2.4deg)}
-.tiles figure:nth-child(even){transform:rotate(2deg) translateY(16px)}
-.tiles figcaption{text-align:center;font:400 30px/1.1 var(--script);color:var(--g1);margin-top:-6px}
-@media(max-width:820px){.tiles{grid-template-columns:1fr 1fr}}
-
-/* ---------- our song ---------- */
-.ticket{display:grid;grid-template-columns:120px 1fr;gap:20px;align-items:center;text-align:left;max-width:460px;margin:40px auto 0;padding:18px;background:url(/assets/candlelit/paper.webp) center/cover,#f6ecdc;color:var(--ink);
-  -webkit-mask:radial-gradient(circle 12px at 0 50%,#0000 98%,#000) left/51% 100% no-repeat,radial-gradient(circle 12px at 100% 50%,#0000 98%,#000) right/51% 100% no-repeat;
-          mask:radial-gradient(circle 12px at 0 50%,#0000 98%,#000) left/51% 100% no-repeat,radial-gradient(circle 12px at 100% 50%,#0000 98%,#000) right/51% 100% no-repeat}
-.ticket .tint{aspect-ratio:1}
-.ticket .tint img{width:100%;height:100%;object-fit:cover}
-.ticket h3{font:400 26px/1.1 var(--display)}
-.ticket .by{font-style:italic;color:var(--muted)}
-.ticket button{margin-top:10px;display:inline-flex;align-items:center;gap:8px;border:0;border-radius:999px;padding:9px 16px;background:var(--wine);color:var(--cream);font:500 15px var(--body);cursor:pointer}
-
-/* ---------- ending ---------- */
-.end{text-align:center;padding-bottom:50px}
-.end .ovalf{width:min(300px,70vw);margin:0 auto 26px}
-.end h2{font-size:clamp(46px,12.5vw,120px);line-height:1.25;padding:0 .2em}
-.end .date{font:400 italic 21px var(--display);color:#e8d4b8;margin-top:10px}
-.end .days{margin-top:6px;font:400 clamp(30px,6vw,40px)/1.2 var(--script);color:var(--g1)}
-.end .seal{width:84px;margin:34px auto 0;filter:drop-shadow(0 6px 8px #0008)}
-.end .credit{margin-top:50px;font:400 14px var(--body);color:#e8d4b899}
-
-/* ---------- opening: break the wax seal, the curtains part ---------- */
-.gate{display:none}
-.js .gate{position:fixed;inset:0;z-index:100;display:grid;place-items:center;text-align:center;padding:24px}
-.js.entered .gate{pointer-events:none}
-.gate-l,.gate-r{position:absolute;top:0;bottom:0;width:50.5%;background:linear-gradient(#1f010455,#1f0104b0),url(/assets/candlelit/silk.webp) center/cover;transition:transform 1.7s cubic-bezier(.7,0,.2,1)}
-.gate-l{left:0;background-position:left center;box-shadow:inset -40px 0 50px -30px #000c}
-.gate-r{right:0;background-position:right center;box-shadow:inset 40px 0 50px -30px #000c}
-.gate-l::after{content:"";position:absolute;right:0;top:0;bottom:0;width:2px;background:linear-gradient(#0000,#d2ae63aa,#0000)}
-.gate-in{position:relative;z-index:2;transition:opacity .7s}
-.gate .gname{font-size:clamp(64px,17vw,120px)}
-.gseal:focus:not(:focus-visible){outline:none}
-.gseal{display:grid;width:150px;margin:24px auto 14px;border:0;padding:0;background:none;cursor:pointer;filter:drop-shadow(0 14px 18px #000b)}
-.gseal img{grid-area:1/1;width:100%;transition:transform 1s cubic-bezier(.3,.7,.3,1),opacity .9s .2s}
-.gseal .sl{clip-path:polygon(0 0,53% 0,46% 34%,55% 56%,47% 78%,52% 100%,0 100%)}
-.gseal .sr{clip-path:polygon(53% 0,100% 0,100% 100%,52% 100%,47% 78%,55% 56%,46% 34%)}
-@media (prefers-reduced-motion:no-preference){.gseal{animation:pulse 2.4s ease-in-out infinite}}
-@keyframes pulse{50%{transform:scale(1.05)}}
-.ghint{font:400 italic 18px var(--display);color:#e8d4b8cc}
-.opening .gseal{animation:none}
-.opening .gseal .sl{transform:translate(-34px,26px) rotate(-28deg);opacity:0}
-.opening .gseal .sr{transform:translate(34px,26px) rotate(28deg);opacity:0}
-.opening .gate-in{opacity:0;transition-delay:.45s}
-.opening .gate-l{transform:translateX(-101%);transition-delay:.6s}
-.opening .gate-r{transform:translateX(101%);transition-delay:.6s}
-html.locked{overflow:hidden}
-.js:not(.entered) .hero *{animation-play-state:paused!important}
-
-/* ---------- gold dust in the hero ---------- */
-.dust{position:absolute;inset:0;pointer-events:none;z-index:0}
-.dust i{position:absolute;border-radius:50%;background:radial-gradient(#fff6d6,#e8c978 45%,#0000 70%);opacity:0}
-@media (prefers-reduced-motion:no-preference){.dust i{animation:twinkle var(--d) ease-in-out var(--dl) infinite}}
-@keyframes twinkle{0%,100%{opacity:0;transform:translateY(0) scale(.5)}50%{opacity:1;transform:translateY(-18px) scale(1.4)}}
-.hero>div{position:relative;z-index:1}
-
-/* ---------- candle glow ---------- */
-.film .glow{position:absolute;left:52%;top:30%;width:min(80vw,620px);aspect-ratio:1;translate:-50% -50%;pointer-events:none;mix-blend-mode:screen;background:radial-gradient(circle,#ffc77a66,#ff9a3a26 35%,#0000 66%)}
-@media (prefers-reduced-motion:no-preference){.film .glow{animation:flicker 3.2s infinite}}
-@keyframes flicker{0%,100%{opacity:.85;scale:1}12%{opacity:.6;scale:.97}20%{opacity:.95;scale:1.02}41%{opacity:.7}55%{opacity:1;scale:1.03}73%{opacity:.65;scale:.98}86%{opacity:.9}}
-
-/* ---------- a band of gold script ---------- */
-.marq{overflow:hidden;background:#160003;border-block:1px solid #d2ae6340;padding:16px 0 10px}
-.mq-in{display:flex;width:max-content;align-items:center;gap:30px;font:400 clamp(40px,8vw,56px)/1.2 var(--script);white-space:nowrap}
-.mq-in span{background:var(--gold);-webkit-background-clip:text;background-clip:text;color:transparent;padding:0 .1em}
-.mq-in i{font:normal 18px/1 var(--display);color:var(--g2)}
-@media (prefers-reduced-motion:no-preference){.mq-in{animation:mq 44s linear infinite}}
+/* ---------- words band ---------- */
+.band{background:var(--wine3);padding:16px 0 8px;overflow:hidden}
+.band .in{display:flex;width:max-content;gap:28px;align-items:center;font:400 40px/1.2 var(--script);color:var(--gold2);white-space:nowrap}
+.band i{font:normal 14px var(--sans);color:var(--gold)}
+@media (prefers-reduced-motion:no-preference){.band .in{animation:mq 40s linear infinite}}
 @keyframes mq{to{transform:translateX(-50%)}}
 
-/* ---------- open when... ---------- */
-.ow{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(22px,3.4vw,36px) clamp(16px,3vw,32px);margin-top:20px}
-.owe{border:0;background:none;padding:0;cursor:pointer;color:inherit;font:inherit;perspective:800px}
-.env2{display:block;position:relative;aspect-ratio:4/3;margin-top:58%}
-.env2 .back{position:absolute;inset:0;background:#4a0a14;border-radius:4px;box-shadow:0 16px 24px -14px #000c}
-.env2 .card2{position:absolute;left:7%;right:7%;bottom:6%;height:92%;z-index:1;display:grid;place-items:center;padding:10px 12px;text-align:center;background:url(/assets/candlelit/paper.webp) center/cover,#f3e7d3;color:var(--ink);font:400 italic clamp(14px,2.4vw,16px)/1.35 var(--body);box-shadow:0 -4px 10px #0003;transition:transform .9s .25s cubic-bezier(.2,.8,.3,1.1)}
-.env2 .front{position:absolute;inset:0;z-index:2;border-radius:4px;background:linear-gradient(160deg,#7a1626,#560c18);clip-path:polygon(0 0,50% 54%,100% 0,100% 100%,0 100%)}
-.env2 .front::after{content:"";position:absolute;inset:0;background:linear-gradient(20deg,#0000 48%,#ffffff12 50%,#0000 52%),linear-gradient(-20deg,#0000 48%,#ffffff12 50%,#0000 52%)}
-.env2 .flap{position:absolute;left:0;right:0;top:0;height:62%;z-index:3;background:linear-gradient(#8f1c2f,#64101c);clip-path:polygon(0 0,100% 0,50% 100%);transform-origin:top;transition:transform .7s cubic-bezier(.4,0,.2,1),z-index 0s .35s}
-.env2 .wseal{position:absolute;z-index:4;left:50%;top:58%;width:30%;translate:-50% -50%;transition:opacity .3s,transform .3s;filter:drop-shadow(0 3px 3px #0008)}
-.owe.on .flap{transform:rotateX(180deg);z-index:0}
-.owe.on .wseal{opacity:0;transform:scale(1.4)}
-.owe.on .card2{transform:translateY(-64%)}
-.owe .lbl{display:block;margin-top:12px;font:400 italic 15px var(--display);color:#e8d4b8}
-.owe .lbl b{display:block;font:400 27px/1.15 var(--script);color:var(--g1)}
-@media(max-width:820px){.ow{grid-template-columns:1fr 1fr}}
+/* ---------- our story: a stamp, a polaroid and lace ---------- */
+.story .pics{position:relative;height:clamp(330px,92vw,440px);margin:0 auto 26px;max-width:440px}
+.doily{position:absolute;width:72%;left:14%;top:6%}
+.stamp{position:absolute;background:#fffdf8;padding:9px;
+  -webkit-mask:radial-gradient(circle 4.5px at 7px 7px,#0000 95%,#000) -7px -7px/14px 14px repeat,linear-gradient(#000 0 0) content-box no-repeat;
+          mask:radial-gradient(circle 4.5px at 7px 7px,#0000 95%,#000) -7px -7px/14px 14px repeat,linear-gradient(#000 0 0) content-box no-repeat}
+.shadow{filter:drop-shadow(0 10px 14px #3b0d1540)}
+.stamp img{width:100%;height:100%;object-fit:cover}
+.story .stamp{width:52%;aspect-ratio:4/5;left:4%;top:0;transform:rotate(-5deg)}
+.pola{position:absolute;background:#fffdf8;padding:9px 9px 34px;box-shadow:0 14px 24px #3b0d1540}
+.pola img{width:100%;aspect-ratio:1;object-fit:cover;background:#e9dccb}
+.pola::after{content:"";position:absolute;width:44%;height:22px;left:28%;top:-10px;background:#ead7a4bb;transform:rotate(-4deg);box-shadow:0 1px 2px #0002}
+.story .pola{width:50%;right:3%;bottom:0;transform:rotate(5deg)}
+.story .heart{position:absolute;width:13%;left:46%;top:46%;transform:rotate(-14deg);z-index:3}
+.story p{margin:0 0 1em;font:400 19px/1.65 var(--serif)}
+.story p:first-of-type::first-letter{float:left;font:400 74px/.8 var(--script);color:var(--wine);margin:10px 8px 0 0}
+.echo{padding:30px 0 34px;text-align:center;line-height:.82;background:var(--ivory);overflow:hidden}
+.echo span{display:block;font:400 clamp(48px,14vw,72px)/1 var(--script);color:var(--wine);white-space:nowrap}
+.echo span:nth-child(2){opacity:.45;transform:translateX(5%)}.echo span:nth-child(3){opacity:.18;transform:translateX(-5%)}
 
-/* ---------- the letter writes itself ---------- */
-.js .note .w{opacity:0;filter:blur(4px);transition:opacity .45s,filter .45s;transition-delay:calc(var(--i)*30ms + .9s)}
-.letter.open .note .w{opacity:1;filter:none}
-.letter:not(.open) .note .w{transition-delay:0s}
-.js .note .sign{clip-path:inset(0 100% 0 0);transition:clip-path 1.6s calc(var(--n,40)*30ms + 1.1s) ease-out}
-.letter.open .note .sign{clip-path:inset(0 0 0 0)}
-.letter:not(.open) .note .sign{transition-delay:0s}
+/* ---------- reruns: ticket stubs ---------- */
+.reruns .still{position:relative;width:80%;margin:26px auto 22px;transform:rotate(-2deg)}
+.reruns .still img{aspect-ratio:4/3}
+.onair{display:inline-flex;align-items:center;gap:8px;padding:5px 12px;border:1px solid #ead7a466;border-radius:999px;font:500 11px/1 var(--sans);letter-spacing:.25em;text-transform:uppercase;color:var(--gold2)}
+.onair::before{content:"";width:7px;height:7px;border-radius:50%;background:#ff5a4e;box-shadow:0 0 8px #ff5a4e}
+.tickets{display:grid;gap:12px;margin-top:22px}
+.tk{display:grid;grid-template-columns:72px 1fr;background:var(--ivory);color:var(--ink);text-align:left;min-height:84px;
+  -webkit-mask:radial-gradient(circle 10px at 0 50%,#0000 97%,#000) left/51% 100% no-repeat,radial-gradient(circle 10px at 100% 50%,#0000 97%,#000) right/51% 100% no-repeat;
+          mask:radial-gradient(circle 10px at 0 50%,#0000 97%,#000) left/51% 100% no-repeat,radial-gradient(circle 10px at 100% 50%,#0000 97%,#000) right/51% 100% no-repeat}
+.tk .ep{display:grid;place-items:center;align-content:center;border-right:2px dashed #7a152455;font:600 12px/1.2 var(--sans);letter-spacing:.15em;color:var(--wine);text-align:center;padding:8px}
+.tk .ep b{display:block;font:400 26px/1 var(--script);letter-spacing:0}
+.tk .tx{padding:14px 16px 14px 18px}
+.tk strong{display:block;font:600 19px/1.2 var(--serif)}
+.tk small{display:block;margin-top:3px;font:italic 400 16px/1.35 var(--serif);color:var(--soft)}
 
-@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}.petals{display:none}.env .sheet,.env .on-paper{transform:none}}
+/* ---------- moments on playing cards ---------- */
+.gal{display:grid;grid-template-columns:1fr 1fr;gap:20px 14px;margin-top:26px}
+.gal figure{margin:0;background:#fffdf8;border-radius:10px;padding:26px 10px 12px;position:relative;box-shadow:0 14px 22px #0005}
+.gal figure:nth-child(odd){rotate:-2.5deg}.gal figure:nth-child(even){rotate:2.5deg;translate:0 14px}
+.gal img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:3px}
+.gal .r{position:absolute;left:9px;top:5px;font:600 15px/1 var(--serif);color:var(--wine)}
+.gal .r2{position:absolute;right:9px;bottom:6px;font:600 15px/1 var(--serif);color:var(--wine);transform:rotate(180deg)}
+.gal figcaption{margin-top:6px;font:400 24px/1.1 var(--script);color:var(--wine);text-align:center}
+
+/* ---------- open when ---------- */
+.ow{display:grid;grid-template-columns:1fr 1fr;gap:16px 14px;margin-top:40px}
+.owe{border:0;background:none;padding:0;cursor:pointer;color:inherit;font:inherit}
+.e2{display:block;position:relative;aspect-ratio:4/3;margin-top:30%}
+.e2 .bk{position:absolute;inset:0;background:var(--wine2);border-radius:4px;box-shadow:0 14px 22px -12px #000b}
+.e2 .cd{position:absolute;left:7%;right:7%;bottom:6%;height:92%;z-index:1;display:grid;place-items:center;padding:8px 10px;text-align:center;background:var(--ivory);color:var(--ink);font:italic 400 15px/1.3 var(--serif);transition:transform .9s .25s cubic-bezier(.2,.8,.3,1.1)}
+.e2 .fr{position:absolute;inset:0;z-index:2;border-radius:4px;background:linear-gradient(160deg,#8e1c2d,#6a1220);clip-path:polygon(0 0,50% 54%,100% 0,100% 100%,0 100%)}
+.e2 .fp{position:absolute;left:0;right:0;top:0;height:62%;z-index:3;background:linear-gradient(#9b2335,#741526);clip-path:polygon(0 0,100% 0,50% 100%);transform-origin:top;transition:transform .7s cubic-bezier(.4,0,.2,1),z-index 0s .35s}
+.e2 .ws{position:absolute;z-index:4;left:50%;top:58%;width:30%;translate:-50% -50%;transition:opacity .3s,transform .3s;filter:drop-shadow(0 3px 3px #0008)}
+.owe.on .fp{transform:rotateX(180deg);z-index:0}.owe.on .ws{opacity:0;transform:scale(1.4)}.owe.on .cd{transform:translateY(-52%)}
+.owe .lbl{display:block;margin-top:10px;font:italic 400 14px var(--serif);color:var(--soft)}
+.owe .lbl b{display:block;font:400 26px/1.1 var(--script);color:var(--wine)}
+
+/* ---------- our song: a ticket ---------- */
+.song .tkt{display:grid;grid-template-columns:112px 1fr;gap:16px;align-items:center;margin-top:26px;padding:18px 16px;background:var(--ivory);color:var(--ink);text-align:left;
+  -webkit-mask:radial-gradient(circle 12px at 50% 0,#0000 97%,#000) top/100% 51% no-repeat,radial-gradient(circle 12px at 50% 100%,#0000 97%,#000) bottom/100% 51% no-repeat;
+          mask:radial-gradient(circle 12px at 50% 0,#0000 97%,#000) top/100% 51% no-repeat,radial-gradient(circle 12px at 50% 100%,#0000 97%,#000) bottom/100% 51% no-repeat}
+.song .stamp{position:relative;width:100%;aspect-ratio:1;padding:7px;background:#efe3cf}
+.song h3{font:600 22px/1.15 var(--serif)}
+.song .by{font:italic 400 16px var(--serif);color:var(--soft)}
+.song button{margin-top:10px;display:inline-flex;align-items:center;gap:8px;border:0;border-radius:999px;padding:9px 16px;background:var(--wine);color:var(--ivory);font:500 13px var(--sans);letter-spacing:.06em;cursor:pointer}
+#spot iframe{display:block;width:100%;margin:16px auto 0;border:0;border-radius:12px}
+
+/* ---------- together for: a lace doily with a live counter ---------- */
+.count{text-align:center;padding-top:40px;padding-bottom:40px}
+.lace{position:relative;width:min(360px,96%);margin:0 auto;aspect-ratio:1.25}
+.lace svg{position:absolute;inset:0;width:100%;height:100%}
+.lace .in{position:absolute;inset:18% 10%;display:grid;place-items:center;align-content:center;text-align:center}
+.lace .t{font:400 32px/1 var(--script);color:var(--wine)}
+.nums{display:grid;grid-template-columns:repeat(4,auto);justify-content:center;margin-top:10px}
+.nums div{padding:0 9px;border-left:1px solid #7a152440;font:500 28px/1 var(--serif);color:var(--ink)}
+.nums div:first-child{border-left:0}
+.nums small{display:block;margin-top:5px;font:500 9px var(--sans);letter-spacing:.2em;text-transform:uppercase;color:var(--soft)}
+
+/* ---------- the ending: a stamp on dark roses ---------- */
+.end{text-align:center;padding-bottom:46px;color:var(--ivory);background:radial-gradient(80% 50% at 50% 30%,#7a152499,#0000),var(--wine3)}
+.end .roses{position:absolute;inset:0;z-index:0;opacity:.22;pointer-events:none;background:url(/assets/candlelit/rose.webp) -14% 6%/46% no-repeat,url(/assets/candlelit/rose.webp) 116% 46%/52% no-repeat,url(/assets/candlelit/rose.webp) 18% 106%/40% no-repeat;filter:blur(1.5px)}
+.end .stamp{position:relative;width:62%;aspect-ratio:4/5;margin:10px auto 0;transform:rotate(-2deg)}
+.end .line{margin:22px 0 0;font:italic 400 18px var(--serif);color:var(--gold2)}
+.end h2{margin-top:8px;font:400 clamp(52px,15vw,78px)/1.05 var(--script);color:var(--ivory)}
+.end .date{margin-top:10px;font:500 12px var(--sans);letter-spacing:.3em;text-transform:uppercase;color:#f3e2c8bb}
+.end .seal{width:74px;margin:30px auto 0;filter:drop-shadow(0 6px 8px #0009)}
+.end .credit{margin-top:40px;font:300 13px var(--sans);color:#f3e2c899}
+
+/* reveal on scroll */
+.js .rv{opacity:0;transform:translateY(22px);transition:opacity .9s,transform .9s}
+.js .rv.seen{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}.js .rv{opacity:1;transform:none}}
 </style>
-<script src="/assets/ks-templates.v3.js"></script>
+<script src="/assets/ks-templates.v4.js"></script>
 <link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png"><link rel="icon" type="image/svg+xml" href="/assets/icon.svg"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest"></head>
 <body>
 <script>
 document.documentElement.classList.add("js","locked");
 if (/[?&]preview=1/.test(location.search)) document.documentElement.classList.add("entered");
 </script>
-<div class="petals" aria-hidden="true" id="petals"></div>
 
 <div class="gate" id="gate" role="dialog" aria-modal="true" aria-label="Open your keepsake">
- <div class="gate-l"></div><div class="gate-r"></div>
- <div class="gate-in">
-  <div class="kicker">a love letter for</div>
-  <div class="gname script goldtext" id="recipient">Meera</div>
-  <button class="gseal" id="gseal" type="button" aria-label="Break the seal to open"><img class="sl" src="/assets/candlelit/seal.webp" alt=""><img class="sr" src="/assets/candlelit/seal.webp" alt=""></button>
-  <div class="ghint">tap the seal to open</div>
+ <div>
+  <div class="for">a letter for</div>
+  <div class="who" id="recipient">Meera</div>
+  <button class="genv" id="gseal" type="button" aria-label="Open the envelope">
+   <span class="b"></span><span class="f"></span><span class="fl"></span><img class="s" src="/assets/candlelit/seal.webp" alt=""><span class="addr">with love</span>
+  </button>
+  <div class="hint">tap the seal to open</div>
  </div>
 </div>
 
 <main>
-<section class="hero silk" aria-label="The two of you">
- <div class="dust" id="dust" aria-hidden="true"></div>
- <div>
-  <div class="kicker" id="tagline">two hearts, one story</div>
-  <h1 class="script goldtext" data-names>Meera &amp; Aarav</h1>
-  <div class="stage">
-   <div class="gframe rect"><div class="pic"><img class="bw" data-ph="photos.hero" alt=""></div><img class="border" src="/assets/candlelit/frame.webp" alt=""></div>
-   <img class="bow" src="/assets/candlelit/bow.webp" alt="">
-  </div>
-  <div class="date" id="heroDate"></div>
-  <div class="scroll-cue" id="cue">a letter is waiting for you</div>
+<section class="hero cream" aria-label="The two of you">
+ <div class="hand" data-hand aria-hidden="true"></div>
+ <div class="caps" id="tagline">two hearts, one story</div>
+ <h1 class="names" id="names"><span class="a">Meera</span><span class="amp">&amp;</span><span class="b">Aarav</span></h1>
+ <div style="position:relative">
+  <div class="hpic"><img class="warm" data-ph="photos.hero" alt=""></div>
+  <div class="hbtn" aria-hidden="true">♥</div>
+  <svg class="sticker" viewBox="0 0 120 110" aria-hidden="true"><path d="M60 104C24 80 4 58 4 34 4 16 18 4 34 4c12 0 21 6 26 16C65 10 74 4 86 4c16 0 30 12 30 30 0 24-20 46-56 70Z" fill="#d42b36" stroke="#fff" stroke-width="5"/><path d="M60 92C30 72 14 54 14 35 14 22 24 14 35 14c10 0 18 6 25 18 7-12 15-18 25-18 11 0 21 8 21 21 0 19-16 37-46 57Z" fill="none" stroke="#fff" stroke-width="1.5" stroke-dasharray="3 4"/><text x="60" y="50" text-anchor="middle" font-family="Pinyon Script,cursive" font-size="19" fill="#fff" transform="rotate(-8 60 50)">you're the one</text><text x="60" y="70" text-anchor="middle" font-family="Jost,sans-serif" font-size="8" letter-spacing="2" fill="#fff">ALWAYS</text></svg>
+  <div class="tag" aria-hidden="true"><span class="ring"></span><div class="plate">with love</div></div>
  </div>
+ <div class="hdate" id="heroDate"></div>
+ <div class="cue" id="cue">a letter is waiting for you</div>
 </section>
 
-<div class="lace-band" aria-hidden="true"></div>
+<section class="cal cream rv" id="cal" aria-label="The day it all began">
+ <div class="kick">the day it all began</div>
+ <div class="mon" id="calMon"></div><div class="yr" id="calYr"></div>
+ <div class="grid" id="grid"></div>
+ <div class="place" id="calPlace"></div>
+</section>
 
-<section class="letter" id="letter" aria-label="A letter">
- <div class="kicker">sealed with love</div>
- <h2 class="title">For <em>you</em></h2>
+<section class="letter wine" id="letter" aria-label="A letter">
+ <div class="hand" data-hand aria-hidden="true"></div>
+ <div class="kick">sealed with love</div>
+ <h2 class="h2">For you</h2>
  <button class="env" type="button" id="envBtn" aria-expanded="false" aria-controls="note">
-  <img class="sheet" src="/assets/candlelit/env-letter.webp" alt="">
-  <span class="on-paper"><b data-greeting>Dear you,</b><small>tap to open</small></span>
-  <img class="pocket" src="/assets/candlelit/env-pocket.webp" alt="">
+  <span class="b"></span><span class="card" data-greeting>Dear you,</span><span class="f"></span><span class="fl"></span><img class="s" src="/assets/candlelit/seal.webp" alt=""><img class="bow" src="/assets/candlelit/bow.webp" alt="">
  </button>
+ <div class="hint" id="envHint">tap the envelope to open</div>
  <div class="unfold"><div>
-  <article class="note paper" id="note">
-   <img class="rose" src="/assets/candlelit/rose.webp" alt="">
+  <article class="note" id="note">
    <h3 data-greeting>Dear you,</h3>
    <div id="letterBody"></div>
    <div class="sign" id="sign">Always yours, Aarav</div>
-   <img class="seal" src="/assets/candlelit/seal.webp" alt="">
   </article>
  </div></div>
 </section>
 
-<section class="datesec damask" id="reasonsSec" aria-label="Reasons I love you">
- <div class="wrap">
-  <div class="card">
-   <img class="crose" src="/assets/candlelit/rose.webp" alt="">
-   <div class="kicker">just a few of the</div>
-   <h2 class="names script goldtext" id="reasonsTitle">reasons I love you</h2>
-   <svg class="orn" viewBox="0 0 180 20" aria-hidden="true"><defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#8C6526"/><stop offset=".5" stop-color="#FFF0BE"/><stop offset="1" stop-color="#8C6526"/></linearGradient></defs><g fill="none" stroke="url(#g)" stroke-width="1.4"><path d="M0 10h70M110 10h70"/><path d="M90 2c-8 0-14 8-20 8 6 0 12 8 20 8s14-8 20-8c-6 0-12-8-20-8z"/></g><circle cx="90" cy="10" r="2.4" fill="#E8C978"/></svg>
-   <ol class="reasons" id="reasons"></ol>
-   <svg class="orn" viewBox="0 0 180 20" aria-hidden="true"><g fill="none" stroke="url(#g)" stroke-width="1.4"><path d="M0 10h70M110 10h70"/><path d="M90 2c-8 0-14 8-20 8 6 0 12 8 20 8s14-8 20-8c-6 0-12-8-20-8z"/></g><circle cx="90" cy="10" r="2.4" fill="#E8C978"/></svg>
-   <div class="toast" id="reasonsEnd"></div>
-  </div>
+<section class="reasons cream" id="reasonsSec" aria-label="Reasons I love you">
+ <div class="kick">just a few of the</div>
+ <h2 class="h2" id="reasonsTitle">reasons I love you</h2>
+ <div class="deck" id="deck"></div>
+ <div class="swipe">swipe the cards</div>
+ <div class="toast" id="reasonsEnd"></div>
+</section>
+
+<div class="band" aria-hidden="true"><div class="in" id="words"></div></div>
+
+<section class="story cream" aria-label="Our story">
+ <div class="hand" data-hand aria-hidden="true"></div>
+ <div class="pics rv">
+  <svg class="doily" viewBox="0 0 200 200" aria-hidden="true" id="doily1"></svg>
+  <div class="shadow"><div class="stamp"><img class="warm" data-ph="photos.storyA" alt=""></div></div>
+  <div class="pola"><img class="warm" data-ph="photos.storyB" alt=""></div>
+  <svg class="heart" viewBox="0 0 40 36" aria-hidden="true"><path d="M20 34C8 25 2 18 2 11 2 6 6 2 11 2c4 0 7 2 9 6 2-4 5-6 9-6 5 0 9 4 9 9 0 7-6 14-18 23Z" fill="#c42634"/></svg>
+ </div>
+ <div class="kick" id="storyKicker"></div>
+ <h2 class="h2" style="margin:2px 0 16px">Our story</h2>
+ <div id="storyBody"></div>
+</section>
+
+<div class="echo" aria-hidden="true" id="echo"><span></span><span></span><span></span></div>
+
+<section class="reruns wine center" id="reruns" aria-label="Our favourite reruns">
+ <div class="onair">now showing</div>
+ <h2 class="h2" style="margin-top:12px">our favourite reruns</h2>
+ <div class="pola still rv"><img class="warm" data-ph="photos.tv" alt=""></div>
+ <div class="tickets" id="sched"></div>
+</section>
+
+<section class="moments wine center" id="momentsSec" aria-label="Moments so far" style="background:var(--wine2)">
+ <h2 class="h2">moments so far</h2>
+ <p class="kick" id="momentsIntro" style="margin:8px auto 0;max-width:30ch"></p>
+ <div class="gal" id="gal"></div>
+</section>
+
+<section class="openwhen cream center" id="owSec" aria-label="Open when">
+ <div class="hand" data-hand aria-hidden="true"></div>
+ <div class="kick">for the days you need me</div>
+ <h2 class="h2">open when…</h2>
+ <div class="ow" id="ow"></div>
+</section>
+
+<section class="song wine center" aria-label="Our song">
+ <div class="kick">press play</div>
+ <h2 class="h2">our song</h2>
+ <div class="tkt">
+  <div class="stamp"><img class="warm" data-ph="photos.cover" alt="Album cover"></div>
+  <div><h3 id="songTitle"></h3><div class="by" id="songNote"></div><button type="button" id="spotBtn"><svg width="11" height="11" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6 4v16l14-8z"/></svg>Play on Spotify</button></div>
+ </div>
+ <div id="spot"></div>
+</section>
+
+<section class="count cream rv" aria-label="Together for">
+ <div class="lace">
+  <svg viewBox="0 0 250 200" aria-hidden="true" id="doily2"></svg>
+  <div class="in"><div class="t" id="countT">together for</div><div class="nums" id="nums"></div></div>
  </div>
 </section>
 
-<div class="marq" aria-hidden="true"><div class="mq-in" id="words"></div></div>
-
-<figure class="film" style="margin:0" aria-label="By candlelight">
- <div class="glow" aria-hidden="true"></div>
- <img class="strip" src="/assets/candlelit/filmstrip.webp" alt="">
- <figcaption class="goldtext" id="filmCaption"></figcaption>
-</figure>
-
-<section class="story paper" aria-label="Our story">
- <div class="wrap">
-  <div class="duo">
-   <div class="gframe ovalf"><div class="pic tint"><img data-ph="photos.storyA" alt=""></div><img class="border" src="/assets/candlelit/oval.webp" alt=""></div>
-   <div class="gframe rect"><div class="pic"><img class="bw" data-ph="photos.storyB" alt=""></div><img class="border" src="/assets/candlelit/frame.webp" alt=""></div>
-   <img class="rose" src="/assets/candlelit/rose.webp" alt="">
-  </div>
-  <div>
-   <div class="kicker" id="storyKicker"></div>
-   <h2 class="title">Our <em>story</em></h2>
-   <div id="storyBody"></div>
-  </div>
- </div>
-</section>
-
-<section class="sched silk" id="reruns" aria-label="Our favourite reruns">
- <div class="wrap">
-  <div class="tv"><div class="screen"><img data-ph="photos.tv" alt=""></div><img class="set" src="/assets/candlelit/tv.webp" alt=""></div>
-  <div>
-   <div class="onair">now showing</div>
-   <h2 class="title">Our favourite <em>reruns</em></h2>
-   <ol id="sched"></ol>
-  </div>
- </div>
-</section>
-
-<div class="lace-band" aria-hidden="true"></div>
-
-<section class="moments damask center" id="momentsSec" aria-label="Moments so far">
- <div class="wrap">
-  <h2 class="title">Moments <em>so far</em></h2>
-  <p class="sub" id="momentsIntro"></p>
-  <div class="tiles" id="tiles"></div>
- </div>
-</section>
-
-<section class="openwhen silk center" id="owSec" aria-label="Open when">
- <div class="wrap">
-  <div class="kicker">for the days you need me</div>
-  <h2 class="title">Open <em>when…</em></h2>
-  <div class="ow" id="ow"></div>
- </div>
-</section>
-
-<div class="lace-band" aria-hidden="true"></div>
-
-<section class="song silk center" aria-label="Our song">
- <div class="narrow">
-  <div class="kicker">press play</div>
-  <h2 class="title">Our <em>song</em></h2>
-  <div class="ticket" id="ticket">
-   <div class="tint"><img data-ph="photos.cover" alt="Album cover"></div>
-   <div><h3 id="songTitle"></h3><div class="by" id="songNote"></div><button type="button" id="spotBtn"><svg width="12" height="12" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6 4v16l14-8z"/></svg>Play on Spotify</button></div>
-  </div>
-  <div id="spot"></div>
- </div>
-</section>
-
-<div class="lace-band" aria-hidden="true"></div>
-
-<section class="end damask" aria-label="Closing">
- <div class="gframe ovalf"><div class="pic"><img class="bw" data-ph="photos.end" alt=""></div><img class="border" src="/assets/candlelit/oval.webp" alt=""></div>
- <h2 class="script goldtext" data-names>Meera &amp; Aarav</h2>
+<section class="end" aria-label="Closing">
+ <div class="roses" aria-hidden="true"></div>
+ <div class="shadow"><div class="stamp"><img class="warm" data-ph="photos.end" alt=""></div></div>
+ <p class="line" id="endLine"></p>
+ <h2 id="endNames">Meera &amp; Aarav</h2>
  <div class="date" id="endDate"></div>
- <div class="days" id="endDays"></div>
  <img class="seal" src="/assets/candlelit/seal.webp" alt="">
- <div class="credit">Made with <a href="/">Keepsake</a></div>
+ <div class="credit">Made with <a href="/">GetKeepsake</a></div>
 </section>
 </main>
 
 <script>
-
-
 const K = KSKit, $ = id => document.getElementById(id);
 const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
-const FRAME = '<div class="gframe rect"><div class="pic"><img alt=""></div><img class="border" src="/assets/candlelit/frame.webp" alt=""></div>';
+const RANKS = ["A", "K", "Q", "J", "10", "9", "8", "7"];
+let tick = null;
+
+// lace doilies, drawn in code: a scalloped edge with rings of little holes
+function doily(svg, w, h) {
+  const cx = w / 2, cy = h / 2, rx = w / 2 - 6, ry = h / 2 - 6, n = 36, m = Math.min(rx, ry);
+  const P = (a, k) => `${(cx + Math.cos(a) * rx * k).toFixed(1)} ${(cy + Math.sin(a) * ry * k).toFixed(1)}`;
+  let d = "M " + P(0, .95), holes = "", inner = "";
+  for (let i = 0; i < n; i++) {
+    const a0 = i / n * Math.PI * 2, am = (i + .5) / n * Math.PI * 2, a1 = (i + 1) / n * Math.PI * 2;
+    d += ` Q ${P(am, 1.07)} ${P(a1, .95)}`;
+    holes += `<circle cx="${(cx + Math.cos(am) * rx * .87).toFixed(1)}" cy="${(cy + Math.sin(am) * ry * .87).toFixed(1)}" r="${(m * .035).toFixed(1)}"/>`;
+    inner += `<circle cx="${(cx + Math.cos(a0) * rx * .77).toFixed(1)}" cy="${(cy + Math.sin(a0) * ry * .77).toFixed(1)}" r="${(m * .02).toFixed(1)}"/>`;
+  }
+  svg.innerHTML = `<path d="${d} Z" fill="#fffdf8" stroke="#e6dac6" stroke-width="1" style="filter:drop-shadow(0 6px 10px #3b0d1526)"/><g fill="#eadfcd">${holes}${inner}</g><ellipse cx="${cx}" cy="${cy}" rx="${(rx * .7).toFixed(1)}" ry="${(ry * .7).toFixed(1)}" fill="none" stroke="#e3d6c1" stroke-width="1" stroke-dasharray="2 3"/>`;
+}
+doily($("doily1"), 200, 200); doily($("doily2"), 250, 200);
 
 function render(D) {
-  const a = K.str(D.a, 30), b = K.str(D.b, 30), d = K.date(D.date), names = `${a} & ${b}`;
-  document.title = `${names} · Keepsake`;
+  const a = K.str(D.a, 30), b = K.str(D.b, 30), d = K.date(D.date), names = `${a} & ${b}`, ahead = d > Date.now();
+  document.title = `${names} · GetKeepsake`;
   if ($("recipient")) $("recipient").textContent = K.str(D.recipient || a, 30);
   $("tagline").textContent = K.str(D.tagline, 60);
-  document.querySelectorAll("[data-names]").forEach(e => e.textContent = names);
+  const nm = $("names"); nm.textContent = ""; nm.append(el("span", "a", a), el("span", "amp", "&"), el("span", "b", b));
+  $("endNames").textContent = names;
   document.querySelectorAll("[data-ph]").forEach(i => K.setImg(i, K.get(D, i.dataset.ph)));
   const hd = $("heroDate"); hd.textContent = "";
-  const ahead = d > Date.now();
-  if (ahead) hd.append(String(d.getDate()), el("span", "", "❦"), K.fmt.month(d), el("span", "", "❦"), String(d.getFullYear()));
-  else hd.append("since", el("span", "", "❦"), K.fmt.monthYear(d));
+  hd.append(ahead ? "save the date" : "since", el("i", "", "♥"), K.fmt.monthYear(d));
   $("cue").textContent = K.str(D.cue, 60);
+  // faint handwriting in the background, made from their own letter
+  const hand = (K.paras(D.letter).join(" ") + " ").repeat(4);
+  document.querySelectorAll("[data-hand]").forEach(h => h.textContent = hand);
 
-  // letter, split into words so it can appear as if being written
+  // calendar with a heart round the day
+  $("calMon").textContent = K.fmt.month(d); $("calYr").textContent = d.getFullYear();
+  const g = $("grid"); g.textContent = "";
+  ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"].forEach(x => g.appendChild(el("div", "wd", x)));
+  const first = (new Date(d.getFullYear(), d.getMonth(), 1).getDay() + 6) % 7, days = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
+  for (let i = 0; i < first; i++) g.appendChild(el("div"));
+  for (let i = 1; i <= days; i++) {
+    const c = el("div", "day" + (i === d.getDate() ? " hit" : ""), String(i));
+    if (i === d.getDate()) c.insertAdjacentHTML("beforeend", '<svg viewBox="0 0 60 54" aria-hidden="true"><path d="M30 50C12 37 4 27 4 17 4 9 10 4 17 4c6 0 10 3 13 9 3-6 7-9 13-9 7 0 13 5 13 13 0 10-8 20-26 33-2 1-6 1-8-2"/></svg>');
+    g.appendChild(c);
+  }
+  const pl = $("calPlace"); pl.textContent = "";
+  pl.append(K.fmt.long(d)); if (K.str(D.place, 60)) pl.appendChild(el("b", "", K.str(D.place, 60)));
+
+  // the letter, split into words so it appears as if being written
   document.querySelectorAll("[data-greeting]").forEach(e => e.textContent = K.str(D.greeting, 40));
   $("sign").textContent = K.str(D.sign, 40);
   const body = $("letterBody"); body.textContent = ""; let n = 0;
@@ -435,53 +432,59 @@ function render(D) {
     t.split(/(\s+)/).forEach(x => { if (/^\s+$/.test(x)) { p.append(x); return; } const s = el("span", "w", x); s.style.setProperty("--i", n++); p.appendChild(s); });
     body.appendChild(p);
   });
-  $("note").style.setProperty("--n", n);
 
-  // reasons I love you
+  // reasons, one per playing card
   $("reasonsTitle").textContent = K.str(D.reasonsTitle, 40);
   $("reasonsEnd").textContent = K.str(D.reasonsEnd, 40);
-  const rs = $("reasons"); rs.textContent = "";
+  const deck = $("deck"); deck.textContent = "";
   (D.reasons || []).map(t => K.str(t, 90)).filter(Boolean).slice(0, 8).forEach((t, i) => {
-    const li = el("li"); li.style.setProperty("--i", i); li.appendChild(el("b", "", K.roman(i) + ".")); li.appendChild(el("span", "", t)); rs.appendChild(li);
+    const c = el("div", "pc"), r = RANKS[i];
+    c.innerHTML = `<div class="r t">${r}<small>♥</small></div><div class="r bt">${r}<small>♥</small></div>`;
+    c.appendChild(el("p", "", t)); deck.appendChild(c);
   });
-  $("reasonsSec").hidden = !rs.children.length;
+  $("reasonsSec").hidden = !deck.children.length;
+
   const w = $("words"); w.textContent = "";
   const list = K.words(D.words);
-  for (let r = 0; r < 2; r++) list.forEach(x => { w.appendChild(el("span", "", x)); w.appendChild(el("i", "", "❦")); });
-  $("filmCaption").textContent = K.str(D.filmCaption, 40);
+  for (let r = 0; r < 2; r++) list.forEach(x => { w.appendChild(el("span", "", x)); w.appendChild(el("i", "", "♥")); });
+  const cap = K.str(D.filmCaption, 40) || names;
+  $("echo").querySelectorAll("span").forEach(s => s.textContent = cap);
 
   // story
   $("storyKicker").textContent = K.str(D.storyKicker, 60);
   const sb = $("storyBody"); sb.textContent = "";
   K.paras(D.story).forEach(t => sb.appendChild(el("p", "", t)));
 
-  // our favourite reruns
-  const ol = $("sched"); ol.textContent = "";
+  // favourite reruns, as ticket stubs
+  const tk = $("sched"); tk.textContent = "";
   (D.reruns || []).filter(x => x && (x.title || x.note)).slice(0, 8).forEach((x, i) => {
-    const li = el("li"), box = el("div"); li.appendChild(el("b", "", "Ep. " + K.roman(i)));
-    box.appendChild(el("strong", "", K.str(x.title, 40))); if (x.note) box.appendChild(el("small", "", K.str(x.note, 90)));
-    li.appendChild(box); ol.appendChild(li);
+    const t = el("div", "tk"), ep = el("div", "ep"), tx = el("div", "tx");
+    ep.append("EP.", el("b", "", K.roman(i)));
+    tx.appendChild(el("strong", "", K.str(x.title, 40))); if (x.note) tx.appendChild(el("small", "", K.str(x.note, 90)));
+    t.append(ep, tx); tk.appendChild(t);
   });
-  $("reruns").hidden = D.showTv === false || !ol.children.length;
+  $("reruns").hidden = D.showTv === false || !tk.children.length;
+  $("reruns").querySelector(".still").hidden = !K.img(K.get(D, "photos.tv"));
 
-  // moments in gold frames; alternate black-and-white and wine-tinted photos
+  // moments on playing cards
   $("momentsIntro").textContent = K.str(D.momentsIntro, 140);
-  const tiles = $("tiles"); tiles.textContent = "";
+  const gal = $("gal"); gal.textContent = "";
   (D.moments || []).filter(x => K.img(x.photo)).slice(0, 8).forEach((x, i) => {
-    const f = el("figure"); f.innerHTML = FRAME;
-    const pic = f.querySelector(".pic"), im = pic.querySelector("img");
-    if (i % 2) pic.classList.add("tint"); else im.className = "bw";
-    im.src = K.img(x.photo); im.alt = K.str(x.cap, 60);
-    f.appendChild(el("figcaption", "", K.str(x.cap, 60))); tiles.appendChild(f);
+    const f = el("figure", "rv"), im = el("img", "warm"), r = RANKS[i] + " ♥";
+    im.src = K.img(x.photo); im.alt = K.str(x.cap, 60); im.loading = "lazy";
+    f.append(el("span", "r", r), im);
+    if (K.str(x.cap, 60)) f.appendChild(el("figcaption", "", K.str(x.cap, 60)));
+    f.appendChild(el("span", "r2", r));
+    gal.appendChild(f);
   });
-  $("momentsSec").hidden = !tiles.children.length;
+  $("momentsSec").hidden = !gal.children.length;
 
   // open when...
   const ow = $("ow"); ow.textContent = "";
   (D.openWhen || []).filter(x => x.when && x.msg).slice(0, 8).forEach(x => {
     const bt = el("button", "owe"); bt.type = "button"; bt.setAttribute("aria-expanded", "false");
-    bt.innerHTML = '<span class="env2"><span class="back"></span><span class="card2"></span><span class="front"></span><span class="flap"></span><img class="wseal" src="/assets/candlelit/seal.webp" alt=""></span><span class="lbl">open when<b></b></span>';
-    bt.querySelector(".card2").textContent = K.str(x.msg, 200); bt.querySelector(".lbl b").textContent = K.str(x.when, 30);
+    bt.innerHTML = '<span class="e2"><span class="bk"></span><span class="cd"></span><span class="fr"></span><span class="fp"></span><img class="ws" src="/assets/candlelit/seal.webp" alt=""></span><span class="lbl">open when<b></b></span>';
+    bt.querySelector(".cd").textContent = K.str(x.msg, 200); bt.querySelector(".lbl b").textContent = K.str(x.when, 30);
     bt.setAttribute("aria-label", "Open when " + K.str(x.when, 30));
     bt.onclick = () => { const on = bt.classList.toggle("on"); bt.setAttribute("aria-expanded", on); };
     ow.appendChild(bt);
@@ -495,66 +498,42 @@ function render(D) {
   $("spotBtn").hidden = !sp; $("spot").textContent = "";
   $("spotBtn").onclick = () => { if (!sp || $("spot").firstChild) return; const f = el("iframe"); f.src = sp.src; f.height = sp.h; f.allow = "autoplay; encrypted-media; clipboard-write"; f.title = "Our song on Spotify"; $("spot").appendChild(f); };
 
-  $("endDate").textContent = ahead ? K.fmt.long(d) : "together since " + K.fmt.long(d);
-  const t = K.since(d); $("endDays").textContent = ahead ? "" : t.days.toLocaleString("en-IN") + " days of us, and counting";
+  // together for... (or a countdown, if the date is still ahead)
+  $("countT").textContent = ahead ? "until our day" : "together for";
+  const nums = $("nums");
+  const draw = () => { const t = K.since(d); nums.textContent = ""; [[t.days, "days"], [t.hours, "hours"], [t.minutes, "mins"], [t.seconds, "secs"]].forEach(([v, l]) => { const c = el("div", "", String(v).padStart(2, "0")); c.appendChild(el("small", "", l)); nums.appendChild(c); }); };
+  draw(); clearInterval(tick); tick = setInterval(draw, 1000);
+
+  $("endLine").textContent = "a love that led us here";
+  $("endDate").textContent = ahead ? K.fmt.long(d) : "since " + K.fmt.long(d);
 }
 
-// opening: break the seal
+// opening: open the envelope
 (function () {
-  const root = document.documentElement, gate = document.getElementById("gate");
-  // the builder preview skips the opening screen
+  const root = document.documentElement, gate = $("gate");
   if (/[?&]preview=1/.test(location.search)) { root.classList.remove("locked"); root.classList.add("js", "entered"); gate.remove(); return; }
-  root.classList.add("js", "locked");
   const enter = () => {
-    gate.classList.add("opening"); root.classList.add("entered");
-    setTimeout(() => { root.classList.remove("locked"); gate.remove(); }, matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 2400);
+    gate.classList.add("opening");
+    setTimeout(() => root.classList.add("entered"), 700);
+    setTimeout(() => { root.classList.remove("locked"); gate.remove(); }, matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 2000);
   };
-  document.getElementById("gseal").addEventListener("click", enter);
+  $("gseal").addEventListener("click", enter);
 })();
 
-// gold dust
-(function () {
-  const box = document.getElementById("dust"), n = innerWidth < 600 ? 22 : 40;
-  for (let i = 0; i < n; i++) {
-    const d = document.createElement("i"), z = 3 + Math.random() * 6;
-    d.style.cssText = `left:${Math.random() * 100}%;top:${Math.random() * 100}%;width:${z}px;height:${z}px;--d:${3 + Math.random() * 4}s;--dl:${-Math.random() * 6}s`;
-    box.appendChild(d);
-  }
-})();
+// gentle reveals as things scroll into view
+const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("seen"); io.unobserve(e.target); } }), { threshold: .3 });
+const watch = () => document.querySelectorAll(".rv:not(.seen)").forEach(s => io.observe(s));
 
-
-
-
-// rose petals drifting down the page
-(function () {
-  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-  const box = document.getElementById("petals"), srcs = [0,1,2,3,4,5,6].map(i => `/assets/candlelit/petal${i}.webp`);
-  const n = innerWidth < 600 ? 9 : 14;
-  for (let i = 0; i < n; i++) {
-    const p = new Image(); p.src = srcs[i % srcs.length]; p.alt = "";
-    p.style.left = (Math.random() * 100) + "vw";
-    p.style.setProperty("--s", (18 + Math.random() * 22) + "px");
-    p.style.setProperty("--d", (11 + Math.random() * 10) + "s");
-    p.style.setProperty("--delay", (-Math.random() * 20) + "s");
-    p.style.setProperty("--sway", ((Math.random() * 60) - 30) + "px");
-    box.appendChild(p);
-  }
-})();
-
-// moments that happen once, when a section comes into view
-const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("seen"); io.unobserve(e.target); } }), { threshold: .35 });
-document.querySelectorAll(".letter,.datesec").forEach(s => io.observe(s));
-
-// tap the envelope to unfold the letter
-const letter = document.getElementById("letter"), env = document.getElementById("envBtn");
+// tap the envelope to read the letter
+const letter = $("letter"), env = $("envBtn");
 env.addEventListener("click", () => {
   const open = !letter.classList.contains("open");
-  letter.classList.add("seen"); letter.classList.toggle("open", open); env.setAttribute("aria-expanded", open);
-  env.querySelector("small").textContent = open ? "tap to close" : "tap to open";
-  if (open) setTimeout(() => document.getElementById("note").scrollIntoView({ behavior: "smooth", block: "center" }), 450);
+  letter.classList.toggle("open", open); env.setAttribute("aria-expanded", open);
+  $("envHint").textContent = open ? "tap to close" : "tap the envelope to open";
+  if (open) setTimeout(() => $("note").scrollIntoView({ behavior: "smooth", block: "start" }), 700);
 });
 
-K.boot("candlelit", render);
+K.boot("candlelit", D => { render(D); watch(); });
 </script>
 </body>
 </html>

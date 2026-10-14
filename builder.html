@@ -25,7 +25,7 @@
 <script src="/assets/ks-checkout.v4.js"></script>
 <script src="/assets/ks-claim.v1.js"></script>
 <script src="/assets/site-render.v1.js"></script>
-<script src="/assets/ks-templates.v3.js"></script>
+<script src="/assets/ks-templates.v4.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js" defer></script>
 <style>
 :root{--bg:#240409;--panel:#33100f;--panel2:#3d1517;--line:#6b3a35;--ink:#f8f0df;--muted:#c9b99a;--gold:#e4c680;--field:#1a0206;--bad:#ff9aa8;--ok:#9ad8b0}
@@ -236,7 +236,7 @@ function photoField(holder, get, set) {
   if (u) { const r = document.createElement("button"); r.type = "button"; r.className = "link-btn"; r.textContent = "Remove"; r.onclick = () => { set(""); changed(); photoField(holder, get, set); }; holder.appendChild(r); }
 }
 
-// ---------- designed templates (Wildflower, Candlelit, Mixtape) ----------
+// ---------- designed templates (Wildflower, Red Letter, Mixtape) ----------
 const isTpl = () => !!(D && D.tpl && KSKit.DEMO[D.tpl]);
 let FRAME = null, FRAME_TPL = "", BIG = null, postT = 0;
 function post(frame) { try { frame && frame.contentWindow && frame.contentWindow.postMessage({ type: "ks-preview", data: D }, location.origin); } catch (e) {} }

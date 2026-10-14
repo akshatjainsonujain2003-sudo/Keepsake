@@ -4,7 +4,7 @@
    - KSKit.boot(tpl, render): runs a template with the customer's data (or the demo),
      and re-renders live when the builder sends new data.
    Customer text is only ever set with textContent. Links are checked before use.
-   Files in /assets are cached for a year: rename (v3…) when changing. */
+   Files in /assets are cached for a year: rename (v5…) when changing. */
 (function () {
   const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     const D = n => "/assets/demo/" + n + ".webp", W = n => "/assets/wildflower/" + n + ".webp";
@@ -58,7 +58,7 @@
       reasons: ["The way you say my name when you're sleepy.", "You laugh with your whole face.", "You make chai exactly right, every time.", "You believe in me louder than I do.", "Home is wherever you leave your shoes."],
       reasonsEnd: "and a thousand more",
       words: "only you, my love, home, every day, my person, always",
-      filmCaption: "by candlelight, always",
+      filmCaption: "you and me, always",
       storyKicker: "chapter one, and every one since",
       story: "Once upon a time, two people reached for the last free table at the same café. Neither of us gave it up, so we shared it, and talked until they stacked the chairs.\n\nThen came the wrong turn, the right umbrella, a hundred late-night drives and more inside jokes than anyone should be allowed. Somehow, it still feels like the beginning.",
       showTv: true,
@@ -151,11 +151,11 @@
     ],
     candlelit: [
       { group: "The two of you", fields: [
-        { key: "recipient", label: "Who is it for? (shown on the wax seal screen)", type: "text", max: 30 },
+        { key: "recipient", label: "Who is it for? (written above the envelope)", type: "text", max: 30 },
         { key: "a", label: "First name", type: "text", max: 30 }, { key: "b", label: "Second name", type: "text", max: 30 },
         { key: "tagline", label: "Line above your names", type: "text", max: 60 },
         { key: "date", label: "The day it all began (first date, anniversary…)", type: "date" },
-        { key: "photos.hero", label: "Photo in the gold frame", type: "photo" } ] },
+        { key: "photos.hero", label: "Main photo (under your names)", type: "photo" } ] },
       { group: "The letter", fields: [
         { key: "greeting", label: "Greeting", type: "text", max: 40 },
         { key: "letter", label: "Your letter (leave a blank line between paragraphs)", type: "area", max: 2000 },
@@ -164,19 +164,19 @@
         { key: "reasonsTitle", label: "Heading", type: "text", max: 40 },
         { key: "reasons", label: "Reasons", type: "strings", max: 8, item: "Reason", add: "Add a reason", itemMax: 90 },
         { key: "reasonsEnd", label: "Closing line", type: "text", max: 40 },
-        { key: "filmCaption", label: "Caption on the candlelight photo", type: "text", max: 40 },
+        { key: "filmCaption", label: "Big line written three times across the page", type: "text", max: 40 },
         { key: "words", label: "Scrolling words (separate with commas)", type: "text", max: 160 } ] },
       { group: "Our story", fields: [
         { key: "storyKicker", label: "Line above the heading", type: "text", max: 60 },
         { key: "story", label: "Your story (leave a blank line between paragraphs)", type: "area", max: 1500 },
-        { key: "photos.storyA", label: "Oval frame photo", type: "photo" }, { key: "photos.storyB", label: "Square frame photo", type: "photo" } ] },
+        { key: "photos.storyA", label: "Postage-stamp photo", type: "photo" }, { key: "photos.storyB", label: "Polaroid photo", type: "photo" } ] },
       { group: "Our favourite reruns (optional)", fields: [
         { key: "showTv", label: "Show this section", type: "toggle" },
-        { key: "photos.tv", label: "Photo on the old TV", type: "photo" },
+        { key: "photos.tv", label: "Photo above the tickets", type: "photo" },
         { key: "reruns", label: "Memories you replay", type: "list", max: 8, add: "Add an episode", of: [{ key: "title", label: "Episode title", type: "text", max: 40 }, { key: "note", label: "One line about it", type: "text", max: 90 }] } ] },
       { group: "Moments so far", fields: [
         { key: "momentsIntro", label: "Intro line", type: "text", max: 140 },
-        PHOTO_LIST("moments", "Framed photos", 8) ] },
+        PHOTO_LIST("moments", "Photos on playing cards", 8) ] },
       { group: "Open when…", fields: [
         { key: "openWhen", label: "Envelopes", type: "list", max: 8, add: "Add an envelope", of: [{ key: "when", label: "Open when…", type: "text", max: 30 }, { key: "msg", label: "Note inside", type: "area", max: 200 }] } ] },
       { group: "Song & ending", fields: [
@@ -184,7 +184,7 @@
         { key: "song.title", label: "Song name", type: "text", max: 50 },
         { key: "song.note", label: "Note about it", type: "text", max: 60 },
         { key: "photos.cover", label: "Album cover photo", type: "photo" },
-        { key: "photos.end", label: "Closing portrait", type: "photo" } ] }
+        { key: "photos.end", label: "Closing stamp photo", type: "photo" } ] }
     ],
     mixtape: [
       { group: "The two of you", fields: [
@@ -221,8 +221,8 @@
         { key: "photos.end", label: "Closing photo", type: "photo" } ] }
     ]
   };
-  const NAMES = { wildflower: "Wildflower", candlelit: "Candlelit", mixtape: "Mixtape" };
-  const HINTS = { wildflower: "A pressed-flower scrapbook of your story", candlelit: "A candlelit love letter, sealed in wax", mixtape: "Gingham, film strips and a mixtape for your favourite person" };
+  const NAMES = { wildflower: "Wildflower", candlelit: "Red Letter", mixtape: "Mixtape" };
+  const HINTS = { wildflower: "A pressed-flower scrapbook of your story", candlelit: "A wine-red love letter: stamps, playing cards and a heart round your date", mixtape: "Gingham, film strips and a mixtape for your favourite person" };
 
   // ---------- helpers ----------
   const str = (v, n) => String(v == null ? "" : v).slice(0, n || 4000);
