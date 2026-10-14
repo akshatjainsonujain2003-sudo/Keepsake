@@ -1445,7 +1445,15 @@ window.qrcode=function(typeNumber,errorLevel){
 </script>
 <style>.payPanel{max-width:760px;margin:0 auto 24px}.liveExtra{margin-top:12px}.lockField{margin-top:6px}</style>
 <script src="/assets/ks-checkout.v1.js"></script><script src="/assets/ks-claim.v1.js"></script>
-<link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/svg+xml" href="/assets/icon.svg"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest"></head>
+<link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/svg+xml" href="/assets/icon.svg"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest"><style>
+/* phones: smaller theme tiles so the form is closer */
+@media(max-width:600px){#templates .templates{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:8px!important}#templates .template .meta b{font-size:11.5px}#templates .template .index{transform:scale(.8);transform-origin:top left}#templates .template.active::before,#templates .template.active::after{display:none!important}}
+/* no sample QR before saving */
+#qrPanel .qrBox{position:relative}
+#qrPanel.locked .qrBox img{filter:blur(7px);opacity:.35}
+#qrPanel.locked .qrBox::after{content:"Your QR code appears here after you save";position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:14px;font:600 14px/1.35 system-ui,sans-serif;color:#2a0409}
+</style>
+</head>
 <body>
 <div class="topbar"><div class="wrap nav">
 <a class="brand" href="/">Keepsake</a>
@@ -1545,7 +1553,7 @@ window.qrcode=function(typeNumber,errorLevel){
 <div class="heroBtns"><button class="btn small" id="publishBtn">Publish my site</button><button class="btn small ghost" id="siteBtn">Download page</button></div>
 <div class="status" id="pubStatus"></div></details>
 </div>
-<div class="darkPanel reveal">
+<div class="darkPanel reveal locked" id="qrPanel">
 <h3>Your QR code</h3>
 <div class="qrWrap"><div class="qrBox"><img id="qrImg" alt="Memory QR code"></div><div>
 
@@ -1871,7 +1879,7 @@ function qrSvg(u){
 function qrApiUrl(u,format="png"){
  return "";
 }
-function drawQR(){
+function drawQR(){$("#qrPanel")?.classList.toggle("locked",!(short||longLink));
  const u=finalLink()||"https://keepsake.example";qrFallbackUrl="";
  try{qrSVG=qrSvg(u);$("#qrImg").src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(qrSVG);
   setStatus("#qrStatus",`${byteLen(u)} bytes · ${short?"short link":!isWeb(u)&&longLink?"text card · no website needed":longLink?"full link (long QR)":"sample QR — generate your card"}`,!!(short||!longLink))}

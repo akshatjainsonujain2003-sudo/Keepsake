@@ -37,6 +37,11 @@
     if (info.tier === "card" && opts.kind === "site") { banner(opts.before, "Your prepaid code is for a <b>memory card</b>. <a href=\"/studio\">Make your card here →</a>"); return null; }
     const what = opts.kind === "site" ? "website" : "card";
     banner(opts.before, `Retail Keepsake Box <b>#${esc(info.code)}</b> detected! Your ${info.tier === "site" ? "VIP website" : "digital card"} is prepaid. Design your memories below, then tap Save and enter the 4-digit PIN from inside your box. <b>No payment needed.</b>` + (info.tier === "site" && opts.kind === "site" ? ` <span style="opacity:.8">(Prefer a simple card? <a href="/studio">Use it for a card instead</a>.)</span>` : ""));
+    // prepaid: no prices on the save buttons
+    const gb = document.getElementById("generateBtn"); if (gb) { gb.textContent = "Save & Activate with my Code"; const h = gb.nextElementSibling; if (h && h.classList.contains("mediaHint")) h.textContent = "🎁 Prepaid: no payment needed. You'll enter the PIN from your box after saving."; }
+    const sb = document.getElementById("saveBtn"); if (sb) sb.textContent = "Save & Activate with my Code";
+    const fp = document.querySelector(".free-pill"); if (fp) fp.textContent = "🎁 Prepaid Keepsake · no payment needed";
+    const sh = document.querySelector(".save-hint"); if (sh) sh.textContent = "🎁 After saving, enter the PIN from inside your box to make it live.";
     return { code: info.code, tier: info.tier };
   }
   function panel(el, o) {
