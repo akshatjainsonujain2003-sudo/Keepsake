@@ -2,17 +2,6 @@
   "cleanUrls": true,
   "redirects": [
     {
-      "source": "/:path*",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.getkeepsake.in"
-        }
-      ],
-      "destination": "https://getkeepsake.in/:path*",
-      "permanent": true
-    },
-    {
       "source": "/business",
       "destination": "/",
       "permanent": false
