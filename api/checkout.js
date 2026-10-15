@@ -77,6 +77,8 @@ module.exports = async (req, res) => {
         } else if (b.print === "design") frame = { print: "design" };
         else return db.reply(res, 400, { error: "Choose what to print in the frame." });
       }
+      // Razorpay won't take less than ₹1 (100 paise), even after a creator's discount.
+      if (!(amt.rupees >= 1)) return db.reply(res, 400, { error: "This order total is too low to pay online. Please contact us." });
       // At most a few open orders per minute per account.
       const rl = "checkout-rate:" + user.id, n = await db.cmd("INCR", rl);
       if (n === 1) await db.cmd("EXPIRE", rl, 60);
@@ -106,6 +108,7 @@ module.exports = async (req, res) => {
 
     return db.reply(res, 400, { error: "Unknown action." });
   } catch (e) {
+    if (e && e.razorpayAuth) { console.error("Razorpay rejected the API keys. Check RAZORPAY_KEY_ID / RAZORPAY_KEY_SECRET in Vercel."); return db.reply(res, 503, { error: "Payments are temporarily unavailable. Please try again soon." }); }
     return db.reply(res, 500, { error: "Could not start the payment. Please try again." });
   }
 };

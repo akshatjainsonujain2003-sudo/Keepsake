@@ -49,6 +49,7 @@ const keyId = () => env.RAZORPAY_KEY_ID || "";
 const configured = () => !!(env.RAZORPAY_KEY_ID && env.RAZORPAY_KEY_SECRET);
 
 async function createOrder({ rupees, receipt, notes }) {
+  if (!(rupees >= 1)) throw new Error("Razorpay needs at least ₹1 (100 paise).");
   const auth = Buffer.from(env.RAZORPAY_KEY_ID + ":" + env.RAZORPAY_KEY_SECRET).toString("base64");
   const r = await fetch("https://api.razorpay.com/v1/orders", {
     method: "POST",
@@ -56,7 +57,11 @@ async function createOrder({ rupees, receipt, notes }) {
     body: JSON.stringify({ amount: rupees * 100, currency: "INR", receipt, notes })
   });
   const j = await r.json().catch(() => ({}));
-  if (!r.ok || !j.id) throw new Error((j.error && j.error.description) || "Payment provider error.");
+  if (!r.ok || !j.id) {
+    // 401 from Razorpay means the key ID / secret in Vercel are wrong (or test and live keys are mixed).
+    const e = new Error((j.error && j.error.description) || "Payment provider error.");
+    e.razorpayAuth = r.status === 401; throw e;
+  }
   return j;
 }
 
