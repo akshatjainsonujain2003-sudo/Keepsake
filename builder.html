@@ -22,7 +22,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,500&family=DM+Sans:wght@400;500;700&display=swap">
 <link rel="stylesheet" href="/assets/site-themes.v1.css">
-<script src="/assets/ks-checkout.v4.js"></script>
+<script src="/assets/ks-checkout.v5.js"></script>
 <script src="/assets/ks-claim.v1.js"></script>
 <script src="/assets/site-render.v1.js"></script>
 <script src="/assets/ks-templates.v4.js"></script>
@@ -439,11 +439,11 @@ async function saveSite() {
   const btn = $("#saveBtn"); btn.disabled = true; status("Saving…");
   try {
     if (isTpl()) D.t = `${(D.a || "").trim()} & ${(D.b || "").trim()}`.slice(0, 80);
-    const body = { data: D, kind: "site" }; if (EDIT_ID) body.id = EDIT_ID; const lk = LOCK.value(); if (lk !== undefined) body.lock = lk;
+    const body = { data: D, kind: "site" }; if (EDIT_ID) body.id = EDIT_ID; const lk = LOCK.value(); if (lk !== undefined) body.lock = lk; body.lockStyle = LOCK.style(); const lh = LOCK.hint(); if (lh !== undefined) body.lockHint = lh;
     let r = await fetch("/api/customer-memories", { method: EDIT_ID ? "PUT" : "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
     let j = await r.json().catch(() => ({}));
     if (!r.ok) throw new Error(j.error || "Could not save your website.");
-    setEdit(j.id); LOCK.set(j.locked); dirty = false; ACTIVE = j.active; try { localStorage.removeItem(DRAFT); } catch (e) {}
+    setEdit(j.id); LOCK.set(j.locked, j.lockStyle, j.lockHint); dirty = false; ACTIVE = j.active; try { localStorage.removeItem(DRAFT); } catch (e) {}
     if (CLAIM) { status("Saved. Enter your PIN below to activate it.", "ok"); claimPanel(); }
     else if (j.active) { status("Saved. Your live website is updated ♡", "ok"); live(j.url); }
     else { status("Saved. Choose how to activate it below.", "ok"); checkout("activate"); }
@@ -503,7 +503,7 @@ window.addEventListener("beforeunload", e => { if (dirty && EDIT_ID) { e.prevent
     try {
       const r = await fetch("/api/customer-memories?id=" + encodeURIComponent(id), { cache: "no-store" }); const j = await r.json();
       if (!r.ok || j.kind !== "site") throw new Error(j.error || "Website not found.");
-      D = j.data.tpl ? KSKit.withDefaults(j.data.tpl, j.data) : j.data; EDIT_ID = id; ACTIVE = j.active; LOCK.set(j.locked);
+      D = j.data.tpl ? KSKit.withDefaults(j.data.tpl, j.data) : j.data; EDIT_ID = id; ACTIVE = j.active; LOCK.set(j.locked, j.lockStyle, j.lockHint);
       all();
       if (j.active) live("/s/" + id); else if (CLAIM) claimPanel(); else checkout("activate");
       status(j.active ? "Editing your live website. Save to update it." : "Editing your saved website. It isn't active yet.", "ok");
