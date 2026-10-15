@@ -11,12 +11,13 @@ const rupees = (v, d) => { const n = Math.round(+v); return n >= 1 ? n : d; };
 // Photo frames are paused: they are only sold when FRAMES=on is set in Vercel.
 const framesOn = () => String(env.FRAMES || "").toLowerCase() === "on";
 // Launch offer: a % off every keepsake (cards and websites), on by default at 50%.
-// In Vercel: SALE_PERCENT=0 switches it off, SALE_ENDS=2026-11-30 ends it after that day (India time),
+// In Vercel: SALE_PERCENT=0 switches it off, SALE_ENDS=2026-11-30 moves the last day (India time),
 // SALE_NAME changes the label. Photo frames are never discounted (printing and shipping cost real money).
 function sale() {
   const pct = Math.min(90, Math.max(0, Math.round(env.SALE_PERCENT === undefined || env.SALE_PERCENT === "" ? 50 : +env.SALE_PERCENT || 0)));
   if (!pct) return null;
-  const ends = /^\d{4}-\d{2}-\d{2}$/.test(env.SALE_ENDS || "") ? env.SALE_ENDS : "";
+  // The launch offer runs for two days: until 17 Oct 2026, 11:59 PM India time (override with SALE_ENDS).
+  const ends = /^\d{4}-\d{2}-\d{2}$/.test(env.SALE_ENDS || "") ? env.SALE_ENDS : "2026-10-17";
   if (ends && Date.now() > Date.parse(ends + "T23:59:59+05:30")) return null;
   return { percent: pct, name: String(env.SALE_NAME || "Launch offer").slice(0, 40), ends };
 }

@@ -14,12 +14,22 @@
     var st = document.createElement("style");
     st.textContent = ".ks-salebar{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:4px 12px;padding:9px 14px;background:linear-gradient(90deg,#42070f,#7a1424,#42070f);color:#f8ecd2;font:500 13.5px/1.35 system-ui,-apple-system,sans-serif;text-align:center;position:relative;z-index:60}" +
       ".ks-salebar b{color:#f2d27a;font-weight:700}.ks-salebar a{color:#f2d27a;font-weight:600;text-decoration:underline;text-underline-offset:3px}" +
-      ".ks-was-p{opacity:.6;font-weight:400;text-decoration-thickness:1.5px;margin-right:2px}";
+      ".ks-salebar .ks-left{font-variant-numeric:tabular-nums;white-space:nowrap}.ks-was-p{opacity:.6;font-weight:400;text-decoration-thickness:1.5px;margin-right:2px}";
     document.head.appendChild(st);
-    var ends = s.ends ? " · till " + new Date(s.ends + "T12:00:00+05:30").toLocaleDateString("en-IN", { day: "numeric", month: "short" }) : "";
+    var endAt = s.ends ? Date.parse(s.ends + "T23:59:59+05:30") : 0;
+    var ends = endAt ? ' · <span class="ks-left"></span>' : "";
     var bar = document.createElement("div"); bar.className = "ks-salebar"; bar.setAttribute("role", "note");
     bar.innerHTML = "<span>🎉 <b>" + s.name.replace(/[<>&]/g, "") + ": " + s.percent + "% off</b> every keepsake" + ends + "</span>" +
       "<span>Websites " + (p.site ? "<s class=\"ks-was-p\">" + rs(p.site.was) + "</s> " + rs(p.site.price) : "") + " · Cards " + (p.card ? "<s class=\"ks-was-p\">" + rs(p.card.was) + "</s> " + rs(p.card.price) : "") + "</span>";
     document.body.insertBefore(bar, document.body.firstChild);
+    if (endAt) {
+      var left = bar.querySelector(".ks-left");
+      var tick = function () {
+        var ms = endAt - Date.now(); if (ms <= 0) { bar.remove(); return; }
+        var m = Math.floor(ms / 60000), d = Math.floor(m / 1440), h = Math.floor(m % 1440 / 60), mm = m % 60;
+        left.textContent = "ends in " + (d ? d + "d " : "") + (d || h ? h + "h " : "") + mm + "m";
+      };
+      tick(); setInterval(tick, 30000);
+    }
   }).catch(function () {});
 })();
