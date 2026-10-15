@@ -162,6 +162,44 @@
  .lk-folder .lk-sign{position:absolute;left:40px;bottom:18px;margin:0}
  .lk-folder .lk-sky svg{width:30px}
 }
+.lk-mirror{background:#3b86a3;color:#fff;font-family:system-ui,-apple-system,sans-serif;transition:opacity .6s 1s}
+.lk-mirror .lk-scene{position:relative;min-height:max(100%,720px);overflow:hidden}
+.lk-mirror .lk-bg{position:absolute;inset:-60px;filter:blur(20px) saturate(1.15)}
+.lk-mirror .lk-bg::before,.lk-mirror .lk-bg::after{content:"";position:absolute;left:0;right:0;background-image:url(/assets/lock/mirror-meadow.webp);background-size:cover}
+.lk-mirror .lk-bg::before{top:0;height:62%;background-position:center top}
+.lk-mirror .lk-bg::after{bottom:0;height:52%;background-position:center bottom;-webkit-mask:linear-gradient(#0000,#000 30%);mask:linear-gradient(#0000,#000 30%)}
+.lk-mirror .lk-stage{--H:980px;position:absolute;height:var(--H);width:calc(var(--H) / 2);left:calc(50% - var(--H) * .2517);top:calc(var(--cy,283px) - var(--H) * .5);background:url(/assets/lock/mirror-meadow.webp) center/100% 100%;
+  -webkit-mask:linear-gradient(90deg,#0000,#000 14%,#000 86%,#0000);mask:linear-gradient(90deg,#0000,#000 14%,#000 86%,#0000);transform-origin:50.3% 51%;transition:transform 1.3s cubic-bezier(.6,0,.2,1)}
+.lk-mirror .lk-glass{position:absolute;left:33%;width:35.4%;top:36.6%;height:30%;box-sizing:border-box;border-radius:50% 50% 4px 4px/22% 22% 4px 4px;overflow:hidden;
+  -webkit-backdrop-filter:blur(7px) brightness(1.12) saturate(.9);backdrop-filter:blur(7px) brightness(1.12) saturate(.9);background:linear-gradient(170deg,#ffffff5e,#ffffff1c 55%,#ffffff33);box-shadow:inset 0 0 26px #ffffffa0;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:26px 10px 6px;transition:opacity .7s,backdrop-filter .7s}
+.lk-mirror .lk-glass>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.42;filter:blur(1.5px);z-index:-1}
+.lk-mirror .lk-s{font:400 30px/1 "Great Vibes",cursive;text-shadow:0 1px 10px #1d5a7488}
+.lk-mirror .lk-label{margin-top:6px;font:600 13px/1.2 system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;text-shadow:0 1px 6px #1d5a7499}
+.lk-mirror .lk-hintx{margin-top:5px;font:italic 13px/1.3 Georgia,serif;text-shadow:0 1px 6px #1d5a74aa}
+.lk-mirror .lk-dots{display:flex;justify-content:center;gap:8px;margin-top:12px}
+.lk-mirror .lk-dots i{width:30px;height:36px;border-radius:8px;background:#ffffff40;border:1.5px solid #ffffffc0;display:grid;place-items:center;font:700 16px/1 system-ui;font-style:normal;color:#fff;transition:background .2s,transform .2s}
+.lk-mirror .lk-dots i.on{background:#ffffffcc;color:#2c6f8c;transform:scale(1.06)}
+.lk-mirror .lk-top{position:absolute;top:16px;left:0;right:0;margin:0;text-align:center;font:600 14px/1.3 system-ui,sans-serif;text-shadow:0 1px 8px #1d5a74aa;z-index:2;padding:0 16px}
+.lk-mirror .lk-pane{position:absolute;left:0;right:0;bottom:14px;margin:0 auto;width:min(330px,calc(100% - 24px));box-sizing:border-box;padding:16px 16px 10px;text-align:center;border-radius:30px;border:1px solid #ffffff70;
+  background:#ffffff26;-webkit-backdrop-filter:blur(16px) saturate(1.3);backdrop-filter:blur(16px) saturate(1.3);box-shadow:0 22px 44px -20px #0008;transition:opacity .5s,transform .6s}
+.lk-mirror .lk-pad{display:grid;grid-template-columns:repeat(3,58px);justify-content:center;gap:9px 20px}
+.lk-mirror .lk-k{width:58px;height:58px;border-radius:50%;border:1px solid #ffffffb0;background:#ffffff30;color:#fff;font:400 25px/1 system-ui,sans-serif;cursor:pointer;text-shadow:0 1px 4px #0003;transition:transform .12s,background .15s}
+.lk-mirror .lk-k:active{transform:scale(.92);background:#ffffff70}
+.lk-mirror .lk-k.lk-deco{border:0;background:none;color:#fff;font-size:22px;cursor:default}
+.lk-mirror .lk-k:focus-visible,.lk-mirror .lk-enter:focus-visible,.lk-mirror .lk-word:focus-visible{outline:3px solid #fff;outline-offset:2px}
+.lk-mirror .lk-word{width:100%;box-sizing:border-box;padding:14px;border-radius:16px;border:1px solid #ffffffb0;background:#ffffff38;color:#fff;font-size:18px;text-align:center}
+.lk-mirror .lk-enter{margin-top:12px;padding:11px 30px;border:0;border-radius:999px;background:#fff;color:#2c6f8c;font:600 15px/1 system-ui,sans-serif;letter-spacing:.04em;cursor:pointer;box-shadow:0 6px 16px -6px #0006}
+.lk-mirror .lk-msg{min-height:1.3em;margin-top:8px;font-size:13.5px;font-weight:600;text-shadow:0 1px 6px #7a1f2e}
+.lk-mirror .lk-close{background:none;border:0;color:#fff;text-decoration:underline;font-size:13px;cursor:pointer}
+.lk-mirror .lk-card.lk-shake{animation:none}.lk-mirror .lk-card.lk-shake .lk-glass,.lk-mirror .lk-card.lk-shake .lk-pane{animation:lkshake .45s}
+.lk-mirror.lk-ok{opacity:0}
+.lk-mirror.lk-ok .lk-stage{transform:scale(3.4)}
+.lk-mirror.lk-ok .lk-glass{opacity:0}
+.lk-mirror.lk-ok .lk-pane{opacity:0;transform:translateY(60px)}
+.lk-mirror.lk-ok .lk-top{opacity:0;transition:opacity .4s}
+@media(max-height:740px){.lk-mirror .lk-scene{min-height:max(100%,700px)}.lk-mirror .lk-stage{--H:840px;--cy:236px}.lk-mirror .lk-top{top:10px}.lk-mirror .lk-k{width:50px;height:50px;font-size:22px}.lk-mirror .lk-pad{grid-template-columns:repeat(3,50px);gap:7px 18px}.lk-mirror .lk-pane{padding-top:13px}.lk-mirror .lk-s{font-size:26px}.lk-mirror .lk-glass{padding:22px 4px 6px}.lk-mirror .lk-dots{gap:6px}.lk-mirror .lk-dots i{width:26px;height:32px}}
+@media(min-width:820px) and (min-height:760px){.lk-mirror .lk-stage{--H:1040px;--cy:300px}}
 .ksun{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;padding:24px;background:radial-gradient(ellipse at top,#5a0f17,#1b0306 70%);color:#f8f0df;font-family:system-ui,sans-serif}
 .ksun .ku-box{width:min(380px,100%);text-align:center}
 .ksun .ku-mark{font:italic 44px/1 Georgia,serif;color:#e4c680;margin-bottom:6px}
@@ -341,7 +379,7 @@
         <input class="kl-pw" type="text" maxlength="4" inputmode="numeric" autocomplete="off" placeholder="4 numbers, e.g. 1203">
         <input class="kl-hn" type="text" maxlength="60" autocomplete="off" placeholder="Hint on the lock screen (optional), e.g. our anniversary DDMM">
         <div class="kl-sub">Lock screen design</div>
-        <div class="kl-style kl-look" role="group" aria-label="Lock screen design"><button type="button" data-l="folder" class="on">Secret folder</button><button type="button" data-l="lilac">Lilac keypad</button></div>
+        <div class="kl-style kl-look" role="group" aria-label="Lock screen design"><button type="button" data-l="folder" class="on">Secret folder</button><button type="button" data-l="mirror">Magic mirror</button><button type="button" data-l="lilac">Lilac keypad</button></div>
         <div class="kl-photo"><span class="kl-thumb" hidden></span><label class="kl-up">Add a teaser photo (optional)<input type="file" accept="image/*" hidden></label><button type="button" class="kl-rm" hidden>Remove</button></div>
         <div class="kl-hint kl-pnote" hidden>Anyone with the link can see this photo before unlocking, so pick one that doesn't give the surprise away.</div>
         <button type="button" class="kl-prev">Preview the lock screen</button>
@@ -350,8 +388,8 @@
     let saved = false, savedStyle = "pin", style = "pin", look = "folder", photo = "";
     const lookBtns = el.querySelector(".kl-look"), thumb = el.querySelector(".kl-thumb"), up = el.querySelector(".kl-up"), rm = el.querySelector(".kl-rm"), pnote = el.querySelector(".kl-pnote"), file = up.querySelector("input");
     const PNOTE = pnote.textContent;
-    const setLook = l => { look = l === "lilac" ? "lilac" : "folder"; lookBtns.querySelectorAll("button").forEach(b => b.classList.toggle("on", b.dataset.l === look)); el.querySelector(".kl-photo").hidden = look !== "folder"; pnote.hidden = look !== "folder" || !photo; };
-    const setPhoto = u => { photo = u || ""; thumb.hidden = !photo; thumb.style.backgroundImage = photo ? `url("${photo}")` : ""; rm.hidden = !photo; up.firstChild.textContent = photo ? "Change photo" : "Add a teaser photo (optional)"; pnote.hidden = look !== "folder" || !photo; pnote.textContent = PNOTE; };
+    const setLook = l => { look = ["lilac", "mirror"].includes(l) ? l : "folder"; lookBtns.querySelectorAll("button").forEach(b => b.classList.toggle("on", b.dataset.l === look)); el.querySelector(".kl-photo").hidden = look === "lilac"; pnote.hidden = look === "lilac" || !photo; };
+    const setPhoto = u => { photo = u || ""; thumb.hidden = !photo; thumb.style.backgroundImage = photo ? `url("${photo}")` : ""; rm.hidden = !photo; up.firstChild.textContent = photo ? "Change photo" : "Add a teaser photo (optional)"; pnote.hidden = look === "lilac" || !photo; pnote.textContent = PNOTE; };
     lookBtns.addEventListener("click", e => { const b = e.target.closest("button"); if (b) setLook(b.dataset.l); });
     rm.addEventListener("click", () => setPhoto(""));
     file.addEventListener("change", async () => { const f = file.files[0]; file.value = ""; if (!f) return; up.firstChild.textContent = "Uploading…"; try { setPhoto(await uploadPhoto(f)); } catch (x) { setPhoto(photo); pnote.hidden = false; pnote.textContent = x.message || "Couldn't upload that photo."; } });
@@ -418,21 +456,28 @@
   function unlock({ kind, style, hint, look, photo, onTry, preview }) {
     css();
     if (!document.getElementById("ks-lock-fonts")) { const l = document.createElement("link"); l.id = "ks-lock-fonts"; l.rel = "stylesheet"; l.href = "https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Great+Vibes&family=Special+Elite&display=swap"; document.head.appendChild(l); }
-    const pin = style === "pin", L = look === "lilac" ? "lilac" : "folder", F = L === "folder";
+    const pin = style === "pin", L = ["lilac", "mirror"].includes(look) ? look : "folder", F = L === "folder";
     const w = document.createElement("div"); w.className = "kslk lk-" + L; w.setAttribute("role", "dialog"); w.setAttribute("aria-modal", "true"); w.setAttribute("aria-label", "Enter the passcode to open");
     const keys = ["1","2","3","4","5","6","7","8","9","♥","0","⌫"];
+    const P = {
+      label: `<div class="lk-label">${pin ? (L === "lilac" ? "Enter passcode" : "enter the passcode") : (L === "lilac" ? "Enter the secret word" : "enter the secret word")}</div>`,
+      hint: hint ? `<div class="lk-hintx">Hint: ${esc(hint)}</div>` : "",
+      dots: pin ? `<div class="lk-dots" aria-live="polite"><i></i><i></i><i></i><i></i></div>` : "",
+      input: pin ? `<div class="lk-pad">${keys.map(k => `<button type="button" class="lk-k${k === "♥" ? " lk-deco" : ""}" data-k="${k}" ${k === "♥" ? 'tabindex="-1" aria-hidden="true"' : `aria-label="${k === "⌫" ? "Delete" : k}"`}>${k}</button>`).join("")}</div>`
+        : `<input class="lk-word" type="password" autocomplete="off" aria-label="Secret word" required>`,
+      enter: `<button type="submit" class="lk-enter">${F ? "open ♥" : L === "mirror" ? "step through ✦" : "enter"}</button>`,
+      msg: `<div class="lk-msg" role="alert"></div>` + (preview ? `<button type="button" class="lk-close">Close preview</button>` : "")
+    };
     const form = `<form class="lk-card" novalidate>
         ${F ? `<div class="lk-stamp" aria-hidden="true"><div><small>SEALED</small><strong>for you</strong></div></div><div class="lk-kick">our little secret ahead</div>` : ""}
-        <div class="lk-label">${pin ? (F ? "enter the passcode" : "Enter passcode") : (F ? "enter the secret word" : "Enter the secret word")}</div>
-        ${hint ? `<div class="lk-hintx">Hint: ${esc(hint)}</div>` : ""}
-        ${pin ? `<div class="lk-dots" aria-live="polite"><i></i><i></i><i></i><i></i></div>
-        <div class="lk-pad">${keys.map(k => `<button type="button" class="lk-k${k === "♥" ? " lk-deco" : ""}" data-k="${k}" ${k === "♥" ? 'tabindex="-1" aria-hidden="true"' : `aria-label="${k === "⌫" ? "Delete" : k}"`}>${k}</button>`).join("")}</div>`
-        : `<input class="lk-word" type="password" autocomplete="off" aria-label="Secret word" required>`}
-        <button type="submit" class="lk-enter">${F ? "open ♥" : "enter"}</button>
-        <div class="lk-msg" role="alert"></div>
-        ${preview ? `<button type="button" class="lk-close">Close preview</button>` : ""}
+        ${P.label}${P.hint}${P.dots}${P.input}${P.enter}${P.msg}
       </form>`;
-    if (F) {
+    if (L === "mirror") {
+      w.innerHTML = `<div class="lk-scene"><div class="lk-bg" aria-hidden="true"></div>
+      <p class="lk-top">There's a little magic on the other side.</p>
+      <form class="lk-card" novalidate><div class="lk-stage"><div class="lk-glass">${photo ? `<img src="${esc(photo)}" alt="">` : ""}<span class="lk-s">for your eyes only</span>${P.label}${P.hint}${P.dots}</div></div>
+      <div class="lk-pane">${P.input}${P.enter}${P.msg}</div></form></div><div class="lk-burst" aria-hidden="true"></div>`;
+    } else if (F) {
       const A = folderArt(photo);
       w.innerHTML = `<div class="lk-sky" aria-hidden="true">${A.stars}</div><div class="lk-hills" aria-hidden="true">${A.hills}</div>
       <p class="lk-top">It starts with a little secret.</p>
@@ -459,9 +504,9 @@
     const paint = () => dots.forEach((d, i) => { d.classList.toggle("on", i < code.length); d.textContent = i < code.length ? "✱" : ""; });
     const close = () => { document.documentElement.style.overflow = ""; w.remove(); document.removeEventListener("keydown", onKey); };
     const celebrate = () => {
-      const b = w.querySelector(".lk-burst"), cols = F ? ["#e0466e", "#7a3b1e", "#fff", "#f4c542", "#ec5d86"] : ["#ff8fb1", "#ffd84a", "#8a6fdc", "#fff", "#ff5d8f"];
+      const b = w.querySelector(".lk-burst"), cols = L === "mirror" ? ["#fff", "#fffbe0", "#ffd6e2", "#e8f6ff", "#fff3a8"] : F ? ["#e0466e", "#7a3b1e", "#fff", "#f4c542", "#ec5d86"] : ["#ff8fb1", "#ffd84a", "#8a6fdc", "#fff", "#ff5d8f"];
       for (let i = 0; i < 26; i++) { const s = document.createElement("i"); s.textContent = i % 3 ? "♥" : "✦"; s.style.cssText = `--x:${(Math.random() * 2 - 1) * 46}vw;--y:${-20 - Math.random() * 60}vh;--r:${Math.random() * 360}deg;color:${cols[i % cols.length]};animation-delay:${Math.random() * .15}s`; b.appendChild(s); }
-      w.classList.add("lk-ok"); setTimeout(close, matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 1350);
+      w.classList.add("lk-ok"); setTimeout(close, matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : L === "mirror" ? 1650 : 1350);
     };
     const tryCode = async v => {
       if (busy) return; busy = true; msg.textContent = "";

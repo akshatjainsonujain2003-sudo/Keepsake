@@ -31,7 +31,7 @@ function setLock(memory, b) {
   return null;
 }
 // What the lock screen may show before it's unlocked: never the password or the content.
-const LOOKS = ["folder", "lilac"];
+const LOOKS = ["folder", "mirror", "lilac"];
 const lockInfo = m => ({ style: (m.lock && m.lock.style) || "word", hint: (m.lock && m.lock.hint) || "", look: (m.lock && m.lock.look) || "folder", photo: (m.lock && m.lock.photo) || "" });
 const ownerLock = m => m.lock ? { lockStyle: lockInfo(m).style, lockHint: lockInfo(m).hint, lockLook: lockInfo(m).look, lockPhoto: lockInfo(m).photo } : {};
 function lockMatches(memory, pw) {
