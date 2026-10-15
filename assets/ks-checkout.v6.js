@@ -189,7 +189,7 @@
     const $ = s => el.querySelector(s);
     const state = { mode: "activate", plan: "digital", print: "", photo: "", cat: null, code: null };
     const status = (t, cls) => { const s = $(".ks-status"); s.textContent = t || ""; s.className = "ks-status" + (cls ? " " + cls : ""); };
-    const full = plan => { const c = state.cat; if (!c || !c.delivery[plan]) return { sum: 0, frame: 0 }; const base = state.mode === "upgrade" ? 0 : c.products[opts.kind].price, fr = c.delivery[plan].price; return { sum: base + fr, frame: fr }; };
+    const full = plan => { const c = state.cat; if (!c || !c.delivery[plan]) return { sum: 0, frame: 0 }; const pr = c.products[opts.kind], up = state.mode === "upgrade", base = up ? 0 : pr.price, fr = c.delivery[plan].price; return { sum: base + fr, frame: fr, was: (up ? 0 : pr.was || pr.price) + fr }; };
     // A creator's code takes its discount off the keepsake itself, never a frame (same as api/_ref.js).
     const total = plan => { const f = full(plan); if (!state.code) return f.sum; return f.sum - Math.round(Math.max(0, f.sum - f.frame) * state.code.discount / 100); };
 
@@ -198,12 +198,12 @@
       $(".ks-title").textContent = state.mode === "upgrade" ? "Get it in a photo frame" : "Activate your " + (opts.kind === "site" ? "website" : "keepsake");
       $(".ks-note").textContent = state.mode === "upgrade"
         ? "We'll print a photo frame for this keepsake and deliver it to you. Your link stays the same."
-        : `Your ${opts.kind === "site" ? "website" : "card"} is saved. Pay once to switch on its link, QR code and NFC link. It stays live for good, and you can keep editing it.`;
+        : `Your ${opts.kind === "site" ? "website" : "card"} is saved. Pay once to switch on its link, QR code and NFC link. It stays live for good, and you can keep editing it.` + (c.sale ? ` 🎉 ${c.sale.name}: ${c.sale.percent}% off right now.` : "");
       const plans = (state.mode === "upgrade" ? ["frameQr", "frameNfc"] : ["digital", "frameQr", "frameNfc"]).filter(p => c.delivery[p]);
       $(".ks-opts").hidden = $(".ks-dq").hidden = plans.length < 2;
       if (!plans.includes(state.plan)) state.plan = plans[0];
       $(".ks-opts").style.gridTemplateColumns = plans.length === 2 ? "1fr 1fr" : "";
-      $(".ks-opts").innerHTML = plans.map(p => { const d = c.delivery[p]; return `<button type="button" class="ks-opt${p === state.plan ? " on" : ""}" data-plan="${p}"><b>${esc(p === "digital" ? prod.name + " · Digital" : d.name)}</b><span class="ks-pp">${money(total(p))}</span><small>${esc(d.desc || "")}</small></button>`; }).join("");
+      $(".ks-opts").innerHTML = plans.map(p => { const d = c.delivery[p]; return `<button type="button" class="ks-opt${p === state.plan ? " on" : ""}" data-plan="${p}"><b>${esc(p === "digital" ? prod.name + " · Digital" : d.name)}</b><span class="ks-pp">${full(p).was > total(p) ? `<s class="ks-was">${money(full(p).was)}</s> ` : ""}${money(total(p))}</span><small>${esc(d.desc || "")}</small></button>`; }).join("");
       const frame = state.plan !== "digital";
       $(".ks-frame").hidden = !frame;
       el.querySelectorAll(".ks-pill").forEach(b => b.classList.toggle("on", b.dataset.print === state.print));
@@ -213,7 +213,8 @@
       const cd = state.code, off = cd ? full(state.plan).sum - total(state.plan) : 0;
       $(".ks-code").hidden = state.mode === "upgrade"; $(".ks-con").hidden = !cd; $(".ks-cask").hidden = !!cd; if (cd) $(".ks-crow").hidden = true;
       if (cd) $(".ks-con").innerHTML = `<span class="ks-on">✓ Code ${esc(cd.code)} applied: ${cd.discount}% off${off ? " (you save " + money(off) + ")" : ""}</span> · <button type="button" class="ks-link ks-cdel">Remove</button>`;
-      $(".ks-pay").innerHTML = "Pay " + money(total(state.plan)) + (off ? `<span class="ks-was">${money(full(state.plan).sum)}</span>` : "") + (state.mode === "upgrade" ? " & order frame" : " & activate");
+      const was = full(state.plan).was;
+      $(".ks-pay").innerHTML = "Pay " + money(total(state.plan)) + (was > total(state.plan) ? `<span class="ks-was">${money(was)}</span>` : "") + (state.mode === "upgrade" ? " & order frame" : " & activate");
     }
 
     el.addEventListener("click", e => {
