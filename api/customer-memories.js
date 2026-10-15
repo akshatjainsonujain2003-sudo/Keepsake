@@ -13,7 +13,8 @@ const validData = (data, kind) => !!data && (kind === "site" ? (Array.isArray(da
 
 // Optional password lock. Only a salted hash is stored; the card's content is never sent until it matches.
 const hashPw = (pw, salt) => crypto.scryptSync(String(pw), salt, 32).toString("hex");
-function setLock(memory, lock, style, hint) {
+function setLock(memory, b) {
+  const { lock, lockStyle: style, lockHint: hint, lockLook: look, lockPhoto: photo } = b;
   if (lock === false) { delete memory.lock; return null; }                      // removed
   if (!(lock === undefined || lock === null || lock === "")) {
     const pw = String(lock), pin = style === "pin";
@@ -24,10 +25,15 @@ function setLock(memory, lock, style, hint) {
   }
   // A hint shown on the lock screen, e.g. "our anniversary (DDMM)". Saved with or without a new password.
   if (memory.lock && hint !== undefined) { const h = clip(hint, 60); if (h) memory.lock.hint = h; else delete memory.lock.hint; }
+  // Which lock screen design, and an optional teaser photo the owner chose to show on it (only our own uploads).
+  if (memory.lock && look !== undefined) memory.lock.look = LOOKS.includes(look) ? look : "folder";
+  if (memory.lock && photo !== undefined) { const u = String(photo || ""); if (/^\/api\/img\?id=[\w-]{1,80}$/.test(u)) memory.lock.photo = u; else delete memory.lock.photo; }
   return null;
 }
 // What the lock screen may show before it's unlocked: never the password or the content.
-const lockInfo = m => ({ style: (m.lock && m.lock.style) || "word", hint: (m.lock && m.lock.hint) || "" });
+const LOOKS = ["folder", "lilac"];
+const lockInfo = m => ({ style: (m.lock && m.lock.style) || "word", hint: (m.lock && m.lock.hint) || "", look: (m.lock && m.lock.look) || "folder", photo: (m.lock && m.lock.photo) || "" });
+const ownerLock = m => m.lock ? { lockStyle: lockInfo(m).style, lockHint: lockInfo(m).hint, lockLook: lockInfo(m).look, lockPhoto: lockInfo(m).photo } : {};
 function lockMatches(memory, pw) {
   if (!pw) return false;
   const a = Buffer.from(hashPw(pw, memory.lock.salt), "hex"), b = Buffer.from(memory.lock.hash, "hex");
@@ -58,7 +64,7 @@ module.exports = async (req, res) => {
       const kind = kindOf(memory.kind), base = { id, kind, created: memory.created, locked: !!memory.lock };
       if (!active) {
         if (!isOwner) return db.reply(res, 402, { error: "This keepsake isn't active yet.", inactive: true });
-        return db.reply(res, 200, { ...base, ...(memory.lock ? { lockStyle: lockInfo(memory).style, lockHint: lockInfo(memory).hint } : {}), data: memory.data, title: memory.title, active: false, owner: true });
+        return db.reply(res, 200, { ...base, ...ownerLock(memory), data: memory.data, title: memory.title, active: false, owner: true });
       }
       if (memory.lock && !isOwner) {
         const pw = String(req.headers["x-card-password"] || "");
@@ -70,7 +76,7 @@ module.exports = async (req, res) => {
         await db.cmd("DEL", rk);
       }
       if (!isOwner) await db.cmd("INCR", "customer-memory-views:" + id);
-      return db.reply(res, 200, { ...base, ...(isOwner && memory.lock ? { lockStyle: lockInfo(memory).style, lockHint: lockInfo(memory).hint } : {}), data: memory.data, title: memory.title, active: true, owner: isOwner });
+      return db.reply(res, 200, { ...base, ...(isOwner ? ownerLock(memory) : {}), data: memory.data, title: memory.title, active: true, owner: isOwner });
     }
     const user = await auth.currentUser(req);
     if (!user) return db.reply(res, 401, { error: "Please log in to manage your memories." });
@@ -95,10 +101,10 @@ module.exports = async (req, res) => {
       const memory = { owner: user.id, ownerName: user.name, kind, title: clip(data.t || "Our Memories", 80) || "Our Memories", data, created: now, updated: now,
         // Until Razorpay keys are added in Vercel, keepsakes go live without payment.
         paid: !pay.configured(), ...(pay.configured() ? {} : { free: true }) };
-      const lockErr = setLock(memory, b.lock, b.lockStyle, b.lockHint); if (lockErr) return db.reply(res, 400, { error: lockErr });
+      const lockErr = setLock(memory, b); if (lockErr) return db.reply(res, 400, { error: lockErr });
       await db.setj("customer-memory:" + id, memory, "NX");
       await db.cmd("SADD", "customer-memories:" + user.id, id);
-      return db.reply(res, 201, { id, kind, url: (kind === "site" ? "/s/" : "/m/") + id, title: memory.title, created: now, active: memory.paid !== false, locked: !!memory.lock, ...(memory.lock ? { lockStyle: lockInfo(memory).style, lockHint: lockInfo(memory).hint } : {}) });
+      return db.reply(res, 201, { id, kind, url: (kind === "site" ? "/s/" : "/m/") + id, title: memory.title, created: now, active: memory.paid !== false, locked: !!memory.lock, ...ownerLock(memory) });
     }
     if (req.method === "PUT") {
       const b = req.body || {}, id = String(b.id || ""), data = b.data;
@@ -107,10 +113,10 @@ module.exports = async (req, res) => {
       if (!memory || memory.owner !== user.id) return db.reply(res, 404, { error: "Memory not found in your account." });
       const kind = kindOf(memory.kind);
       if (!validData(data, kind) || tooBig(data, kind)) return db.reply(res, 400, { error: "This memory is empty or too large." });
-      const lockErr = setLock(memory, b.lock, b.lockStyle, b.lockHint); if (lockErr) return db.reply(res, 400, { error: lockErr });
+      const lockErr = setLock(memory, b); if (lockErr) return db.reply(res, 400, { error: lockErr });
       memory.data = data; memory.title = clip(data.t || "Our Memories", 80) || "Our Memories"; memory.updated = Date.now();
       await db.setj(key, memory);
-      return db.reply(res, 200, { id, kind, url: (kind === "site" ? "/s/" : "/m/") + id, title: memory.title, updated: memory.updated, active: memory.paid !== false, locked: !!memory.lock, ...(memory.lock ? { lockStyle: lockInfo(memory).style, lockHint: lockInfo(memory).hint } : {}) });
+      return db.reply(res, 200, { id, kind, url: (kind === "site" ? "/s/" : "/m/") + id, title: memory.title, updated: memory.updated, active: memory.paid !== false, locked: !!memory.lock, ...ownerLock(memory) });
     }
     if (req.method === "DELETE") {
       const id = String(q.id || (req.body || {}).id || "");
