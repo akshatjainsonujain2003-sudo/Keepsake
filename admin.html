@@ -5,16 +5,36 @@ button{background:#d6b06a;color:#2a0409;border:0;font-weight:700;cursor:pointer}
 .card{background:#3a1218;border:1px solid #6b3a35;border-radius:16px;padding:14px;margin:12px 0}.bad{color:#ff9aa8}.good{color:#9ad8b0}small{opacity:.75}
 .tabs{display:flex;gap:8px;flex-wrap:wrap}.tabs button{width:auto;flex:1 1 auto}.tabs button{background:#3a1218;color:#f8f0df;border:1px solid #6b3a35}.tabs button.on{background:#d6b06a;color:#2a0409}
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.stats div{background:#3a1218;border:1px solid #6b3a35;border-radius:14px;padding:12px;text-align:center}.stats b{display:block;font-size:26px;color:#e4c680}
-.top{display:flex;gap:8px}.top input{margin:5px 0}.top button{width:auto;white-space:nowrap}a{color:#e4c680}@media(max-width:520px){.stats.c4{grid-template-columns:1fr 1fr!important}}</style><link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png"><link rel="icon" type="image/svg+xml" href="/assets/icon.svg"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest"></head><body>
+.top{display:flex;gap:8px}.top input{margin:5px 0}.top button{width:auto;white-space:nowrap}a{color:#e4c680}input::placeholder{text-transform:none}@media(max-width:520px){.stats.c4{grid-template-columns:1fr 1fr!important}}</style><link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png"><link rel="icon" type="image/svg+xml" href="/assets/icon.svg"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest"></head><body>
 <h1>Keepsake admin</h1>
 <div class="top"><input id="ak" type="password" placeholder="Admin key"><button id="go">Open</button></div><div id="msg" class="bad"></div>
 <div id="app" hidden>
 <div class="stats"><div><b id="oN">0</b>paid orders</div><div><b id="oR">₹0</b>revenue</div><div><b id="oT">0</b>frames to ship</div></div>
-<div class="tabs" style="margin-top:14px"><button class="on" data-t="orders">Orders</button><button data-t="leads">Enquiries <span id="lc"></span></button><button data-t="prepaid">Prepaid codes</button><button data-t="codes">Creator codes</button><button data-t="shops">Shops (paused)</button></div>
+<div class="tabs" style="margin-top:14px"><button class="on" data-t="orders">Orders</button><button data-t="leads">Enquiries <span id="lc"></span></button><button data-t="prepaid">Prepaid codes</button><button data-t="coupons">Coupons</button><button data-t="codes">Creator codes</button><button data-t="shops">Shops (paused)</button></div>
 <div id="orders"><label style="display:flex;gap:8px;align-items:center;margin:10px 0"><input type="checkbox" id="onlyShip" style="width:auto;margin:0"> Only photo frames still to ship</label><div id="olist"></div></div>
 <div id="shops" hidden><p><small>Shops are switched off on the public site for now. Existing keys still work if you share them.</small></p><div class="card"><b>Add a shop</b><input id="n" placeholder="Shop name"><input id="w" placeholder="WhatsApp number (with country code)"><input id="d" type="number" value="30" placeholder="Days of access"><button id="add">Create shop &amp; key</button></div>
 <input id="q" placeholder="Search shops…"><div id="list"></div></div>
 <div id="leads" hidden></div>
+<div id="coupons" hidden><div class="card" style="border-color:#c9a45a55">
+ <h3 style="margin:0 0 4px">🎟️ Coupon code generator</h3>
+ <p style="margin:0 0 10px"><small>Make one code to share (like DIWALI20) or a batch of random single-use codes for giveaways. Buyers type it in "Have a code?" at checkout. Coupons come off the keepsake (never frames) and stack with the launch offer.</small></p>
+ <label><small>Campaign name (only you see this)</small><input id="kName" placeholder="e.g. Diwali Instagram giveaway" maxlength="60"></label>
+ <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+  <label><small>Discount type</small><select id="kType"><option value="percent">% off</option><option value="flat">₹ off</option></select></label>
+  <label><small id="kValL">Percent off</small><input id="kVal" type="number" value="20" min="1"></label>
+ </div>
+ <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+  <label><small>How many codes (1–200)</small><input id="kCount" type="number" value="1" min="1" max="200"></label>
+  <label><small>Uses per code (0 = unlimited)</small><input id="kUses" type="number" value="0" min="0"></label>
+ </div>
+ <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+  <label><small>Your own code (only for 1 code)</small><input id="kCode" placeholder="e.g. DIWALI20" maxlength="20" style="text-transform:uppercase"></label>
+  <label><small>…or a prefix for random codes</small><input id="kPrefix" placeholder="e.g. GIFT" maxlength="10" style="text-transform:uppercase"></label>
+ </div>
+ <label><small>Expires after (optional)</small><input id="kExp" type="date"></label>
+ <label style="display:flex;gap:8px;align-items:center;margin:8px 0"><input type="checkbox" id="kOnce" checked style="width:auto;margin:0"> One use per customer</label>
+ <button type="button" id="kGo">Generate coupons</button><div id="kStatus"></div>
+</div><div id="klist"></div></div>
 <div id="codes" hidden><div class="card"><b>New creator code</b><p style="margin:4px 0"><small>Buyers get the discount on the keepsake (not frames). The creator earns the commission on what the buyer paid for it.</small></p>
 <input id="cc" placeholder="Code, e.g. PRIYA10" maxlength="20" style="text-transform:uppercase"><input id="cn" placeholder="Creator name / Instagram handle"><input id="ct" placeholder="Their UPI ID or phone (for payouts)">
 <div style="display:flex;gap:8px"><label style="flex:1"><small>Buyer discount %</small><input id="cd" type="number" value="10" min="0" max="50"></label><label style="flex:1"><small>Creator commission %</small><input id="cm" type="number" value="25" min="0" max="60"></label></div>
@@ -56,7 +76,7 @@ $("#clist").onclick=async e=>{const b=e.target.closest("button");if(!b)return;co
  if(b.dataset.a==="pay"){const n=prompt("How much did you pay "+c.name+"? (₹, owed "+rs(c.owed)+")",c.owed||"");if(!n)return;await api({action:"code-payout",code:c.code,amount:n})}
  else await api({action:"code-toggle",code:c.code});loadCodes()}catch(x){$("#msg").textContent=x.message}};
 const _load=load;load=async()=>{await _load();if(!$("#app").hidden)loadCodes()};$("#go").onclick=load;
-document.querySelector(".tabs").onclick=e=>{const b=e.target.closest("button");if(!b)return;document.querySelectorAll(".tabs button").forEach(x=>x.classList.toggle("on",x===b));$("#shops").hidden=b.dataset.t!=="shops";$("#leads").hidden=b.dataset.t!=="leads";$("#orders").hidden=b.dataset.t!=="orders";$("#prepaid").hidden=b.dataset.t!=="prepaid";$("#codes").hidden=b.dataset.t!=="codes";if(b.dataset.t==="prepaid")loadBatches()};
+document.querySelector(".tabs").onclick=e=>{const b=e.target.closest("button");if(!b)return;document.querySelectorAll(".tabs button").forEach(x=>x.classList.toggle("on",x===b));$("#shops").hidden=b.dataset.t!=="shops";$("#leads").hidden=b.dataset.t!=="leads";$("#orders").hidden=b.dataset.t!=="orders";$("#prepaid").hidden=b.dataset.t!=="prepaid";$("#codes").hidden=b.dataset.t!=="codes";$("#coupons").hidden=b.dataset.t!=="coupons";if(b.dataset.t==="coupons")loadCoupons();if(b.dataset.t==="prepaid")loadBatches()};
 $("#onlyShip").onchange=drawOrders;
 $("#olist").onclick=async e=>{const b=e.target.closest("button");if(!b)return;const o=OR.find(x=>x.id===b.dataset.o);if(!o)return;try{if(b.dataset.a==="copyaddr"){const a=o.address;await navigator.clipboard.writeText([a.name,a.phone,a.line1,a.line2,a.city+", "+a.state+" "+a.pincode].filter(Boolean).join("\n"));b.textContent="Copied ✓";return}let t="";if(b.dataset.a==="ship"){t=prompt("Courier tracking number (optional)",o.tracking||"");if(t===null)return}await api({action:"ship",order:o.id,tracking:t,undo:b.dataset.a==="unship"});load()}catch(x){$("#msg").textContent=x.message}};
 $("#add").onclick=async()=>{try{await api({action:"create",name:$("#n").value,whatsapp:$("#w").value,days:$("#d").value});$("#n").value="";load()}catch(e){$("#msg").textContent=e.message}};
@@ -74,4 +94,22 @@ $("#generateBatchBtn").onclick=async()=>{const st=$("#batchStatus"),btn=$("#gene
  try{const j=await api({action:"prepaid-create",shop:$("#batchPrefix").value.trim(),count:qty,tier:$("#batchTier").value});st.className="good";st.textContent=`Generated ${j.batch.count} codes. Opening the print sheet…`;window.open("/print-codes?batch="+encodeURIComponent(j.batch.id),"_blank");loadBatches()}
  catch(e){st.className="bad";st.textContent=e.message}finally{btn.disabled=false}};
 if($("#ak").value)load();
-</script></body></html>
+</script><script>
+let KB=[];
+const kDesc=b=>(b.type==="flat"?rs(b.value):b.value+"%")+" off · "+(b.maxUses?("each code works "+b.maxUses+(b.maxUses===1?" time":" times")):"unlimited uses")+(b.oncePer?" · one per customer":"")+(b.expires?" · until "+new Date(b.expires+"T12:00:00+05:30").toLocaleDateString("en-IN",{day:"numeric",month:"short",year:"numeric"}):"");
+async function loadCoupons(){try{KB=(await api({action:"coupons"})).batches;drawCoupons()}catch(e){$("#msg").textContent=e.message}}
+function drawCoupons(){$("#klist").innerHTML=KB.map(b=>{const st=b.expired?'<span class="bad">expired</span>':b.active?'<span class="good">active</span>':'<span class="bad">paused</span>',show=b.codes.slice(0,12);
+return`<div class="card"><b>${esc(b.name||"Coupon")}</b> ${st}<br><small>${esc(kDesc(b))} · made ${new Date(b.created).toLocaleDateString("en-IN")}</small>
+<div class="stats" style="margin-top:8px"><div><b>${b.codes.length}</b>${b.codes.length===1?"code":"codes"}</div><div><b>${b.used}</b>times used</div><div><b>${b.maxUses?b.codes.filter((c,i)=>b.uses[i]<b.maxUses).length:b.codes.length}</b>still usable</div></div>
+<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px">${show.map((c,i)=>`<code style="padding:5px 9px;border-radius:8px;background:#1a0206;border:1px solid #6b3a35;${b.maxUses&&b.uses[i]>=b.maxUses?"opacity:.45;text-decoration:line-through":""}">${esc(c)}${b.uses[i]?` <small>×${b.uses[i]}</small>`:""}</code>`).join("")}${b.codes.length>12?`<small style="align-self:center">and ${b.codes.length-12} more</small>`:""}</div>
+<button class="g" data-k="copy" data-id="${b.id}">${b.codes.length===1?"Copy code":"Copy all codes"}</button>${b.codes.length>1?`<button class="g" data-k="csv" data-id="${b.id}">Download CSV</button>`:""}<button class="g" data-k="toggle" data-id="${b.id}">${b.active?"Pause":"Resume"}</button></div>`}).join("")||"<p><small>No coupons yet.</small></p>"}
+$("#kType").onchange=()=>{const f=$("#kType").value==="flat";$("#kValL").textContent=f?"Rupees off":"Percent off";$("#kVal").value=f?50:20};
+$("#kCode").oninput=()=>{if($("#kCode").value)$("#kCount").value=1};
+$("#kGo").onclick=async()=>{const s=$("#kStatus");s.className="";s.textContent="Generating…";try{const j=await api({action:"coupon-create",name:$("#kName").value,type:$("#kType").value,value:$("#kVal").value,count:$("#kCount").value,maxUses:$("#kUses").value,code:$("#kCode").value,prefix:$("#kPrefix").value,expires:$("#kExp").value,oncePer:$("#kOnce").checked});
+ s.className="good";s.textContent="✓ Made "+j.batch.codes.length+(j.batch.codes.length===1?" code: "+j.batch.codes[0]:" codes");$("#kCode").value="";loadCoupons()}catch(e){s.className="bad";s.textContent=e.message}};
+$("#klist").onclick=async e=>{const t=e.target.closest("button");if(!t)return;const b=KB.find(x=>x.id===t.dataset.id);if(!b)return;
+ try{if(t.dataset.k==="copy"){await navigator.clipboard.writeText(b.codes.join("\n"));t.textContent="Copied ✓";return}
+ if(t.dataset.k==="csv"){const rows=[["code","discount","uses_allowed","times_used","expires"],...b.codes.map((c,i)=>[c,b.type==="flat"?"Rs "+b.value+" off":b.value+"% off",b.maxUses||"unlimited",b.uses[i],b.expires||""])];const u=URL.createObjectURL(new Blob([rows.map(r=>r.join(",")).join("\n")],{type:"text/csv"}));const l=document.createElement("a");l.href=u;l.download=(b.name||"coupons").replace(/[^\w-]+/g,"-")+".csv";l.click();URL.revokeObjectURL(u);return}
+ await api({action:"coupon-toggle",id:b.id});loadCoupons()}catch(x){$("#msg").textContent=x.message}};
+</script>
+</body></html>
