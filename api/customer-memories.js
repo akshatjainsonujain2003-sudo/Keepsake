@@ -14,7 +14,7 @@ const validData = (data, kind) => !!data && (kind === "site" ? (Array.isArray(da
 // Optional password lock. Only a salted hash is stored; the card's content is never sent until it matches.
 const hashPw = (pw, salt) => crypto.scryptSync(String(pw), salt, 32).toString("hex");
 function setLock(memory, b) {
-  const { lock, lockStyle: style, lockHint: hint, lockLook: look, lockPhoto: photo } = b;
+  const { lock, lockStyle: style, lockHint: hint, lockPhoto: photo } = b;
   if (lock === false) { delete memory.lock; return null; }                      // removed
   if (!(lock === undefined || lock === null || lock === "")) {
     const pw = String(lock), pin = style === "pin";
@@ -25,15 +25,13 @@ function setLock(memory, b) {
   }
   // A hint shown on the lock screen, e.g. "our anniversary (DDMM)". Saved with or without a new password.
   if (memory.lock && hint !== undefined) { const h = clip(hint, 60); if (h) memory.lock.hint = h; else delete memory.lock.hint; }
-  // Which lock screen design, and an optional teaser photo the owner chose to show on it (only our own uploads).
-  if (memory.lock && look !== undefined) memory.lock.look = LOOKS.includes(look) ? look : "folder";
+  // An optional teaser photo the owner chose to show on it (only our own uploads).
   if (memory.lock && photo !== undefined) { const u = String(photo || ""); if (/^\/api\/img\?id=[\w-]{1,80}$/.test(u)) memory.lock.photo = u; else delete memory.lock.photo; }
   return null;
 }
 // What the lock screen may show before it's unlocked: never the password or the content.
-const LOOKS = ["folder", "mirror", "lilac"];
-const lockInfo = m => ({ style: (m.lock && m.lock.style) || "word", hint: (m.lock && m.lock.hint) || "", look: (m.lock && m.lock.look) || "folder", photo: (m.lock && m.lock.photo) || "" });
-const ownerLock = m => m.lock ? { lockStyle: lockInfo(m).style, lockHint: lockInfo(m).hint, lockLook: lockInfo(m).look, lockPhoto: lockInfo(m).photo } : {};
+const lockInfo = m => ({ style: (m.lock && m.lock.style) || "word", hint: (m.lock && m.lock.hint) || "", photo: (m.lock && m.lock.photo) || "" });
+const ownerLock = m => m.lock ? { lockStyle: lockInfo(m).style, lockHint: lockInfo(m).hint, lockPhoto: lockInfo(m).photo } : {};
 function lockMatches(memory, pw) {
   if (!pw) return false;
   const a = Buffer.from(hashPw(pw, memory.lock.salt), "hex"), b = Buffer.from(memory.lock.hash, "hex");
