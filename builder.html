@@ -22,7 +22,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,500&family=DM+Sans:wght@400;500;700&display=swap">
 <link rel="stylesheet" href="/assets/site-themes.v1.css">
-<script src="/assets/ks-checkout.v5.js"></script>
+<script src="/assets/ks-checkout.v6.js"></script>
 <script src="/assets/ks-claim.v1.js"></script>
 <script src="/assets/site-render.v1.js"></script>
 <script src="/assets/ks-templates.v4.js"></script>
@@ -138,12 +138,12 @@ textarea.in{min-height:110px;resize:vertical;line-height:1.5}
 <header class="top">
   <a class="brand" href="/">Keepsake</a>
   <nav id="nav">
-    <a class="chip" href="/studio">₹99 Memory Cards</a>
+    <a class="chip" href="/studio"><span data-price="card">₹99</span> Memory Cards</a>
   </nav>
 </header>
 <div class="layout">
  <main class="editor">
-  <div class="free-pill">✨ Free to design &amp; preview · One-time ₹299 to publish</div>
+  <div class="free-pill"><span>✨ Free to design &amp; preview · One-time <span data-price="site">₹299</span> to publish</span></div>
   <h1 class="page">Your love-story website</h1>
   <p class="lede">Pick a design below, then make it yours with your photos, Spotify song and words. Everything updates live in the preview.</p>
 
@@ -515,5 +515,6 @@ window.addEventListener("beforeunload", e => { if (dirty && EDIT_ID) { e.prevent
 })();
 })();
 </script>
+<script src="/assets/ks-sale.v1.js" defer></script>
 </body>
 </html>

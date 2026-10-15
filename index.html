@@ -339,7 +339,7 @@
   <section class="sec wrap" id="websites" style="padding-top:72px">
     <div class="sec-head">
       <div>
-        <div class="eyebrow">Interactive love-story websites · ₹299</div>
+        <div class="eyebrow">Interactive love-story websites · <span data-price="site">₹299</span></div>
         <h2 class="d">A whole page for <em>your story</em></h2>
       </div>
       <p>Pick a design, add your photos, your song and a letter. Ready to share tonight. Tap any template to play with the live demo first.</p>
@@ -394,7 +394,7 @@
         </div>
       </article>
     </div>
-    <p class="quick">Want something simpler for a birthday, parent, or friend? <a href="/studio">Make a ₹99 memory card →</a></p>
+    <p class="quick">Want something simpler for a birthday, parent, or friend? <a href="/studio">Make a <span data-price="card">₹99</span> memory card →</a></p>
   </section>
 
   <!-- GIFT IDEAS / SEO PILLS -->
@@ -496,7 +496,7 @@
   <section class="sec wrap" id="designs">
     <div class="sec-head">
       <div>
-        <div class="eyebrow">Memory cards · ₹99</div>
+        <div class="eyebrow">Memory cards · <span data-price="card">₹99</span></div>
         <h2 class="d">Cards for anyone, <em>in minutes.</em></h2>
       </div>
       <p>Sixteen handcrafted card themes, from soft stationery to dreamy photo backgrounds. Tap any card to customize it free in the Studio.</p>
@@ -617,8 +617,8 @@
       <div class="eyebrow" style="text-align:center">Good to know</div>
       <h2 class="d">Questions</h2>
       <details open>
-        <summary>What is the difference between a Memory Card (₹99) and a Website (₹299)?</summary>
-        <p>A <b>Memory Card (₹99)</b> is a single interactive card with your photo gallery, a song, a video and a personal letter—great for birthdays, parents, friends or quick surprises. A <b>Love-Story Website (₹299)</b> is a full multi-section experience (like <i>Wildflower</i>, <i>Red Letter</i> or <i>Mixtape</i>) with interactive polaroids, wax seals, live relationship timers and multiple “open when” letters.</p>
+        <summary>What is the difference between a Memory Card and a Website?</summary>
+        <p>A <b>Memory Card (<span data-price="card">₹99</span>)</b> is a single interactive card with your photo gallery, a song, a video and a personal letter—great for birthdays, parents, friends or quick surprises. A <b>Love-Story Website (<span data-price="site">₹299</span>)</b> is a full multi-section experience (like <i>Wildflower</i>, <i>Red Letter</i> or <i>Mixtape</i>) with interactive polaroids, wax seals, live relationship timers and multiple “open when” letters.</p>
       </details>
       <details>
         <summary>Does the person need an app to open it?</summary>
@@ -681,14 +681,6 @@
 <script>(function(){var b=document.querySelector(".wa-float");function f(){b.classList.toggle("show",scrollY>innerHeight*0.8)}addEventListener("scroll",f,{passive:true});f()})();</script>
 
 <script src="/assets/ks2.js" defer></script>
-<script>
-  fetch("/api/checkout").then(r=>r.json()).then(j=>{
-    const v={card:j.products&&j.products.card,site:j.products&&j.products.site,frameQr:j.delivery&&j.delivery.frameQr,frameNfc:j.delivery&&j.delivery.frameNfc};
-    document.querySelectorAll("[data-price]").forEach(e=>{
-      const x=v[e.dataset.price];
-      if(x)e.textContent=(e.hasAttribute("data-plus")?"+":"")+"₹"+Number(x.price).toLocaleString("en-IN")
-    })
-  }).catch(()=>{})
-</script>
+<script src="/assets/ks-sale.v1.js" defer></script>
 </body>
 </html>

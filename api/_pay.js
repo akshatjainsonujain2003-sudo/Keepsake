@@ -10,11 +10,25 @@ const rupees = (v, d) => { const n = Math.round(+v); return n >= 1 ? n : d; };
 // Prices are in rupees and can be changed in Vercel without code changes.
 // Photo frames are paused: they are only sold when FRAMES=on is set in Vercel.
 const framesOn = () => String(env.FRAMES || "").toLowerCase() === "on";
+// Launch offer: a % off every keepsake (cards and websites), on by default at 50%.
+// In Vercel: SALE_PERCENT=0 switches it off, SALE_ENDS=2026-11-30 moves the last day (India time),
+// SALE_NAME changes the label. Photo frames are never discounted (printing and shipping cost real money).
+function sale() {
+  const pct = Math.min(90, Math.max(0, Math.round(env.SALE_PERCENT === undefined || env.SALE_PERCENT === "" ? 50 : +env.SALE_PERCENT || 0)));
+  if (!pct) return null;
+  // The launch offer runs for two days: until 17 Oct 2026, 11:59 PM India time (override with SALE_ENDS).
+  const ends = /^\d{4}-\d{2}-\d{2}$/.test(env.SALE_ENDS || "") ? env.SALE_ENDS : "2026-10-17";
+  if (ends && Date.now() > Date.parse(ends + "T23:59:59+05:30")) return null;
+  return { percent: pct, name: String(env.SALE_NAME || "Launch offer").slice(0, 40), ends };
+}
+const onSale = (full, s) => s ? Math.max(1, Math.floor(full * (100 - s.percent) / 100)) : full;
 function catalog() {
+  const s = sale(), card = rupees(env.PRICE_TEMPLATE, 99), site = rupees(env.PRICE_WEBSITE, 299);
   const c = {
+    sale: s,
     products: {
-      card: { name: "Template", price: rupees(env.PRICE_TEMPLATE, 99), desc: "One beautiful memory card from our designs." },
-      site: { name: "Custom website", price: rupees(env.PRICE_WEBSITE, 299), desc: "A full page for your story: photos, videos, songs, timeline and letters." }
+      card: { name: "Template", price: onSale(card, s), ...(s ? { was: card } : {}), desc: "One beautiful memory card from our designs." },
+      site: { name: "Custom website", price: onSale(site, s), ...(s ? { was: site } : {}), desc: "A full page for your story: photos, videos, songs, timeline and letters." }
     },
     delivery: {
       digital: { name: "Digital", price: 0, desc: "Short link, QR code and NFC-ready link to share or print." },
@@ -49,6 +63,7 @@ const keyId = () => env.RAZORPAY_KEY_ID || "";
 const configured = () => !!(env.RAZORPAY_KEY_ID && env.RAZORPAY_KEY_SECRET);
 
 async function createOrder({ rupees, receipt, notes }) {
+  if (!(rupees >= 1)) throw new Error("Razorpay needs at least ₹1 (100 paise).");
   const auth = Buffer.from(env.RAZORPAY_KEY_ID + ":" + env.RAZORPAY_KEY_SECRET).toString("base64");
   const r = await fetch("https://api.razorpay.com/v1/orders", {
     method: "POST",
@@ -56,7 +71,11 @@ async function createOrder({ rupees, receipt, notes }) {
     body: JSON.stringify({ amount: rupees * 100, currency: "INR", receipt, notes })
   });
   const j = await r.json().catch(() => ({}));
-  if (!r.ok || !j.id) throw new Error((j.error && j.error.description) || "Payment provider error.");
+  if (!r.ok || !j.id) {
+    // 401 from Razorpay means the key ID / secret in Vercel are wrong (or test and live keys are mixed).
+    const e = new Error((j.error && j.error.description) || "Payment provider error.");
+    e.razorpayAuth = r.status === 401; throw e;
+  }
   return j;
 }
 

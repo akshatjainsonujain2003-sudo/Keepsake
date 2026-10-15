@@ -1444,7 +1444,7 @@ window.qrcode=function(typeNumber,errorLevel){
 })();
 </script>
 <style>.payPanel{max-width:760px;margin:0 auto 24px}.liveExtra{margin-top:12px}.lockField{margin-top:6px}</style>
-<script src="/assets/ks-checkout.v5.js"></script><script src="/assets/ks-claim.v1.js"></script>
+<script src="/assets/ks-checkout.v6.js"></script><script src="/assets/ks-claim.v1.js"></script>
 <link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png"><link rel="icon" type="image/svg+xml" href="/assets/icon.svg"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest"><style>
 /* phones: smaller theme tiles so the form is closer */
 @media(max-width:600px){#templates .templates{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:8px!important}#templates .template .meta b{font-size:11.5px}#templates .template .index{transform:scale(.8);transform-origin:top left}#templates .template.active::before,#templates .template.active::after{display:none!important}}
@@ -1457,7 +1457,7 @@ window.qrcode=function(typeNumber,errorLevel){
 <body>
 <div class="topbar"><div class="wrap nav">
 <a class="brand" href="/">Keepsake</a>
-<nav class="navlinks"><a href="/">Home</a><a href="/builder">Love-Story Websites (₹299)</a><a href="#create">Create Card (₹99)</a><a href="#link">Get Link &amp; QR</a></nav>
+<nav class="navlinks"><a href="/">Home</a><a href="/builder">Love-Story Websites (<span data-price="site">₹299</span>)</a><a href="#create">Create Card (<span data-price="card">₹99</span>)</a><a href="#link">Get Link &amp; QR</a></nav>
 <div class="navactions"><button class="iconbtn" id="themeBtn" title="Toggle theme">☼</button></div>
 </div></div>
 
@@ -1514,8 +1514,8 @@ window.qrcode=function(typeNumber,errorLevel){
  <div class="mediaHint">Use “Cover photo link” above for a logo or photo. For Google reviews: open your business on Google Maps → Share → paste that link as a Link button.</div>
 </div>
 <div class="field lockField"><label>Password (optional)</label><div id="lockBox"></div></div>
-<button class="btn" id="generateBtn" style="width:100%;margin-top:8px">Save &amp; Get My Card Link (₹99)</button>
-<div class="mediaHint" style="margin-top:8px;text-align:center">✨ Free to design &amp; preview. One-time ₹99 UPI payment to activate.</div>
+<button class="btn" id="generateBtn" style="width:100%;margin-top:8px">Save &amp; Get My Card Link (<span data-price="card">₹99</span>)</button>
+<div class="mediaHint" style="margin-top:8px;text-align:center">✨ Free to design &amp; preview. One-time <span data-price="card">₹99</span> UPI payment to activate.</div>
 <div class="status" id="generateStatus"></div>
 </div>
 
@@ -2186,5 +2186,6 @@ async function init(){ if(await parseHash()){showViewer();return} await licence(
 init();
 </script>
 <script>if(!/^\/(m|c)\//.test(location.pathname))KSClaim.init({kind:"card",before:document.querySelector("section")}).then(c=>{window.KS_CLAIM=c})</script>
+<script src="/assets/ks-sale.v1.js" defer></script>
 </body>
 </html>
