@@ -109,13 +109,7 @@
 .kslk .lk-burst img{position:absolute;width:44px;animation:lkfly 1.2s cubic-bezier(.2,.7,.3,1) forwards}
 @keyframes lkfly{from{transform:translate(0,0) scale(.3);opacity:1}to{transform:translate(var(--x),var(--y)) rotate(var(--r)) scale(1.2);opacity:0}}
 @media(max-height:720px){.kslk .lk-k{width:50px;height:50px;font-size:22px}.kslk .lk-pad{grid-template-columns:repeat(3,50px);gap:6px 18px}.kslk .lk-enter{margin-top:9px;padding:10px 30px}.kslk .lk-s{font-size:34px}}
-@media(min-width:860px){
- .kslk .lk-g{display:grid;grid-template-columns:auto auto;grid-template-rows:auto 1fr;justify-content:center;align-content:center;column-gap:120px;row-gap:26px;padding:30px}
- .kslk .lk-title{grid-column:1/-1}
- .kslk .lk-stage{--fw:clamp(220px,40vh,300px);align-self:center}
- .kslk .lk-pane{align-self:center;width:330px}
- .kslk .lk-sun{width:240px;top:-60px;right:-50px}.kslk .lk-vine{width:150px}
-}
+@media(min-width:860px){.kslk .lk-sun{width:200px;top:-66px;right:-60px}.kslk .lk-vine{width:140px}}
 @media (prefers-reduced-motion:reduce){.kslk,.kslk *{animation:none!important;transition:none!important}}
 .ksun{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;padding:24px;background:radial-gradient(ellipse at top,#5a0f17,#1b0306 70%);color:#f8f0df;font-family:system-ui,sans-serif}
 .ksun .ku-box{width:min(380px,100%);text-align:center}
