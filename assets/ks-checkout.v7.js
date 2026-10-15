@@ -151,7 +151,7 @@
   const REF_KEY = "ks-ref", REF_DAYS = 30;
   function savedCode() { try { const r = JSON.parse(localStorage.getItem(REF_KEY) || "null"); return r && r.code && Date.now() - r.at < REF_DAYS * 864e5 ? r.code : ""; } catch (e) { return ""; } }
   function saveCode(code) { try { code ? localStorage.setItem(REF_KEY, JSON.stringify({ code, at: Date.now() })) : localStorage.removeItem(REF_KEY); } catch (e) {} }
-  async function checkCode(v) { try { const r = await fetch("/api/checkout?code=" + encodeURIComponent(v), { cache: "no-store" }); const j = await r.json().catch(() => ({})); return r.ok && j.code ? j.code : null; } catch (e) { return null; } }
+  async function checkCode(v) { try { const r = await fetch("/api/checkout?code=" + encodeURIComponent(v), { cache: "no-store" }); const j = await r.json().catch(() => ({})); return r.ok && j.code ? j.code : { error: j.error || "That code isn't valid." }; } catch (e) { return { error: "Couldn't check that code. Try again." }; } }
   // Facebook Pixel events (only when the pixel is on; see ks-pixel.v1.js)
   const track = (name, data) => { try { if (window.fbq) window.fbq("track", name, data || {}); } catch (e) {} };
 
@@ -191,7 +191,7 @@
     const status = (t, cls) => { const s = $(".ks-status"); s.textContent = t || ""; s.className = "ks-status" + (cls ? " " + cls : ""); };
     const full = plan => { const c = state.cat; if (!c || !c.delivery[plan]) return { sum: 0, frame: 0 }; const pr = c.products[opts.kind], up = state.mode === "upgrade", base = up ? 0 : pr.price, fr = c.delivery[plan].price; return { sum: base + fr, frame: fr, was: (up ? 0 : pr.was || pr.price) + fr }; };
     // A creator's code takes its discount off the keepsake itself, never a frame (same as api/_ref.js).
-    const total = plan => { const f = full(plan); if (!state.code) return f.sum; return f.sum - Math.round(Math.max(0, f.sum - f.frame) * state.code.discount / 100); };
+    const total = plan => { const f = full(plan), cd = state.code; if (!cd) return f.sum; const dig = Math.max(0, f.sum - f.frame); return f.sum - (cd.off ? Math.min(cd.off, Math.max(0, dig - 1)) : Math.round(dig * (cd.discount || 0) / 100)); };
 
     function render() {
       const c = state.cat, prod = c.products[opts.kind];
@@ -212,7 +212,7 @@
       $(".ks-up").firstChild.textContent = state.photo ? "Change photo" : "Upload photo to print";
       const cd = state.code, off = cd ? full(state.plan).sum - total(state.plan) : 0;
       $(".ks-code").hidden = state.mode === "upgrade"; $(".ks-con").hidden = !cd; $(".ks-cask").hidden = !!cd; if (cd) $(".ks-crow").hidden = true;
-      if (cd) $(".ks-con").innerHTML = `<span class="ks-on">✓ Code ${esc(cd.code)} applied: ${cd.discount}% off${off ? " (you save " + money(off) + ")" : ""}</span> · <button type="button" class="ks-link ks-cdel">Remove</button>`;
+      if (cd) $(".ks-con").innerHTML = `<span class="ks-on">✓ Code ${esc(cd.code)} applied: ${cd.off ? money(cd.off) : cd.discount + "%"} off${off ? " (you save " + money(off) + ")" : ""}</span> · <button type="button" class="ks-link ks-cdel">Remove</button>`;
       const was = full(state.plan).was;
       $(".ks-pay").innerHTML = "Pay " + money(total(state.plan)) + (was > total(state.plan) ? `<span class="ks-was">${money(was)}</span>` : "") + (state.mode === "upgrade" ? " & order frame" : " & activate");
     }
@@ -228,8 +228,8 @@
     async function applyCode(v, loud) {
       v = String(v || "").trim(); if (!v) { if (loud) status("Enter a code first.", "bad"); return; }
       const c = await checkCode(v);
-      if (c) { state.code = c; saveCode(c.code); if (loud) status(""); render(); }
-      else if (loud) status("That code isn't valid.", "bad"); else saveCode(null);
+      if (c && c.code) { state.code = c; saveCode(c.code); if (loud) status(""); render(); }
+      else if (loud) status((c && c.error) || "That code isn't valid.", "bad"); else saveCode(null);
     }
     $(".ks-photo input").addEventListener("change", async e => {
       const f = e.target.files && e.target.files[0]; e.target.value = ""; if (!f) return;

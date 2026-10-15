@@ -118,7 +118,7 @@ async function markPaid(orderId, paymentId) {
       await db.setj(mk, memory);
     }
     await db.cmd("ZADD", "orders-paid", order.paidAt, orderId);
-    if (order.ref) await db.cmd("ZADD", "ref-orders:" + order.ref, order.paidAt, orderId);
+    if (order.ref) { await db.cmd("ZADD", "ref-orders:" + order.ref, order.paidAt, orderId); await db.cmd("SADD", "coupon-users:" + order.ref, order.owner); }
     return order;
   } finally {
     await db.cmd("DEL", "order-lock:" + orderId);

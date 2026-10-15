@@ -59,6 +59,10 @@ module.exports = async (req, res) => {
       else { const n = Math.round(+b.amount); if (!(n > 0 && n < 10000000)) return db.reply(res, 400, { error: "Enter the amount you paid." }); r.paidOut = (+r.paidOut || 0) + n; r.payouts = [...(r.payouts || []), { at: Date.now(), amount: n }].slice(-100); }
       await db.setj("refcode:" + r.code, r); return db.reply(res, 200, { ok: true });
     }
+    // Coupon generator
+    if (b.action === "coupon-create") { const x = await ref.createCoupons(b); if (x.error) return db.reply(res, 400, { error: x.error }); return db.reply(res, 200, { batch: x.batch }); }
+    if (b.action === "coupons") return db.reply(res, 200, { batches: await ref.couponBatches() });
+    if (b.action === "coupon-toggle") { const x = await ref.toggleBatch(String(b.id || "")); return x ? db.reply(res, 200, x) : db.reply(res, 404, { error: "Not found." }); }
     // Prepaid QR codes for shops
     if (b.action === "prepaid-create") {
       const tier = b.tier === "vip" ? "site" : b.tier;

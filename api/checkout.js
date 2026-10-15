@@ -32,9 +32,9 @@ module.exports = async (req, res) => {
     // Creator codes. GET ?code=X -> { code: { code, discount } } when X is an active code
     if (req.method === "GET" && (req.query || {}).code) {
       if (!db.ok()) return db.reply(res, 404, { error: "That code isn't valid." });
-      const r = await ref.active(req.query.code);
-      if (!r) return db.reply(res, 404, { error: "That code isn't valid." });
-      return db.reply(res, 200, { code: { code: r.code, discount: r.discount } });
+      const x = await ref.check(req.query.code);
+      if (!x.rec) return db.reply(res, 404, { error: x.error });
+      return db.reply(res, 200, { code: ref.pub(x.rec) });
     }
     // A creator's own sales page: GET ?creator=CODE&key=K -> sales, earned, owed (no customer details)
     if (req.method === "GET" && (req.query || {}).creator) {
@@ -64,7 +64,10 @@ module.exports = async (req, res) => {
       // A creator's code takes a discount off the keepsake (never a frame) and records their commission.
       let code = null, off = 0, commission = 0;
       if (b.ref) {
-        code = await ref.active(b.ref);
+        const x = await ref.check(b.ref, user.id);
+        // A coupon that can't be used is an error (the buyer saw a lower price); an old creator link is just ignored.
+        if (x.coupon) return db.reply(res, 400, { error: x.error + " Remove it to pay the regular price." });
+        code = x.rec || null;
         if (code) { const fr = pay.isFrame(plan) ? (pay.catalog().delivery[plan] || {}).price || 0 : 0; const x = ref.apply(code, amt.rupees, fr); off = x.discount; commission = x.commission; amt.rupees = x.rupees; }
       }
       let address = null, frame = null;
