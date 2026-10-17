@@ -68,7 +68,7 @@ module.exports = async (req, res) => {
         // A coupon that can't be used is an error (the buyer saw a lower price); an old creator link is just ignored.
         if (x.coupon) return db.reply(res, 400, { error: x.error + " Remove it to pay the regular price." });
         code = x.rec || null;
-        if (code) { const fr = pay.isFrame(plan) ? (pay.catalog().delivery[plan] || {}).price || 0 : 0; const x = ref.apply(code, amt.rupees, fr); off = x.discount; commission = x.commission; amt.rupees = x.rupees; }
+        if (code) { const fr = plan === "bizQr" ? amt.ship || 0 : pay.isFrame(plan) ? (pay.catalog().delivery[plan] || {}).price || 0 : 0; const x = ref.apply(code, amt.rupees, fr); off = x.discount; commission = x.commission; amt.rupees = x.rupees; }
       }
       // A blank business QR card being set up: remember it so paying links the card to this page.
       let claim = null;
@@ -86,6 +86,7 @@ module.exports = async (req, res) => {
         else if (claim) { const pc = await require("./_prepaid").get(claim), bt = pc && await db.getj("pbatch:" + pc.batch); if (bt && bt.sp) sp = bt.sp; }
       }
       let address = null, frame = null;
+      if (plan === "bizQr") { const a = readAddress(b.address); if (a.error) return db.reply(res, 400, { error: a.error }); address = a.addr; }
       if (pay.isFrame(plan)) {
         const a = readAddress(b.address); if (a.error) return db.reply(res, 400, { error: a.error }); address = a.addr;
         if (b.print === "photo") {
