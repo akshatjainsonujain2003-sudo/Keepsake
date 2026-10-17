@@ -41,8 +41,8 @@ function catalog() {
     frames: framesOn()
   };
   // Printed QR sticker for a business page, couriered to the shop (all India).
-  // PRICE_BIZ_QR is added to the ₹499 page (default 0: included). PRICE_BIZ_QR_REORDER is for a page that's already live.
-  c.delivery.bizQr = { name: "Printed QR, delivered", price: rupees0(env.PRICE_BIZ_QR, 0), reorder: rupees(env.PRICE_BIZ_QR_REORDER, 149),
+  // PRICE_BIZ_QR is added to the ₹499 page (default ₹99). PRICE_BIZ_QR_REORDER is for a page that's already live.
+  c.delivery.bizQr = { name: "Printed QR, delivered", price: rupees0(env.PRICE_BIZ_QR, 99), reorder: rupees(env.PRICE_BIZ_QR_REORDER, 149),
     desc: "Your QR printed on our black & gold counter board, couriered to your shop anywhere in India." };
   if (!c.frames) { delete c.delivery.frameQr; delete c.delivery.frameNfc; }
   return c;
