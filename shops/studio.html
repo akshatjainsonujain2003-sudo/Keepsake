@@ -44,6 +44,8 @@ button,input,select,textarea{font:inherit;color:inherit}
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 label.f{display:grid;gap:6px;font-size:13px;font-weight:600;color:#4a3d31}
 label.f em{font-style:normal;font-weight:400;color:var(--mu)}
+#ordRow[hidden]{display:none!important}
+.item .ft{flex-wrap:wrap;row-gap:8px}
 .in{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--ln);background:#fff;outline:none;transition:border .15s,box-shadow .15s;font-size:15px;font-weight:400}
 .in:focus{border-color:var(--ac2);box-shadow:0 0 0 4px color-mix(in srgb,var(--ac2) 18%,transparent)}
 textarea.in{resize:vertical;min-height:74px}
@@ -164,8 +166,8 @@ textarea.in{resize:vertical;min-height:74px}
  .live{grid-template-columns:1fr}.live .ordq{margin:12px 0 0;font-size:13px;opacity:.92}.live .ordq .lnk{color:#e6c27a}
 .live .qr{max-width:180px}.savebar{border-radius:20px}}
 .bst{margin:0;padding:16px;border-radius:16px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1)}.bst .bh{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}.bst .bh b{font-size:34px;line-height:1}.bst .bh span{opacity:.8}.bst em{font-style:normal;font-weight:700;margin-left:4px}.bst em.up{color:#7fd6a0}.bst em.dn{color:#ff9aa8}.bst .bars{display:flex;gap:6px;align-items:flex-end;height:70px;margin:14px 0 4px}.bst .bars i{flex:1;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:4px;font-style:normal}.bst .bars u{display:block;width:100%;border-radius:6px 6px 3px 3px;background:linear-gradient(#e8cf8e,#b88a3e)}.bst .bars small{font-size:10px;opacity:.6}.bst .bt{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 0}.bst .bt span{padding:5px 10px;border-radius:999px;background:rgba(255,255,255,.08);font-size:13px}.live .bst .bh b{display:inline;font:500 34px/1 var(--fs);margin:0}.live .bst .bt b{display:inline;font:700 13px var(--fn);margin:0}.live .bst .bt span{display:inline-block}</style>
-<script src="/assets/biz.v4.js"></script>
-<script src="/assets/biz-demos.v2.js"></script>
+<script src="/assets/biz.v5.js"></script>
+<script src="/assets/biz-demos.v4.js"></script>
 <script src="/assets/ks-checkout.v10.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js" defer></script>
 </head>
@@ -264,7 +266,7 @@ textarea.in{resize:vertical;min-height:74px}
         </div>
         <label class="f"><span>Description <em>(optional)</em></span><textarea class="in" data-k="ft.text" maxlength="200" rows="2" placeholder="What makes it special"></textarea></label>
         <div class="g2">
-          <label class="f">Price<input class="in" data-k="ft.p" maxlength="12" inputmode="decimal" placeholder="₹ 260"></label>
+          <label class="f">Price<input class="in" data-k="ft.p" maxlength="24" inputmode="decimal" placeholder="₹ 260"></label>
           <label class="f"><span>Old price <em>(shown crossed out)</em></span><input class="in" data-k="ft.was" maxlength="12" inputmode="decimal" placeholder="₹ 320"></label>
         </div>
       </div>
@@ -273,7 +275,7 @@ textarea.in{resize:vertical;min-height:74px}
 
   <details class="sec" data-s="menu"><summary><span class="n">7</span><span class="ti"><b>Menu or price list</b><small id="menuSub">Sections, items and prices</small></span><svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></summary>
     <div class="body">
-      <div class="sw"><div><b>Orders on WhatsApp</b><div class="hint">Customers tap + on items and send you the order on WhatsApp, with the total worked out.</div></div><label class="switch"><input type="checkbox" id="ordOn" aria-label="Orders on WhatsApp"><i></i></label></div>
+      <div class="sw" id="ordRow"><div><b>Orders on WhatsApp</b><div class="hint">Customers tap + on items and send you the order on WhatsApp, with the total worked out.</div></div><label class="switch"><input type="checkbox" id="ordOn" aria-label="Orders on WhatsApp"><i></i></label></div>
       <label class="f">Heading<input class="in" data-k="menuTitle" maxlength="24" placeholder="Menu, Services, Price list…"></label>
       <div id="menu" style="display:grid;gap:12px"></div>
       <button type="button" class="add" id="addCat">+ Add a section</button>
@@ -336,7 +338,7 @@ function changed() { dirty = true; save(); preview(); $("#saveS").textContent = 
 // ---------- live preview (an iframe, so the page sizes itself like a real phone) ----------
 const FRAME_DOC = `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&family=Inter:wght@400;500;600;700&display=swap">
-<style>html,body{margin:0;min-height:100%;scrollbar-width:none}.ph body{padding-top:40px}body::-webkit-scrollbar{display:none}<\/style><script src="/assets/biz.v4.js"><\/script></head><body><main id="b"></main>
+<style>html,body{margin:0;min-height:100%;scrollbar-width:none}.ph body{padding-top:40px}body::-webkit-scrollbar{display:none}<\/style><script src="/assets/biz.v5.js"><\/script></head><body><main id="b"></main>
 <script>try{if(frameElement.id==="pvFrame")document.documentElement.className="ph"}catch(e){}addEventListener("message",e=>{if(e.source!==parent)return;const d=e.data&&e.data.ksbiz;if(!d)return;const b=document.getElementById("b"),y=scrollY;KSBiz.render(b,d,{preview:true});document.body.style.background=getComputedStyle(b).getPropertyValue("--bg");scrollTo(0,y)});parent.postMessage({ksbizReady:1},"*")<\/script></body></html>`;
 const frames = [$("#pvFrame"), $("#ovFrame")];
 frames.forEach(f => f.srcdoc = FRAME_DOC);
@@ -459,24 +461,27 @@ $("#offOn").onchange = e => { D.offer.on = e.target.checked; offer(); changed();
 function menu() {
   D.menu = Array.isArray(D.menu) ? D.menu : [];
   const n = D.menu.reduce((a, s) => a + s.items.filter(i => i.n).length, 0); $("#menuSub").textContent = n ? n + " item" + (n > 1 ? "s" : "") + " in " + D.menu.length + " section" + (D.menu.length > 1 ? "s" : "") : "Sections, items and prices";
+  const PR = !!(KSBiz.CATS[D.cat] && KSBiz.CATS[D.cat].prop);
+  $("#ordRow").hidden = PR;
   $("#menu").innerHTML = D.menu.map((s, ci) => `<div class="mcat" data-c="${ci}">
-    <div class="mhead"><input class="in" data-m="n" value="${esc(s.n)}" maxlength="24" placeholder="Section, e.g. Coffee" aria-label="Section name">
+    <div class="mhead"><input class="in" data-m="n" value="${esc(s.n)}" maxlength="24" placeholder="${PR ? "Section, e.g. Flats for sale" : "Section, e.g. Coffee"}" aria-label="Section name">
       <button type="button" class="ib" data-a="cup" ${ci ? "" : "disabled"} aria-label="Move section up">↑</button><button type="button" class="ib" data-a="cdn" ${ci < D.menu.length - 1 ? "" : "disabled"} aria-label="Move section down">↓</button><button type="button" class="ib" data-a="crm" aria-label="Remove section">×</button></div>
-    ${s.items.map((it, ii) => `<div class="item" data-i="${ii}"><label class="drop ip${it.i ? " has" : ""}" style="${it.i ? `background-image:url('${esc(it.i)}')` : ""}" title="Item photo">${it.i ? `<button type="button" class="x" data-a="ipx" aria-label="Remove photo">×</button>` : "+"}<input type="file" accept="image/*" data-ip aria-label="Item photo"></label><input class="in" data-m="n" value="${esc(it.n)}" maxlength="50" placeholder="Item name" aria-label="Item name"><input class="in" data-m="p" value="${esc(it.p)}" maxlength="12" inputmode="decimal" placeholder="₹ Price" aria-label="Price">
-      <input class="in wide" data-m="d" value="${esc(it.d)}" maxlength="140" placeholder="Short description (optional)" aria-label="Description">
-      <div class="ft"><label class="tog"><input type="checkbox" data-m="b"${it.b ? " checked" : ""}> Bestseller</label><span class="acts"><button type="button" class="ib" data-a="up" ${ii ? "" : "disabled"} aria-label="Move up">↑</button><button type="button" class="ib" data-a="dn" ${ii < s.items.length - 1 ? "" : "disabled"} aria-label="Move down">↓</button><button type="button" class="ib" data-a="rm" aria-label="Remove item">×</button></span></div></div>`).join("")}
-    <button type="button" class="add" data-a="add">+ Add item</button></div>`).join("");
+    ${s.items.map((it, ii) => `<div class="item" data-i="${ii}"><label class="drop ip${it.i ? " has" : ""}" style="${it.i ? `background-image:url('${esc(it.i)}')` : ""}" title="Item photo">${it.i ? `<button type="button" class="x" data-a="ipx" aria-label="Remove photo">×</button>` : "+"}<input type="file" accept="image/*" data-ip aria-label="Item photo"></label><input class="in" data-m="n" value="${esc(it.n)}" maxlength="50" placeholder="${PR ? "e.g. 3 BHK Flat, Vaishali Nagar" : "Item name"}" aria-label="Item name"><input class="in" data-m="p" value="${esc(it.p)}" maxlength="${PR ? 24 : 12}" inputmode="${PR ? "text" : "decimal"}" placeholder="${PR ? "₹ e.g. 85 Lakh" : "₹ Price"}" aria-label="Price">
+      <input class="in wide" data-m="d" value="${esc(it.d)}" maxlength="140" placeholder="${PR ? "e.g. 1,450 sq ft · 2 parking · East facing" : "Short description (optional)"}" aria-label="Description">
+      <div class="ft">${PR ? `<select class="in" data-m="s" style="width:auto;padding:8px 10px" aria-label="Status">${Object.entries(KSBiz.PST).map(([k, l]) => `<option value="${k}"${(it.s || "sale") === k ? " selected" : ""}>${l}</option>`).join("")}</select>` : ""}<label class="tog"><input type="checkbox" data-m="b"${it.b ? " checked" : ""}> ${PR ? "Featured" : "Bestseller"}</label><span class="acts"><button type="button" class="ib" data-a="up" ${ii ? "" : "disabled"} aria-label="Move up">↑</button><button type="button" class="ib" data-a="dn" ${ii < s.items.length - 1 ? "" : "disabled"} aria-label="Move down">↓</button><button type="button" class="ib" data-a="rm" aria-label="Remove item">×</button></span></div></div>`).join("")}
+    <button type="button" class="add" data-a="add">${PR ? "+ Add property" : "+ Add item"}</button></div>`).join("");
 }
 const mv = (a, i, j) => { if (j < 0 || j >= a.length) return; [a[i], a[j]] = [a[j], a[i]]; };
 $("#menu").oninput = $("#menu").onchange = e => {
   const k = e.target.dataset.m; if (!k || e.target.type === "file") return; const c = D.menu[+e.target.closest(".mcat").dataset.c], it = e.target.closest(".item");
-  const v = k === "b" ? e.target.checked : k === "p" ? e.target.value.replace(/[^\d.,–\- ]/g, "") : e.target.value;
+  const PR = !!(KSBiz.CATS[D.cat] && KSBiz.CATS[D.cat].prop);
+  const v = k === "b" ? e.target.checked : k === "p" && !PR ? e.target.value.replace(/[^\d.,–\- ]/g, "") : e.target.value;
   if (k === "p" && e.target.value !== v) e.target.value = v;
   if (it) c.items[+it.dataset.i][k] = v; else c[k] = v; changed();
 };
 $("#menu").onclick = e => {
   const b = e.target.closest("[data-a]"); if (!b) return; const ci = +b.closest(".mcat").dataset.c, c = D.menu[ci], it = b.closest(".item"), ii = it ? +it.dataset.i : -1, a = b.dataset.a;
-  if (a === "add") { c.items.push({ n: "", p: "", d: "", b: false, i: "" }); menu(); changed(); const ins = $$(`.mcat[data-c="${ci}"] .item [data-m="n"]`); ins[ins.length - 1].focus(); return; }
+  if (a === "add") { c.items.push({ n: "", p: "", d: "", b: false, i: "", ...(KSBiz.CATS[D.cat] && KSBiz.CATS[D.cat].prop ? { s: "sale" } : {}) }); menu(); changed(); const ins = $$(`.mcat[data-c="${ci}"] .item [data-m="n"]`); ins[ins.length - 1].focus(); return; }
   if (a === "ipx") { e.preventDefault(); c.items[ii].i = ""; menu(); changed(); return; }
   if (a === "rm") { if (c.items.length === 1) c.items[0] = { n: "", p: "", d: "", b: false }; else c.items.splice(ii, 1); }
   if (a === "up") mv(c.items, ii, ii - 1); if (a === "dn") mv(c.items, ii, ii + 1);

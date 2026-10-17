@@ -259,7 +259,7 @@ footer a{color:#fff}
   <a class="btn" href="/shops/studio">Create your page · ₹499</a>
 </div></section>
 </main>
-<script src="/assets/biz.v4.js"></script><script src="/assets/biz-demos.v2.js"></script>
+<script src="/assets/biz.v5.js"></script><script src="/assets/biz-demos.v4.js"></script>
 <footer><div class="wrap"><span>GetKeepsake for Business · Help: <a href="https://wa.me/916377547759">+91 63775 47759</a></span><span><a href="/">Love-story websites &amp; cards</a> · <a href="/contact">Contact</a> · <a href="/terms">Terms</a></span></div></footer>
 
 <script>
@@ -277,14 +277,14 @@ footer a{color:#fff}
   try {
   // Live example pages inside the phone mock-ups: the real renderer with sample data.
   const DOC = `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=375"><style>html,body{margin:0}body{padding-top:30px}<\/style>
-<script src="/assets/biz.v4.js"><\/script><script src="/assets/biz-demos.v2.js"><\/script></head><body><main id="b"></main><script>
+<script src="/assets/biz.v5.js"><\/script><script src="/assets/biz-demos.v4.js"><\/script></head><body><main id="b"></main><script>
 function show(d){const b=document.getElementById("b");KSBiz.render(b,d,{preview:true});document.body.style.background=getComputedStyle(b).getPropertyValue("--bg")}
 if(window.KSBizDemos&&KSBizDemos[frameElement.dataset.demo])show(KSBizDemos[frameElement.dataset.demo]);addEventListener("message",e=>{if(e.source===parent&&e.data&&e.data.ksbiz)show(e.data.ksbiz)});
 var y=0,dir=1;if(frameElement.dataset.scroll)setInterval(function(){var mx=document.body.scrollHeight-innerHeight;y+=dir*1.2;if(y>mx*0.55||y<0){dir*=-1}scrollTo(0,y)},40);<\/script></body></html>`;
   document.querySelectorAll("iframe[data-demo]").forEach(f => { if (f.closest(".b")) f.dataset.scroll = "1"; f.srcdoc = DOC; });
 
   // Business type picker
-  const G = KSBiz.GROUPS, C = KSBiz.CATS, GD = { food: "cafe", fashion: "boutique", beauty: "salon", services: "gym", health: "clinic", stores: "kirana" };
+  const G = KSBiz.GROUPS, C = KSBiz.CATS, GD = { food: "cafe", fashion: "boutique", beauty: "salon", services: "gym", health: "clinic", stores: "kirana", realty: "realestate" };
   document.getElementById("groups").innerHTML = G.map(g => {
     const lays = [...new Set(g.cats.map(k => C[k].lay))].map(l => KSBiz.LAYOUTS[l].name).join(" / ");
     return `<div class="grp rv"><b>${KSBiz.esc(g.name)} <span>${lays}</span></b><div>${g.cats.filter(k => k !== "other").map(k => `<button type="button" data-cat="${k}"${k === "cafe" ? ' class="on"' : ""}>${KSBiz.esc(C[k].name)}</button>`).join("")}</div></div>`;
@@ -296,6 +296,7 @@ var y=0,dir=1;if(frameElement.dataset.scroll)setInterval(function(){var mx=docum
     beauty: { tag: "Relax, refresh and leave looking your best.", menu: [{ n: "Hair", items: [it("Haircut & Styling", "600", 1), it("Hair Spa", "1,200"), it("Global Colour", "2,500")] }, { n: "Skin", items: [it("Clean-up Facial", "900"), it("Bridal Makeup", "15,000")] }] },
     services: { tag: "Real results, friendly experts, fair prices.", menu: [{ n: "Memberships", items: [it("1 month", "1,500", 1, "Full access, all days"), it("3 months", "4,000")] }, { n: "Personal", items: [it("Personal training", "6,000", 0, "12 sessions"), it("Diet plan", "1,000")] }] },
     health: { tag: "Caring for your family, every day.", menu: [{ n: "Consultations", items: [it("Consultation", "500"), it("Follow-up within 7 days", "Free")] }, { n: "Tests", items: [it("Full body checkup", "999", 1)] }] },
+    realty: { tag: "Verified properties, honest prices, site visits any day.", menu: [{ n: "For sale", items: [Object.assign(it("3 BHK Flat, Vaishali Nagar", "85 Lakh", 1, "1,450 sq ft · 2 parking · East facing"), { s: "ready" }), Object.assign(it("Plot, Ajmer Road", "42 Lakh", 0, "200 sq yd · JDA approved"), { s: "sale" })] }, { n: "For rent", items: [Object.assign(it("2 BHK Flat, Malviya Nagar", "18,000/month", 0, "1,050 sq ft · Semi-furnished"), { s: "rent" })] }] },
     stores: { tag: "Everything you need, close to home.", menu: [{ n: "Daily needs", items: [it("Atta · 10 kg", "420", 1), it("Toor Dal · 1 kg", "160"), it("Mustard Oil · 1 L", "190")] }, { n: "Home", items: [it("Detergent · 1 kg", "180")] }] }
   };
   const stage = document.getElementById("stage");
@@ -313,7 +314,7 @@ var y=0,dir=1;if(frameElement.dataset.scroll)setInterval(function(){var mx=docum
   };
 
   // Six live examples, each scrollable, each opens in the editor
-  const SH = [["cafe", "Café", "Poster"], ["boutique", "Boutique", "Poster"], ["salon", "Salon & Spa", "Botanical"], ["gym", "Gym", "Bold"], ["clinic", "Clinic", "Classic"], ["kirana", "Kirana store", "Classic"]];
+  const SH = [["cafe", "Café", "Poster"], ["boutique", "Boutique", "Poster"], ["salon", "Salon & Spa", "Botanical"], ["gym", "Gym", "Bold"], ["clinic", "Clinic", "Classic"], ["kirana", "Kirana store", "Classic"], ["realestate", "Real estate", "Classic"]];
   const show = document.getElementById("show");
   show.innerHTML = SH.filter(([k]) => KSBizDemos[k]).map(([k, n, l]) => `<div class="it"><div class="ph"><div class="sc"><iframe data-demo="${k}" title="${n} example" loading="lazy"></iframe></div></div><b>${n}</b><span>${l} layout · ${KSBiz.esc(KSBiz.THEMES[KSBizDemos[k].th].name)} colours</span><a href="/shops/studio?ex=${k}">Use this design →</a></div>`).join("");
   show.querySelectorAll("iframe").forEach(f => f.srcdoc = DOC);

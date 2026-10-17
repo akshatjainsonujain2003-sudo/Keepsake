@@ -1,5 +1,5 @@
-/* Sample business pages for the /shops landing page and the studio's "See an example". Needs biz.v4.js first.
-   One demo per business group: food (cafe), fashion (boutique), beauty (salon), services (gym), health (clinic), stores (kirana). */
+/* Sample business pages for the /shops landing page and the studio's "See an example". Needs biz.v5.js first.
+   One demo per business group: food (cafe), fashion (boutique), beauty (salon), services (gym), health (clinic), stores (kirana), real estate (realestate). */
 window.KSBizDemos = (function () {
   const B = KSBiz.blank, z = "/assets/demo/biz/";
   const hrs = (o, c, sunOff) => ({ d: Array.from({ length: 7 }, (_, i) => [o, c, !!sunOff && i === 6]) });
@@ -18,7 +18,7 @@ window.KSBizDemos = (function () {
       gal: [z + "cafe-interior.webp", z + "cafe-bar.webp"], upi: { id: "brewandbloom@okaxis", name: "Brew & Bloom" }
     }),
     boutique: Object.assign(B("boutique"), {
-      t: "Maison Noor", area: "Khan Market, Delhi", tag: "Festive ethnic wear, occasion gowns and the little gold things that finish the look.",
+      t: "Maison Noor", area: "Bapu Bazaar, Jaipur", tag: "Festive ethnic wear, occasion gowns and the little gold things that finish the look.",
       th: "maroon", cover: z + "bq-cover.webp", phone: "9811223344", ig: "maisonnoor", review: "https://g.page/r/example/review", addr: "22 Middle Lane, Khan Market, New Delhi",
       hours: hrs("11:00", "21:00"), offer: { on: true, label: "Festive edit", title: "Flat 20% off kurta sets", text: "This week only, in store and on WhatsApp.", till: "Sunday" },
       ft: { on: true, label: "New arrival", title: "Gulaab Kurta Set", text: "Ivory cotton-silk with hand-embroidered roses and a scalloped dupatta.", p: "3,490", was: "4,200", img: z + "bq-kurta-wide.webp" },
@@ -30,7 +30,7 @@ window.KSBizDemos = (function () {
       gal: [z + "bq-store2.webp", z + "bq-store1.webp", z + "bq-bridal-wide.webp"], upi: { id: "maisonnoor@okhdfc", name: "Maison Noor" }
     }),
     salon: Object.assign(B("salon"), {
-      t: "Ivy Salon & Spa", area: "Koramangala, Bengaluru", tag: "Precision cuts, calming rituals and nails done right, in a space made to unwind.",
+      t: "Ivy Salon & Spa", area: "Raja Park, Jaipur", tag: "Precision cuts, calming rituals and nails done right, in a space made to unwind.",
       th: "sage", cover: z + "salon-cover.webp", phone: "9845012345", ig: "ivysalon", review: "https://g.page/r/example/review", addr: "80 Feet Road, Koramangala, Bengaluru",
       hours: hrs("10:00", "20:30"), offer: { on: true, label: "Weekday special", title: "Hair spa + blow-dry at ₹1,299", text: "Monday to Thursday. Book on WhatsApp.", till: "30 Nov" },
       ft: { on: true, label: "Signature ritual", title: "Ivy Hair Spa", text: "A 60-minute scalp massage, deep conditioning and a soft blow-dry.", p: "1,499", was: "1,899", img: z + "salon-wash-wide.webp" },
@@ -43,7 +43,7 @@ window.KSBizDemos = (function () {
       gal: [z + "salon-gold.webp", z + "salon-shelf-wide.webp"], upi: { id: "ivysalon@okicici", name: "Ivy Salon" }
     }),
     gym: Object.assign(B("gym"), {
-      t: "Iron Republic", area: "Andheri West, Mumbai", tag: "Open 5 am to 11 pm. Strength, cardio and coaching that actually gets results.",
+      t: "Iron Republic", area: "Mansarovar, Jaipur", tag: "Open 5 am to 11 pm. Strength, cardio and coaching that actually gets results.",
       cover: z + "gym-cover.webp", phone: "9930012345", ig: "ironrepublic", review: "https://g.page/r/example/review", addr: "Link Road, Andheri West, Mumbai",
       hours: hrs("05:00", "23:00"), offer: { on: true, label: "Free trial", title: "Your first workout is on us", text: "Walk in any day with this page.", till: "" },
       menu: [
@@ -77,6 +77,19 @@ window.KSBizDemos = (function () {
         { n: "Snacks", items: [it("Namkeen · 400 g", "110", "Bhujia, mixture, chana", "kirana-shelf"), it("Biscuits combo", "99", "Pack of 5")] }
       ],
       gal: [z + "kirana-aisle.webp", z + "kirana-pulses-wide.webp"], upi: { id: "sharmastore@okhdfcbank", name: "Sharma General Store" }
+    }),
+    realestate: Object.assign(B("realestate"), {
+      t: "Shree Ram Properties", area: "Vaishali Nagar, Jaipur", tag: "Flats, villas and plots across Jaipur. Verified listings, honest prices and site visits any day.",
+      cover: z + "re-cover.webp", phone: "9829012345", review: "https://g.page/r/example/review", addr: "Vaishali Nagar, Jaipur", ig: "shreeramproperties",
+      hours: hrs("10:00", "20:00"),
+      stats: [{ v: "250+", l: "Families settled" }, { v: "12 yrs", l: "In Jaipur" }, { v: "JDA", l: "Approved projects" }, { v: "0", l: "Hidden charges" }],
+      offer: { on: true, label: "This month", title: "Free site visit with pickup", text: "Book on WhatsApp and we'll pick you up.", till: "30 Nov" },
+      menu: [
+        { n: "For sale", items: [{ n: "3 BHK Flat, Vaishali Nagar", p: "85 Lakh", d: "1,450 sq ft · 2 parking · East facing · Lift", s: "ready", b: true, i: z + "re-living.webp" }, { n: "4 BHK Villa, Jagatpura", p: "1.6 Cr", d: "2,800 sq ft · Private garden · Gated society", s: "new", b: false, i: z + "re-villa.webp" }, { n: "Plot, Ajmer Road", p: "42 Lakh", d: "200 sq yd · JDA approved · Corner plot", s: "sale", b: false, i: z + "re-plot.webp" }] },
+        { n: "For rent", items: [{ n: "2 BHK Flat, Malviya Nagar", p: "18,000/month", d: "1,050 sq ft · Semi-furnished · Family only", s: "rent", b: false, i: z + "re-bedroom.webp" }, { n: "Shop, MI Road", p: "45,000/month", d: "320 sq ft · Main road frontage", s: "rent", b: false, i: z + "re-shop.webp" }] }
+      ],
+      ft: { on: true, label: "New launch", title: "Skyline Residency, Jagatpura", text: "2 & 3 BHK homes with pool, clubhouse and landscaped gardens. Possession Dec 2027.", p: "62 Lakh onwards", was: "", img: z + "re-society.webp" },
+      gal: [z + "re-kitchen.webp", z + "re-society.webp", z + "re-garden.webp", z + "re-living.webp"], upi: { id: "", name: "" }
     })
   };
 })();

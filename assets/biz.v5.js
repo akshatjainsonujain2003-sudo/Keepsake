@@ -45,7 +45,8 @@
     beauty:   { name: "Beauty & Wellness",   gal: "Our space",  ord: false },
     services: { name: "Services & Classes",  gal: "Our work",   ord: false },
     health:   { name: "Health",              gal: "Our clinic", ord: false },
-    stores:   { name: "Stores & Professionals", gal: "Our store", ord: false }
+    stores:   { name: "Stores & Professionals", gal: "Our store", ord: false },
+    realty:   { name: "Real Estate & Property", gal: "Projects", ord: false, prop: true }
   };
   const CAT_LIST = [
     ["food", "cafe", "Café", "poster", "latte", "Order Coffee", "Welcome", "Menu"],
@@ -84,13 +85,19 @@
     ["stores", "grocery", "Kirana & Grocery", "classic", "linen", "Fresh stock, *fair* prices", "", "Products"],
     ["stores", "store", "General Store", "classic", "linen", "Everything you *need*", "", "Products"],
     ["stores", "hardware", "Hardware & Electricals", "classic", "cocoa", "Built to *last*", "", "Products"],
-    ["stores", "realestate", "Real Estate", "classic", "cocoa", "Find your *place*", "", "Properties"],
     ["stores", "pro", "CA, Lawyer & Consultant", "classic", "maroon", "Advice you can *trust*", "", "Services"],
+    ["realty", "realestate", "Property Dealer & Agent", "classic", "cocoa", "Find your *place*", "", "Properties"],
+    ["realty", "builder", "Builder & New Projects", "classic", "noir", "Homes built to *last*", "", "Projects"],
+    ["realty", "rental", "Rentals, PG & Hostels", "classic", "linen", "A room that feels like *home*", "", "Rooms"],
+    ["realty", "plots", "Plots, Land & Farmhouses", "classic", "olive", "Own your piece of *land*", "", "Plots"],
+    ["realty", "interior", "Interior Designer & Architect", "bold", "noir", "Spaces that *speak*", "", "Projects"],
     ["stores", "other", "Something else", "classic", "mist", "", "", "Menu"]
   ];
   const CATS = {}, GROUPS = [];
+  // Property listing status (real estate): item.s
+  const PST = { sale: "For sale", rent: "For rent", new: "New launch", ready: "Ready to move", sold: "Sold out" };
   CAT_LIST.forEach(([g, k, label, lay, th, hl, sc, menuTitle]) => {
-    CATS[k] = { label: k === "other" ? "" : label, name: label, group: g, lay, th, hl, sc, menuTitle, galTitle: GROUP_DEF[g].gal, ord: GROUP_DEF[g].ord };
+    CATS[k] = { label: k === "other" ? "" : label, name: label, group: g, lay, th, hl, sc, menuTitle, galTitle: GROUP_DEF[g].gal, ord: GROUP_DEF[g].ord, prop: !!GROUP_DEF[g].prop };
     let gr = GROUPS.find(x => x.key === g); if (!gr) GROUPS.push(gr = { key: g, name: GROUP_DEF[g].name, cats: [] }); gr.cats.push(k);
   });
   const defaults = cat => { const c = CATS[cat] || CATS.other; return { lay: c.lay, th: c.th, hl: c.hl, sc: c.sc, menuTitle: c.menuTitle, galTitle: c.galTitle, ord: c.ord }; };
@@ -177,6 +184,23 @@
 .bz .it .d{margin:5px 0 0;font:400 13.5px/1.45 var(--fn);color:var(--mu)}
 .bz .it>img{width:68px;height:68px;border-radius:16px;object-fit:cover;flex:none}
 .bz .bs{display:inline-block;margin-left:8px;padding:3px 8px;border-radius:999px;background:color-mix(in srgb,var(--ac) 18%,transparent);color:var(--ink);font:700 10px var(--fn);letter-spacing:.08em;text-transform:uppercase;vertical-align:3px}
+/* property listings (real estate) */
+.bz .pgrid{display:grid;gap:14px}
+@media(min-width:720px){.bz .pgrid{grid-template-columns:1fr 1fr}}
+.bz .pcard{background:var(--sf);border-radius:22px;overflow:hidden;box-shadow:0 1px 0 color-mix(in srgb,var(--tx) 8%,transparent),0 12px 30px -18px #0005}
+.bz .pcard.sold{opacity:.62}
+.bz .pim{position:relative;aspect-ratio:16/10;background:var(--sf2);display:grid;place-items:center;color:var(--mu)}
+.bz .pim img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.bz .pst,.bz .pfe{position:absolute;top:12px;padding:6px 11px;border-radius:99px;font:700 11.5px var(--fn);font-style:normal;letter-spacing:.02em;backdrop-filter:blur(8px)}
+.bz .pst{left:12px;background:#fffffff0;color:#121110}.bz .pst.rent{background:#e8f1ff;color:#123c7a}.bz .pst.new{background:var(--ac);color:var(--on)}.bz .pst.sold{background:#121110;color:#fff}.bz .pst.ready{background:#e3f6e9;color:#145c32}
+.bz .pfe{right:12px;background:#121110cc;color:#ffd84d}
+.bz .pbd{padding:16px 18px 18px}
+.bz .ppr{display:block;font:700 24px/1.1 var(--fh);color:var(--ink,var(--ac));letter-spacing:-.01em}
+.bz .pbd h3{margin:6px 0 0;font:600 17px/1.3 var(--fn);color:var(--tx)}
+.bz .psp{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.bz .psp span{padding:5px 10px;border-radius:9px;background:var(--sf2);color:var(--tx);font:600 12.5px var(--fn)}
+.bz .penq{margin-top:14px;width:100%;justify-content:center}
+.bz .psv{margin-top:16px;width:100%;justify-content:center;background:transparent;color:var(--tx);border:1.5px solid color-mix(in srgb,var(--tx) 30%,transparent)}
 /* add-to-basket controls */
 .bz .q{display:inline-flex;align-items:center;gap:2px;flex:none}
 .bz .q button{width:32px;height:32px;border-radius:50%;border:0;display:grid;place-items:center;background:var(--ac);color:var(--on);cursor:pointer}
@@ -501,15 +525,15 @@
   // Everything the layouts need, cleaned and validated once.
   function model(d, opts) {
     const th = THEMES[d.th] || THEMES.espresso, lay = LAYOUTS[d.lay] ? d.lay : "classic";
-    const name = clip(d.t || "Your business", 60), catDef = CATS[d.cat];
+    const name = clip(d.t || "Your business", 60), catDef = CATS[d.cat], prop = !!(catDef && catDef.prop);
     const cat = d.cat === "other" ? clip(d.catx, 30) : catDef ? catDef.name : "";
     const ph = phone10(d.phone), wa = phone10(d.wa || d.phone), ig = String(d.ig || "").replace(/^@/, "").replace(/[^\w.]/g, "").slice(0, 30);
     const upi = d.upi && /^[\w.\-]{2,64}@[A-Za-z]{2,64}$/.test(d.upi.id || "") ? d.upi : null;
     const menu = (Array.isArray(d.menu) ? d.menu : []).map((s, si) => ({
       si, n: clip(s && s.n || "Section", 24),
-      items: (s && Array.isArray(s.items) ? s.items : []).map((x, ii) => x && x.n ? { key: si + "." + ii, n: clip(x.n, 50), p: cleanP(x.p), d: clip(x.d, 140), b: !!x.b, img: safeImg(x.i), price: num(x.p) } : null).filter(Boolean).slice(0, 60)
+      items: (s && Array.isArray(s.items) ? s.items : []).map((x, ii) => x && x.n ? { key: si + "." + ii, n: clip(x.n, 50), p: prop ? clip(String(x.p || "").replace(/^\s*(₹|rs\.?|inr)\s*/i, ""), 24) : cleanP(x.p), d: clip(x.d, 140), b: !!x.b, img: safeImg(x.i), price: num(x.p), st: prop && PST[x.s] ? x.s : "" } : null).filter(Boolean).slice(0, 60)
     })).filter(s => s.items.length);
-    const f = d.ft && d.ft.on && d.ft.title ? { label: clip(d.ft.label || "New", 24), title: clip(d.ft.title, 50), text: clip(d.ft.text, 200), p: cleanP(d.ft.p), was: cleanP(d.ft.was), img: safeImg(d.ft.img) } : null;
+    const f = d.ft && d.ft.on && d.ft.title ? { label: clip(d.ft.label || "New", 24), title: clip(d.ft.title, 50), text: clip(d.ft.text, 200), p: prop ? clip(String(d.ft.p || "").replace(/^\s*(₹|rs\.?|inr)\s*/i, ""), 24) : cleanP(d.ft.p), was: cleanP(d.ft.was), img: safeImg(d.ft.img) } : null;
     return {
       d, th, lay, name, cat, area: clip(d.area, 40), tag: clip(d.tag, 140), cover: safeImg(d.cover), logo: safeImg(d.logo),
       hl: clip(d.hl, 60), sc: clip(d.sc, 24),
@@ -518,7 +542,7 @@
       hi: hoursInfo(d.hours), menu, menuTitle: clip(d.menuTitle || "Menu", 24), gal: (Array.isArray(d.gal) ? d.gal : []).map(safeImg).filter(Boolean).slice(0, 10),
       galTitle: clip(d.galTitle || "Inside", 24), offer: d.offer && d.offer.on && d.offer.title ? d.offer : null, feat: f,
       stats: (Array.isArray(d.stats) ? d.stats : []).filter(x => x && x.v).slice(0, 4).map(x => ({ v: clip(x.v, 8), l: clip(x.l, 28) })),
-      order: !!d.ord && !!wa, pageUrl: opts.url || location.href, preview: !!opts.preview
+      order: !prop && !!d.ord && !!wa, prop, pageUrl: opts.url || location.href, preview: !!opts.preview
     };
   }
 
@@ -541,7 +565,20 @@
     qty: (m, it) => m.order && it.price != null ? `<span class="q" data-q="${it.key}"><button type="button" class="m" data-sub="${it.key}" aria-label="Remove one" hidden>${ic("minus", 16)}</button><b data-n="${it.key}" hidden>0</b><button type="button" data-add="${it.key}" aria-label="Add ${esc(it.n)}">${ic("plus", 16)}</button></span>` : "",
     offer: m => m.offer ? `<div class="sec rv"><div class="offer"><small>${esc(clip(m.offer.label || "Today's offer", 24))}</small><b>${esc(clip(m.offer.title, 60))}</b>${m.offer.text ? `<p>${esc(clip(m.offer.text, 160))}</p>` : ""}${m.offer.till ? `<span class="till">Valid till ${esc(clip(m.offer.till, 30))}</span>` : ""}</div></div>` : "",
     review: m => m.review ? `<div class="sec rv"><div class="card rev"><div style="flex:1"><div class="st">${Array(5).fill(ic("star", 18)).join("")}</div><b>Loved your visit?</b><p>A quick Google review helps us a lot.</p></div><a class="btn" href="${esc(m.review)}" target="_blank" rel="noopener">Review us</a></div></div>` : "",
+    // Property listings (real estate): big photo cards with status, price and an Enquire button.
+    props(m) {
+      if (!m.menu.length) return "";
+      const count = m.menu.reduce((n, s) => n + s.items.length, 0), price = p => /^\d/.test(p) ? "₹" + p : p;
+      const enq = x => m.wa ? "https://wa.me/" + m.wa + "?text=" + encodeURIComponent(`Hi ${m.name}! I'm interested in "${x.n}"${x.p ? " (" + price(x.p) + ")" : ""}. Please share more details and a time for a site visit.`) : m.ph ? "tel:+" + m.ph : "";
+      return `<div class="sec rv" id="bz-menu"><div class="h2"><b>${esc(m.menuTitle)}</b><small>${count} listing${count > 1 ? "s" : ""}</small></div>
+        ${m.menu.length > 1 ? `<div class="tabs">${m.menu.map((s, i) => `<button type="button" data-tab="${i}"${i ? "" : ' class="on"'}>${esc(s.n)}</button>`).join("")}</div>` : ""}
+        ${m.menu.map((s, i) => `<div class="pgrid" data-pane="${i}"${i ? " hidden" : ""}>${s.items.map(x => `<div class="pcard${x.st === "sold" ? " sold" : ""}"><div class="pim">${x.img ? `<img src="${esc(x.img)}" alt="" loading="lazy">` : `<span>${ic("pin", 30)}</span>`}${x.st ? `<em class="pst ${x.st}">${PST[x.st]}</em>` : ""}${x.b ? `<em class="pfe">★ Featured</em>` : ""}</div>
+          <div class="pbd">${x.p ? `<b class="ppr">${esc(price(x.p))}</b>` : ""}<h3>${esc(x.n)}</h3>${x.d ? `<div class="psp">${x.d.split(/\s*[·•|]\s*/).filter(Boolean).slice(0, 6).map(t => `<span>${esc(t)}</span>`).join("")}</div>` : ""}
+          ${x.st !== "sold" && enq(x) ? `<a class="btn penq" href="${esc(enq(x))}"${m.wa ? ' target="_blank" rel="noopener"' : ""}>${ic(m.wa ? "wa" : "call", 17)} ${m.wa ? "Enquire on WhatsApp" : "Call to enquire"}</a>` : ""}</div></div>`).join("")}</div>`).join("")}
+        ${m.wa ? `<a class="btn psv" href="https://wa.me/${m.wa}?text=${encodeURIComponent("Hi " + m.name + "! I'd like to book a site visit.")}" target="_blank" rel="noopener">${ic("pin", 17)} Book a site visit</a>` : ""}</div>`;
+    },
     list(m, ico) { // menu as an elegant list with tabs (Classic, Botanical)
+      if (m.prop) return P.props(m);
       if (!m.menu.length) return "";
       const count = m.menu.reduce((n, s) => n + s.items.length, 0);
       return `<div class="sec rv" id="bz-menu"><div class="h2"><b>${esc(m.menuTitle)}</b><small>${count} item${count > 1 ? "s" : ""}</small></div>
@@ -604,7 +641,7 @@
       const words = plain(m.hl || m.name).trim().split(/\s+/), w1 = words.shift() || "", w2 = words.join(" ");
       // each big word shrinks to fit the screen width (Archivo Black letters are ~0.78em wide)
       const fs = w => { const n = Math.max(...String(w).split(/\s+/).map(x => x.length), 1); return `font-size:min(18.5vw,${(94 / (n * 0.8)).toFixed(1)}vw,132px)`; };
-      const gridSec = m.menu.length ? `<div class="sec rv" id="bz-menu"><div class="mh"><div><b>${esc(m.menuTitle)}</b>${m.cat ? `<i>${esc(m.cat.split(/[ &,]/)[0].toLowerCase())}</i>` : ""}</div><small>${m.menu.reduce((n, s) => n + s.items.length, 0)} items</small></div>
+      const gridSec = m.prop ? P.props(m) : m.menu.length ? `<div class="sec rv" id="bz-menu"><div class="mh"><div><b>${esc(m.menuTitle)}</b>${m.cat ? `<i>${esc(m.cat.split(/[ &,]/)[0].toLowerCase())}</i>` : ""}</div><small>${m.menu.reduce((n, s) => n + s.items.length, 0)} items</small></div>
         ${m.menu.length > 1 ? `<div class="chips">${m.menu.map((s, i) => `<button type="button" data-tab="${i}"${i ? "" : ' class="on"'}>${esc(s.n)}</button>`).join("")}</div>` : ""}
         ${m.menu.map((s, i) => `<div class="grid" data-pane="${i}"${i ? " hidden" : ""}>${s.items.map(x => `<div class="pc"><div class="im">${x.img ? `<img src="${esc(x.img)}" alt="" loading="lazy">` : `<span class="ni">${esc(x.n.charAt(0).toUpperCase())}</span>`}${x.b ? '<span class="bs">Bestseller</span>' : ""}</div><b>${esc(x.n)}</b>${x.d ? `<p>${esc(x.d)}</p>` : "<p></p>"}<div class="rw"><span class="p">${x.p ? "₹" + esc(x.p) : ""}</span>${P.qty(m, x)}</div></div>`).join("")}</div>`).join("")}</div>` : "";
       const f = m.feat, fw = f ? f.label.split(/\s+/) : [];
@@ -624,7 +661,7 @@
       const rib = Array(8).fill(esc(ribbon) + "  ✦  ").join("");
       const wave = `<svg class="wave" viewBox="0 0 400 74" preserveAspectRatio="none" aria-hidden="true"><path class="fl" d="M0 30 Q50 6 100 30 T200 30 T300 30 T400 30 V74 H0Z"/><path id="bzw" class="ln" d="M0 30 Q50 6 100 30 T200 30 T300 30 T400 30"/><path class="ln" d="M0 56 Q50 32 100 56 T200 56 T300 56 T400 56"/>
         <text dy="17"><textPath href="#bzw" startOffset="0">${rib}${m.preview ? "" : `<animate attributeName="startOffset" from="0" to="-400" dur="16s" repeatCount="indefinite"/>`}</textPath></text></svg>`;
-      const arch = pick.length >= 2 ? `<div class="sec rv"><div class="ctr">${pick.some(x => x.b) ? "Bestsellers" : "Featured"}</div><div class="arches">${pick.map(x => `<div class="ar"><div class="im">${x.img ? `<img src="${esc(x.img)}" alt="" loading="lazy">` : `<span class="ni">${esc(x.n.charAt(0).toUpperCase())}</span>`}</div>${x.b ? '<span class="bd">Best&shy;seller</span>' : ""}<b>${esc(x.n)}</b>${x.p ? `<span class="p">₹${esc(x.p)}</span>` : ""}${P.qty(m, x) ? `<div>${P.qty(m, x)}</div>` : ""}</div>`).join("")}</div></div>` : "";
+      const arch = !m.prop && pick.length >= 2 ? `<div class="sec rv"><div class="ctr">${pick.some(x => x.b) ? "Bestsellers" : "Featured"}</div><div class="arches">${pick.map(x => `<div class="ar"><div class="im">${x.img ? `<img src="${esc(x.img)}" alt="" loading="lazy">` : `<span class="ni">${esc(x.n.charAt(0).toUpperCase())}</span>`}</div>${x.b ? '<span class="bd">Best&shy;seller</span>' : ""}<b>${esc(x.n)}</b>${x.p ? `<span class="p">₹${esc(x.p)}</span>` : ""}${P.qty(m, x) ? `<div>${P.qty(m, x)}</div>` : ""}</div>`).join("")}</div></div>` : "";
       return `${m.offer || m.area ? `<div class="ann">${esc(m.offer ? m.offer.title + (m.offer.till ? " · till " + m.offer.till : "") : m.area)}</div>` : ""}
         <div class="hd">${P.share()}<b>${esc(m.name)}</b>${P.bag(m) || "<span></span>"}</div>
         <div class="hero">${m.cover ? `<img class="cv kb" src="${esc(m.cover)}" alt="">` : `<div class="ph">${esc(m.name)}</div>`}${P.status(m)}
@@ -648,7 +685,7 @@
         <div class="wrap"><div class="hx">${m.cat ? `<small>${esc(m.cat)}${m.area ? " · " + esc(m.area) : ""}</small>` : ""}<h1>${mark(m.hl || m.name)}</h1>${m.tag ? `<p class="nm">${esc(m.tag)}</p>` : ""}${cta}</div>
         <div style="text-align:center;margin-top:16px">${P.status(m).replace('class="pill', 'style="background:color-mix(in srgb,var(--tx) 80%,transparent)" class="pill')}</div>
         ${P.acts(m)}${P.offer(m)}</div>
-        ${m.menu.length ? `<div class="svc" id="bz-menu" style="--gs:min(${(88 / (Math.max(4, m.menuTitle.length) * 0.5)).toFixed(1)}vw,${Math.round(500 / (Math.max(4, m.menuTitle.length) * 0.5))}px)"><div class="gw">${esc(m.menuTitle)}</div><div class="cards wrap">${cards}</div></div>` : ""}
+        ${m.prop ? `<div class="wrap">${P.props(m)}</div>` : m.menu.length ? `<div class="svc" id="bz-menu" style="--gs:min(${(88 / (Math.max(4, m.menuTitle.length) * 0.5)).toFixed(1)}vw,${Math.round(500 / (Math.max(4, m.menuTitle.length) * 0.5))}px)"><div class="gw">${esc(m.menuTitle)}</div><div class="cards wrap">${cards}</div></div>` : ""}
         <div class="wrap">${P.feat(m)}${P.review(m)}${P.gallery(m)}${P.tail(m)}</div>`;
     }
   };
@@ -711,8 +748,8 @@
     return { biz: 1, t: "", cat, catx: "", area: "", tag: "", lay: df.lay, th: df.th, ac: "", hl: df.hl, sc: df.sc, logo: "", cover: "", phone: "", wa: "", ig: "", review: "", maps: "", addr: "",
       hours: { d: Array.from({ length: 7 }, () => ["09:00", "22:00", false]) }, offer: { on: false, label: "Today's offer", title: "", text: "", till: "" },
       ft: { on: false, label: "New arrival", title: "", text: "", p: "", was: "", img: "" }, ord: df.ord,
-      menuTitle: df.menuTitle, menu: [{ n: "Bestsellers", items: [{ n: "", p: "", d: "", b: false, i: "" }] }], galTitle: df.galTitle, gal: [], upi: { id: "", name: "" } };
+      menuTitle: df.menuTitle, menu: [{ n: CATS[cat].prop ? "For sale" : "Bestsellers", items: [{ n: "", p: "", d: "", b: false, i: "", ...(CATS[cat].prop ? { s: "sale" } : {}) }] }], galTitle: df.galTitle, gal: [], upi: { id: "", name: "" } };
   };
 
-  window.KSBiz = { render, THEMES, LAYOUTS, CATS, GROUPS, blank, defaults, esc };
+  window.KSBiz = { render, THEMES, LAYOUTS, CATS, GROUPS, blank, defaults, esc, PST };
 })();
