@@ -199,6 +199,7 @@ textarea.in{resize:vertical;min-height:74px}
       <div><div class="hint" style="font-weight:600;color:#4a3d31;margin-bottom:8px">Layout</div><div class="lays" id="lays"></div></div>
       <div><div class="hint" style="font-weight:600;color:#4a3d31;margin-bottom:8px">Colours</div><div class="themes" id="themes"></div></div>
       <label class="f" id="hlF"><span>Big headline <em id="hlHint"></em></span><input class="in" data-k="hl" maxlength="60" placeholder="e.g. Order Coffee"></label>
+      <div id="stF"><div class="hint" style="font-weight:600;color:#4a3d31;margin-bottom:8px">Highlights <span style="font-weight:400">(up to 4, e.g. "20+" · "Years of practice")</span></div><div id="stats" style="display:grid;gap:8px"></div></div>
       <label class="f" id="scF"><span>Script word <em>(handwritten accent, optional)</em></span><input class="in" data-k="sc" maxlength="24" placeholder="e.g. Welcome"></label>
       <div class="acc"><span class="hint" style="font-weight:600;color:#4a3d31">Brand colour</span><input type="color" id="accent" aria-label="Brand colour"><button type="button" class="lnk" id="accReset">Use theme colour</button></div>
       <div class="pics">
@@ -373,10 +374,16 @@ function fields() {
 // ---------- theme, accent, photos ----------
 function look() {
   $("#lays").innerHTML = Object.entries(KSBiz.LAYOUTS).map(([k, l]) => `<button type="button" class="ly${D.lay === k ? " on" : ""}" data-lay="${k}"><i class="${k[0] === "b" && k !== "bold" ? "b" : k === "bold" ? "r" : k[0]}"><u></u><s></s><em></em></i><b>${esc(l.name)}</b><small>${esc(l.best)}</small></button>`).join("");
-  const lay = D.lay || "classic"; $("#hlF").hidden = lay === "classic"; $("#scF").hidden = lay !== "poster";
-  $("#hlHint").textContent = lay === "poster" ? "(two short words, e.g. ORDER COFFEE)" : lay === "bold" ? "(put *stars* around a word to highlight it)" : "(on the photo card)";
+  const lay = D.lay || "classic"; $("#scF").hidden = lay !== "poster"; $("#stF").hidden = lay !== "classic"; stats();
+  $("#hlHint").textContent = lay === "poster" ? "(two short words, e.g. ORDER COFFEE)" : lay === "bold" ? "(put *stars* around a word to highlight it)" : lay === "classic" ? "(put *stars* around a word to underline it)" : "(on the photo card)";
   themes();
 }
+function stats() {
+  D.stats = Array.isArray(D.stats) ? D.stats : [];
+  const rows = D.stats.concat(Array.from({ length: Math.max(0, 4 - D.stats.length) }, () => ({ v: "", l: "" }))).slice(0, 4);
+  $("#stats").innerHTML = rows.map((x, i) => `<div class="g2" style="grid-template-columns:110px 1fr" data-st="${i}"><input class="in" data-sv="v" maxlength="8" value="${esc(x.v)}" placeholder="${["20+", "15k+", "4.9★", "7 days"][i]}" aria-label="Highlight number"><input class="in" data-sv="l" maxlength="28" value="${esc(x.l)}" placeholder="${["Years of practice", "Happy customers", "Google rating", "Open every week"][i]}" aria-label="Highlight label"></div>`).join("");
+}
+$("#stats").oninput = e => { const r = e.target.closest("[data-st]"); if (!r) return; const i = +r.dataset.st; while (D.stats.length <= i) D.stats.push({ v: "", l: "" }); D.stats[i][e.target.dataset.sv] = e.target.value; D.stats = D.stats.slice(0, 4); changed(); };
 $("#lays").onclick = e => { const b = e.target.closest("[data-lay]"); if (!b) return; D.lay = b.dataset.lay; look(); changed(); };
 function themes() {
   $("#themes").innerHTML = Object.entries(KSBiz.THEMES).map(([k, t]) => `<button type="button" class="th${D.th === k ? " on" : ""}" data-th="${k}"><i style="background:${t.bg};--a:${t.ac};--t:${t.tx}"></i><b>${esc(t.name)}</b></button>`).join("");

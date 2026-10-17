@@ -39,7 +39,8 @@ window.KSBizDemos = (function () {
     }),
     clinic: Object.assign(B("clinic"), {
       t: "Dr. Mehta's Family Clinic", area: "Vaishali Nagar, Jaipur", tag: "General physician · 20 years of caring for Jaipur's families.",
-      phone: "9414012345", review: "https://g.page/r/example/review", addr: "B-21 Vaishali Nagar, Jaipur",
+      phone: "9414012345", ig: "drmehtaclinic", review: "https://g.page/r/example/review", addr: "B-21 Vaishali Nagar, Jaipur",
+      stats: [{ v: "20+", l: "Years of practice" }, { v: "15k+", l: "Patients treated" }, { v: "4.9★", l: "Google rating" }, { v: "6 days", l: "Open every week" }],
       hours: hrs("09:30", "20:30", true),
       menu: [{ n: "Consultations", items: [{ n: "General consultation", p: "500" }, { n: "Follow-up (within 7 days)", p: "Free" }, { n: "Home visit", p: "1,200", d: "Within 5 km" }] }, { n: "Tests", items: [{ n: "Blood sugar", p: "80" }, { n: "ECG", p: "350" }] }],
       upi: { id: "drmehta@oksbi", name: "Dr. Mehta" }
