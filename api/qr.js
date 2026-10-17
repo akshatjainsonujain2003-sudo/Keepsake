@@ -18,7 +18,7 @@ module.exports = async (req, res) => {
       if (!rec) return page(res, 404, "This code isn't valid", "Please check the card, or message us and we'll sort it out.");
       if (rec.status === "claimed" && rec.memory) { res.setHeader("Cache-Control", "no-store"); return res.redirect(302, pp.urlFor(rec.kind, rec.memory)); }
       res.setHeader("Cache-Control", "no-store");
-      return res.redirect(302, (rec.tier === "site" ? "/builder" : rec.tier === "biz" ? "/business-studio" : "/studio") + "?claim=" + rec.code);
+      return res.redirect(302, (rec.tier === "site" ? "/builder" : rec.tier === "biz" ? "/shops/studio" : "/studio") + "?claim=" + rec.code);
     }
     if (req.method !== "POST") { res.setHeader("Allow", "GET, POST"); return db.reply(res, 405, { error: "Method not allowed." }); }
     const user = await auth.currentUser(req);

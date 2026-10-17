@@ -17,7 +17,7 @@ html,body{margin:0;background:#1f1611;min-height:100%}
 .pbar{position:sticky;top:0;z-index:50;background:#d9a066;color:#1f1611;padding:11px 14px;text-align:center;font:600 14px/1.4 system-ui,sans-serif}
 .pbar a{color:#1f1611}
 </style>
-<script src="/assets/biz.v1.js"></script>
+<script src="/assets/biz.v2.js"></script>
 </head>
 <body>
 <main id="biz" aria-live="polite"></main>
@@ -39,7 +39,7 @@ html,body{margin:0;background:#1f1611;min-height:100%}
   if (j.active === false) {
     const b = document.createElement("div"); b.className = "pbar";
     b.append("Preview: only you can see this until it’s activated. ");
-    const a = document.createElement("a"); a.href = "/business-studio?edit=" + encodeURIComponent(m[1]) + "#publish"; a.textContent = "Activate it"; b.appendChild(a);
+    const a = document.createElement("a"); a.href = "/shops/studio?edit=" + encodeURIComponent(m[1]) + "#publish"; a.textContent = "Activate it"; b.appendChild(a);
     document.body.prepend(b);
   }
 })();
