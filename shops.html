@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>GetKeepsake for Business · A beautiful page for your shop, behind one QR</title>
+<meta name="description" content="A premium mobile page for cafés, salons, gyms, boutiques, clinics and every local business: menu, offers, Google reviews, Instagram, UPI and WhatsApp orders, behind one QR on your counter. ₹499 one-time.">
+<link rel="canonical" href="https://getkeepsake.in/shops">
+<meta property="og:type" content="website"><meta property="og:site_name" content="GetKeepsake"><meta property="og:url" content="https://getkeepsake.in/shops">
+<meta property="og:title" content="Your shop, one scan away · GetKeepsake for Business">
+<meta property="og:description" content="Menu, offers, Google reviews, Instagram, UPI and WhatsApp orders behind one QR. ₹499 one-time, no monthly fees.">
+<meta property="og:image" content="https://getkeepsake.in/assets/og-image.jpg">
+<meta name="theme-color" content="#f4f1ea">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Pinyon+Script&family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
+<style>
+:root{--bg:#f4f1ea;--pa:#fffdf8;--ink:#121110;--mu:#6c665d;--ln:#e2dccf;--ac:#ff5b2e;--ac2:#ffd84d;--fd:'Archivo Black','Arial Black',sans-serif;--fsc:'Pinyon Script',cursive;--fn:'Inter',system-ui,-apple-system,sans-serif}
+*{box-sizing:border-box}[hidden]{display:none!important}
+html{scroll-behavior:smooth}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 var(--fn);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit}
+.wrap{max-width:1180px;margin:0 auto;padding:0 22px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:16px 26px;border-radius:999px;background:var(--ink);color:#fff;font:700 15.5px var(--fn);text-decoration:none;border:0;cursor:pointer;transition:transform .15s,box-shadow .15s;white-space:nowrap}
+.btn:hover{transform:translateY(-2px);box-shadow:0 14px 30px -14px #000}
+.btn.ac{background:var(--ac)}
+.btn.gh{background:transparent;color:var(--ink);border:1.5px solid var(--ink)}
+.eyebrow{font:800 11.5px var(--fn);letter-spacing:.24em;text-transform:uppercase;color:var(--ac)}
+/* nav */
+.nav{position:sticky;top:0;z-index:40;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(14px);border-bottom:1px solid var(--ln)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;height:66px;gap:16px}
+.logo{display:flex;align-items:baseline;gap:8px;text-decoration:none}
+.logo b{font:400 20px var(--fd);letter-spacing:-.01em}
+.logo span{font:400 24px var(--fsc);color:var(--ac)}
+.nav nav{display:flex;align-items:center;gap:26px;font:600 14.5px var(--fn)}
+.nav nav a{text-decoration:none;opacity:.8}.nav nav a:hover{opacity:1}
+.nav .btn{padding:11px 18px;font-size:14px}
+/* hero */
+.hero{position:relative;padding:56px 0 30px;overflow:hidden}
+.hero h1{margin:14px 0 0;font:400 clamp(54px,9.6vw,138px)/.86 var(--fd);letter-spacing:-.035em;text-transform:uppercase}
+.hero h1 .o{color:var(--ac)}
+.hero h1 .s{display:inline-block;font:400 clamp(44px,6.4vw,92px)/1 var(--fsc);text-transform:none;letter-spacing:0;color:var(--ink);transform:translateY(-.08em) rotate(-4deg);margin-left:.1em}
+.hero .row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:30px;align-items:end;margin-top:30px}
+.hero p.lead{font-size:19px;line-height:1.55;color:#3b3731;max-width:520px;margin:0 0 26px}
+.cta{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.cta small{color:var(--mu);font-size:13.5px;width:100%;margin-top:4px}
+.phones{position:relative;height:600px}
+.ph{position:absolute;width:276px;height:572px;border-radius:44px;padding:9px;background:#111;box-shadow:0 50px 80px -40px #0009,inset 0 0 0 1.5px #ffffff1a}
+.ph::before{content:"";position:absolute;top:18px;left:50%;transform:translateX(-50%);width:76px;height:20px;border-radius:12px;background:#000;z-index:2}
+.ph .sc{width:100%;height:100%;border-radius:36px;overflow:hidden;position:relative;background:#fff}
+.ph iframe{position:absolute;left:0;top:0;width:375px;height:752px;border:0;transform:scale(.6987);transform-origin:0 0;pointer-events:none}
+.ph.a{left:0;top:40px;transform:rotate(-7deg)}.ph.b{left:50%;margin-left:-138px;top:0;z-index:2}.ph.c{right:0;top:52px;transform:rotate(7deg)}
+.ph .tg{position:absolute;bottom:-14px;left:50%;transform:translateX(-50%);z-index:3;padding:7px 14px;border-radius:999px;background:var(--ink);color:#fff;font:700 12px var(--fn);white-space:nowrap}
+.ph.b .tg{background:var(--ac)}
+/* marquee */
+.mq{background:var(--ink);color:var(--bg);overflow:hidden;padding:18px 0;margin-top:40px;transform:rotate(-1.2deg);width:104%;margin-left:-2%}
+.mq div{display:flex;gap:28px;width:max-content;animation:mq 40s linear infinite;font:400 26px var(--fd);text-transform:uppercase;white-space:nowrap}
+.mq i{font-style:normal;color:var(--ac)}
+@keyframes mq{to{transform:translateX(-50%)}}
+/* sections */
+section.s{padding:96px 0 0}
+.sh{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:36px;flex-wrap:wrap}
+.sh h2{margin:10px 0 0;font:400 clamp(38px,5.4vw,70px)/.95 var(--fd);letter-spacing:-.025em;text-transform:uppercase;max-width:760px}
+.sh h2 em{font:400 1.05em var(--fsc);text-transform:none;letter-spacing:0;color:var(--ac)}
+.sh p{max-width:380px;color:var(--mu);margin:0}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.step{background:var(--pa);border:1px solid var(--ln);border-radius:28px;padding:28px;position:relative;overflow:hidden;min-height:250px}
+.step .n{font:400 92px/.8 var(--fd);color:var(--ac);opacity:.95}
+.step h3{font:400 24px/1.1 var(--fd);text-transform:uppercase;margin:22px 0 10px}
+.step p{margin:0;color:var(--mu)}
+.step:nth-child(2){background:var(--ac2);border-color:transparent}.step:nth-child(2) .n{color:var(--ink)}.step:nth-child(2) p{color:#3b3420}
+.step:nth-child(3){background:var(--ink);color:#fff;border-color:transparent}.step:nth-child(3) p{color:#cfc9bd}
+/* picker */
+.pick{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:40px;align-items:start}
+.grp{margin-bottom:22px}
+.grp b{display:flex;align-items:center;gap:10px;font:800 12px var(--fn);letter-spacing:.18em;text-transform:uppercase;color:var(--mu);margin-bottom:10px}
+.grp b span{padding:3px 9px;border-radius:999px;background:var(--ink);color:#fff;letter-spacing:.06em;font-size:10.5px}
+.grp div{display:flex;flex-wrap:wrap;gap:8px}
+.grp button{padding:10px 16px;border-radius:999px;border:1.5px solid var(--ln);background:var(--pa);font:600 14px var(--fn);cursor:pointer;transition:.15s;color:var(--ink)}
+.grp button:hover{border-color:var(--ink)}
+.grp button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.stage{position:sticky;top:90px;text-align:center}
+.stage .ph{position:relative;margin:0 auto;transform:none;left:auto;top:auto;width:316px;height:654px}
+.stage .ph iframe{transform:scale(.8);height:780px}
+.stage .info{margin-top:30px}
+.stage .info b{display:block;font:400 22px var(--fd);text-transform:uppercase}
+.stage .info span{color:var(--mu);font-size:14px}
+.stage .btn{margin-top:16px}
+/* showcase */
+.show{display:flex;gap:22px;overflow-x:auto;scroll-snap-type:x mandatory;padding:10px max(22px,calc((100vw - 1180px)/2 + 22px)) 30px;scrollbar-width:none}
+.show::-webkit-scrollbar{display:none}
+.show .it{flex:none;scroll-snap-align:center;text-align:center}
+.show .ph{position:relative;left:auto;top:auto;transform:none;width:276px;height:572px}
+.show .ph iframe{pointer-events:auto}
+.show b{display:block;margin-top:18px;font:400 18px var(--fd);text-transform:uppercase}
+.show span{display:block;color:var(--mu);font-size:13.5px;margin:2px 0 10px}
+.show a{font:700 14px var(--fn);text-decoration:none;border-bottom:2px solid var(--ac)}
+/* features */
+.feats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.ft{background:var(--pa);border:1px solid var(--ln);border-radius:24px;padding:24px}
+.ft i{display:grid;place-items:center;width:48px;height:48px;border-radius:14px;background:var(--bg);margin-bottom:18px}
+.ft h3{margin:0 0 6px;font:800 17px var(--fn)}
+.ft p{margin:0;color:var(--mu);font-size:14.5px}
+.ft.hl{background:#25d366;border-color:transparent}.ft.hl i{background:#ffffff55}.ft.hl p{color:#0b3d22}
+/* pricing */
+.price{display:grid;grid-template-columns:1.1fr .9fr;gap:16px}
+.pc{border-radius:32px;padding:38px;background:var(--ink);color:#fff;position:relative;overflow:hidden}
+.pc .amt{font:400 clamp(80px,11vw,140px)/.9 var(--fd);letter-spacing:-.04em;margin:18px 0 6px}
+.pc .amt small{font:600 18px var(--fn);letter-spacing:0;color:#cfc9bd;margin-left:8px}
+.pc ul{list-style:none;padding:0;margin:24px 0 30px;display:grid;grid-template-columns:1fr 1fr;gap:10px 18px;color:#e9e4d8;font-size:15px}
+.pc li::before{content:"✓";color:var(--ac2);font-weight:800;margin-right:9px}
+.pc .btn{background:var(--ac2);color:var(--ink)}
+.pc .sticker{position:absolute;top:30px;right:30px;width:118px;height:118px;border-radius:50%;background:var(--ac);display:grid;place-items:center;text-align:center;font:400 15px/1.05 var(--fd);text-transform:uppercase;transform:rotate(12deg)}
+.qr{border-radius:32px;padding:34px;background:var(--pa);border:1px solid var(--ln);display:flex;flex-direction:column;gap:14px}
+.qr h3{margin:0;font:400 30px/1 var(--fd);text-transform:uppercase}
+.qr p{margin:0;color:var(--mu)}
+.qrcard{display:flex;gap:16px;align-items:center;padding:16px;border-radius:20px;background:#17110d;color:#f4ebde;margin-top:auto}
+.qrcard .q{width:74px;height:74px;border-radius:10px;background:#fff;display:grid;place-items:center;flex:none}
+.qrcard b{font:italic 400 19px Georgia,serif;display:block}.qrcard small{color:#d9a066;font:700 10px var(--fn);letter-spacing:.2em;text-transform:uppercase}
+/* faq */
+.faq{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.faq details{background:var(--pa);border:1px solid var(--ln);border-radius:20px;padding:20px 22px}
+.faq summary{cursor:pointer;font:700 16px var(--fn);list-style:none;display:flex;justify-content:space-between;gap:12px}
+.faq summary::after{content:"+";font:400 22px/1 var(--fd);color:var(--ac)}
+.faq details[open] summary::after{content:"–"}
+.faq summary::-webkit-details-marker{display:none}
+.faq p{margin:12px 0 0;color:var(--mu)}
+/* end */
+.end{margin:96px 0 0;background:var(--ac);color:var(--ink);padding:80px 0 70px;text-align:center;position:relative;overflow:hidden}
+.end h2{margin:0 auto;font:400 clamp(48px,9vw,128px)/.86 var(--fd);letter-spacing:-.035em;text-transform:uppercase;max-width:1000px}
+.end h2 em{font:400 .8em var(--fsc);text-transform:none;letter-spacing:0;color:#fff}
+.end .btn{margin-top:34px}
+footer{background:var(--ink);color:#bdb6a8;padding:34px 0;font-size:14px}
+footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+footer a{color:#fff}
+.io .rv{opacity:0;transform:translateY(24px);transition:opacity .8s ease,transform .8s cubic-bezier(.2,.7,.2,1)}
+.io .rv.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none}.mq div{animation:none}}
+@media (max-width:980px){
+ .nav nav a:not(.btn){display:none}
+ .hero .row{grid-template-columns:1fr}
+ .phones{height:520px;margin:10px -22px 0;overflow-x:auto;overflow-y:visible;display:flex;gap:18px;padding:20px 22px 30px;scroll-snap-type:x mandatory;scrollbar-width:none}
+ .phones::-webkit-scrollbar{display:none}
+ .phones .ph{position:relative;left:auto;right:auto;top:auto;margin:0;transform:none;flex:none;width:232px;height:480px;scroll-snap-align:center;border-radius:38px}
+ .phones .ph iframe{transform:scale(.5707)}.phones .ph .sc{border-radius:31px}
+ .steps,.feats,.faq,.price{grid-template-columns:1fr}
+ .feats{grid-template-columns:1fr 1fr}
+ .pick{grid-template-columns:1fr}.stage{position:relative;top:0;order:-1}
+ .pc ul{grid-template-columns:1fr}
+}
+@media (max-width:420px){.logo span{display:none}}
+@media (max-width:560px){
+ .hero{padding-top:36px}.hero p.lead{font-size:17px}
+ .nav .wrap{height:58px}.logo b{font-size:17px}.logo span{font-size:19px;white-space:nowrap}.nav .btn{padding:9px 14px;font-size:13px}
+ section.s{padding-top:72px}
+ .feats{grid-template-columns:1fr}
+ .stage .ph{width:276px;height:572px}.stage .ph iframe{transform:scale(.6987);height:752px}
+ .pc{padding:28px}.pc .sticker{width:92px;height:92px;font-size:12px;top:20px;right:20px}
+ .cta .btn{flex:1}
+}
+</style>
+</head>
+<body>
+<header class="nav"><div class="wrap">
+  <a class="logo" href="/shops"><b>GetKeepsake</b><span>for business</span></a>
+  <nav><a href="#how">How it works</a><a href="#layouts">Layouts</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a><a class="btn" href="/shops/studio">Create your page</a></nav>
+</div></header>
+
+<main>
+<section class="hero"><div class="wrap">
+  <div class="eyebrow">For cafés, salons, gyms, boutiques, clinics &amp; every local business</div>
+  <h1>Your shop<span class="o">.</span><br>One scan <span class="s">away</span></h1>
+  <div class="row">
+    <div>
+      <p class="lead">A premium page for your business: menu, today's offer, Google reviews, Instagram, UPI and WhatsApp orders, all behind <b>one QR on your counter</b>. Ready in 5 minutes. Looks like you paid an agency.</p>
+      <div class="cta"><a class="btn ac" href="/shops/studio">Create your page · ₹499</a><a class="btn gh" href="#layouts">See layouts</a><small>One-time payment. No monthly fees, no commission on orders.</small></div>
+    </div>
+    <div class="phones" aria-label="Example pages">
+      <div class="ph a"><div class="sc"><iframe data-demo="salon" title="Salon example" loading="lazy"></iframe></div><span class="tg">Salon · Botanical</span></div>
+      <div class="ph b"><div class="sc"><iframe data-demo="cafe" title="Café example"></iframe></div><span class="tg">Café · Poster</span></div>
+      <div class="ph c"><div class="sc"><iframe data-demo="gym" title="Gym example" loading="lazy"></iframe></div><span class="tg">Gym · Bold</span></div>
+    </div>
+  </div>
+</div>
+<div class="mq" aria-hidden="true"><div id="mq"></div></div>
+</section>
+
+<section class="s" id="how"><div class="wrap">
+  <div class="sh rv"><div><div class="eyebrow">How it works</div><h2>Three steps. <em>zero</em> tech.</h2></div><p>No app, no website builder, no designer. If you can fill a form on your phone, you're done.</p></div>
+  <div class="steps">
+    <div class="step rv"><div class="n">01</div><h3>Scan your QR card</h3><p>Got a GetKeepsake card from our team? Scan it. No card? Just start online and download your own QR.</p></div>
+    <div class="step rv"><div class="n">02</div><h3>Fill in your page</h3><p>Pick your business type and we set up the right layout and colours. Add your menu, photos, offer and links.</p></div>
+    <div class="step rv"><div class="n">03</div><h3>Customers scan</h3><p>They see your menu, order on WhatsApp, pay by UPI, follow you on Instagram and leave a Google review.</p></div>
+  </div>
+</div></section>
+
+<section class="s" id="examples"><div class="wrap">
+  <div class="sh rv"><div><div class="eyebrow">Live examples</div><h2>Six shops. <em>six</em> stories.</h2></div><p>These are real GetKeepsake pages with sample details. Scroll inside any phone, then open it in the editor to make it yours.</p></div>
+</div>
+  <div class="show" id="show"></div>
+</section>
+
+<section class="s" id="layouts"><div class="wrap">
+  <div class="sh rv"><div><div class="eyebrow">Made for your business</div><h2>Pick your business. <em>see</em> your page.</h2></div><p>Four layouts and ten colour themes. Tap your type of business to see how your page could look.</p></div>
+  <div class="pick">
+    <div id="groups"></div>
+    <div class="stage">
+      <div class="ph"><div class="sc"><iframe id="stage" data-demo="cafe" title="Preview of the selected business"></iframe></div></div>
+      <div class="info"><b id="stName">Café</b><span id="stLay">Poster layout · Latte colours</span><br><a class="btn" id="stGo" href="/shops/studio?type=cafe">Start with this →</a></div>
+    </div>
+  </div>
+</div></section>
+
+<section class="s"><div class="wrap">
+  <div class="sh rv"><div><div class="eyebrow">Everything on one page</div><h2>Built to bring customers <em>back</em></h2></div></div>
+  <div class="feats">
+    <div class="ft rv"><i><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 4h14v16H5z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></i><h3>Menu &amp; price list</h3><p>Sections, photos, prices and bestseller tags. Update it in seconds.</p></div>
+    <div class="ft hl rv"><i><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3.5 20.5l1.3-4.3A8.5 8.5 0 1 1 8 19.3Z"/></svg></i><h3>WhatsApp orders</h3><p>Customers tap + and send you a ready order with the total. No commission, ever.</p></div>
+    <div class="ft rv"><i><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8L3.5 9.7l5.9-.9Z"/></svg></i><h3>Google reviews</h3><p>A big "Review us" button straight to your Google review form.</p></div>
+    <div class="ft rv"><i><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="6" width="18" height="13" rx="2.5"/><path d="M3 10h18M7 15h4"/></svg></i><h3>UPI payments</h3><p>A Pay button that opens any UPI app. Money goes straight to your bank.</p></div>
+    <div class="ft rv"><i><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16v11H4z"/><path d="M8 7l1-3h6l1 3"/></svg></i><h3>Offer of the day</h3><p>A ticket-style offer and a "featured item" band with the old price crossed out.</p></div>
+    <div class="ft rv"><i><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg></i><h3>Live "Open now"</h3><p>Your hours, with today highlighted and an "Open now · till 10 pm" badge.</p></div>
+    <div class="ft rv"><i><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s7-6.1 7-11.5A7 7 0 0 0 5 9.5C5 14.9 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg></i><h3>Call, map &amp; Instagram</h3><p>One-tap Call, WhatsApp, Directions and Instagram. Save-contact too.</p></div>
+    <div class="ft rv"><i><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20h4L19 9l-4-4L4 16z"/></svg></i><h3>Edit any time</h3><p>Change prices, photos and offers from your phone. The QR never changes.</p></div>
+  </div>
+</div></section>
+
+<section class="s" id="pricing"><div class="wrap">
+  <div class="sh rv"><div><div class="eyebrow">Pricing</div><h2>One price. <em>forever</em> yours.</h2></div></div>
+  <div class="price">
+    <div class="pc rv"><div class="sticker">No monthly fees</div><div class="eyebrow" style="color:var(--ac2)">Business page</div>
+      <div class="amt">₹<span id="price">499</span><small>one-time</small></div>
+      <ul><li>Your own page link and QR</li><li>4 layouts, 10 colour themes</li><li>Menu with photos</li><li>WhatsApp orders, 0% commission</li><li>UPI Pay button</li><li>Google review button</li><li>Offers &amp; featured item</li><li>Unlimited edits</li></ul>
+      <a class="btn" href="/shops/studio">Create your page</a></div>
+    <div class="qr rv"><h3>Got a QR card?</h3><p>Our team gives shops a printed QR card or counter board. Scan it, fill in your page and pay once: the same card then opens your page for every customer.</p>
+      <p>Want to sell GetKeepsake pages in your area? WhatsApp us on <a href="https://wa.me/916377547759">+91 63775 47759</a>.</p>
+      <div class="qrcard"><div class="q"><svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#17110d" stroke-width="1.6"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><path d="M14 14h3v3h-3zM20 14v.01M14 20h.01M17 20h3v-3"/></svg></div><div><small>Scan me</small><b>Menu, offers &amp; more</b></div></div>
+    </div>
+  </div>
+</div></section>
+
+<section class="s" id="faq"><div class="wrap">
+  <div class="sh rv"><div><div class="eyebrow">Questions</div><h2>Good to <em>know</em></h2></div></div>
+  <div class="faq">
+    <details class="rv"><summary>Do my customers need an app?</summary><p>No. They scan the QR with their phone camera and your page opens in the browser.</p></details>
+    <details class="rv"><summary>Is there a monthly fee?</summary><p>No. You pay ₹499 once and your page stays live. There's no commission on WhatsApp orders or UPI payments.</p></details>
+    <details class="rv"><summary>Can I change my menu and prices later?</summary><p>Yes, as often as you like, from your phone. Log in, edit, tap Save, and the page updates straight away. The QR stays the same.</p></details>
+    <details class="rv"><summary>How do WhatsApp orders work?</summary><p>Customers tap + on items, then "Order on WhatsApp". WhatsApp opens with the items, quantities and total, ready to send to you.</p></details>
+    <details class="rv"><summary>Where does UPI money go?</summary><p>Straight to your bank through your own UPI ID. GetKeepsake never touches your money.</p></details>
+    <details class="rv"><summary>I don't have good photos. Will it still look good?</summary><p>Yes. Every layout is designed to look great without photos, and you can add them any time. A clear photo of your counter or bestseller makes a big difference.</p></details>
+    <details class="rv"><summary>What if I don't have a QR card?</summary><p>Start online. After you activate your page, download your QR and print it, or ask us for a printed card.</p></details>
+    <details class="rv"><summary>Need help setting it up?</summary><p>WhatsApp us on <a href="https://wa.me/916377547759">+91 63775 47759</a> and we'll help you finish your page.</p></details>
+  </div>
+</div></section>
+
+<section class="end"><div class="wrap">
+  <h2>Make your shop <em>unmissable</em></h2>
+  <a class="btn" href="/shops/studio">Create your page · ₹499</a>
+</div></section>
+</main>
+<script src="/assets/biz.v4.js"></script><script src="/assets/biz-demos.v2.js"></script>
+<footer><div class="wrap"><span>GetKeepsake for Business · Help: <a href="https://wa.me/916377547759">+91 63775 47759</a></span><span><a href="/">Love-story websites &amp; cards</a> · <a href="/contact">Contact</a> · <a href="/terms">Terms</a></span></div></footer>
+
+<script>
+(() => {
+  // Reveal-on-scroll is set up first: sections are visible by default and only fade in when this works.
+  try {
+    if ("IntersectionObserver" in window) {
+      const io = new IntersectionObserver(es => es.forEach(x => { if (x.isIntersecting) { x.target.classList.add("in"); io.unobserve(x.target); } }), { rootMargin: "0px 0px -8% 0px" });
+      window.__ksio = io; document.documentElement.classList.add("io");
+      document.querySelectorAll(".rv").forEach(el => io.observe(el));
+    }
+  } catch (e) {}
+  const watch = root => { try { root.querySelectorAll(".rv").forEach(el => window.__ksio ? window.__ksio.observe(el) : el.classList.add("in")); } catch (e) {} };
+  if (!window.KSBiz || !window.KSBizDemos) return;
+  try {
+  // Live example pages inside the phone mock-ups: the real renderer with sample data.
+  const DOC = `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=375"><style>html,body{margin:0}body{padding-top:30px}<\/style>
+<script src="/assets/biz.v4.js"><\/script><script src="/assets/biz-demos.v2.js"><\/script></head><body><main id="b"></main><script>
+function show(d){const b=document.getElementById("b");KSBiz.render(b,d,{preview:true});document.body.style.background=getComputedStyle(b).getPropertyValue("--bg")}
+if(window.KSBizDemos&&KSBizDemos[frameElement.dataset.demo])show(KSBizDemos[frameElement.dataset.demo]);addEventListener("message",e=>{if(e.source===parent&&e.data&&e.data.ksbiz)show(e.data.ksbiz)});
+var y=0,dir=1;if(frameElement.dataset.scroll)setInterval(function(){var mx=document.body.scrollHeight-innerHeight;y+=dir*1.2;if(y>mx*0.55||y<0){dir*=-1}scrollTo(0,y)},40);<\/script></body></html>`;
+  document.querySelectorAll("iframe[data-demo]").forEach(f => { if (f.closest(".b")) f.dataset.scroll = "1"; f.srcdoc = DOC; });
+
+  // Business type picker
+  const G = KSBiz.GROUPS, C = KSBiz.CATS, GD = { food: "cafe", fashion: "boutique", beauty: "salon", services: "gym", health: "clinic", stores: "kirana" };
+  document.getElementById("groups").innerHTML = G.map(g => {
+    const lays = [...new Set(g.cats.map(k => C[k].lay))].map(l => KSBiz.LAYOUTS[l].name).join(" / ");
+    return `<div class="grp rv"><b>${KSBiz.esc(g.name)} <span>${lays}</span></b><div>${g.cats.filter(k => k !== "other").map(k => `<button type="button" data-cat="${k}"${k === "cafe" ? ' class="on"' : ""}>${KSBiz.esc(C[k].name)}</button>`).join("")}</div></div>`;
+  }).join("");
+  const it = (n, p, b, d) => ({ n, p, b: !!b, d: d || "" });
+  const SAMPLE = {
+    food: { tag: "Fresh food, friendly faces and fair prices.", menu: [{ n: "Bestsellers", items: [it("Special Thali", "220", 1, "Dal, sabzi, rice, 3 rotis"), it("Masala Dosa", "140"), it("Paneer Tikka", "260")] }, { n: "Drinks", items: [it("Cold Coffee", "120"), it("Fresh Lime Soda", "60")] }] },
+    fashion: { tag: "New styles every week, handpicked for you.", menu: [{ n: "New in", items: [it("Cotton Kurta Set", "1,499", 1), it("Linen Shirt", "999"), it("Silk Dupatta", "799")] }, { n: "Accessories", items: [it("Canvas Tote", "699"), it("Jhumka Earrings", "399")] }] },
+    beauty: { tag: "Relax, refresh and leave looking your best.", menu: [{ n: "Hair", items: [it("Haircut & Styling", "600", 1), it("Hair Spa", "1,200"), it("Global Colour", "2,500")] }, { n: "Skin", items: [it("Clean-up Facial", "900"), it("Bridal Makeup", "15,000")] }] },
+    services: { tag: "Real results, friendly experts, fair prices.", menu: [{ n: "Memberships", items: [it("1 month", "1,500", 1, "Full access, all days"), it("3 months", "4,000")] }, { n: "Personal", items: [it("Personal training", "6,000", 0, "12 sessions"), it("Diet plan", "1,000")] }] },
+    health: { tag: "Caring for your family, every day.", menu: [{ n: "Consultations", items: [it("Consultation", "500"), it("Follow-up within 7 days", "Free")] }, { n: "Tests", items: [it("Full body checkup", "999", 1)] }] },
+    stores: { tag: "Everything you need, close to home.", menu: [{ n: "Daily needs", items: [it("Atta · 10 kg", "420", 1), it("Toor Dal · 1 kg", "160"), it("Mustard Oil · 1 L", "190")] }, { n: "Home", items: [it("Detergent · 1 kg", "180")] }] }
+  };
+  const stage = document.getElementById("stage");
+  document.getElementById("groups").onclick = e => {
+    const b = e.target.closest("[data-cat]"); if (!b) return;
+    document.querySelectorAll("[data-cat]").forEach(x => x.classList.toggle("on", x === b));
+    const k = b.dataset.cat, c = C[k], df = KSBiz.defaults(k), base = KSBizDemos[GD[c.group]]; if (!base) return; const demo = JSON.parse(JSON.stringify(base));
+    const short = c.name.split(/ & |, | and /)[0];
+    if (demo.cat !== k) { Object.assign(demo, df, { cat: k }); const sm = SAMPLE[c.group]; Object.assign(demo, { t: "Your " + short, tag: sm.tag, menu: sm.menu, ft: Object.assign({}, demo.ft, { on: false }), offer: Object.assign({}, demo.offer, { on: false }) }); }
+    stage.contentWindow.postMessage({ ksbiz: demo }, "*");
+    document.getElementById("stName").textContent = c.name;
+    document.getElementById("stLay").textContent = KSBiz.LAYOUTS[demo.lay].name + " layout · " + KSBiz.THEMES[demo.th].name + " colours";
+    document.getElementById("stGo").href = "/shops/studio?type=" + k;
+    if (innerWidth < 980) stage.closest(".stage").scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  // Six live examples, each scrollable, each opens in the editor
+  const SH = [["cafe", "Café", "Poster"], ["boutique", "Boutique", "Poster"], ["salon", "Salon & Spa", "Botanical"], ["gym", "Gym", "Bold"], ["clinic", "Clinic", "Classic"], ["kirana", "Kirana store", "Classic"]];
+  const show = document.getElementById("show");
+  show.innerHTML = SH.filter(([k]) => KSBizDemos[k]).map(([k, n, l]) => `<div class="it"><div class="ph"><div class="sc"><iframe data-demo="${k}" title="${n} example" loading="lazy"></iframe></div></div><b>${n}</b><span>${l} layout · ${KSBiz.esc(KSBiz.THEMES[KSBizDemos[k].th].name)} colours</span><a href="/shops/studio?ex=${k}">Use this design →</a></div>`).join("");
+  show.querySelectorAll("iframe").forEach(f => f.srcdoc = DOC);
+
+  // Marquee of business types
+  const names = Object.values(C).filter(c => c.label).map(c => c.name.split(/ & /)[0]);
+  const line = names.map(n => `<span>${KSBiz.esc(n)}</span><i>✦</i>`).join("");
+  document.getElementById("mq").innerHTML = line + line;
+
+  fetch("/api/checkout", { cache: "no-store" }).then(r => r.json()).then(c => { const p = c && c.products && c.products.biz; if (p) document.getElementById("price").textContent = p.price; }).catch(() => {});
+  } finally { watch(document); }
+})();
+</script>
+<script src="/assets/ks-pixel.v1.js" defer></script>
+</body>
+</html>

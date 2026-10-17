@@ -3,7 +3,12 @@
   "redirects": [
     {
       "source": "/business",
-      "destination": "/",
+      "destination": "/shops",
+      "permanent": false
+    },
+    {
+      "source": "/business-studio",
+      "destination": "/shops/studio",
       "permanent": false
     }
   ],
@@ -23,6 +28,10 @@
     {
       "source": "/s/:id",
       "destination": "/site"
+    },
+    {
+      "source": "/b/:id",
+      "destination": "/biz"
     },
     {
       "source": "/sitemap.xml",

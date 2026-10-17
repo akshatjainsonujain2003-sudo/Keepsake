@@ -28,7 +28,9 @@ function catalog() {
     sale: s,
     products: {
       card: { name: "Template", price: onSale(card, s), ...(s ? { was: card } : {}), desc: "One beautiful memory card from our designs." },
-      site: { name: "Custom website", price: onSale(site, s), ...(s ? { was: site } : {}), desc: "A full page for your story: photos, videos, songs, timeline and letters." }
+      site: { name: "Custom website", price: onSale(site, s), ...(s ? { was: site } : {}), desc: "A full page for your story: photos, videos, songs, timeline and letters." },
+      // Business pages for shops and cafes (sold by QR card, paid online by the shop). Never on sale.
+      biz: { name: "Business page", price: rupees(env.PRICE_BUSINESS, 499), desc: "A premium page for your shop: links, menu, photos, offers and UPI." }
     },
     delivery: {
       digital: { name: "Digital", price: 0, desc: "Short link, QR code and NFC-ready link to share or print." },
@@ -41,13 +43,14 @@ function catalog() {
   return c;
 }
 const isFrame = plan => plan === "frameQr" || plan === "frameNfc";
-const kindOf = memory => (memory.kind === "site" ? "site" : "card");
+const kindOf = memory => (memory.kind === "site" || memory.kind === "biz" ? memory.kind : "card");
 
 // What this customer pays for a delivery option on this memory.
 // An already-active memory only pays for the frame.
 function amountFor(memory, plan) {
   const c = catalog();
   if (!c.delivery[plan]) return { error: "Choose how you'd like it delivered." };
+  if (kindOf(memory) === "biz" && isFrame(plan)) return { error: "Business pages are digital only." };
   const active = memory.paid !== false, base = c.products[kindOf(memory)].price;
   if (active && !isFrame(plan)) return { error: "This keepsake is already active." };
   const total = (active ? 0 : base) + c.delivery[plan].price;
@@ -118,6 +121,8 @@ async function markPaid(orderId, paymentId) {
       await db.setj(mk, memory);
     }
     await db.cmd("ZADD", "orders-paid", order.paidAt, orderId);
+    if (order.sp) { try { await require("./_sales").credit(order.sp, order.memory); } catch (e) {} }
+    if (order.claim) { try { await require("./_prepaid").linkBiz(order.claim, order.memory, order.owner); } catch (e) {} }
     if (order.ref) { await db.cmd("ZADD", "ref-orders:" + order.ref, order.paidAt, orderId); await db.cmd("SADD", "coupon-users:" + order.ref, order.owner); }
     return order;
   } finally {

@@ -13,14 +13,31 @@ module.exports = async (req, res) => {
   try {
     const q = req.query || {};
     if (req.method === "GET") {
+      // Salesperson accounts: check a code (for the shop owner's form) and the salesperson's own panel
+      if (q.spcheck) { const s = await require("./_sales").get(q.spcheck); return s && s.active !== false ? db.reply(res, 200, { code: s.code, name: s.name.split(" ")[0] }) : db.reply(res, 404, { error: "That salesperson code isn't valid." }); }
+      if (q.spme) { const x = await require("./_sales").me(q.spme, q.t); return x ? db.reply(res, 200, x) : db.reply(res, 401, { error: "Please log in again." }); }
+      // Salesperson's private stats: ?sales=BATCH&key=KEY
+      if (q.sales) { const x = await pp.salesView(q.sales, q.key); return x ? db.reply(res, 200, x) : db.reply(res, 404, { error: "This link isn't valid. Ask GetKeepsake for a new one." }); }
+      // A tap on a business page (Call, WhatsApp, Directions…): ?ev=PAGE_ID&t=call. Counted once per person per day.
+      if (q.ev) {
+        const id = String(q.ev), t = String(q.t || "");
+        if (/^[a-z0-9]{8,16}$/i.test(id)) await require("./_stats").tap(id, t, ip(req));
+        res.setHeader("Cache-Control", "no-store"); return res.status(204).end();
+      }
       const rec = await pp.get(q.code);
-      if (q.info) return rec ? db.reply(res, 200, { code: rec.code, tier: rec.tier, status: rec.status, locked: !!rec.locked }) : db.reply(res, 404, { error: "That code isn't valid." });
+      if (q.info) {
+        if (!rec) return db.reply(res, 404, { error: "That code isn't valid." });
+        let sp = "";
+        if (rec.tier === "biz" && rec.status === "new") { const bt = await db.getj("pbatch:" + rec.batch); if (bt && bt.sp) sp = bt.sp; }
+        return db.reply(res, 200, { code: rec.code, tier: rec.tier, status: rec.status, locked: !!rec.locked, ...(sp ? { sp } : {}) });
+      }
       if (!rec) return page(res, 404, "This code isn't valid", "Please check the card, or message us and we'll sort it out.");
-      if (rec.status === "claimed" && rec.memory) { res.setHeader("Cache-Control", "no-store"); return res.redirect(302, (rec.kind === "site" ? "/s/" : "/m/") + rec.memory); }
+      if (rec.status === "claimed" && rec.memory) { res.setHeader("Cache-Control", "no-store"); return res.redirect(302, pp.urlFor(rec.kind, rec.memory)); }
       res.setHeader("Cache-Control", "no-store");
-      return res.redirect(302, (rec.tier === "site" ? "/builder" : "/studio") + "?claim=" + rec.code);
+      return res.redirect(302, (rec.tier === "site" ? "/builder" : rec.tier === "biz" ? "/shops/studio" : "/studio") + "?claim=" + rec.code);
     }
     if (req.method !== "POST") { res.setHeader("Allow", "GET, POST"); return db.reply(res, 405, { error: "Method not allowed." }); }
+    if ((req.body || {}).action === "sp-login") { const r = await require("./_sales").login(req.body.code, req.body.pin, ip(req)); return r.error ? db.reply(res, r.status, { error: r.error }) : db.reply(res, 200, r); }
     const user = await auth.currentUser(req);
     if (!user) return db.reply(res, 401, { error: "Please log in to activate your code." });
     const b = req.body || {};

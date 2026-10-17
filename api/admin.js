@@ -66,11 +66,20 @@ module.exports = async (req, res) => {
     // Prepaid QR codes for shops
     if (b.action === "prepaid-create") {
       const tier = b.tier === "vip" ? "site" : b.tier;
-      const x = await pp.createBatch({ count: b.count, tier, shop: b.shop, note: b.note }); if (x.error) return db.reply(res, 400, { error: x.error });
+      let sp = "";
+      if (b.sp) { const s = await require("./_sales").get(b.sp); if (!s) return db.reply(res, 400, { error: "Salesperson not found." }); sp = s.code; }
+      const x = await pp.createBatch({ count: b.count, tier, shop: b.shop, note: b.note, comm: b.comm, phone: b.phone, sp }); if (x.error) return db.reply(res, 400, { error: x.error });
       return db.reply(res, 200, { batch: { id: x.batch.id, count: x.batch.count } });
     }
     if (b.action === "prepaid-unlock") { const r = await pp.unlock(b.code); return r ? db.reply(res, 200, { ok: true, code: r.code }) : db.reply(res, 404, { error: "Code not found." }); }
+    // Salesperson accounts
+    if (b.action === "sp-create") { const x = await require("./_sales").create(b); return x.error ? db.reply(res, 400, x) : db.reply(res, 200, x); }
+    if (b.action === "sp-list") return db.reply(res, 200, { sps: await require("./_sales").list() });
+    if (b.action === "sp-update") { const x = await require("./_sales").update(b.code, b); return x ? db.reply(res, 200, x) : db.reply(res, 404, { error: "Salesperson not found." }); }
+    if (b.action === "sp-payout") { const x = await require("./_sales").payout(b.code); return x ? db.reply(res, 200, x) : db.reply(res, 404, { error: "Salesperson not found." }); }
     if (b.action === "prepaid-batches") return db.reply(res, 200, { batches: await pp.batches() });
+    if (b.action === "prepaid-comm") { const x = await pp.setComm(b.id, b.comm); return x ? db.reply(res, 200, x) : db.reply(res, 404, { error: "Batch not found." }); }
+    if (b.action === "prepaid-payout") { const x = await pp.payout(b.id); return x ? db.reply(res, 200, x) : db.reply(res, 404, { error: "Batch not found." }); }
     if (b.action === "prepaid-batch") { const x = await pp.batchCodes(b.id); return x ? db.reply(res, 200, { batch: x }) : db.reply(res, 404, { error: "Batch not found." }); }
     if (b.action === "leads") {
       const rows = (await db.cmd("LRANGE", "leads", 0, 99)).map(x => { try { return JSON.parse(x); } catch (e) { return null; } }).filter(Boolean);

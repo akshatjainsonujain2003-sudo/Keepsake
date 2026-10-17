@@ -4,12 +4,14 @@ const pay = require("./_pay");
 const crypto = require("crypto");
 const idPattern = /^[a-z0-9]{8,16}$/i;
 const clip = (v, n) => String(v == null ? "" : v).replace(/[<>]/g, "").trim().slice(0, n);
-const MAX = { card: 30000, site: 90000 };
-const kindOf = v => (v === "site" ? "site" : "card");
+const MAX = { card: 30000, site: 90000, biz: 60000 };
+const kindOf = v => (v === "site" || v === "biz" ? v : "card");
+const urlFor = (kind, id) => (kind === "site" ? "/s/" : kind === "biz" ? "/b/" : "/m/") + id;
 const tooBig = (data, kind) => JSON.stringify(data).length > MAX[kind];
 // A website is either section-based (older themes) or one of the designed templates.
 const TEMPLATES = ["wildflower", "candlelit", "mixtape"];
-const validData = (data, kind) => !!data && (kind === "site" ? (Array.isArray(data.sections) || TEMPLATES.includes(data.tpl)) : Array.isArray(data.i));
+// A business page (shops, cafes): data.biz === 1 with at least a name.
+const validData = (data, kind) => !!data && (kind === "biz" ? data.biz === 1 && typeof data.t === "string" && !!data.t.trim() : kind === "site" ? (Array.isArray(data.sections) || TEMPLATES.includes(data.tpl)) : Array.isArray(data.i));
 
 // Optional password lock. Only a salted hash is stored; the card's content is never sent until it matches.
 const hashPw = (pw, salt) => crypto.scryptSync(String(pw), salt, 32).toString("hex");
@@ -73,7 +75,8 @@ module.exports = async (req, res) => {
         if (!lockMatches(memory, pw)) return db.reply(res, 401, { locked: true, kind, wrong: true, left: Math.max(0, 10 - tries), ...lockInfo(memory), error: "That passcode isn't right." });
         await db.cmd("DEL", rk);
       }
-      if (!isOwner) await db.cmd("INCR", "customer-memory-views:" + id);
+      if (!isOwner) { await db.cmd("INCR", "customer-memory-views:" + id); if (memory.kind === "biz") await require("./_stats").view(id); }
+      if (isOwner && memory.kind === "biz") base.stats = await require("./_stats").week(id);
       return db.reply(res, 200, { ...base, ...(isOwner ? ownerLock(memory) : {}), data: memory.data, title: memory.title, active: true, owner: isOwner });
     }
     const user = await auth.currentUser(req);
@@ -83,7 +86,7 @@ module.exports = async (req, res) => {
       const memories = (await Promise.all(ids.map(async id => {
         const m = await db.getj("customer-memory:" + id);
         if (!m || m.owner !== user.id) return null;
-        return { id, title: m.title || "Our Memories", created: m.created, updated: m.updated || m.created, views: +(await db.cmd("GET", "customer-memory-views:" + id)) || 0, active: m.paid !== false, plan: m.plan || "", ship: await shipStatus(m), kind: kindOf(m.kind), locked: !!m.lock };
+        return { id, title: m.title || "Our Memories", created: m.created, updated: m.updated || m.created, views: +(await db.cmd("GET", "customer-memory-views:" + id)) || 0, active: m.paid !== false, plan: m.plan || "", ship: await shipStatus(m), kind: kindOf(m.kind), locked: !!m.lock, ...(m.kind === "biz" ? { stats: await require("./_stats").week(id) } : {}) };
       }))).filter(Boolean).sort((a, b) => b.created - a.created);
       return db.reply(res, 200, { memories });
     }
@@ -102,7 +105,7 @@ module.exports = async (req, res) => {
       const lockErr = setLock(memory, b); if (lockErr) return db.reply(res, 400, { error: lockErr });
       await db.setj("customer-memory:" + id, memory, "NX");
       await db.cmd("SADD", "customer-memories:" + user.id, id);
-      return db.reply(res, 201, { id, kind, url: (kind === "site" ? "/s/" : "/m/") + id, title: memory.title, created: now, active: memory.paid !== false, locked: !!memory.lock, ...ownerLock(memory) });
+      return db.reply(res, 201, { id, kind, url: urlFor(kind, id), title: memory.title, created: now, active: memory.paid !== false, locked: !!memory.lock, ...ownerLock(memory) });
     }
     if (req.method === "PUT") {
       const b = req.body || {}, id = String(b.id || ""), data = b.data;
@@ -114,7 +117,7 @@ module.exports = async (req, res) => {
       const lockErr = setLock(memory, b); if (lockErr) return db.reply(res, 400, { error: lockErr });
       memory.data = data; memory.title = clip(data.t || "Our Memories", 80) || "Our Memories"; memory.updated = Date.now();
       await db.setj(key, memory);
-      return db.reply(res, 200, { id, kind, url: (kind === "site" ? "/s/" : "/m/") + id, title: memory.title, updated: memory.updated, active: memory.paid !== false, locked: !!memory.lock, ...ownerLock(memory) });
+      return db.reply(res, 200, { id, kind, url: urlFor(kind, id), title: memory.title, updated: memory.updated, active: memory.paid !== false, locked: !!memory.lock, ...ownerLock(memory) });
     }
     if (req.method === "DELETE") {
       const id = String(q.id || (req.body || {}).id || "");
