@@ -122,12 +122,15 @@ textarea.in{resize:vertical;min-height:74px}
 .pub p{margin:0;color:var(--mu)}
 .price{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
 .price>b{font:500 34px var(--fs)}.price>span{color:var(--mu);font-size:14px}
+#qrPay.ksco{--ink:#1d1712;--muted:#7a6c5d;--line:#e6dccb;--gold:#a8692f;--field:#fff;padding:18px;border:1px solid var(--ln);border-radius:18px;background:#fffdf8}
+#qrPay .ks-pay{color:#1d1712;font-weight:700}
 #payPanel.ksco{--ink:#1d1712;--muted:#7a6c5d;--line:#e6dccb;--gold:#a8692f;--field:#fff;padding-top:16px;border-top:1px solid var(--ln)}
 #payPanel .ks-title{display:none}
 #payPanel .ks-pay{color:#1d1712;font-weight:700}
 .status{min-height:1.4em;font-size:14px;font-weight:500}
 .status.ok{color:var(--ok)}.status.bad{color:var(--bad)}
 .live{display:grid;grid-template-columns:150px 1fr;gap:18px;align-items:center;padding:18px;border-radius:18px;background:linear-gradient(135deg,#1f1611,#3a2a1e);color:#f4ebde}
+.live .ordq{margin:12px 0 0;font-size:13px;opacity:.92}.live .ordq .lnk{color:#e6c27a}
 .live .qr{background:#fff;border-radius:14px;padding:10px;aspect-ratio:1}
 .live .qr svg,.live .qr img{width:100%;height:100%;display:block}
 .live b{font:400 24px/1.15 var(--fs);display:block;margin-bottom:6px}
@@ -158,11 +161,12 @@ textarea.in{resize:vertical;min-height:74px}
 @media (max-width:560px){.lays{grid-template-columns:repeat(2,1fr)}.top{padding:10px 16px}.brand span{display:none}.lay{padding:22px 16px 120px}.body{padding:2px 16px 18px}.sec>summary{padding:16px}
  .g2{grid-template-columns:1fr}.themes{grid-template-columns:repeat(2,1fr)}.pics{grid-template-columns:96px 1fr}.gal{grid-template-columns:repeat(3,1fr)}
  .hr{grid-template-columns:40px 1fr 1fr auto;gap:6px}.hr .in{padding:8px 6px;font-size:14px}.tog span{display:none}
- .live{grid-template-columns:1fr}.live .qr{max-width:180px}.savebar{border-radius:20px}}
+ .live{grid-template-columns:1fr}.live .ordq{margin:12px 0 0;font-size:13px;opacity:.92}.live .ordq .lnk{color:#e6c27a}
+.live .qr{max-width:180px}.savebar{border-radius:20px}}
 .bst{margin:0;padding:16px;border-radius:16px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1)}.bst .bh{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}.bst .bh b{font-size:34px;line-height:1}.bst .bh span{opacity:.8}.bst em{font-style:normal;font-weight:700;margin-left:4px}.bst em.up{color:#7fd6a0}.bst em.dn{color:#ff9aa8}.bst .bars{display:flex;gap:6px;align-items:flex-end;height:70px;margin:14px 0 4px}.bst .bars i{flex:1;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:4px;font-style:normal}.bst .bars u{display:block;width:100%;border-radius:6px 6px 3px 3px;background:linear-gradient(#e8cf8e,#b88a3e)}.bst .bars small{font-size:10px;opacity:.6}.bst .bt{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 0}.bst .bt span{padding:5px 10px;border-radius:999px;background:rgba(255,255,255,.08);font-size:13px}.live .bst .bh b{display:inline;font:500 34px/1 var(--fs);margin:0}.live .bst .bt b{display:inline;font:700 13px var(--fn);margin:0}.live .bst .bt span{display:inline-block}</style>
 <script src="/assets/biz.v4.js"></script>
 <script src="/assets/biz-demos.v2.js"></script>
-<script src="/assets/ks-checkout.v9.js"></script>
+<script src="/assets/ks-checkout.v10.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js" defer></script>
 </head>
 <body>
@@ -321,7 +325,7 @@ textarea.in{resize:vertical;min-height:74px}
 const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
 const esc = KSBiz.esc, DRAFT = "ks-biz-draft", CKEY = "ks-bizclaim", DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const WA = '<a href="https://wa.me/916377547759">+91 63775 47759</a>';
-let SP = "", STATS = null, D = null, USER = null, EDIT_ID = null, ACTIVE = false, CLAIM = null, CHECKOUT = null, dirty = false;
+let SP = "", STATS = null, D = null, USER = null, EDIT_ID = null, ACTIVE = false, CLAIM = null, CHECKOUT = null, QRCO = null, dirty = false;
 
 const status = (t, cls) => { const s = $("#status"); s.textContent = t || ""; s.className = "status" + (cls ? " " + cls : ""); if (t) $("#saveS").textContent = t; };
 const get = (o, p) => p.split(".").reduce((x, k) => x == null ? x : x[k], o);
@@ -557,7 +561,7 @@ function setEdit(id) { EDIT_ID = id; const u = new URL(location.href); u.searchP
 function checkout() {
   $("#pubT").textContent = "Activate your page"; $("#pubP").textContent = CLAIM ? "Pay once and your QR card #" + CLAIM.code + " will open this page for good." : "Pay once and your page goes live with its own link and QR code.";
   if (!CHECKOUT) CHECKOUT = KSCheckout.mount($("#payPanel"), { kind: "biz", getId: () => EDIT_ID, claim: () => CLAIM && CLAIM.code, sp: () => SP, customer: () => USER,
-    onPaid: v => { const had = CLAIM; ACTIVE = true; CLAIM = null; try { localStorage.removeItem(CKEY); } catch (e) {} $("#banner").innerHTML = ""; live(v.url, had); status(had ? "Paid. Your page is live and your QR card now opens it." : "Paid. Your page is live.", "ok"); } });
+    onPaid: v => { const had = CLAIM; ACTIVE = true; CLAIM = null; try { localStorage.removeItem(CKEY); } catch (e) {} $("#banner").innerHTML = ""; live(v.url, had); status(v.plan === "bizQr" ? "Paid. Your page is live, and we'll print your QR and courier it to you in 5–7 days." : had ? "Paid. Your page is live and your QR card now opens it." : "Paid. Your page is live.", "ok"); } });
   $("#payPanel").hidden = false; $("#livePanel").hidden = true;
   CHECKOUT.open("activate").then(() => $("#publish").scrollIntoView({ behavior: "smooth", block: "start" }));
 }
@@ -566,7 +570,10 @@ function live(path, card) {
   $("#pubT").textContent = "Your page is live"; $("#pubP").textContent = "Edit anything above and tap Save. Changes show up on your page straight away.";
   $(".price").hidden = true; $("#spF").hidden = true; $("#saveBtn").textContent = "Save changes"; $("#payPanel").hidden = true;
   const p = $("#livePanel"); p.hidden = false;
-  p.innerHTML = `<div class="live"><div class="qr" id="qr"></div><div><b>${card ? "Your QR card #" + esc(card.code) + " is linked" : "Print this QR for your counter"}</b><code>${esc(url)}</code><div class="row"><a class="btn gold" href="${esc(path)}" target="_blank" rel="noopener">Open page</a><button type="button" class="btn ghost" id="cpy">Copy link</button><button type="button" class="btn ghost" id="dl">Download QR</button></div></div></div>`;
+  p.innerHTML = `<div class="live"><div class="qr" id="qr"></div><div><b>${card ? "Your QR card #" + esc(card.code) + " is linked" : "Print this QR for your counter"}</b><code>${esc(url)}</code><div class="row"><a class="btn gold" href="${esc(path)}" target="_blank" rel="noopener">Open page</a><button type="button" class="btn ghost" id="cpy">Copy link</button><button type="button" class="btn ghost" id="dl">Download QR</button></div><p class="ordq">Want it printed? <button type="button" class="lnk" id="ordQr">Get a printed QR delivered to your shop →</button></p></div></div><div id="qrPay" hidden style="margin-top:12px"></div>`;
+  $("#ordQr").onclick = async () => { const box = $("#qrPay"); box.hidden = false;
+    if (!QRCO) QRCO = KSCheckout.mount(box, { kind: "biz", getId: () => EDIT_ID, customer: () => USER, onPaid: () => { box.hidden = true; status("Ordered. We'll print your QR and courier it to you in 5–7 days. You'll see the status in My pages.", "ok"); } });
+    await QRCO.open("upgrade"); box.scrollIntoView({ behavior: "smooth", block: "start" }); };
   $("#cpy").onclick = async () => { try { await navigator.clipboard.writeText(url); $("#cpy").textContent = "Copied"; } catch (e) {} };
   drawQR(url);
   if (STATS) p.insertAdjacentHTML("beforeend", '<div class="live" style="display:block;margin-top:12px">' + bst(STATS) + '</div>');
