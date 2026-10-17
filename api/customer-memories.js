@@ -75,7 +75,8 @@ module.exports = async (req, res) => {
         if (!lockMatches(memory, pw)) return db.reply(res, 401, { locked: true, kind, wrong: true, left: Math.max(0, 10 - tries), ...lockInfo(memory), error: "That passcode isn't right." });
         await db.cmd("DEL", rk);
       }
-      if (!isOwner) await db.cmd("INCR", "customer-memory-views:" + id);
+      if (!isOwner) { await db.cmd("INCR", "customer-memory-views:" + id); if (memory.kind === "biz") await require("./_stats").view(id); }
+      if (isOwner && memory.kind === "biz") base.stats = await require("./_stats").week(id);
       return db.reply(res, 200, { ...base, ...(isOwner ? ownerLock(memory) : {}), data: memory.data, title: memory.title, active: true, owner: isOwner });
     }
     const user = await auth.currentUser(req);
@@ -85,7 +86,7 @@ module.exports = async (req, res) => {
       const memories = (await Promise.all(ids.map(async id => {
         const m = await db.getj("customer-memory:" + id);
         if (!m || m.owner !== user.id) return null;
-        return { id, title: m.title || "Our Memories", created: m.created, updated: m.updated || m.created, views: +(await db.cmd("GET", "customer-memory-views:" + id)) || 0, active: m.paid !== false, plan: m.plan || "", ship: await shipStatus(m), kind: kindOf(m.kind), locked: !!m.lock };
+        return { id, title: m.title || "Our Memories", created: m.created, updated: m.updated || m.created, views: +(await db.cmd("GET", "customer-memory-views:" + id)) || 0, active: m.paid !== false, plan: m.plan || "", ship: await shipStatus(m), kind: kindOf(m.kind), locked: !!m.lock, ...(m.kind === "biz" ? { stats: await require("./_stats").week(id) } : {}) };
       }))).filter(Boolean).sort((a, b) => b.created - a.created);
       return db.reply(res, 200, { memories });
     }

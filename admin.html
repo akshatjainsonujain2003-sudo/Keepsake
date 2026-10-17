@@ -42,15 +42,21 @@ button{background:#d6b06a;color:#2a0409;border:0;font-weight:700;cursor:pointer}
 <div id="prepaid" hidden><div class="card" style="border-color:#c9a45a55">
  <h3 style="margin:0 0 4px">📦 Phygital Retail Batch Generator</h3>
  <p style="margin:0 0 10px"><small>Generate prepaid QR codes for keychains and greeting-card boxes sold in shops. Every card gets its own random code and its own 6-digit PIN (different on every card), which goes inside the pack. Buyers scan, make their keepsake and enter the PIN: no online payment.</small></p>
- <label><small>Batch label (shop or city, printed on the cards)</small><input id="batchPrefix" value="KS-JAIPUR" maxlength="40"></label>
+ <label><small>Batch label: shop, city or salesperson name (printed on the cards)</small><input id="batchPrefix" value="KS-JAIPUR" maxlength="40"></label>
  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
   <label><small>Quantity (max 200)</small><input id="batchQty" type="number" value="50" min="1" max="200"></label>
   <label><small>Prepaid tier</small><select id="batchTier"><option value="card">Prepaid Template Card (₹99 value)</option><option value="vip">Prepaid VIP Website (₹299 value)</option><option value="biz">Business page QR (shop pays ₹499 online)</option></select></label>
+ </div>
+ <div id="salesF" style="display:grid;grid-template-columns:1fr 1fr;gap:10px" hidden>
+  <label><small>Salesperson commission per activated shop (₹)</small><input id="batchComm" type="number" value="100" min="0" max="5000"></label>
+  <label><small>Salesperson phone (optional)</small><input id="batchPhone" inputmode="tel" maxlength="16" placeholder="98765 43210"></label>
  </div>
  <button type="button" id="generateBatchBtn">Generate &amp; Export Print Sheet</button>
  <div id="batchStatus"></div>
 </div>
 <div class="card"><b>Unlock a code</b><p style="margin:2px 0 6px"><small>A code locks after 10 wrong PINs. Check the buyer's photo of the card, then unlock it here.</small></p><div class="top"><input id="unlockCode" placeholder="Code, e.g. KSJMT4LTQT" style="text-transform:uppercase"><button id="unlockBtn" type="button">Unlock</button></div><div id="unlockStatus"></div></div>
+<div class="card"><b>📄 Sales sheet for salespeople</b><p style="margin:2px 0 8px"><small>One-page A4 PDF to show shop owners or print. Each salesperson's private link also has it.</small></p><a href="/assets/getkeepsake-business-sales-sheet.pdf" target="_blank" rel="noopener" style="color:#e4c680;font-weight:700">Download the PDF →</a></div>
+<div id="salesSum"></div>
 <div id="batchList"></div></div></div>
 <script>
 const $=s=>document.querySelector(s);$("#ak").value=sessionStorage.ak||"";let SH=[];
@@ -87,11 +93,23 @@ $("#list").onclick=async e=>{const b=e.target.closest("button");if(!b)return;con
  else if(a==="remove"){if(!confirm("Delete "+s.name+" and ALL its cards? This cannot be undone."))return;await api({action:"remove",key:k})}
  else await api({action:a,key:k,days:30});load()}catch(x){$("#msg").textContent=x.message}};
 let PB=[];
-async function loadBatches(){try{PB=(await api({action:"prepaid-batches"})).batches;$("#batchList").innerHTML=PB.map(x=>`<div class="card"><b>${esc(x.shop)}</b> · ${x.tier==="biz"?"Business page QR":x.tier==="site"?"VIP website":"Template card"} · ${x.count} codes<br><small>${new Date(x.created).toLocaleString()} · <span class="${x.claimed?"good":""}">${x.claimed} used</span>, ${x.count-x.claimed} unused</small><br><button class="g" data-b="${esc(x.id)}">Print sheet / codes</button></div>`).join("")||"<p>No batches yet.</p>"}catch(e){$("#msg").textContent=e.message}}
+
+async function loadBatches(){try{PB=(await api({action:"prepaid-batches"})).batches;
+ // Salespeople summary (business QR batches, grouped by name)
+ const by={};PB.filter(x=>x.tier==="biz").forEach(x=>{const k=x.shop||"Direct",g=by[k]||(by[k]={name:k,codes:0,act:0,earned:0,owed:0,batches:0});g.codes+=x.count;g.act+=x.claimed;g.earned+=x.earned||0;g.owed+=x.owed||0;g.batches++});
+ const G=Object.values(by).sort((a,b)=>b.act-a.act);
+ $("#salesSum").innerHTML=G.length?`<div class="card" style="border-color:#9ad8b055"><b>👥 Salespeople</b><table style="width:100%;border-collapse:collapse;margin-top:8px;font-size:14px"><tr style="text-align:left;opacity:.7"><th>Name</th><th>QR cards</th><th>Activated</th><th>Earned</th><th>To pay</th></tr>${G.map(g=>`<tr style="border-top:1px solid #6b3a35"><td style="padding:7px 4px">${esc(g.name)}</td><td>${g.codes}</td><td class="good">${g.act} <small>(${Math.round(g.act*100/Math.max(1,g.codes))}%)</small></td><td>${rs(g.earned)}</td><td class="${g.owed?"bad":""}"><b>${rs(g.owed)}</b></td></tr>`).join("")}</table><p style="margin:8px 0 0"><small>"Activated" = shops that paid ₹499 with that salesperson's QR card. Pay commission below, batch by batch.</small></p></div>`:"";
+ $("#batchList").innerHTML=PB.map(x=>{const biz=x.tier==="biz";return`<div class="card"><b>${esc(x.shop)}</b> · ${biz?"Business page QR":x.tier==="site"?"VIP website":"Template card"} · ${x.count} codes${x.phone?` · <a style="color:#e4c680" href="https://wa.me/${esc(x.phone.replace(/\D/g,"").replace(/^(\d{10})$/,"91$1"))}">${esc(x.phone)}</a>`:""}<br><small>${new Date(x.created).toLocaleString()} · <span class="${x.claimed?"good":""}">${x.claimed} ${biz?"activated":"used"}</span>, ${x.count-x.claimed} unused</small>
+ ${biz?`<div style="margin-top:8px;padding:10px 12px;border-radius:12px;background:#2a0409"><small>Commission</small> <input data-comm="${esc(x.id)}" type="number" min="0" max="5000" value="${x.comm||0}" style="width:90px;padding:6px 8px;margin:0 4px;display:inline-block"> <small>per shop · earned ${rs(x.earned)} · paid ${rs((x.paidOut||0)*(x.comm||0))} ·</small> <b class="${x.owed?"bad":"good"}">to pay ${rs(x.owed)}</b></div>`:""}
+ <button class="g" data-b="${esc(x.id)}">Print sheet / codes</button>${biz?`<button class="g" data-link="${esc(x.id)}" data-k="${esc(x.key||"")}">Copy salesperson link</button>${x.owed?`<button class="g" data-pay="${esc(x.id)}" data-amt="${x.owed}">Mark ${rs(x.owed)} as paid</button>`:""}`:""}</div>`}).join("")||"<p>No batches yet.</p>"}catch(e){$("#msg").textContent=e.message}}
 $("#unlockBtn").onclick=async()=>{const st=$("#unlockStatus");try{const j=await api({action:"prepaid-unlock",code:$("#unlockCode").value.trim()});st.className="good";st.textContent=j.code+" unlocked. The buyer can try their PIN again."}catch(e){st.className="bad";st.textContent=e.message}};
-$("#batchList").onclick=e=>{const b=e.target.closest("button[data-b]");if(b)window.open("/print-codes?batch="+encodeURIComponent(b.dataset.b),"_blank")};
+$("#batchList").onclick=async e=>{const b=e.target.closest("button[data-b]");if(b){window.open("/print-codes?batch="+encodeURIComponent(b.dataset.b),"_blank");return}
+ const l=e.target.closest("button[data-link]");if(l){if(!l.dataset.k){l.textContent="Set a commission first";return}const u=location.origin+"/sales?b="+l.dataset.link+"&k="+l.dataset.k;try{await navigator.clipboard.writeText(u);l.textContent="Link copied ✓"}catch(x){prompt("Salesperson link",u)}return}
+ const p=e.target.closest("button[data-pay]");if(p){if(!confirm("Mark ₹"+(+p.dataset.amt).toLocaleString("en-IN")+" as paid to this salesperson?"))return;try{await api({action:"prepaid-payout",id:p.dataset.pay});loadBatches()}catch(x){$("#msg").textContent=x.message}}};
+$("#batchList").onchange=async e=>{const c=e.target.closest("[data-comm]");if(!c)return;try{await api({action:"prepaid-comm",id:c.dataset.comm,comm:c.value});loadBatches()}catch(x){$("#msg").textContent=x.message}};
+$("#batchTier").onchange=()=>{$("#salesF").hidden=$("#batchTier").value!=="biz"};
 $("#generateBatchBtn").onclick=async()=>{const st=$("#batchStatus"),btn=$("#generateBatchBtn");const qty=parseInt($("#batchQty").value)||50;st.className="";st.textContent="Generating batch codes…";btn.disabled=true;
- try{const j=await api({action:"prepaid-create",shop:$("#batchPrefix").value.trim(),count:qty,tier:$("#batchTier").value});st.className="good";st.textContent=`Generated ${j.batch.count} codes. Opening the print sheet…`;window.open("/print-codes?batch="+encodeURIComponent(j.batch.id),"_blank");loadBatches()}
+ try{const j=await api({action:"prepaid-create",shop:$("#batchPrefix").value.trim(),count:qty,tier:$("#batchTier").value,comm:$("#batchComm").value,phone:$("#batchPhone").value});st.className="good";st.textContent=`Generated ${j.batch.count} codes. Opening the print sheet…`;window.open("/print-codes?batch="+encodeURIComponent(j.batch.id),"_blank");loadBatches()}
  catch(e){st.className="bad";st.textContent=e.message}finally{btn.disabled=false}};
 if($("#ak").value)load();
 </script><script>

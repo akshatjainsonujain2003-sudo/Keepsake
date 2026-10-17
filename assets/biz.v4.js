@@ -677,14 +677,18 @@
       const tot = Object.entries(cart).reduce((t, [k, q]) => t + q * (items[k].price || 0), 0);
       return `Hi ${m.name}! I'd like to order:\n\n${lines.join("\n")}\n\nTotal: ${money(tot)}\n\nName:\nPickup / delivery address:`;
     };
+    // Count taps for the owner's stats (live page only): Call, WhatsApp, Directions, Instagram, Pay, Review, Order.
+    const track = ev => { if (!opts.id || m.preview) return; try { fetch("/api/qr?ev=" + encodeURIComponent(opts.id) + "&t=" + ev, { keepalive: true, cache: "no-store" }); } catch (x) {} };
+    const kindOf = h => /^tel:/.test(h) ? "call" : /wa\.me\//.test(h) ? "wa" : /^upi:/.test(h) || h === "#bz-pay" ? "pay" : /instagram\.com/.test(h) ? "ig" : m.review && h === m.review ? "review" : /google\.[a-z.]+\/maps|maps\.app\.goo|goo\.gl\/maps/.test(h) || (m.mapsU && h === m.mapsU) ? "dir" : "";
     root.onclick = async e => {
       const t = e.target;
+      const la = t.closest("a[href]"); if (la && !la.hasAttribute("data-send")) { const k = kindOf(la.getAttribute("href") || ""); if (k) track(k); }
       const tb = t.closest("[data-tab]"); if (tb) { const box = tb.parentNode.parentNode; box.querySelectorAll("[data-tab]").forEach(b => b.classList.toggle("on", b === tb)); box.querySelectorAll("[data-pane]").forEach(p => p.hidden = p.dataset.pane !== tb.dataset.tab); return; }
       const ad = t.closest("[data-add]"); if (ad) { cart[ad.dataset.add] = (cart[ad.dataset.add] || 0) + 1; sync(); return; }
       const sb = t.closest("[data-sub]"); if (sb) { const k = sb.dataset.sub; cart[k] = Math.max(0, (cart[k] || 0) - 1); if (!cart[k]) delete cart[k]; sync(); return; }
       const acc = t.closest("[data-acc]"); if (acc) { acc.parentNode.classList.toggle("op"); return; }
       if (t.closest("[data-bag]")) { if (!Object.keys(cart).length) { toast("Tap + on any item to add it"); const mn = root.querySelector("#bz-menu"); if (mn) mn.scrollIntoView({ behavior: "smooth" }); } else root.querySelector("[data-send]").click(); return; }
-      if (t.closest("[data-send]")) { e.preventDefault(); if (m.preview) { toast("Opens WhatsApp with the order"); return; } window.open("https://wa.me/" + m.wa + "?text=" + encodeURIComponent(orderText()), "_blank", "noopener"); return; }
+      if (t.closest("[data-send]")) { e.preventDefault(); if (m.preview) { toast("Opens WhatsApp with the order"); return; } track("order"); window.open("https://wa.me/" + m.wa + "?text=" + encodeURIComponent(orderText()), "_blank", "noopener"); return; }
       const cp = t.closest("[data-copy]"); if (cp) { try { await navigator.clipboard.writeText(cp.dataset.copy); toast("UPI ID copied"); } catch (x) {} return; }
       if (t.closest("[data-share]")) { try { if (navigator.share) await navigator.share({ title: m.name, url: m.pageUrl }); else { await navigator.clipboard.writeText(m.pageUrl); toast("Link copied"); } } catch (x) {} return; }
       if (t.closest("[data-vcf]")) {

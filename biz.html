@@ -17,7 +17,7 @@ html,body{margin:0;background:#1f1611;min-height:100%}
 .pbar{position:sticky;top:0;z-index:50;background:#d9a066;color:#1f1611;padding:11px 14px;text-align:center;font:600 14px/1.4 system-ui,sans-serif}
 .pbar a{color:#1f1611}
 </style>
-<script src="/assets/biz.v3.js"></script>
+<script src="/assets/biz.v4.js"></script>
 </head>
 <body>
 <main id="biz" aria-live="polite"></main>
@@ -31,7 +31,7 @@ html,body{margin:0;background:#1f1611;min-height:100%}
   try { const r = await fetch("/api/customer-memories?id=" + m[1], { cache: "no-store" }); j = await r.json(); if (!r.ok) j.error = j.error || "x"; } catch (e) { j = { error: "x" }; }
   if (j.error) return j.inactive ? say("This page isn’t live yet.", "If it’s your business, log in and activate it.") : say("This page could not be found.");
   if (j.kind !== "biz") { location.replace((j.kind === "site" ? "/s/" : "/m/") + m[1]); return; }
-  KSBiz.render(root, j.data, { url: location.origin + "/b/" + m[1] });
+  KSBiz.render(root, j.data, { url: location.origin + "/b/" + m[1], id: j.owner ? "" : m[1] });
   document.title = (j.data.t || "Our shop") + (j.data.area ? " · " + j.data.area : "");
   const set = (p, v) => { let e = document.querySelector(`meta[property="${p}"]`); if (!e) { e = document.createElement("meta"); e.setAttribute("property", p); document.head.appendChild(e); } e.content = v; };
   set("og:title", document.title); if (j.data.tag) set("og:description", j.data.tag);

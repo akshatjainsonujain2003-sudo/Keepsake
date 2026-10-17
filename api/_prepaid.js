@@ -21,7 +21,7 @@ const same = (a, b) => { const x = Buffer.from(String(a || "")), y = Buffer.from
 
 async function get(code) { code = norm(code); return valid(code) ? await db.getj("pcode:" + code) : null; }
 
-async function createBatch({ count, tier, shop, note }) {
+async function createBatch({ count, tier, shop, note, comm, phone }) {
   count = Math.round(+count); if (!(count >= 1 && count <= 200)) return { error: "Make between 1 and 200 codes at a time." };
   if (!TIERS[tier]) return { error: "Choose card, website or business codes." };
   const id = db.rid(8), created = Date.now(), codes = [], pins = new Set();
@@ -31,7 +31,9 @@ async function createBatch({ count, tier, shop, note }) {
     const rec = { code, pin, tier, batch: id, status: "new", fails: 0, created };
     if ((await db.cmd("SET", "pcode:" + code, JSON.stringify(rec), "NX")) === "OK") codes.push(code);
   }
-  const batch = { id, shop: String(shop || "").slice(0, 60) || "Direct", tier, count, note: String(note || "").slice(0, 120), created, codes };
+  comm = Math.max(0, Math.min(5000, Math.round(+comm || 0)));
+  const batch = { id, shop: String(shop || "").slice(0, 60) || "Direct", tier, count, note: String(note || "").slice(0, 120), created, codes,
+    comm, phone: String(phone || "").replace(/[^\d+ ]/g, "").slice(0, 16), key: db.rid(12), paidOut: 0, payouts: [] };
   await db.setj("pbatch:" + id, batch);
   await db.cmd("ZADD", "pbatches", created, id);
   return { batch };
@@ -47,7 +49,8 @@ async function batches() {
   const ids = await db.cmd("ZRANGE", "pbatches", 0, -1, "REV");
   return (await Promise.all(ids.map(async id => {
     const b = await db.getj("pbatch:" + id); if (!b) return null;
-    const { codes, ...rest } = b; return { ...rest, claimed: +(await db.cmd("GET", "pbatch-claimed:" + id)) || 0 };
+    const { codes, ...rest } = b, claimed = +(await db.cmd("GET", "pbatch-claimed:" + id)) || 0, comm = b.comm || 0, paidOut = b.paidOut || 0;
+    return { ...rest, claimed, comm, paidOut, earned: claimed * comm, owed: Math.max(0, claimed - paidOut) * comm };
   }))).filter(Boolean);
 }
 async function batchCodes(id) {
@@ -55,6 +58,33 @@ async function batchCodes(id) {
   const codes = (await Promise.all(b.codes.map(c => db.getj("pcode:" + c)))).filter(Boolean)
     .map(r => ({ code: r.code, pin: r.pin, status: r.status, locked: !!r.locked, fails: r.fails || 0, kind: r.kind || "", claimedAt: r.claimedAt || null }));
   return { ...b, codes };
+}
+
+// Salesperson commission: rate per activation, and "mark as paid" (pays everything activated so far).
+async function setComm(id, comm) {
+  const b = await db.getj("pbatch:" + String(id || "").slice(0, 20)); if (!b) return null;
+  b.comm = Math.max(0, Math.min(5000, Math.round(+comm || 0))); if (!b.key) b.key = db.rid(12);
+  await db.setj("pbatch:" + b.id, b); return { id: b.id, comm: b.comm };
+}
+async function payout(id) {
+  const b = await db.getj("pbatch:" + String(id || "").slice(0, 20)); if (!b) return null;
+  const claimed = +(await db.cmd("GET", "pbatch-claimed:" + b.id)) || 0, n = claimed - (b.paidOut || 0);
+  if (n <= 0) return { id: b.id, paid: 0 };
+  b.payouts = (b.payouts || []).concat({ at: Date.now(), shops: n, amount: n * (b.comm || 0) }).slice(-50); b.paidOut = claimed;
+  await db.setj("pbatch:" + b.id, b); return { id: b.id, paid: n * (b.comm || 0), shops: n };
+}
+// The salesperson's private page (/sales?b=ID&k=KEY): their codes, activated shops and commission. Never PINs or customer details.
+async function salesView(id, key) {
+  const b = await db.getj("pbatch:" + String(id || "").slice(0, 20));
+  if (!b || !b.key || !same(b.key, key)) return null;
+  const recs = (await Promise.all(b.codes.map(c => db.getj("pcode:" + c)))).filter(Boolean);
+  const shops = (await Promise.all(recs.filter(r => r.status === "claimed" && r.memory).map(async r => {
+    const m = await db.getj("customer-memory:" + r.memory);
+    return { code: r.code, name: m ? String(m.title || "").slice(0, 60) : "Shop", at: r.claimedAt || 0, url: urlFor(r.kind, r.memory) };
+  }))).sort((a, c) => c.at - a.at);
+  const claimed = shops.length, comm = b.comm || 0, paidOut = Math.min(b.paidOut || 0, claimed);
+  return { name: b.shop, tier: b.tier, count: b.count, created: b.created, activated: claimed, unused: b.count - claimed, comm, earned: claimed * comm, paid: paidOut * comm, owed: (claimed - paidOut) * comm,
+    payouts: (b.payouts || []).map(p => ({ at: p.at, amount: p.amount, shops: p.shops })), shops, codes: recs.map(r => ({ code: r.code, status: r.status })) };
 }
 
 // Claim a code for one of the user's keepsakes. Returns { ok, url } or { status, error }.
@@ -114,4 +144,4 @@ async function linkBiz(code, id, owner) {
   return rec;
 }
 
-module.exports = { norm, valid, get, createBatch, batches, batchCodes, claim, unlock, linkBiz, urlFor, TIERS };
+module.exports = { norm, valid, get, createBatch, batches, batchCodes, claim, unlock, linkBiz, urlFor, setComm, payout, salesView, TIERS };

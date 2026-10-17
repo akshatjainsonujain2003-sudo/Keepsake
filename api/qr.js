@@ -13,6 +13,14 @@ module.exports = async (req, res) => {
   try {
     const q = req.query || {};
     if (req.method === "GET") {
+      // Salesperson's private stats: ?sales=BATCH&key=KEY
+      if (q.sales) { const x = await pp.salesView(q.sales, q.key); return x ? db.reply(res, 200, x) : db.reply(res, 404, { error: "This link isn't valid. Ask GetKeepsake for a new one." }); }
+      // A tap on a business page (Call, WhatsApp, Directions…): ?ev=PAGE_ID&t=call. Counted once per person per day.
+      if (q.ev) {
+        const id = String(q.ev), t = String(q.t || "");
+        if (/^[a-z0-9]{8,16}$/i.test(id)) await require("./_stats").tap(id, t, ip(req));
+        res.setHeader("Cache-Control", "no-store"); return res.status(204).end();
+      }
       const rec = await pp.get(q.code);
       if (q.info) return rec ? db.reply(res, 200, { code: rec.code, tier: rec.tier, status: rec.status, locked: !!rec.locked }) : db.reply(res, 404, { error: "That code isn't valid." });
       if (!rec) return page(res, 404, "This code isn't valid", "Please check the card, or message us and we'll sort it out.");

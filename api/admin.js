@@ -66,11 +66,13 @@ module.exports = async (req, res) => {
     // Prepaid QR codes for shops
     if (b.action === "prepaid-create") {
       const tier = b.tier === "vip" ? "site" : b.tier;
-      const x = await pp.createBatch({ count: b.count, tier, shop: b.shop, note: b.note }); if (x.error) return db.reply(res, 400, { error: x.error });
+      const x = await pp.createBatch({ count: b.count, tier, shop: b.shop, note: b.note, comm: b.comm, phone: b.phone }); if (x.error) return db.reply(res, 400, { error: x.error });
       return db.reply(res, 200, { batch: { id: x.batch.id, count: x.batch.count } });
     }
     if (b.action === "prepaid-unlock") { const r = await pp.unlock(b.code); return r ? db.reply(res, 200, { ok: true, code: r.code }) : db.reply(res, 404, { error: "Code not found." }); }
     if (b.action === "prepaid-batches") return db.reply(res, 200, { batches: await pp.batches() });
+    if (b.action === "prepaid-comm") { const x = await pp.setComm(b.id, b.comm); return x ? db.reply(res, 200, x) : db.reply(res, 404, { error: "Batch not found." }); }
+    if (b.action === "prepaid-payout") { const x = await pp.payout(b.id); return x ? db.reply(res, 200, x) : db.reply(res, 404, { error: "Batch not found." }); }
     if (b.action === "prepaid-batch") { const x = await pp.batchCodes(b.id); return x ? db.reply(res, 200, { batch: x }) : db.reply(res, 404, { error: "Batch not found." }); }
     if (b.action === "leads") {
       const rows = (await db.cmd("LRANGE", "leads", 0, 99)).map(x => { try { return JSON.parse(x); } catch (e) { return null; } }).filter(Boolean);
