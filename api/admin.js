@@ -29,6 +29,20 @@ module.exports = async (req, res) => {
       await db.cmd("DEL", "shopimgs:" + b.key); await db.cmd("DEL", "shopcards:" + b.key); await db.cmd("DEL", "shop:" + b.key); await db.cmd("SREM", "shops", b.key);
       return db.reply(res, 200, { ok: true });
     }
+    // Admin app (/hq)
+    if (typeof b.action === "string" && b.action.startsWith("hq-") || b.action && String(b.action).startsWith("push-")) {
+      const H = require("./_hq");
+      if (b.action === "hq-summary") return db.reply(res, 200, await H.summary());
+      if (b.action === "hq-orders") return db.reply(res, 200, { orders: await H.orders() });
+      if (b.action === "hq-pages") return db.reply(res, 200, { pages: await H.pages() });
+      if (b.action === "hq-people") return db.reply(res, 200, { people: await H.people() });
+      if (b.action === "push-key") return db.reply(res, 200, { key: (await H.vapid()).pub });
+      if (b.action === "push-sub") { const r = await H.subscribe(b.sub, b.label); return db.reply(res, r.error ? 400 : 200, r); }
+      if (b.action === "push-unsub") return db.reply(res, 200, await H.unsubscribe(b.endpoint));
+      if (b.action === "push-test") return db.reply(res, 200, await H.notify());
+      if (b.action === "push-latest") return db.reply(res, 200, { order: await H.latest() });
+      return db.reply(res, 400, { error: "Unknown action." });
+    }
     if (b.action === "orders") {
       // Most recent 200 paid customer orders, newest first.
       const ids = await db.cmd("ZRANGE", "orders-paid", 0, 199, "REV");

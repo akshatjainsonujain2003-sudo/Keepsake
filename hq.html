@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>GetKeepsake HQ</title>
+<meta name="theme-color" content="#121110">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="KS HQ">
+<link rel="manifest" href="/hq.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700;800&display=swap">
+<style>
+:root{--bg:#121110;--card:#1c1a17;--card2:#24211d;--ln:#2e2a25;--tx:#f4efe4;--mu:#a9a296;--gd:#e6c27a;--gn:#6fd49a;--rd:#ff8f7e;--bl:#8fb8ff;--sa:env(safe-area-inset-bottom);--st:env(safe-area-inset-top)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.45 Inter,system-ui,sans-serif}
+button,input{font:inherit;color:inherit}
+a{color:var(--gd)}
+.fd{font-family:'Archivo Black','Arial Black',sans-serif;font-weight:400;letter-spacing:-.01em}
+[hidden]{display:none!important}
+/* login */
+#login{min-height:100dvh;display:grid;place-items:center;padding:24px}
+#login .bx{width:min(360px,100%);text-align:center}
+#login .lg{width:64px;height:64px;border-radius:18px;margin:0 auto 18px;display:grid;place-items:center;background:var(--gd);color:var(--bg);font-size:28px}
+#login h1{margin:0 0 6px;font-size:26px}#login p{color:var(--mu);margin:0 0 22px}
+.in{width:100%;padding:14px 16px;border-radius:14px;border:1px solid var(--ln);background:var(--card);font-size:16px;outline:none}
+.in:focus{border-color:var(--gd)}
+.bt{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 18px;border-radius:999px;border:0;background:var(--gd);color:#121110;font-weight:700;cursor:pointer;text-decoration:none}
+.bt.w{width:100%;margin-top:12px}.bt.gh{background:var(--card2);color:var(--tx);border:1px solid var(--ln)}.bt.sm{padding:9px 14px;font-size:14px}
+.err{color:var(--rd);min-height:1.4em;margin-top:10px;font-size:14px}
+/* shell */
+#app{padding:calc(var(--st) + 14px) 16px calc(var(--sa) + 92px);max-width:640px;margin:0 auto}
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+.top h1{margin:0;font-size:24px}.top small{display:block;color:var(--mu);font-size:13px}
+.ib{width:42px;height:42px;border-radius:50%;border:1px solid var(--ln);background:var(--card);display:grid;place-items:center;cursor:pointer;flex:none}
+.ib svg{width:20px;height:20px}.ib.spin svg{animation:sp .8s linear infinite}@keyframes sp{to{transform:rotate(360deg)}}
+nav{position:fixed;left:0;right:0;bottom:0;z-index:20;background:#121110ee;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--ln);padding:8px 8px calc(var(--sa) + 8px);display:flex;justify-content:center}
+nav .in2{display:grid;grid-template-columns:repeat(5,1fr);width:100%;max-width:640px}
+nav button{background:none;border:0;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;font-weight:600;color:var(--mu);padding:4px 0;cursor:pointer;position:relative}
+nav button svg{width:23px;height:23px}nav button.on{color:var(--gd)}
+nav .dot{position:absolute;top:0;left:calc(50% + 6px);min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--rd);color:#121110;font-size:11px;font-weight:800;display:grid;place-items:center}
+.card{background:var(--card);border:1px solid var(--ln);border-radius:20px;padding:16px;margin-bottom:12px}
+.hero{background:radial-gradient(120% 140% at 0% 0%,#3a2f1c,#1c1a17 60%);border-color:#4a3d24}
+.lab{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--mu)}
+.big{font-size:40px;line-height:1.05;margin:6px 0 2px}.big small{font:600 14px Inter,sans-serif;color:var(--mu);margin-left:6px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px}
+.g3 .card{margin:0;padding:12px}.g3 b{display:block;font-size:19px;margin-top:4px}.g3 small{color:var(--mu);font-size:12px}
+.alert{display:flex;align-items:center;gap:12px;background:#3a1d17;border-color:#6b3227;cursor:pointer}
+.alert .n{font-size:30px;color:var(--rd)}.alert b{display:block}.alert small{color:#e8c3bb}
+.alert svg{margin-left:auto;width:20px;height:20px;flex:none}
+.chart{display:flex;align-items:flex-end;gap:3px;height:110px;margin-top:14px}
+.chart i{flex:1;background:#3a3329;border-radius:4px 4px 2px 2px;min-height:3px;position:relative}
+.chart i.v{background:var(--gd)}.chart i.t{background:var(--gn)}
+.cx{display:flex;justify-content:space-between;color:var(--mu);font-size:11px;margin-top:6px}
+.mix{display:flex;height:12px;border-radius:6px;overflow:hidden;margin:12px 0 10px;background:#3a3329}
+.mix span{display:block}.leg{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;color:var(--mu)}.leg i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px}
+.sec{display:flex;align-items:baseline;justify-content:space-between;margin:20px 2px 10px}.sec h2{margin:0;font-size:17px}.sec button{background:none;border:0;color:var(--gd);font-weight:600;cursor:pointer}
+.row{display:flex;align-items:center;gap:12px;padding:13px 14px;background:var(--card);border:1px solid var(--ln);border-radius:16px;margin-bottom:8px;cursor:pointer;width:100%;text-align:left}
+.row .av{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:var(--card2);flex:none;font-size:18px}
+.row .mid{flex:1;min-width:0}.row .mid b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.row .mid small{display:block;color:var(--mu);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row .rt{text-align:right;flex:none}.row .rt b{display:block}.row .rt small{color:var(--mu);font-size:12px}
+.tag{display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;letter-spacing:.02em}
+.tag.r{background:#4a221b;color:var(--rd)}.tag.g{background:#1d3a2a;color:var(--gn)}.tag.y{background:#3d3220;color:var(--gd)}.tag.m{background:var(--card2);color:var(--mu)}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:2px 0 12px;scrollbar-width:none}.chips::-webkit-scrollbar{display:none}
+.chips button{flex:none;padding:8px 14px;border-radius:999px;border:1px solid var(--ln);background:var(--card);font-weight:600;font-size:14px;cursor:pointer;white-space:nowrap}
+.chips button.on{background:var(--tx);color:#121110;border-color:var(--tx)}
+.srch{position:relative;margin-bottom:10px}.srch svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--mu)}.srch .in{padding-left:42px}
+.empty{text-align:center;color:var(--mu);padding:40px 10px}
+.load{text-align:center;color:var(--mu);padding:30px}
+/* sheet */
+.ov{position:fixed;inset:0;z-index:40;background:#0009;opacity:0;pointer-events:none;transition:.2s}.ov.on{opacity:1;pointer-events:auto}
+.sh{position:fixed;left:0;right:0;bottom:0;z-index:41;max-height:88dvh;overflow:auto;background:#191714;border-top:1px solid var(--ln);border-radius:24px 24px 0 0;padding:10px 18px calc(var(--sa) + 24px);transform:translateY(105%);transition:transform .25s ease;max-width:640px;margin:0 auto}
+.sh.on{transform:none}
+.sh .gr{width:40px;height:5px;border-radius:3px;background:#3a3631;margin:0 auto 14px}
+.sh h3{margin:0 0 4px;font-size:21px}.sh .sub{color:var(--mu);margin:0 0 14px;font-size:14px}
+.kv{display:grid;grid-template-columns:110px 1fr;gap:8px 12px;font-size:14px;margin:12px 0}.kv dt{color:var(--mu)}.kv dd{margin:0;word-break:break-word}
+.acts{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.addr{white-space:pre-line;background:var(--card);border:1px solid var(--ln);border-radius:14px;padding:12px 14px;font-size:14px}
+.box{background:var(--card);border:1px solid var(--ln);border-radius:16px;padding:14px;margin:12px 0}
+.box h4{margin:0 0 8px;font-size:14px;color:var(--mu);font-weight:600}
+.toast{position:fixed;left:50%;top:calc(var(--st) + 14px);transform:translate(-50%,-160%);z-index:60;background:var(--gd);color:#121110;padding:12px 18px;border-radius:999px;font-weight:700;transition:transform .3s;box-shadow:0 10px 30px #0008;max-width:calc(100% - 32px);text-align:center}
+.toast.on{transform:translate(-50%,0)}
+.li{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--ln)}.li:last-child{border-bottom:0}.li small{display:block;color:var(--mu);font-size:13px}
+.sw{width:50px;height:30px;border-radius:15px;background:#3a3631;border:0;position:relative;cursor:pointer;flex:none}.sw:after{content:"";position:absolute;left:3px;top:3px;width:24px;height:24px;border-radius:50%;background:#fff;transition:.2s}.sw.on{background:var(--gn)}.sw.on:after{left:23px}
+</style></head>
+<body>
+<section id="login" hidden><div class="bx">
+  <div class="lg fd">K</div><h1 class="fd">GetKeepsake HQ</h1><p>Your orders, shops and customers in one place.</p>
+  <input class="in" id="key" type="password" placeholder="Admin key" autocomplete="current-password">
+  <button class="bt w" id="go">Open</button><div class="err" id="lerr"></div>
+</div></section>
+
+<main id="app" hidden></main>
+<nav id="nav" hidden><div class="in2">
+  <button data-t="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Home</button>
+  <button data-t="orders"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l9-4 9 4-9 4z"/><path d="M3 7v10l9 4 9-4V7M12 11v10"/></svg>Orders<span class="dot" id="shipDot" hidden></span></button>
+  <button data-t="shops"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9l1.5-5h13L20 9M4 9h16v11H4zM4 9a3 3 0 0 0 5.3 1.9A3 3 0 0 0 12 12a3 3 0 0 0 2.7-1.1A3 3 0 0 0 20 9"/></svg>Shops</button>
+  <button data-t="people"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.5a3.5 3.5 0 0 1 0 7M18 14a6 6 0 0 1 3.5 6"/></svg>People</button>
+  <button data-t="more"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg>More</button>
+</div></nav>
+<div class="ov" id="ov"></div><div class="sh" id="sh"></div><div class="toast" id="toast"></div>
+
+<script>
+(() => {
+const $ = s => document.querySelector(s), esc = t => String(t == null ? "" : t).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const rs = n => "₹" + Number(n || 0).toLocaleString("en-IN");
+const KK = "ks-hq-key"; let KEY = ""; try { KEY = localStorage.getItem(KK) || ""; } catch (e) {}
+const S = { sum: null, orders: null, pages: null, people: null, tab: "home", of: "ship", pf: "live", q: { orders: "", shops: "", people: "" } };
+const IC = { biz: "🏪", site: "💌", card: "🎴" };
+const ago = t => { if (!t) return ""; const s = (Date.now() - t) / 1000; if (s < 60) return "just now"; if (s < 3600) return Math.floor(s / 60) + "m ago"; if (s < 86400) return Math.floor(s / 3600) + "h ago"; if (s < 172800) return "yesterday"; return new Date(t).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: new Date(t).getFullYear() === new Date().getFullYear() ? undefined : "numeric" }); };
+const when = t => t ? new Date(t).toLocaleString("en-IN", { day: "numeric", month: "short", hour: "numeric", minute: "2-digit" }) : "";
+const SHIP = p => p === "frameQr" || p === "frameNfc" || p === "bizQr";
+const PLAN = { digital: "Digital", frameQr: "Photo frame + QR", frameNfc: "Photo frame + NFC", bizQr: "Printed QR delivered" };
+const KIND = { biz: "Business page", site: "Website", card: "Memory card" };
+const wa = p => { p = String(p || "").replace(/\D/g, ""); if (p.length === 10) p = "91" + p; return p.length >= 11 ? "https://wa.me/" + p : ""; };
+const tel = p => { p = String(p || "").replace(/\D/g, ""); return p ? "tel:+" + (p.length === 10 ? "91" + p : p) : ""; };
+
+async function api(b) {
+  const r = await fetch("/api/admin", { method: "POST", headers: { "Content-Type": "application/json", "x-admin-key": KEY }, body: JSON.stringify(b) });
+  const j = await r.json().catch(() => ({}));
+  if (r.status === 401) { logout(true); throw new Error(j.error || "Wrong admin key."); }
+  if (!r.ok) throw new Error(j.error || "Something went wrong.");
+  return j;
+}
+function toast(t) { const e = $("#toast"); e.textContent = t; e.classList.add("on"); clearTimeout(toast.t); toast.t = setTimeout(() => e.classList.remove("on"), 3200); }
+// The service worker reads the key from here to show order details in alerts.
+async function keepKeyForAlerts() { try { const c = await caches.open("hq"); await c.put("/hq-key", new Response(KEY)); } catch (e) {} }
+
+// ---------- login ----------
+async function login() {
+  KEY = $("#key").value.trim(); $("#lerr").textContent = "";
+  if (!KEY) return;
+  try { S.sum = await api({ action: "hq-summary" }); try { localStorage.setItem(KK, KEY); sessionStorage.ak = KEY; } catch (e) {} keepKeyForAlerts(); start(); }
+  catch (e) { $("#lerr").textContent = e.message; }
+}
+function logout(bad) { try { localStorage.removeItem(KK); caches.delete("hq"); } catch (e) {} KEY = ""; $("#app").hidden = $("#nav").hidden = true; $("#login").hidden = false; if (bad) $("#lerr").textContent = "Please enter the admin key again."; }
+$("#go").onclick = login; $("#key").onkeydown = e => { if (e.key === "Enter") login(); };
+
+// ---------- shell ----------
+function start() {
+  $("#login").hidden = true; $("#app").hidden = $("#nav").hidden = false;
+  const t = (location.hash || "#home").slice(1); go(["home", "orders", "shops", "people", "more"].includes(t) ? t : "home");
+  setInterval(() => { if (document.visibilityState === "visible") poll(); }, 60000);
+  document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") poll(); });
+  if ("serviceWorker" in navigator) navigator.serviceWorker.register("/hq-sw.js", { scope: "/hq" }).catch(() => {});
+}
+document.querySelectorAll("nav button").forEach(b => b.onclick = () => go(b.dataset.t));
+addEventListener("hashchange", () => { const t = location.hash.slice(1); if (t && t !== S.tab && ["home", "orders", "shops", "people", "more"].includes(t)) go(t); });
+function go(t) {
+  S.tab = t; if (location.hash.slice(1) !== t) history.replaceState(null, "", "#" + t);
+  document.querySelectorAll("nav button").forEach(b => b.classList.toggle("on", b.dataset.t === t));
+  scrollTo(0, 0); draw(); load(t);
+}
+async function load(t, force) {
+  try {
+    if (t === "home" && (force || !S.sum)) S.sum = await api({ action: "hq-summary" });
+    if (t === "orders" && (force || !S.orders)) S.orders = (await api({ action: "hq-orders" })).orders;
+    if (t === "shops" && (force || !S.pages)) S.pages = (await api({ action: "hq-pages" })).pages;
+    if (t === "people" && (force || !S.people)) S.people = (await api({ action: "hq-people" })).people;
+    if (t === "more" && (force || !S.sum)) S.sum = await api({ action: "hq-summary" });
+    if (S.tab === t) draw();
+  } catch (e) { toast(e.message); }
+  dot();
+}
+async function refresh() { const b = $("#rf"); if (b) b.classList.add("spin"); S[{ home: "sum", orders: "orders", shops: "pages", people: "people", more: "sum" }[S.tab]] = null; await load(S.tab, true); if (S.tab !== "home") { try { S.sum = await api({ action: "hq-summary" }); } catch (e) {} } dot(); }
+let lastN = null;
+async function poll() {
+  try {
+    const s = await api({ action: "hq-summary" });
+    if (lastN !== null && s.all.n > lastN) { const o = s.recent[0]; toast("🎉 New order: " + rs(o && o.amount) + (o && o.title ? " · " + o.title : "")); try { navigator.vibrate && navigator.vibrate([80, 60, 80]); } catch (e) {} S.orders = null; if (S.tab === "orders") load("orders", true); }
+    lastN = s.all.n; S.sum = s; dot(); if (S.tab === "home") draw();
+  } catch (e) {}
+}
+function dot() { const n = S.sum ? S.sum.toShip : 0, d = $("#shipDot"); d.hidden = !n; d.textContent = n; if (S.sum && lastN === null) lastN = S.sum.all.n; }
+const top = (title, sub) => `<div class="top"><div><small>${esc(sub || "")}</small><h1 class="fd">${esc(title)}</h1></div><button class="ib" id="rf" aria-label="Refresh"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7"/></svg></button></div>`;
+const srch = (k, ph) => `<div class="srch"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input class="in" id="q" placeholder="${esc(ph)}" value="${esc(S.q[k])}" autocomplete="off"></div>`;
+const loading = () => `<div class="load">Loading…</div>`;
+
+function draw() {
+  const A = $("#app");
+  if (S.tab === "home") A.innerHTML = home();
+  if (S.tab === "orders") A.innerHTML = orders();
+  if (S.tab === "shops") A.innerHTML = shops();
+  if (S.tab === "people") A.innerHTML = people();
+  if (S.tab === "more") A.innerHTML = more();
+  const rf = $("#rf"); if (rf) rf.onclick = refresh;
+  const q = $("#q"); if (q) { q.oninput = () => { S.q[S.tab] = q.value; const p = q.selectionStart; draw(); const n = $("#q"); n.focus(); n.setSelectionRange(p, p); }; }
+  A.querySelectorAll("[data-f]").forEach(b => b.onclick = () => { if (S.tab === "orders") S.of = b.dataset.f; else S.pf = b.dataset.f; draw(); });
+  A.querySelectorAll("[data-o]").forEach(b => b.onclick = () => orderSheet(b.dataset.o));
+  A.querySelectorAll("[data-p]").forEach(b => b.onclick = () => pageSheet(b.dataset.p));
+  A.querySelectorAll("[data-u]").forEach(b => b.onclick = () => personSheet(b.dataset.u));
+  A.querySelectorAll("[data-go]").forEach(b => b.onclick = () => { if (b.dataset.of) S.of = b.dataset.of; go(b.dataset.go); });
+  const al = $("#alertBtn"); if (al) al.onclick = toggleAlerts;
+  const ts = $("#testBtn"); if (ts) ts.onclick = async () => { try { const r = await api({ action: "push-test" }); toast(r.sent ? "Test alert sent to " + r.sent + " phone" + (r.sent > 1 ? "s" : "") : "No phone has alerts on yet."); } catch (e) { toast(e.message); } };
+  const lo = $("#logout"); if (lo) lo.onclick = () => logout();
+  if (S.tab === "home" || S.tab === "more") alertState();
+}
+
+// ---------- home ----------
+function home() {
+  const s = S.sum; const h = new Date().getHours(), hi = h < 12 ? "Good morning" : h < 17 ? "Good afternoon" : "Good evening";
+  if (!s) return top("HQ", hi) + loading();
+  const mx = Math.max(1, ...s.days.map(d => d.v)), tot = s.kinds.biz + s.kinds.site + s.kinds.card || 1;
+  const recent = s.recent.map(orderRow).join("") || `<div class="empty">No orders yet. They'll show up here the moment someone pays.</div>`;
+  return top("HQ", hi + " · " + new Date().toLocaleDateString("en-IN", { weekday: "long", day: "numeric", month: "long" })) +
+  `<div class="card hero"><div class="lab">Today</div><div class="big fd">${rs(s.today.rev)}<small>${s.today.n} order${s.today.n === 1 ? "" : "s"}</small></div></div>
+  <div class="g3"><div class="card"><small>7 days</small><b class="fd">${rs(s.week.rev)}</b><small>${s.week.n} orders</small></div><div class="card"><small>30 days</small><b class="fd">${rs(s.month.rev)}</b><small>${s.month.n} orders</small></div><div class="card"><small>All time</small><b class="fd">${rs(s.all.rev)}</b><small>${s.all.n} orders</small></div></div>
+  ${s.toShip ? `<div class="card alert" data-go="orders" data-of="ship"><span class="n fd">${s.toShip}</span><div><b>${s.toShip === 1 ? "Order" : "Orders"} to print &amp; ship</b><small>Printed QRs and frames waiting</small></div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 6 6 6-6 6"/></svg></div>` : ""}
+  <div class="card" id="alertCard" hidden><div style="display:flex;gap:12px;align-items:center"><div style="flex:1"><b>Get a phone alert for every order</b><small style="display:block;color:var(--mu)">Even when this app is closed.</small></div><button class="bt sm" id="alertBtn">Turn on</button></div></div>
+  <div class="card"><div class="lab">Last 30 days</div><div class="chart">${s.days.map((d, i) => `<i class="${i === s.days.length - 1 ? "t" : d.v ? "v" : ""}" style="height:${Math.max(3, Math.round(d.v * 100 / mx))}%" title="${d.d}: ${rs(d.v)} · ${d.n} orders"></i>`).join("")}</div><div class="cx"><span>${new Date(s.days[0].d).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}</span><span>Best day ${rs(mx === 1 ? 0 : mx)}</span><span>Today</span></div>
+  <div class="mix"><span style="width:${s.kinds.biz * 100 / tot}%;background:var(--gd)"></span><span style="width:${s.kinds.site * 100 / tot}%;background:var(--bl)"></span><span style="width:${s.kinds.card * 100 / tot}%;background:var(--gn)"></span></div>
+  <div class="leg"><span><i style="background:var(--gd)"></i>Shops ${rs(s.kinds.biz)}</span><span><i style="background:var(--bl)"></i>Websites ${rs(s.kinds.site)}</span><span><i style="background:var(--gn)"></i>Cards ${rs(s.kinds.card)}</span></div></div>
+  <div class="g3" style="grid-template-columns:1fr 1fr"><div class="card" data-go="shops"><small>New shops · 7 days</small><b class="fd">${s.newShops}</b></div><div class="card" data-go="more"><small>Phones with alerts</small><b class="fd">${s.alerts}</b></div></div>
+  <div class="sec"><h2>Latest orders</h2><button data-go="orders" data-of="all">See all</button></div>${recent}`;
+}
+
+// ---------- orders ----------
+function orderRow(o) {
+  const st = SHIP(o.plan) ? (o.ship === "shipped" ? '<span class="tag g">Shipped</span>' : '<span class="tag r">To ship</span>') : '<span class="tag m">Digital</span>';
+  return `<button class="row" data-o="${esc(o.id)}"><span class="av">${IC[o.kind] || "🎴"}</span><span class="mid"><b>${esc(o.title || KIND[o.kind] || "Order")}</b><small>${esc(o.name || "")} · ${o.upgrade ? esc(PLAN[o.plan] || "") + " (added)" : esc(KIND[o.kind] || "") + (o.plan !== "digital" ? " + " + esc((PLAN[o.plan] || "").toLowerCase()) : "")}</small></span><span class="rt"><b>${rs(o.amount)}</b>${st}<small style="display:block">${ago(o.paidAt)}</small></span></button>`;
+}
+function orders() {
+  if (!S.orders) return top("Orders") + loading();
+  const os = S.orders, q = S.q.orders.toLowerCase().trim();
+  const F = { ship: o => SHIP(o.plan) && o.ship !== "shipped", all: () => true, shipped: o => SHIP(o.plan) && o.ship === "shipped", biz: o => o.kind === "biz", keep: o => o.kind !== "biz" };
+  const n = k => os.filter(F[k]).length;
+  const list = os.filter(F[S.of]).filter(o => !q || [o.title, o.name, o.email, o.phone, o.id, o.paymentId, o.qrCode, o.address && o.address.city, o.address && o.address.phone].join(" ").toLowerCase().includes(q));
+  return top("Orders", os.length + " paid orders") + srch("orders", "Search name, phone, shop, city…") +
+  `<div class="chips">${[["ship", "To ship"], ["all", "All"], ["biz", "Shops"], ["keep", "Keepsakes"], ["shipped", "Shipped"]].map(([k, l]) => `<button data-f="${k}" class="${S.of === k ? "on" : ""}">${l} · ${n(k)}</button>`).join("")}</div>` +
+  (list.map(orderRow).join("") || `<div class="empty">${S.of === "ship" ? "Nothing to ship. All caught up ✓" : "No orders match."}</div>`);
+}
+function orderSheet(id) {
+  const o = (S.orders || []).concat(S.sum ? S.sum.recent : []).find(x => x.id === id); if (!o) return;
+  const a = o.address, ship = SHIP(o.plan), sh = o.ship === "shipped", ph = o.phone || (a && a.phone);
+  const addr = a ? [a.name, a.phone, a.line1, a.line2, a.city + ", " + a.state + " " + a.pincode].filter(Boolean).join("\n") : "";
+  const msg = encodeURIComponent(`Hi ${o.name || ""}, thank you for your GetKeepsake order${o.title ? ' for "' + o.title + '"' : ""}! ` + (ship ? (sh ? "Your order has been shipped" + (o.tracking ? ", tracking: " + o.tracking : "") + "." : "We're preparing it now and will share tracking soon.") : "Your page is live."));
+  const print = o.plan === "bizQr" ? (o.qrBatch ? `<div class="acts"><a class="bt sm" href="/print-codes?batch=${encodeURIComponent(o.qrBatch)}&size=board" target="_blank" rel="noopener">Print counter board</a><a class="bt sm gh" href="/print-codes?batch=${encodeURIComponent(o.qrBatch)}&sides=1" target="_blank" rel="noopener">Print wallet card</a></div><small style="color:var(--mu)">QR #${esc(o.qrCode)} opens ${esc(o.title)}. Admin key needed on the print page: it uses the one saved in this browser.</small>` : `<small style="color:var(--mu)">QR is being made. Pull to refresh in a minute.</small>`)
+    : o.frame ? (o.frame.print === "photo" ? `<a class="bt sm gh" href="${esc(o.frame.photo)}" target="_blank" rel="noopener">Open photo to print</a>` : "<small>Print the card design</small>") : "";
+  sheet(`<h3>${esc(o.title || KIND[o.kind])}</h3><p class="sub">${rs(o.amount)} · ${esc(KIND[o.kind] || "")}${o.plan !== "digital" ? " · " + esc(PLAN[o.plan] || o.plan) : ""}${o.upgrade ? " (added later)" : ""} · ${when(o.paidAt)}</p>
+  ${ship ? `<div class="box"><h4>${sh ? "Shipped ✓" + (o.tracking ? " · " + esc(o.tracking) : "") : "To print & ship"}</h4>${print}
+    ${addr ? `<div class="addr" style="margin-top:12px">${esc(addr)}</div><div class="acts"><button class="bt sm gh" id="cpA">Copy address</button></div>` : ""}
+    ${sh ? `<button class="bt sm gh" id="unS">Mark not shipped</button>` : `<div style="display:flex;gap:8px;margin-top:6px"><input class="in" id="trk" placeholder="Courier tracking no. (optional)" style="padding:11px 14px"><button class="bt sm" id="doS">Mark shipped</button></div>`}</div>` : ""}
+  <div class="box"><h4>Customer</h4><b>${esc(o.name || "")}</b><div style="color:var(--mu);font-size:14px">${esc(o.email || "")}${ph ? " · " + esc(ph) : ""}</div>
+  <div class="acts">${ph ? `<a class="bt sm" href="${wa(ph)}?text=${msg}" target="_blank" rel="noopener">WhatsApp</a><a class="bt sm gh" href="${tel(ph)}">Call</a>` : ""}${o.email ? `<a class="bt sm gh" href="mailto:${esc(o.email)}">Email</a>` : ""}</div></div>
+  <dl class="kv"><dt>Page</dt><dd><a href="${(o.kind === "biz" ? "/b/" : o.kind === "site" ? "/s/" : "/m/") + esc(o.memory)}" target="_blank" rel="noopener">Open ${esc(KIND[o.kind] || "page")} ↗</a></dd>
+  <dt>Payment</dt><dd>${esc(o.paymentId || "")}</dd><dt>Order</dt><dd>${esc(o.id)}</dd>
+  ${o.ref ? `<dt>Code</dt><dd>${esc(o.ref)} (−${rs(o.refDiscount)})</dd>` : ""}${o.sp ? `<dt>Salesperson</dt><dd>${esc(o.sp)}</dd>` : ""}${o.claim ? `<dt>QR card</dt><dd>${esc(o.claim)}</dd>` : ""}</dl>`);
+  const cp = $("#cpA"); if (cp) cp.onclick = async () => { try { await navigator.clipboard.writeText(addr); cp.textContent = "Copied ✓"; } catch (e) { toast("Couldn't copy"); } };
+  const ds = $("#doS"); if (ds) ds.onclick = () => setShip(o, false, $("#trk").value);
+  const us = $("#unS"); if (us) us.onclick = () => setShip(o, true, "");
+}
+async function setShip(o, undo, tracking) {
+  try { await api({ action: "ship", order: o.id, tracking, undo }); o.ship = undo ? "to-ship" : "shipped"; if (!undo) o.tracking = tracking || o.tracking; if (S.sum) S.sum.toShip = Math.max(0, S.sum.toShip + (undo ? 1 : -1)); toast(undo ? "Moved back to To ship" : "Marked shipped ✓"); closeSheet(); draw(); dot(); }
+  catch (e) { toast(e.message); }
+}
+
+// ---------- shops & pages ----------
+function shops() {
+  if (!S.pages) return top("Shops & pages") + loading();
+  const ps = S.pages, q = S.q.shops.toLowerCase().trim();
+  const F = { live: p => p.kind === "biz" && p.live, draft: p => p.kind === "biz" && !p.live, keep: p => p.kind !== "biz" && p.live, kdraft: p => p.kind !== "biz" && !p.live };
+  const n = k => ps.filter(F[k]).length;
+  const list = ps.filter(F[S.pf]).filter(p => !q || [p.title, p.cat, p.area, p.owner.name, p.owner.email, p.owner.phone, p.id].join(" ").toLowerCase().includes(q));
+  const hint = S.pf === "draft" ? `<p style="color:var(--mu);font-size:14px;margin:0 2px 12px">Shops that saved a page but haven't paid. Your warmest leads: tap one to WhatsApp them.</p>` : "";
+  return top("Shops & pages", ps.filter(p => p.kind === "biz").length + " business pages") + srch("shops", "Search shop, owner, area…") +
+  `<div class="chips">${[["live", "Live shops"], ["draft", "Shop drafts"], ["keep", "Live keepsakes"], ["kdraft", "Keepsake drafts"]].map(([k, l]) => `<button data-f="${k}" class="${S.pf === k ? "on" : ""}">${l} · ${n(k)}</button>`).join("")}</div>` + hint +
+  (list.map(p => `<button class="row" data-p="${esc(p.id)}"><span class="av">${IC[p.kind]}</span><span class="mid"><b>${esc(p.title || "Untitled")}</b><small>${esc([p.cat, p.area].filter(Boolean).join(" · ") || KIND[p.kind])} · ${esc(p.owner.name)}</small></span><span class="rt">${p.live ? '<span class="tag g">Live</span>' : '<span class="tag y">Draft</span>'}<small style="display:block">${p.live ? p.views + " opens" : ago(p.updated)}</small></span></button>`).join("") || `<div class="empty">Nothing here yet.</div>`);
+}
+function pageSheet(id) {
+  const p = (S.pages || []).find(x => x.id === id); if (!p) return; const ph = p.owner.phone || p.owner.wa;
+  const msg = encodeURIComponent(p.live ? `Hi ${p.owner.name}, this is GetKeepsake. Hope "${p.title}" is getting good scans! Need any changes to your page?` : `Hi ${p.owner.name}, this is GetKeepsake. I saw you started a page for "${p.title}". Can I help you finish it and make it live? It takes 2 minutes.`);
+  sheet(`<h3>${esc(p.title || "Untitled")}</h3><p class="sub">${esc(KIND[p.kind])} · ${p.live ? "Live" : "Draft, not paid"}${p.cat ? " · " + esc(p.cat) : ""}${p.area ? " · " + esc(p.area) : ""}</p>
+  <div class="box"><h4>Owner</h4><b>${esc(p.owner.name)}</b><div style="color:var(--mu);font-size:14px">${esc(p.owner.email)}${ph ? " · " + esc(ph) : ""}</div>
+  <div class="acts">${ph ? `<a class="bt sm" href="${wa(ph)}?text=${msg}" target="_blank" rel="noopener">WhatsApp</a><a class="bt sm gh" href="${tel(ph)}">Call</a>` : ""}${p.owner.email ? `<a class="bt sm gh" href="mailto:${esc(p.owner.email)}">Email</a>` : ""}</div>${!ph ? `<small style="color:var(--mu)">No phone saved. Use email.</small>` : ""}</div>
+  <dl class="kv"><dt>Opens</dt><dd>${p.views}</dd><dt>Created</dt><dd>${when(p.created)}</dd><dt>Last edit</dt><dd>${when(p.updated)}</dd>${p.qr ? `<dt>Printed QRs</dt><dd>${p.qr}</dd>` : ""}<dt>ID</dt><dd>${esc(p.id)}</dd></dl>
+  ${p.live ? `<a class="bt w" href="${esc(p.path)}" target="_blank" rel="noopener">Open page ↗</a>` : ""}`);
+}
+
+// ---------- people ----------
+function people() {
+  if (!S.people) return top("People") + loading();
+  const q = S.q.people.toLowerCase().trim(), list = S.people.filter(u => !q || [u.name, u.email, u.phone].join(" ").toLowerCase().includes(q));
+  const paying = S.people.filter(u => u.spent > 0).length;
+  return top("People", S.people.length + " accounts · " + paying + " paying") + srch("people", "Search name, email, phone…") +
+  (list.map(u => `<button class="row" data-u="${esc(u.id)}"><span class="av fd" style="color:var(--gd)">${esc((u.name || "?").charAt(0).toUpperCase())}</span><span class="mid"><b>${esc(u.name || u.email)}</b><small>${esc(u.phone || u.email)} · joined ${ago(u.created)}</small></span><span class="rt"><b>${u.spent ? rs(u.spent) : "—"}</b><small>${u.pages} page${u.pages === 1 ? "" : "s"}</small></span></button>`).join("") || `<div class="empty">No one matches.</div>`);
+}
+function personSheet(id) {
+  const u = (S.people || []).find(x => x.id === id); if (!u) return;
+  const mine = (S.pages || []).filter(p => p.owner.email === u.email);
+  sheet(`<h3>${esc(u.name)}</h3><p class="sub">Joined ${when(u.created)} · spent ${rs(u.spent)}</p>
+  <div class="box"><h4>Contact</h4><div style="font-size:14px">${esc(u.email)}${u.phone ? " · " + esc(u.phone) : ""}</div><div class="acts">${u.phone ? `<a class="bt sm" href="${wa(u.phone)}" target="_blank" rel="noopener">WhatsApp</a><a class="bt sm gh" href="${tel(u.phone)}">Call</a>` : ""}<a class="bt sm gh" href="mailto:${esc(u.email)}">Email</a></div></div>
+  <div class="box"><h4>${u.pages} page${u.pages === 1 ? "" : "s"} · ${u.live} live</h4>${mine.length ? mine.map(p => `<div class="li"><div><b>${IC[p.kind]} ${esc(p.title || "Untitled")}</b><small>${esc(KIND[p.kind])} · ${p.live ? p.views + " opens" : "draft"}</small></div>${p.live ? `<a href="${esc(p.path)}" target="_blank" rel="noopener">Open ↗</a>` : '<span class="tag y">Draft</span>'}</div>`).join("") : `<small style="color:var(--mu)">${S.pages ? "No pages saved." : "Open the Shops tab once to load their pages."}</small>`}</div>`);
+}
+
+// ---------- more ----------
+function more() {
+  const std = matchMedia("(display-mode: standalone)").matches || navigator.standalone;
+  return top("More") + `<div class="card"><div class="lab" style="margin-bottom:4px">Order alerts</div>
+  <div class="li"><div><b>Alerts on this phone</b><small id="alertTxt">Checking…</small></div><button class="sw" id="alertBtn" aria-label="Order alerts"></button></div>
+  <div class="li"><div><b>Send a test alert</b><small>${S.sum ? S.sum.alerts : 0} phone${S.sum && S.sum.alerts === 1 ? "" : "s"} signed up</small></div><button class="bt sm gh" id="testBtn">Test</button></div></div>
+  ${std ? "" : `<div class="card"><div class="lab" style="margin-bottom:8px">Install as an app</div><p style="margin:0 0 6px"><b>Android (Chrome):</b> tap ⋮ → <b>Install app</b> (or Add to Home screen).</p><p style="margin:0"><b>iPhone (Safari):</b> tap Share → <b>Add to Home Screen</b>, then open it from the home screen. iPhone alerts only work from the installed app.</p></div>`}
+  <div class="card"><div class="lab" style="margin-bottom:4px">More tools (full admin)</div>
+  ${[["Prepaid & business QR codes", "Make batches, print sheets"], ["Salespeople", "Codes, PINs, commission, payouts"], ["Coupons & creator codes", "Discounts and creator payouts"], ["Gift shop partners", "Shop keys and renewals"]].map(([a, b]) => `<a class="li" href="/admin" style="text-decoration:none;color:inherit"><div><b>${a}</b><small>${b}</small></div><span style="color:var(--gd)">↗</span></a>`).join("")}</div>
+  <button class="bt w gh" id="logout">Log out of HQ</button>`;
+}
+
+// ---------- alerts ----------
+const pushOK = () => "serviceWorker" in navigator && "PushManager" in window && "Notification" in window;
+async function currentSub() { if (!pushOK()) return null; const r = await navigator.serviceWorker.getRegistration("/hq"); return r ? r.pushManager.getSubscription() : null; }
+async function alertState() {
+  const card = $("#alertCard"), btn = $("#alertBtn"), txt = $("#alertTxt");
+  let sub = null; try { sub = await currentSub(); } catch (e) {}
+  const on = !!sub && Notification.permission === "granted";
+  if (card) card.hidden = on || !pushOK() || Notification.permission === "denied";
+  if (btn && btn.classList.contains("sw")) btn.classList.toggle("on", on);
+  if (txt) txt.textContent = !pushOK() ? (/iPhone|iPad/.test(navigator.userAgent) ? "Install the app to your home screen first, then turn this on." : "This browser can't show alerts.") : Notification.permission === "denied" ? "Blocked. Allow notifications for this site in your phone settings." : on ? "On: you'll get a notification for every paid order." : "Off";
+}
+const u8 = b => { const p = "=".repeat((4 - b.length % 4) % 4), r = atob((b + p).replace(/-/g, "+").replace(/_/g, "/")); return Uint8Array.from([...r].map(c => c.charCodeAt(0))); };
+async function toggleAlerts() {
+  if (!pushOK()) { toast(/iPhone|iPad/.test(navigator.userAgent) ? "Add HQ to your home screen first, then open it from there." : "This browser can't show alerts."); return; }
+  try {
+    const old = await currentSub();
+    if (old && Notification.permission === "granted") { await api({ action: "push-unsub", endpoint: old.endpoint }); await old.unsubscribe(); toast("Alerts off on this phone"); }
+    else {
+      const p = await Notification.requestPermission(); if (p !== "granted") { toast("Notifications weren't allowed."); alertState(); return; }
+      await keepKeyForAlerts();
+      const reg = await navigator.serviceWorker.register("/hq-sw.js", { scope: "/hq" }); await navigator.serviceWorker.ready;
+      const { key } = await api({ action: "push-key" });
+      const sub = (await reg.pushManager.getSubscription()) || await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: u8(key) });
+      await api({ action: "push-sub", sub: sub.toJSON(), label: (navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || "phone" });
+      toast("Alerts on ✓ You'll be notified for every order"); if (S.sum) S.sum.alerts++;
+    }
+  } catch (e) { toast(e.message || "Couldn't turn on alerts."); }
+  alertState(); if (S.tab === "more") draw();
+}
+
+// ---------- sheet ----------
+function sheet(html) { $("#sh").innerHTML = '<div class="gr"></div>' + html; $("#sh").classList.add("on"); $("#ov").classList.add("on"); $("#sh").scrollTop = 0; }
+function closeSheet() { $("#sh").classList.remove("on"); $("#ov").classList.remove("on"); }
+$("#ov").onclick = closeSheet;
+let y0 = null; $("#sh").addEventListener("touchstart", e => { y0 = $("#sh").scrollTop <= 0 ? e.touches[0].clientY : null; }, { passive: true });
+$("#sh").addEventListener("touchend", e => { if (y0 !== null && e.changedTouches[0].clientY - y0 > 90) closeSheet(); y0 = null; });
+
+// ---------- boot ----------
+(async () => {
+  if (!KEY) { $("#login").hidden = false; return; }
+  try { S.sum = await api({ action: "hq-summary" }); keepKeyForAlerts(); try { sessionStorage.ak = KEY; } catch (e) {} start(); } catch (e) { $("#login").hidden = false; $("#lerr").textContent = e.message; }
+})();
+})();
+</script>
+</body></html>
