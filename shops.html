@@ -86,6 +86,15 @@ section.s{padding:96px 0 0}
 .stage .info b{display:block;font:400 22px var(--fd);text-transform:uppercase}
 .stage .info span{color:var(--mu);font-size:14px}
 .stage .btn{margin-top:16px}
+/* showcase */
+.show{display:flex;gap:22px;overflow-x:auto;scroll-snap-type:x mandatory;padding:10px max(22px,calc((100vw - 1180px)/2 + 22px)) 30px;scrollbar-width:none}
+.show::-webkit-scrollbar{display:none}
+.show .it{flex:none;scroll-snap-align:center;text-align:center}
+.show .ph{position:relative;left:auto;top:auto;transform:none;width:276px;height:572px}
+.show .ph iframe{pointer-events:auto}
+.show b{display:block;margin-top:18px;font:400 18px var(--fd);text-transform:uppercase}
+.show span{display:block;color:var(--mu);font-size:13.5px;margin:2px 0 10px}
+.show a{font:700 14px var(--fn);text-decoration:none;border-bottom:2px solid var(--ac)}
 /* features */
 .feats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
 .ft{background:var(--pa);border:1px solid var(--ln);border-radius:24px;padding:24px}
@@ -167,9 +176,9 @@ footer a{color:#fff}
       <div class="cta"><a class="btn ac" href="/shops/studio">Create your page · ₹499</a><a class="btn gh" href="#layouts">See layouts</a><small>One-time payment. No monthly fees, no commission on orders.</small></div>
     </div>
     <div class="phones" aria-label="Example pages">
-      <div class="ph a"><div class="sc"><iframe data-demo="florist" title="Florist example" loading="lazy"></iframe></div><span class="tg">Florist · Botanical</span></div>
+      <div class="ph a"><div class="sc"><iframe data-demo="salon" title="Salon example" loading="lazy"></iframe></div><span class="tg">Salon · Botanical</span></div>
       <div class="ph b"><div class="sc"><iframe data-demo="cafe" title="Café example"></iframe></div><span class="tg">Café · Poster</span></div>
-      <div class="ph c"><div class="sc"><iframe data-demo="photo" title="Photographer example" loading="lazy"></iframe></div><span class="tg">Studio · Bold</span></div>
+      <div class="ph c"><div class="sc"><iframe data-demo="gym" title="Gym example" loading="lazy"></iframe></div><span class="tg">Gym · Bold</span></div>
     </div>
   </div>
 </div>
@@ -184,6 +193,12 @@ footer a{color:#fff}
     <div class="step rv"><div class="n">03</div><h3>Customers scan</h3><p>They see your menu, order on WhatsApp, pay by UPI, follow you on Instagram and leave a Google review.</p></div>
   </div>
 </div></section>
+
+<section class="s" id="examples"><div class="wrap">
+  <div class="sh rv"><div><div class="eyebrow">Live examples</div><h2>Six shops. <em>six</em> stories.</h2></div><p>These are real GetKeepsake pages with sample details. Scroll inside any phone, then open it in the editor to make it yours.</p></div>
+</div>
+  <div class="show" id="show"></div>
+</section>
 
 <section class="s" id="layouts"><div class="wrap">
   <div class="sh rv"><div><div class="eyebrow">Made for your business</div><h2>Pick your business. <em>see</em> your page.</h2></div><p>Four layouts and ten colour themes. Tap your type of business to see how your page could look.</p></div>
@@ -257,7 +272,7 @@ var y=0,dir=1;if(frameElement.dataset.scroll)setInterval(function(){var mx=docum
   document.querySelectorAll("iframe[data-demo]").forEach(f => { if (f.closest(".b")) f.dataset.scroll = "1"; f.srcdoc = DOC; });
 
   // Business type picker
-  const G = KSBiz.GROUPS, C = KSBiz.CATS, Lc = { poster: "cafe", botanical: "florist", bold: "photo", classic: "clinic" };
+  const G = KSBiz.GROUPS, C = KSBiz.CATS, GD = { food: "cafe", fashion: "boutique", beauty: "salon", services: "gym", health: "clinic", stores: "kirana" };
   document.getElementById("groups").innerHTML = G.map(g => {
     const lays = [...new Set(g.cats.map(k => C[k].lay))].map(l => KSBiz.LAYOUTS[l].name).join(" / ");
     return `<div class="grp rv"><b>${KSBiz.esc(g.name)} <span>${lays}</span></b><div>${g.cats.filter(k => k !== "other").map(k => `<button type="button" data-cat="${k}"${k === "cafe" ? ' class="on"' : ""}>${KSBiz.esc(C[k].name)}</button>`).join("")}</div></div>`;
@@ -275,16 +290,21 @@ var y=0,dir=1;if(frameElement.dataset.scroll)setInterval(function(){var mx=docum
   document.getElementById("groups").onclick = e => {
     const b = e.target.closest("[data-cat]"); if (!b) return;
     document.querySelectorAll("[data-cat]").forEach(x => x.classList.toggle("on", x === b));
-    const k = b.dataset.cat, c = C[k], df = KSBiz.defaults(k), demo = JSON.parse(JSON.stringify(KSBizDemos[Lc[c.lay]]));
+    const k = b.dataset.cat, c = C[k], df = KSBiz.defaults(k), demo = JSON.parse(JSON.stringify(KSBizDemos[GD[c.group]]));
     const short = c.name.split(/ & |, | and /)[0];
-    Object.assign(demo, df, { cat: k });
-    if (k !== Lc[c.lay]) { const sm = SAMPLE[c.group]; Object.assign(demo, { t: "Your " + short, tag: sm.tag, menu: sm.menu, ft: Object.assign({}, demo.ft, { on: false }), offer: Object.assign({}, demo.offer, { on: false }) }); }
+    if (demo.cat !== k) { Object.assign(demo, df, { cat: k }); const sm = SAMPLE[c.group]; Object.assign(demo, { t: "Your " + short, tag: sm.tag, menu: sm.menu, ft: Object.assign({}, demo.ft, { on: false }), offer: Object.assign({}, demo.offer, { on: false }) }); }
     stage.contentWindow.postMessage({ ksbiz: demo }, "*");
     document.getElementById("stName").textContent = c.name;
-    document.getElementById("stLay").textContent = KSBiz.LAYOUTS[c.lay].name + " layout · " + KSBiz.THEMES[df.th].name + " colours";
+    document.getElementById("stLay").textContent = KSBiz.LAYOUTS[demo.lay].name + " layout · " + KSBiz.THEMES[demo.th].name + " colours";
     document.getElementById("stGo").href = "/shops/studio?type=" + k;
     if (innerWidth < 980) stage.closest(".stage").scrollIntoView({ behavior: "smooth", block: "start" });
   };
+
+  // Six live examples, each scrollable, each opens in the editor
+  const SH = [["cafe", "Café", "Poster"], ["boutique", "Boutique", "Poster"], ["salon", "Salon & Spa", "Botanical"], ["gym", "Gym", "Bold"], ["clinic", "Clinic", "Classic"], ["kirana", "Kirana store", "Classic"]];
+  const show = document.getElementById("show");
+  show.innerHTML = SH.map(([k, n, l]) => `<div class="it rv"><div class="ph"><div class="sc"><iframe data-demo="${k}" title="${n} example" loading="lazy"></iframe></div></div><b>${n}</b><span>${l} layout · ${KSBiz.esc(KSBiz.THEMES[KSBizDemos[k].th].name)} colours</span><a href="/shops/studio?ex=${k}">Use this design →</a></div>`).join("");
+  show.querySelectorAll("iframe").forEach(f => f.srcdoc = DOC);
 
   // Marquee of business types
   const names = Object.values(C).filter(c => c.label).map(c => c.name.split(/ & /)[0]);

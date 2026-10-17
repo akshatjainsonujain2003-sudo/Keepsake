@@ -583,7 +583,7 @@
       const small = [];
       if (m.ph) small.push(`<a class="bc dk" href="tel:+${m.ph}"><span class="lb">Call us</span><b>+${esc(m.ph.replace(/^91(\d{5})(\d{5})$/, "91 $1 $2"))}</b><span class="go">${ic("arrow", 16)}</span></a>`);
       if (m.wa) small.push(`<a class="bc" href="https://wa.me/${m.wa}" target="_blank" rel="noopener"><span class="lb">WhatsApp</span><b>Chat with us</b><span class="go">${ic("wa", 16)}</span></a>`);
-      if (m.mapsU) small.push(`<a class="bc" href="${esc(m.mapsU)}" target="_blank" rel="noopener"><span class="lb">Visit</span><b>${esc(clip(m.d.addr ? String(m.d.addr).split(",")[0] : "Get directions", 40))}</b><span class="go">${ic("pin", 16)}</span></a>`);
+      if (m.mapsU) small.push(`<a class="bc" href="${esc(m.mapsU)}" target="_blank" rel="noopener"><span class="lb">Visit</span><b>${esc(clip(m.d.addr ? (p => p[0].length < 12 && p[1] ? p[0] + "," + p[1] : p[0])(String(m.d.addr).split(",")) : "Get directions", 40))}</b><span class="go">${ic("pin", 16)}</span></a>`);
       if (m.ig) small.push(`<a class="bc" href="https://instagram.com/${esc(m.ig)}" target="_blank" rel="noopener"><span class="lb">Instagram</span><b>@${esc(m.ig)}</b><span class="go">${ic("ig", 16)}</span></a>`);
       if (m.upi) small.push(`<a class="bc" href="#bz-pay"><span class="lb">Pay</span><b>UPI</b><span class="go">${ic("pay", 16)}</span></a>`);
       const tallImg = m.gal[0] || m.cover;
@@ -602,6 +602,8 @@
     },
     poster(m) {
       const words = plain(m.hl || m.name).trim().split(/\s+/), w1 = words.shift() || "", w2 = words.join(" ");
+      // each big word shrinks to fit the screen width (Archivo Black letters are ~0.78em wide)
+      const fs = w => { const n = Math.max(...String(w).split(/\s+/).map(x => x.length), 1); return `font-size:min(18.5vw,${(94 / (n * 0.8)).toFixed(1)}vw,132px)`; };
       const gridSec = m.menu.length ? `<div class="sec rv" id="bz-menu"><div class="mh"><div><b>${esc(m.menuTitle)}</b>${m.cat ? `<i>${esc(m.cat.split(/[ &,]/)[0].toLowerCase())}</i>` : ""}</div><small>${m.menu.reduce((n, s) => n + s.items.length, 0)} items</small></div>
         ${m.menu.length > 1 ? `<div class="chips">${m.menu.map((s, i) => `<button type="button" data-tab="${i}"${i ? "" : ' class="on"'}>${esc(s.n)}</button>`).join("")}</div>` : ""}
         ${m.menu.map((s, i) => `<div class="grid" data-pane="${i}"${i ? " hidden" : ""}>${s.items.map(x => `<div class="pc"><div class="im">${x.img ? `<img src="${esc(x.img)}" alt="" loading="lazy">` : `<span class="ni">${esc(x.n.charAt(0).toUpperCase())}</span>`}${x.b ? '<span class="bs">Bestseller</span>' : ""}</div><b>${esc(x.n)}</b>${x.d ? `<p>${esc(x.d)}</p>` : "<p></p>"}<div class="rw"><span class="p">${x.p ? "₹" + esc(x.p) : ""}</span>${P.qty(m, x)}</div></div>`).join("")}</div>`).join("")}</div>` : "";
@@ -610,7 +612,7 @@
         <h3>${esc(f.title)}</h3>${f.text ? `<p>${esc(f.text)}</p>` : ""}${f.p ? `<div class="pr"><b>₹${esc(f.p)}</b>${f.was ? `<s>₹${esc(f.was)}</s>` : ""}</div>` : ""}${f.img ? `<img src="${esc(f.img)}" alt="" loading="lazy">` : '<div class="pad"></div>'}</div></div>` : "";
       return `<div class="hero">${m.cover ? `<img class="cv kb" src="${esc(m.cover)}" alt="">` : `<div class="ph"></div>`}<div class="sh"></div>
         <div class="top"><span class="brand">${esc(m.name)}</span><span class="r">${P.bag(m)}${P.share()}</span></div>
-        <div class="big w1">${esc(w1)}</div>${w2 ? `<div class="big w2">${esc(w2)}</div>` : ""}${m.sc ? `<div class="scr">${esc(m.sc)}</div>` : ""}
+        <div class="big w1" style="${fs(w1)}">${esc(w1)}</div>${w2 ? `<div class="big w2" style="${fs(w2)}">${esc(w2)}</div>` : ""}${m.sc ? `<div class="scr">${esc(m.sc)}</div>` : ""}
         <div class="foot1">${P.status(m)}${m.menu.length ? `<a class="btn" href="#bz-menu">${esc(m.menuTitle)} ${ic("arrow", 16)}</a>` : ""}</div></div>
         <div class="wrap"><div class="id">${P.logo(m)}<div><h1>${esc(m.name)}</h1>${m.cat || m.area ? `<div class="cat" style="margin-top:6px">${esc([m.cat, m.area].filter(Boolean).join(" · "))}</div>` : ""}</div></div>${m.tag ? `<p class="tag">${esc(m.tag)}</p>` : ""}
         ${P.acts(m)}${P.offer(m)}${gridSec}</div>${featSec}<div class="wrap">${P.review(m)}${P.gallery(m)}${P.tail(m)}</div>`;
