@@ -70,6 +70,14 @@ module.exports = async (req, res) => {
         code = x.rec || null;
         if (code) { const fr = pay.isFrame(plan) ? (pay.catalog().delivery[plan] || {}).price || 0 : 0; const x = ref.apply(code, amt.rupees, fr); off = x.discount; commission = x.commission; amt.rupees = x.rupees; }
       }
+      // A blank business QR card being set up: remember it so paying links the card to this page.
+      let claim = null;
+      if (b.claim && pay.kindOf(memory) === "biz") {
+        const pc = await require("./_prepaid").get(b.claim);
+        if (!pc || pc.tier !== "biz") return db.reply(res, 400, { error: "That QR card isn't a business card." });
+        if (pc.status !== "new" && pc.memory !== id) return db.reply(res, 409, { error: "That QR card is already linked to another page." });
+        claim = pc.code;
+      }
       let address = null, frame = null;
       if (pay.isFrame(plan)) {
         const a = readAddress(b.address); if (a.error) return db.reply(res, 400, { error: a.error }); address = a.addr;
@@ -90,7 +98,7 @@ module.exports = async (req, res) => {
       const order = await pay.createOrder({ rupees: amt.rupees, receipt: "ks_" + id, notes: { memory: id, plan, customer: user.id } });
       await db.setj("order:" + order.id, {
         memory: id, title: memory.title || "", owner: user.id, name: user.name, email: user.email, phone: user.phone || "",
-        kind: pay.kindOf(memory), plan, frame, upgrade: amt.upgrade, amount: amt.rupees, ...(code ? { ref: code.code, refDiscount: off, commission } : {}), address, status: "created", created: Date.now()
+        kind: pay.kindOf(memory), plan, frame, upgrade: amt.upgrade, amount: amt.rupees, ...(code ? { ref: code.code, refDiscount: off, commission } : {}), address, ...(claim ? { claim } : {}), status: "created", created: Date.now()
       }, "EX", 60 * 60 * 24 * 30);
       return db.reply(res, 200, {
         keyId: pay.keyId(), orderId: order.id, amount: order.amount, currency: order.currency,
@@ -106,7 +114,7 @@ module.exports = async (req, res) => {
       if (!order || order.owner !== user.id) return db.reply(res, 404, { error: "Order not found." });
       if (!pay.verifyPayment(orderId, paymentId, b.razorpay_signature)) return db.reply(res, 400, { error: "Payment could not be verified. If money was taken, contact us with your payment ID." });
       const done = await pay.markPaid(orderId, paymentId);
-      return db.reply(res, 200, { ok: true, id: done.memory, url: (done.kind === "site" ? "/s/" : "/m/") + done.memory, plan: done.plan, amount: done.amount });
+      return db.reply(res, 200, { ok: true, id: done.memory, url: (done.kind === "site" ? "/s/" : done.kind === "biz" ? "/b/" : "/m/") + done.memory, plan: done.plan, amount: done.amount });
     }
 
     return db.reply(res, 400, { error: "Unknown action." });

@@ -16,9 +16,9 @@ module.exports = async (req, res) => {
       const rec = await pp.get(q.code);
       if (q.info) return rec ? db.reply(res, 200, { code: rec.code, tier: rec.tier, status: rec.status, locked: !!rec.locked }) : db.reply(res, 404, { error: "That code isn't valid." });
       if (!rec) return page(res, 404, "This code isn't valid", "Please check the card, or message us and we'll sort it out.");
-      if (rec.status === "claimed" && rec.memory) { res.setHeader("Cache-Control", "no-store"); return res.redirect(302, (rec.kind === "site" ? "/s/" : "/m/") + rec.memory); }
+      if (rec.status === "claimed" && rec.memory) { res.setHeader("Cache-Control", "no-store"); return res.redirect(302, pp.urlFor(rec.kind, rec.memory)); }
       res.setHeader("Cache-Control", "no-store");
-      return res.redirect(302, (rec.tier === "site" ? "/builder" : "/studio") + "?claim=" + rec.code);
+      return res.redirect(302, (rec.tier === "site" ? "/builder" : rec.tier === "biz" ? "/business-studio" : "/studio") + "?claim=" + rec.code);
     }
     if (req.method !== "POST") { res.setHeader("Allow", "GET, POST"); return db.reply(res, 405, { error: "Method not allowed." }); }
     const user = await auth.currentUser(req);

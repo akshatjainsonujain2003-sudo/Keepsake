@@ -1,0 +1,503 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Business Studio · GetKeepsake</title>
+<meta name="description" content="A beautiful page for your shop or café: menu, offers, photos, Google reviews, Instagram and UPI, all behind one QR code.">
+<meta name="theme-color" content="#f6f1e8">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&family=Inter:wght@400;500;600;700&display=swap">
+<link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
+<style>
+:root{--bg:#f6f1e8;--pa:#fffdf8;--ln:#e6dccb;--tx:#1d1712;--mu:#7a6c5d;--ac:#a8692f;--ac2:#c98f4f;--ink:#1d1712;--ok:#2f7a4f;--bad:#b3362f;--fs:'Fraunces',Georgia,serif;--fn:'Inter',system-ui,-apple-system,sans-serif}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.5 var(--fn);-webkit-font-smoothing:antialiased}
+a{color:var(--ac)}
+button,input,select,textarea{font:inherit;color:inherit}
+.top{position:sticky;top:0;z-index:30;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 22px;background:color-mix(in srgb,var(--bg) 86%,transparent);backdrop-filter:blur(14px);border-bottom:1px solid var(--ln)}
+.brand{display:flex;align-items:baseline;gap:10px;text-decoration:none;color:var(--tx)}
+.brand b{font:500 21px var(--fs);letter-spacing:-.01em}
+.brand span{font:600 10.5px var(--fn);letter-spacing:.24em;text-transform:uppercase;color:var(--ac)}
+.nav{display:flex;gap:8px}
+.chip{padding:8px 14px;border-radius:999px;border:1px solid var(--ln);background:var(--pa);color:var(--tx);text-decoration:none;font-weight:600;font-size:13.5px}
+.lay{display:grid;grid-template-columns:minmax(0,1fr) 430px;gap:44px;max-width:1240px;margin:0 auto;padding:34px 22px 120px}
+.intro{margin:6px 0 26px}
+.intro small{font:600 11px var(--fn);letter-spacing:.24em;text-transform:uppercase;color:var(--ac)}
+.intro h1{font:400 clamp(34px,5vw,52px)/1.04 var(--fs);letter-spacing:-.02em;margin:10px 0 12px}
+.intro h1 i{color:var(--ac)}
+.intro p{color:var(--mu);font-size:16.5px;max-width:560px;margin:0}
+.perks{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.perks span{padding:6px 12px;border-radius:999px;background:var(--pa);border:1px solid var(--ln);font-size:13px;font-weight:500}
+.ban{display:flex;gap:12px;align-items:flex-start;padding:14px 18px;border-radius:16px;margin:0 0 18px;background:linear-gradient(135deg,#efd9a8,#c99a55);color:#2a1a0c;font-weight:500;box-shadow:0 12px 30px -16px #6b4a1f}
+.ban.bad{background:#2a1a12;color:#f6ead8}.ban.bad a{color:#f0c47e}
+.ban svg{flex:none;margin-top:2px}
+.sec{background:var(--pa);border:1px solid var(--ln);border-radius:22px;margin-bottom:14px;box-shadow:0 1px 0 #fff inset,0 18px 40px -34px #5a4126}
+.sec>summary{list-style:none;display:flex;align-items:center;gap:14px;padding:18px 22px;cursor:pointer;user-select:none}
+.sec>summary::-webkit-details-marker{display:none}
+.sec .n{width:32px;height:32px;flex:none;border-radius:50%;display:grid;place-items:center;font:500 15px var(--fs);background:var(--bg);border:1px solid var(--ln);color:var(--ac)}
+.sec .ti{flex:1;min-width:0}.sec .ti b{display:block;font:500 20px/1.2 var(--fs)}.sec .ti small{color:var(--mu);font-size:13px}
+.sec .chev{transition:transform .25s;color:var(--mu)}
+.sec[open] .chev{transform:rotate(180deg)}
+.body{padding:2px 22px 22px;display:grid;gap:14px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+label.f{display:grid;gap:6px;font-size:13px;font-weight:600;color:#4a3d31}
+label.f em{font-style:normal;font-weight:400;color:var(--mu)}
+.in{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--ln);background:#fff;outline:none;transition:border .15s,box-shadow .15s;font-size:15px;font-weight:400}
+.in:focus{border-color:var(--ac2);box-shadow:0 0 0 4px color-mix(in srgb,var(--ac2) 18%,transparent)}
+textarea.in{resize:vertical;min-height:74px}
+.in.bad{border-color:var(--bad)}
+.hint{font-size:12.5px;color:var(--mu);font-weight:400;line-height:1.45}
+.err{font-size:12.5px;color:var(--bad);font-weight:500}
+.themes{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.th{border:1.5px solid var(--ln);border-radius:16px;padding:10px;background:#fff;cursor:pointer;text-align:left;transition:.15s}
+.th.on{border-color:var(--tx);box-shadow:0 0 0 3px color-mix(in srgb,var(--tx) 12%,transparent)}
+.th i{display:block;height:58px;border-radius:10px;position:relative;overflow:hidden}
+.th i::before{content:"";position:absolute;left:10px;bottom:10px;width:46%;height:8px;border-radius:4px;background:var(--a)}
+.th i::after{content:"Aa";position:absolute;left:10px;top:7px;font:500 20px var(--fs);color:var(--t)}
+.th b{display:block;margin-top:8px;font-size:13px}
+.acc{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.acc input[type=color]{width:44px;height:36px;padding:0;border:1px solid var(--ln);border-radius:10px;background:#fff;cursor:pointer}
+.lnk{background:none;border:0;padding:0;color:var(--ac);font-weight:600;font-size:13px;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.pics{display:grid;grid-template-columns:120px 1fr;gap:12px}
+.drop{position:relative;border:1.5px dashed #d4c6b0;border-radius:16px;background:#fbf8f2 center/cover no-repeat;min-height:120px;display:grid;place-items:center;text-align:center;color:var(--mu);font-size:12.5px;font-weight:600;cursor:pointer;overflow:hidden;padding:8px}
+.drop.has{border-style:solid;color:transparent}
+.drop.logo{border-radius:50%;aspect-ratio:1;min-height:0}
+.drop input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.drop .x{position:absolute;top:6px;right:6px;width:26px;height:26px;border-radius:50%;border:0;background:#000a;color:#fff;font-size:15px;line-height:1;cursor:pointer;z-index:2}
+.drop.logo .x{top:2px;right:2px}
+.drop.busy::after{content:"Uploading…";position:absolute;inset:0;display:grid;place-items:center;background:#fffc;color:var(--tx)}
+.hrs{display:grid;gap:8px}
+.hr{display:grid;grid-template-columns:52px 1fr 1fr auto;gap:8px;align-items:center}
+.hr b{font-size:13.5px}
+.hr .in{padding:9px 10px}
+.hr.cl .in{opacity:.35;pointer-events:none}
+.tog{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
+.tog input{width:18px;height:18px;accent-color:var(--tx)}
+.sw{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;border-radius:14px;background:var(--bg)}
+.sw b{font-size:14px}
+.switch{position:relative;width:46px;height:28px;flex:none}
+.switch input{position:absolute;inset:0;opacity:0;cursor:pointer;z-index:1;margin:0}
+.switch i{position:absolute;inset:0;border-radius:99px;background:#d8ccba;transition:.2s}
+.switch i::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 2px 6px #0003;transition:.2s}
+.switch input:checked+i{background:var(--tx)}.switch input:checked+i::after{left:21px}
+.mcat{border:1px solid var(--ln);border-radius:18px;padding:14px;background:#fffefb;display:grid;gap:10px}
+.mhead{display:flex;gap:8px;align-items:center}
+.mhead .in{font:500 17px var(--fs)}
+.ib{width:36px;height:36px;flex:none;border-radius:10px;border:1px solid var(--ln);background:#fff;cursor:pointer;display:grid;place-items:center;color:var(--mu);font-size:16px}
+.ib:hover{color:var(--tx);border-color:#cdbfa8}
+.ib:disabled{opacity:.35;cursor:default}
+.item{display:grid;grid-template-columns:1fr 92px;gap:8px;padding:12px;border-radius:14px;background:var(--bg);position:relative}
+.item .in{padding:10px 12px}
+.item .wide{grid-column:1/-1}
+.item .ft{grid-column:1/-1;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.item .ft .acts{display:flex;gap:6px}.item .ft .ib{width:30px;height:30px;font-size:14px}
+.add{display:flex;align-items:center;justify-content:center;gap:8px;padding:11px;border-radius:12px;border:1.5px dashed #d4c6b0;background:none;color:var(--tx);font-weight:600;font-size:13.5px;cursor:pointer;width:100%}
+.add:hover{border-color:var(--ac2);background:#fffaf1}
+.gal{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.gal .drop{min-height:0;aspect-ratio:1}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:15px 24px;border-radius:999px;border:0;background:var(--ink);color:#fff;font-weight:600;font-size:15.5px;cursor:pointer;text-decoration:none;transition:transform .15s,box-shadow .15s;box-shadow:0 14px 30px -14px #1d1712}
+.btn:hover{transform:translateY(-1px)}
+.btn:disabled{opacity:.55;cursor:default;transform:none}
+.btn.gold{background:linear-gradient(135deg,#d9a066,#a8692f);color:#1d1712}
+.btn.ghost{background:#fff;color:var(--tx);border:1px solid var(--ln);box-shadow:none}
+.pub{padding:22px;display:grid;gap:14px}
+.pub h2{margin:0;font:400 30px/1.1 var(--fs)}
+.pub p{margin:0;color:var(--mu)}
+.price{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.price>b{font:500 34px var(--fs)}.price>span{color:var(--mu);font-size:14px}
+#payPanel.ksco{--ink:#1d1712;--muted:#7a6c5d;--line:#e6dccb;--gold:#a8692f;--field:#fff;padding-top:16px;border-top:1px solid var(--ln)}
+#payPanel .ks-title{display:none}
+#payPanel .ks-pay{color:#1d1712;font-weight:700}
+.status{min-height:1.4em;font-size:14px;font-weight:500}
+.status.ok{color:var(--ok)}.status.bad{color:var(--bad)}
+.live{display:grid;grid-template-columns:150px 1fr;gap:18px;align-items:center;padding:18px;border-radius:18px;background:linear-gradient(135deg,#1f1611,#3a2a1e);color:#f4ebde}
+.live .qr{background:#fff;border-radius:14px;padding:10px;aspect-ratio:1}
+.live .qr svg,.live .qr img{width:100%;height:100%;display:block}
+.live b{font:400 24px/1.15 var(--fs);display:block;margin-bottom:6px}
+.live code{display:block;font:600 13px var(--fn);color:#e6b77d;word-break:break-all;margin-bottom:12px}
+.live .row{display:flex;gap:8px;flex-wrap:wrap}
+.live .btn{padding:11px 16px;font-size:13.5px;box-shadow:none}
+.live .btn.ghost{background:#ffffff14;color:#f4ebde;border-color:#ffffff2a}
+/* preview */
+.pv{position:sticky;top:86px;align-self:start}
+.pvh{display:flex;align-items:center;justify-content:space-between;margin:4px 6px 14px}
+.pvh b{font:600 11px var(--fn);letter-spacing:.24em;text-transform:uppercase;color:var(--mu)}
+.pvh span{font-size:12.5px;color:var(--mu);display:flex;align-items:center;gap:6px}
+.pvh span i{width:7px;height:7px;border-radius:50%;background:#4ade80;box-shadow:0 0 0 3px #4ade8033}
+.phone{width:400px;height:min(820px,calc(100vh - 150px));margin:0 auto;border-radius:52px;padding:12px;background:linear-gradient(145deg,#2b2520,#0f0c0a);box-shadow:0 50px 90px -40px #3b2a18,0 0 0 1px #00000040,inset 0 0 0 2px #ffffff14;position:relative}
+.phone::before{content:"";position:absolute;top:22px;left:50%;transform:translateX(-50%);width:104px;height:28px;border-radius:20px;background:#0a0807;z-index:3}
+.phone iframe{width:100%;height:100%;border:0;border-radius:41px;background:#1f1611;display:block}
+.fab{display:none}
+.ov{position:fixed;inset:0;z-index:60;background:#0d0a08;display:none;flex-direction:column}
+.ov.open{display:flex}
+.ov iframe{flex:1;border:0;width:100%}
+.ov .bar{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:#0d0a08;color:#f4ebde;font-weight:600;font-size:14px}
+.ov .bar button{padding:9px 16px;border-radius:999px;border:0;background:#f4ebde;color:#1d1712;font-weight:700;cursor:pointer}
+.savebar{position:sticky;bottom:16px;z-index:20;display:flex;align-items:center;gap:14px;justify-content:space-between;margin-top:18px;padding:12px 12px 12px 20px;border-radius:999px;background:#1d1712f2;color:#f4ebde;backdrop-filter:blur(12px);box-shadow:0 24px 50px -20px #1d1712}
+.savebar .s{font-size:13.5px;opacity:.85;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.savebar .btn{padding:12px 22px;font-size:14.5px;box-shadow:none}
+@media (max-width:1060px){.lay{grid-template-columns:minmax(0,1fr);max-width:720px}.pv{display:none}
+ .fab{display:inline-flex;position:fixed;right:16px;bottom:88px;z-index:25;padding:12px 18px;border-radius:999px;border:0;background:#fff;color:var(--tx);font-weight:700;box-shadow:0 14px 30px -10px #0005;gap:8px;align-items:center;cursor:pointer}}
+@media (max-width:560px){.top{padding:10px 16px}.brand span{display:none}.lay{padding:22px 16px 120px}.body{padding:2px 16px 18px}.sec>summary{padding:16px}
+ .g2{grid-template-columns:1fr}.themes{grid-template-columns:repeat(2,1fr)}.pics{grid-template-columns:96px 1fr}.gal{grid-template-columns:repeat(3,1fr)}
+ .hr{grid-template-columns:40px 1fr 1fr auto;gap:6px}.hr .in{padding:8px 6px;font-size:14px}.tog span{display:none}
+ .live{grid-template-columns:1fr}.live .qr{max-width:180px}.savebar{border-radius:20px}}
+</style>
+<script src="/assets/biz.v1.js"></script>
+<script src="/assets/ks-checkout.v8.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js" defer></script>
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="/"><b>GetKeepsake</b><span>Business Studio</span></a>
+  <nav class="nav" id="nav"></nav>
+</header>
+
+<div class="lay">
+<main>
+  <div class="intro" id="intro">
+    <small>For shops, cafés &amp; studios</small>
+    <h1>Your shop, <i>beautifully</i> online.</h1>
+    <p>One QR on your counter opens a page with your menu, today's offer, photos, Google reviews, Instagram and UPI. Fill it in below and watch it come alive.</p>
+    <div class="perks"><span>No app needed</span><span>Edit any time</span><span>₹<b id="priceTop">499</b> one-time</span></div>
+  </div>
+  <div id="banner"></div>
+
+  <details class="sec" open data-s="basics"><summary><span class="n">1</span><span class="ti"><b>Your business</b><small>Name, what you do and where</small></span><svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></summary>
+    <div class="body">
+      <label class="f">Business name<input class="in" data-k="t" maxlength="60" placeholder="e.g. Brew &amp; Bloom Café" autocomplete="organization"></label>
+      <div class="g2">
+        <label class="f">Category<select class="in" data-k="cat" id="cat"></select></label>
+        <label class="f" id="catxF" hidden>Your category<input class="in" data-k="catx" maxlength="30" placeholder="e.g. Tattoo Studio"></label>
+        <label class="f">Area or city<input class="in" data-k="area" maxlength="40" placeholder="e.g. C-Scheme, Jaipur"></label>
+      </div>
+      <label class="f"><span>Tagline <em>(one line about you)</em></span><textarea class="in" data-k="tag" maxlength="140" rows="2" placeholder="Slow coffee, warm bakes and a garden corner made for long conversations."></textarea></label>
+    </div>
+  </details>
+
+  <details class="sec" data-s="look"><summary><span class="n">2</span><span class="ti"><b>Look &amp; photos</b><small>Theme, logo and cover photo</small></span><svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></summary>
+    <div class="body">
+      <div class="themes" id="themes"></div>
+      <div class="acc"><span class="hint" style="font-weight:600;color:#4a3d31">Brand colour</span><input type="color" id="accent" aria-label="Brand colour"><button type="button" class="lnk" id="accReset">Use theme colour</button></div>
+      <div class="pics">
+        <div><div class="drop logo" id="logoDrop"><span>Add logo</span><input type="file" accept="image/*" aria-label="Upload logo"></div></div>
+        <div><div class="drop" id="coverDrop" style="min-height:120px;height:100%"><span>Add a cover photo<br><span style="font-weight:400">your storefront, counter or bestseller</span></span><input type="file" accept="image/*" aria-label="Upload cover photo"></div></div>
+      </div>
+      <p class="hint" id="picNote">Tip: a bright, wide photo looks best on top. No logo? We'll use your first letter in your theme colour.</p>
+    </div>
+  </details>
+
+  <details class="sec" data-s="links"><summary><span class="n">3</span><span class="ti"><b>Contact &amp; links</b><small>Call, WhatsApp, Instagram, Google</small></span><svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></summary>
+    <div class="body">
+      <div class="g2">
+        <label class="f">Phone<input class="in" data-k="phone" data-v="phone" inputmode="tel" maxlength="16" placeholder="98765 43210" autocomplete="tel"></label>
+        <label class="f"><span>WhatsApp <em>(if different)</em></span><input class="in" data-k="wa" data-v="phone" inputmode="tel" maxlength="16" placeholder="Same as phone"></label>
+      </div>
+      <label class="f">Instagram<input class="in" data-k="ig" maxlength="40" placeholder="@yourshop" autocapitalize="off" autocomplete="off"></label>
+      <label class="f">Google review link<input class="in" data-k="review" data-v="url" inputmode="url" maxlength="300" placeholder="https://g.page/r/…/review" autocapitalize="off">
+        <span class="hint">On Google Maps, open your business → <b>Ask for reviews</b> (or <b>Share review form</b>) → copy the link.</span></label>
+      <label class="f">Address<textarea class="in" data-k="addr" maxlength="200" rows="2" placeholder="12 Prithviraj Rd, C-Scheme, Jaipur 302001"></textarea></label>
+      <label class="f"><span>Google Maps link <em>(optional)</em></span><input class="in" data-k="maps" data-v="url" inputmode="url" maxlength="300" placeholder="https://maps.app.goo.gl/…" autocapitalize="off">
+        <span class="hint">Without it, Directions searches your name and address on Google Maps.</span></label>
+    </div>
+  </details>
+
+  <details class="sec" data-s="hours"><summary><span class="n">4</span><span class="ti"><b>Opening hours</b><small>Shows "Open now" live on your page</small></span><svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></summary>
+    <div class="body">
+      <div class="sw"><b>Show opening hours</b><label class="switch"><input type="checkbox" id="hrsOn" aria-label="Show opening hours"><i></i></label></div>
+      <div class="hrs" id="hrs"></div>
+      <div><button type="button" class="lnk" id="hrsCopy">Copy Monday's hours to every day</button></div>
+    </div>
+  </details>
+
+  <details class="sec" data-s="offer"><summary><span class="n">5</span><span class="ti"><b>Offer of the day</b><small>A ticket at the top of your page</small></span><svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></summary>
+    <div class="body">
+      <div class="sw"><b>Show an offer</b><label class="switch"><input type="checkbox" id="offOn" aria-label="Show an offer"><i></i></label></div>
+      <div id="offF" class="body" style="padding:0">
+        <div class="g2">
+          <label class="f">Label<input class="in" data-k="offer.label" maxlength="24" placeholder="Today's offer"></label>
+          <label class="f"><span>Valid till <em>(optional)</em></span><input class="in" data-k="offer.till" maxlength="30" placeholder="31 Oct"></label>
+        </div>
+        <label class="f">Offer<input class="in" data-k="offer.title" maxlength="60" placeholder="Buy 1 Get 1 on Cold Brews"></label>
+        <label class="f"><span>Details <em>(optional)</em></span><textarea class="in" data-k="offer.text" maxlength="160" rows="2" placeholder="Every weekday 3–6 pm. Show this page at the counter."></textarea></label>
+      </div>
+    </div>
+  </details>
+
+  <details class="sec" data-s="menu"><summary><span class="n">6</span><span class="ti"><b>Menu or price list</b><small id="menuSub">Sections, items and prices</small></span><svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></summary>
+    <div class="body">
+      <label class="f">Heading<input class="in" data-k="menuTitle" maxlength="24" placeholder="Menu, Services, Price list…"></label>
+      <div id="menu" style="display:grid;gap:12px"></div>
+      <button type="button" class="add" id="addCat">+ Add a section</button>
+    </div>
+  </details>
+
+  <details class="sec" data-s="gal"><summary><span class="n">7</span><span class="ti"><b>Photo gallery</b><small>Up to 10 photos people can swipe</small></span><svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></summary>
+    <div class="body">
+      <label class="f">Heading<input class="in" data-k="galTitle" maxlength="24" placeholder="Inside, Our work, Fresh today…"></label>
+      <div class="gal" id="gal"></div>
+    </div>
+  </details>
+
+  <details class="sec" data-s="upi"><summary><span class="n">8</span><span class="ti"><b>UPI payments</b><small>A Pay button that opens any UPI app</small></span><svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></summary>
+    <div class="body">
+      <label class="f">UPI ID<input class="in" data-k="upi.id" data-v="upi" maxlength="80" placeholder="yourshop@okaxis" autocapitalize="off" autocomplete="off"></label>
+      <label class="f"><span>Name shown when paying <em>(optional)</em></span><input class="in" data-k="upi.name" maxlength="40" placeholder="Brew &amp; Bloom"></label>
+      <p class="hint">Money goes straight to your bank through your own UPI ID. GetKeepsake never touches it. Without a UPI ID, the top button becomes "Review" instead.</p>
+    </div>
+  </details>
+
+  <section class="sec" id="publish">
+    <div class="pub">
+      <h2 id="pubT">Ready to go live?</h2>
+      <p id="pubP">Save your page, then activate it once. After that you can change your menu, offers and photos whenever you like.</p>
+      <div class="price"><b>₹<span id="price">499</span></b><span>one-time · no monthly fees</span></div>
+      <div><button type="button" class="btn" id="saveBtn">Save my page</button></div>
+      <div class="status" id="status" role="status"></div>
+      <div id="payPanel" hidden></div>
+      <div id="livePanel" hidden></div>
+    </div>
+  </section>
+
+  <div class="savebar" id="savebar"><span class="s" id="saveS">Your changes are kept on this device until you save.</span><button type="button" class="btn gold" id="saveBtn2">Save</button></div>
+</main>
+
+<aside class="pv" aria-label="Live preview">
+  <div class="pvh"><b>Live preview</b><span><i></i>updates as you type</span></div>
+  <div class="phone"><iframe id="pvFrame" title="Preview of your page"></iframe></div>
+</aside>
+</div>
+
+<button type="button" class="fab" id="fab"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="2.5" width="12" height="19" rx="3"/><path d="M11 18.5h2"/></svg>Preview</button>
+<div class="ov" id="ov" role="dialog" aria-label="Preview"><div class="bar"><span>Preview</span><button type="button" id="ovClose">Back to editing</button></div><iframe id="ovFrame" title="Preview of your page"></iframe></div>
+
+<script>
+(() => {
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+const esc = KSBiz.esc, DRAFT = "ks-biz-draft", CKEY = "ks-bizclaim", DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+const WA = '<a href="https://wa.me/916377547759">+91 63775 47759</a>';
+let D = null, USER = null, EDIT_ID = null, ACTIVE = false, CLAIM = null, CHECKOUT = null, dirty = false;
+
+const status = (t, cls) => { const s = $("#status"); s.textContent = t || ""; s.className = "status" + (cls ? " " + cls : ""); if (t) $("#saveS").textContent = t; };
+const get = (o, p) => p.split(".").reduce((x, k) => x == null ? x : x[k], o);
+const set = (o, p, v) => { const ks = p.split("."), last = ks.pop(); const t = ks.reduce((x, k) => (x[k] = x[k] || {}), o); t[last] = v; };
+function save() { try { localStorage.setItem(DRAFT, JSON.stringify({ d: D, id: EDIT_ID, at: Date.now() })); } catch (e) {} }
+function changed() { dirty = true; save(); preview(); $("#saveS").textContent = EDIT_ID ? (ACTIVE ? "Unsaved changes. Save to update your live page." : "Unsaved changes.") : "Your changes are kept on this device until you save."; }
+
+// ---------- live preview (an iframe, so the page sizes itself like a real phone) ----------
+const FRAME_DOC = `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&family=Inter:wght@400;500;600;700&display=swap">
+<style>html,body{margin:0;min-height:100%;scrollbar-width:none}.ph .bz .top{top:46px}body::-webkit-scrollbar{display:none}<\/style><script src="/assets/biz.v1.js"><\/script></head><body><main id="b"></main>
+<script>try{if(frameElement.id==="pvFrame")document.documentElement.className="ph"}catch(e){}addEventListener("message",e=>{if(e.source!==parent)return;const d=e.data&&e.data.ksbiz;if(!d)return;const b=document.getElementById("b"),y=scrollY;KSBiz.render(b,d,{preview:true});document.body.style.background=getComputedStyle(b).getPropertyValue("--bg");scrollTo(0,y)});parent.postMessage({ksbizReady:1},"*")<\/script></body></html>`;
+const frames = [$("#pvFrame"), $("#ovFrame")];
+frames.forEach(f => f.srcdoc = FRAME_DOC);
+addEventListener("message", e => { if (e.data && e.data.ksbizReady) preview(); });
+let pvT = 0;
+function preview() { clearTimeout(pvT); pvT = setTimeout(() => frames.forEach(f => { try { f.contentWindow.postMessage({ ksbiz: JSON.parse(JSON.stringify(D)) }, "*"); } catch (e) {} }), 80); }
+$("#fab").onclick = () => { $("#ov").classList.add("open"); document.body.style.overflow = "hidden"; preview(); };
+$("#ovClose").onclick = () => { $("#ov").classList.remove("open"); document.body.style.overflow = ""; };
+
+// ---------- simple fields ----------
+const CHECKS = {
+  phone: v => !v || /^\+?[\d\s-]{10,16}$/.test(v) && v.replace(/\D/g, "").length >= 10 ? "" : "Enter a 10-digit mobile number.",
+  url: v => !v || /^https:\/\/[^\s"'<>]+$/i.test(v) ? "" : "Paste the full link, starting with https://",
+  upi: v => !v || /^[\w.\-]{2,64}@[A-Za-z]{2,64}$/.test(v) ? "" : "A UPI ID looks like name@bank, e.g. yourshop@okaxis"
+};
+function check(i) {
+  const fn = CHECKS[i.dataset.v]; if (!fn) return "";
+  const m = fn(i.value.trim()); i.classList.toggle("bad", !!m);
+  let e = i.parentNode.querySelector(".err"); if (m && !e) { e = document.createElement("span"); e.className = "err"; i.insertAdjacentElement("afterend", e); } if (e) { e.textContent = m; e.hidden = !m; }
+  return m;
+}
+function fields() {
+  $("#cat").innerHTML = Object.entries(KSBiz.CATS).map(([k, v]) => `<option value="${k}">${esc(v || "Something else")}</option>`).join("");
+  $$("[data-k]").forEach(i => {
+    i.value = get(D, i.dataset.k) || "";
+    i.oninput = () => { let v = i.value; if (i.dataset.k === "ig") v = v.replace(/^.*instagram\.com\//i, "").replace(/[/?].*$/, ""); set(D, i.dataset.k, v); if (i.dataset.k === "cat") $("#catxF").hidden = v !== "other"; changed(); };
+    if (i.dataset.v) i.onblur = () => check(i);
+  });
+  $("#catxF").hidden = D.cat !== "other";
+}
+
+// ---------- theme, accent, photos ----------
+function themes() {
+  $("#themes").innerHTML = Object.entries(KSBiz.THEMES).map(([k, t]) => `<button type="button" class="th${D.th === k ? " on" : ""}" data-th="${k}"><i style="background:${t.bg};--a:${t.ac};--t:${t.tx}"></i><b>${esc(t.name)}</b></button>`).join("");
+  $("#accent").value = /^#[0-9a-f]{6}$/i.test(D.ac || "") ? D.ac : (KSBiz.THEMES[D.th] || KSBiz.THEMES.espresso).ac;
+  $("#accReset").hidden = !D.ac;
+}
+$("#themes").onclick = e => { const b = e.target.closest("[data-th]"); if (!b) return; D.th = b.dataset.th; D.ac = ""; themes(); changed(); };
+$("#accent").oninput = e => { D.ac = e.target.value; $("#accReset").hidden = false; changed(); };
+$("#accReset").onclick = () => { D.ac = ""; themes(); changed(); };
+
+function needLogin() {
+  if (USER) return false;
+  save(); status("Log in first to add photos. Your page so far is kept.", "bad");
+  setTimeout(() => location.href = "/account?next=" + encodeURIComponent("/business-studio?resume=1"), 900);
+  return true;
+}
+async function upload(f, box) {
+  box.classList.add("busy");
+  try { return await KSKeepsake.uploadPhoto(f); }
+  catch (x) { $("#picNote").textContent = x.message || "Couldn't upload that photo."; status(x.message || "Couldn't upload that photo.", "bad"); return ""; }
+  finally { box.classList.remove("busy"); }
+}
+function photo(box, key) {
+  const v = D[key];
+  box.classList.toggle("has", !!v); box.style.backgroundImage = v ? `url("${v.replace(/"/g, "")}")` : "";
+  let x = box.querySelector(".x"); if (v && !x) { x = document.createElement("button"); x.type = "button"; x.className = "x"; x.textContent = "×"; x.setAttribute("aria-label", "Remove photo"); box.appendChild(x); x.onclick = e => { e.preventDefault(); e.stopPropagation(); D[key] = ""; photo(box, key); changed(); }; }
+  if (!v && x) x.remove();
+  const inp = box.querySelector("input");
+  inp.onclick = e => { if (needLogin()) e.preventDefault(); };
+  inp.onchange = async () => { const f = inp.files[0]; inp.value = ""; if (!f) return; const u = await upload(f, box); if (u) { D[key] = u; photo(box, key); changed(); } };
+}
+function gallery() {
+  const g = D.gal = Array.isArray(D.gal) ? D.gal : [];
+  $("#gal").innerHTML = g.map((u, i) => `<div class="drop has" style="background-image:url('${esc(u)}')"><button type="button" class="x" data-rm="${i}" aria-label="Remove photo">×</button></div>`).join("")
+    + (g.length < 10 ? `<label class="drop"><span>+ Add photos</span><input type="file" accept="image/*" multiple aria-label="Add gallery photos"></label>` : "");
+  const inp = $("#gal input");
+  if (inp) {
+    inp.onclick = e => { if (needLogin()) e.preventDefault(); };
+    inp.onchange = async () => { const fs = [...inp.files].slice(0, 10 - g.length); inp.value = ""; const box = inp.parentNode; for (const f of fs) { const u = await upload(f, box); if (u) { g.push(u); changed(); } } gallery(); };
+  }
+}
+$("#gal").onclick = e => { const b = e.target.closest("[data-rm]"); if (!b) return; D.gal.splice(+b.dataset.rm, 1); gallery(); changed(); };
+
+// ---------- hours ----------
+function hours() {
+  const on = !!(D.hours && Array.isArray(D.hours.d)); $("#hrsOn").checked = on; $("#hrs").hidden = $("#hrsCopy").parentNode.hidden = !on;
+  if (!on) return;
+  $("#hrs").innerHTML = D.hours.d.map((d, i) => `<div class="hr${d[2] ? " cl" : ""}" data-i="${i}"><b>${DAYS[i]}</b><input class="in" type="time" data-h="0" value="${esc(d[0])}" aria-label="${DAYS[i]} opens"><input class="in" type="time" data-h="1" value="${esc(d[1])}" aria-label="${DAYS[i]} closes"><label class="tog"><input type="checkbox" data-h="2"${d[2] ? " checked" : ""}><span>Closed</span></label></div>`).join("");
+}
+$("#hrs").oninput = $("#hrs").onchange = e => { const r = e.target.closest(".hr"), h = e.target.dataset.h; if (!r || h == null) return; const d = D.hours.d[+r.dataset.i]; d[+h] = h === "2" ? e.target.checked : e.target.value; r.classList.toggle("cl", !!d[2]); changed(); };
+$("#hrsOn").onchange = e => { D.hours = e.target.checked ? { d: KSBiz.blank().hours.d } : null; hours(); changed(); };
+$("#hrsCopy").onclick = () => { const m = D.hours.d[0]; D.hours.d = D.hours.d.map(() => m.slice()); hours(); changed(); };
+
+// ---------- offer ----------
+function offer() { D.offer = D.offer || KSBiz.blank().offer; $("#offOn").checked = !!D.offer.on; $("#offF").hidden = !D.offer.on; }
+$("#offOn").onchange = e => { D.offer.on = e.target.checked; offer(); changed(); if (e.target.checked) $('[data-k="offer.title"]').focus(); };
+
+// ---------- menu ----------
+function menu() {
+  D.menu = Array.isArray(D.menu) ? D.menu : [];
+  const n = D.menu.reduce((a, s) => a + s.items.filter(i => i.n).length, 0); $("#menuSub").textContent = n ? n + " item" + (n > 1 ? "s" : "") + " in " + D.menu.length + " section" + (D.menu.length > 1 ? "s" : "") : "Sections, items and prices";
+  $("#menu").innerHTML = D.menu.map((s, ci) => `<div class="mcat" data-c="${ci}">
+    <div class="mhead"><input class="in" data-m="n" value="${esc(s.n)}" maxlength="24" placeholder="Section, e.g. Coffee" aria-label="Section name">
+      <button type="button" class="ib" data-a="cup" ${ci ? "" : "disabled"} aria-label="Move section up">↑</button><button type="button" class="ib" data-a="cdn" ${ci < D.menu.length - 1 ? "" : "disabled"} aria-label="Move section down">↓</button><button type="button" class="ib" data-a="crm" aria-label="Remove section">×</button></div>
+    ${s.items.map((it, ii) => `<div class="item" data-i="${ii}"><input class="in" data-m="n" value="${esc(it.n)}" maxlength="50" placeholder="Item name" aria-label="Item name"><input class="in" data-m="p" value="${esc(it.p)}" maxlength="12" inputmode="decimal" placeholder="₹ Price" aria-label="Price">
+      <input class="in wide" data-m="d" value="${esc(it.d)}" maxlength="140" placeholder="Short description (optional)" aria-label="Description">
+      <div class="ft"><label class="tog"><input type="checkbox" data-m="b"${it.b ? " checked" : ""}> Bestseller</label><span class="acts"><button type="button" class="ib" data-a="up" ${ii ? "" : "disabled"} aria-label="Move up">↑</button><button type="button" class="ib" data-a="dn" ${ii < s.items.length - 1 ? "" : "disabled"} aria-label="Move down">↓</button><button type="button" class="ib" data-a="rm" aria-label="Remove item">×</button></span></div></div>`).join("")}
+    <button type="button" class="add" data-a="add">+ Add item</button></div>`).join("");
+}
+const mv = (a, i, j) => { if (j < 0 || j >= a.length) return; [a[i], a[j]] = [a[j], a[i]]; };
+$("#menu").oninput = $("#menu").onchange = e => {
+  const k = e.target.dataset.m; if (!k) return; const c = D.menu[+e.target.closest(".mcat").dataset.c], it = e.target.closest(".item");
+  const v = k === "b" ? e.target.checked : k === "p" ? e.target.value.replace(/[^\d.,–\- ]/g, "") : e.target.value;
+  if (k === "p" && e.target.value !== v) e.target.value = v;
+  if (it) c.items[+it.dataset.i][k] = v; else c[k] = v; changed();
+};
+$("#menu").onclick = e => {
+  const b = e.target.closest("[data-a]"); if (!b) return; const ci = +b.closest(".mcat").dataset.c, c = D.menu[ci], it = b.closest(".item"), ii = it ? +it.dataset.i : -1, a = b.dataset.a;
+  if (a === "add") { c.items.push({ n: "", p: "", d: "", b: false }); menu(); changed(); const ins = $$(`.mcat[data-c="${ci}"] .item [data-m="n"]`); ins[ins.length - 1].focus(); return; }
+  if (a === "rm") { if (c.items.length === 1) c.items[0] = { n: "", p: "", d: "", b: false }; else c.items.splice(ii, 1); }
+  if (a === "up") mv(c.items, ii, ii - 1); if (a === "dn") mv(c.items, ii, ii + 1);
+  if (a === "crm") { if ((c.items.some(i => i.n) && !confirm("Remove the whole \"" + (c.n || "section") + "\" section?"))) return; D.menu.splice(ci, 1); }
+  if (a === "cup") mv(D.menu, ci, ci - 1); if (a === "cdn") mv(D.menu, ci, ci + 1);
+  menu(); changed();
+};
+$("#addCat").onclick = () => { D.menu.push({ n: "", items: [{ n: "", p: "", d: "", b: false }] }); menu(); changed(); const ins = $$(".mcat .mhead .in"); ins[ins.length - 1].focus(); };
+
+function all() { fields(); themes(); photo($("#logoDrop"), "logo"); photo($("#coverDrop"), "cover"); gallery(); hours(); offer(); menu(); preview(); }
+
+// ---------- QR card (scanned from a blank Keepsake business QR) ----------
+function banner(html, bad) { $("#banner").innerHTML = `<div class="ban${bad ? " bad" : ""}" role="status"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><path d="M14 14h3v3h-3zM20 14v.01M14 20h.01M17 20h3v-3"/></svg><div>${html}</div></div>`; }
+async function claimInit() {
+  const u = new URL(location.href); let code = (u.searchParams.get("claim") || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+  if (code) { try { localStorage.setItem(CKEY, JSON.stringify({ code, at: Date.now() })); } catch (e) {} u.searchParams.delete("claim"); history.replaceState(null, "", u.pathname + u.search + u.hash); }
+  else { try { const r = JSON.parse(localStorage.getItem(CKEY) || "null"); if (r && Date.now() - r.at < 30 * 864e5) code = r.code; } catch (e) {} }
+  if (!code) return null;
+  const forget = () => { try { localStorage.removeItem(CKEY); } catch (e) {} };
+  let info = null; try { const r = await fetch("/api/qr?info=1&code=" + encodeURIComponent(code), { cache: "no-store" }); if (r.ok) info = await r.json(); } catch (e) {}
+  if (!info) { forget(); banner("That QR card code isn't valid. Please check the card, or WhatsApp us on " + WA + ".", true); return null; }
+  if (info.tier !== "biz") { forget(); banner("This QR card is for a love-story keepsake, not a business page. <a href=\"/k/" + esc(info.code) + "\">Open it here</a>.", true); return null; }
+  if (info.status !== "new") { forget(); banner("This QR card is already linked to a business page. If that wasn't you, WhatsApp us on " + WA + ".", true); return null; }
+  banner(`QR card <b>#${esc(info.code)}</b> is ready for your shop. Fill in your page below, then activate it once and this card will open it for every customer who scans.`);
+  return info;
+}
+
+// ---------- save, pay, live ----------
+async function saveBiz() {
+  if (!(D.t || "").trim()) { $('[data-s="basics"]').open = true; const i = $('[data-k="t"]'); i.focus(); i.classList.add("bad"); status("Add your business name first.", "bad"); return; }
+  $('[data-k="t"]').classList.remove("bad");
+  for (const i of $$("[data-v]")) { if (check(i)) { i.closest("details").open = true; i.focus(); status(i.parentNode.querySelector(".err").textContent, "bad"); return; } }
+  if (!USER) { save(); status("Log in to save your page. Everything you've typed is kept.", "ok"); setTimeout(() => location.href = "/account?next=" + encodeURIComponent("/business-studio?resume=1"), 700); return; }
+  const bs = [$("#saveBtn"), $("#saveBtn2")]; bs.forEach(b => b.disabled = true); status("Saving…");
+  try {
+    D.biz = 1; D.ig = String(D.ig || "").replace(/^@/, "").trim();
+    const body = { data: D, kind: "biz" }; if (EDIT_ID) body.id = EDIT_ID;
+    const r = await fetch("/api/customer-memories", { method: EDIT_ID ? "PUT" : "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(j.error || "Could not save your page.");
+    setEdit(j.id); dirty = false; ACTIVE = j.active; try { localStorage.removeItem(DRAFT); } catch (e) {}
+    if (j.active) { status("Saved. Your live page is updated.", "ok"); live(j.url); }
+    else { status("Saved. Activate it below to go live.", "ok"); checkout(); }
+  } catch (e) { status(e.message, "bad"); } finally { bs.forEach(b => b.disabled = false); }
+}
+$("#saveBtn").onclick = $("#saveBtn2").onclick = saveBiz;
+function setEdit(id) { EDIT_ID = id; const u = new URL(location.href); u.searchParams.set("edit", id); u.searchParams.delete("resume"); history.replaceState(null, "", u.pathname + u.search + u.hash); }
+function checkout() {
+  $("#pubT").textContent = "Activate your page"; $("#pubP").textContent = CLAIM ? "Pay once and your QR card #" + CLAIM.code + " will open this page for good." : "Pay once and your page goes live with its own link and QR code.";
+  if (!CHECKOUT) CHECKOUT = KSCheckout.mount($("#payPanel"), { kind: "biz", getId: () => EDIT_ID, claim: () => CLAIM && CLAIM.code, customer: () => USER,
+    onPaid: v => { const had = CLAIM; ACTIVE = true; CLAIM = null; try { localStorage.removeItem(CKEY); } catch (e) {} $("#banner").innerHTML = ""; live(v.url, had); status(had ? "Paid. Your page is live and your QR card now opens it." : "Paid. Your page is live.", "ok"); } });
+  $("#payPanel").hidden = false; $("#livePanel").hidden = true;
+  CHECKOUT.open("activate").then(() => $("#publish").scrollIntoView({ behavior: "smooth", block: "start" }));
+}
+function live(path, card) {
+  const url = location.origin + path;
+  $("#pubT").textContent = "Your page is live"; $("#pubP").textContent = "Edit anything above and tap Save. Changes show up on your page straight away.";
+  $(".price").hidden = true; $("#saveBtn").textContent = "Save changes"; $("#payPanel").hidden = true;
+  const p = $("#livePanel"); p.hidden = false;
+  p.innerHTML = `<div class="live"><div class="qr" id="qr"></div><div><b>${card ? "Your QR card #" + esc(card.code) + " is linked" : "Print this QR for your counter"}</b><code>${esc(url)}</code><div class="row"><a class="btn gold" href="${esc(path)}" target="_blank" rel="noopener">Open page</a><button type="button" class="btn ghost" id="cpy">Copy link</button><button type="button" class="btn ghost" id="dl">Download QR</button></div></div></div>`;
+  $("#cpy").onclick = async () => { try { await navigator.clipboard.writeText(url); $("#cpy").textContent = "Copied"; } catch (e) {} };
+  drawQR(url);
+}
+function drawQR(url) {
+  const box = $("#qr"); if (!box) return;
+  if (!window.qrcode) { setTimeout(() => drawQR(url), 400); return; }
+  const q = qrcode(0, "M"); q.addData(url); q.make(); box.innerHTML = q.createSvgTag({ cellSize: 6, margin: 2, scalable: true });
+  $("#dl").onclick = () => { const c = document.createElement("canvas"), n = q.getModuleCount(), s = 16, m = 4; c.width = c.height = (n + m * 2) * s; const x = c.getContext("2d"); x.fillStyle = "#fff"; x.fillRect(0, 0, c.width, c.height); x.fillStyle = "#000"; for (let r = 0; r < n; r++) for (let k = 0; k < n; k++) if (q.isDark(r, k)) x.fillRect((k + m) * s, (r + m) * s, s, s); const a = document.createElement("a"); a.href = c.toDataURL("image/png"); a.download = (D.t || "shop").replace(/[^\w ]+/g, "").trim().replace(/\s+/g, "-") + "-QR.png"; a.click(); };
+}
+addEventListener("beforeunload", e => { if (dirty && EDIT_ID) { e.preventDefault(); e.returnValue = ""; } });
+
+// ---------- start ----------
+(async () => {
+  try { const r = await fetch("/api/customer-auth", { cache: "no-store" }); const j = await r.json(); USER = j.user || null; } catch (e) {}
+  $("#nav").innerHTML = USER ? '<a class="chip" href="/dashboard">My pages</a>' : '<a class="chip" href="/account?next=%2Fbusiness-studio%3Fresume%3D1">Log in</a>';
+  try { const c = await KSCheckout.catalog(); const p = c && c.products && c.products.biz; if (p) $("#price").textContent = $("#priceTop").textContent = String(p.price); } catch (e) {}
+  CLAIM = await claimInit();
+  const q = new URLSearchParams(location.search), id = q.get("edit");
+  let dr = null; try { dr = JSON.parse(localStorage.getItem(DRAFT) || "null"); } catch (e) {}
+  if (id && USER) {
+    try {
+      const r = await fetch("/api/customer-memories?id=" + encodeURIComponent(id), { cache: "no-store" }); const j = await r.json();
+      if (!r.ok || j.kind !== "biz") throw new Error(j.error || "Page not found.");
+      D = Object.assign(KSBiz.blank(), j.data); if (j.data.hours === null) D.hours = null;
+      if (dr && dr.id === id && dr.d) { D = dr.d; dirty = true; }
+      EDIT_ID = id; ACTIVE = j.active; all();
+      $("#intro").hidden = true;
+      if (j.active) live("/b/" + id); else checkout();
+      status(dr && dr.id === id ? "Your unsaved changes are back. Save to keep them." : j.active ? "Editing your live page. Save to update it." : "Editing your saved page. It isn't live yet.", "ok");
+      if (location.hash === "#publish") $("#publish").scrollIntoView();
+      return;
+    } catch (e) { status(e.message, "bad"); }
+  }
+  if (id && !USER) { location.href = "/account?next=" + encodeURIComponent(location.pathname + location.search); return; }
+  D = dr && dr.d && dr.d.biz === 1 && !dr.id ? dr.d : KSBiz.blank();
+  all();
+  if (q.get("resume") && USER) status("Welcome! Your page is still here. Tap Save when you're ready.", "ok");
+})();
+})();
+</script>
+</body>
+</html>

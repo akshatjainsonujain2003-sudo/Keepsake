@@ -15,6 +15,17 @@
 .in .p{font:700 6.4mm/1 ui-monospace,Menlo,monospace;letter-spacing:1.1mm;color:#7a1420;margin:1mm 0 1.5mm}
 .in ol{margin:0;padding-left:3.6mm}.in .h{font-weight:700;font-size:2.7mm}
 .used{position:absolute;inset:0;background:#fff9;display:grid;place-items:center;font-weight:800;color:#a00;font-size:4mm;transform:rotate(-20deg)}
+/* business QR cards: no PIN, the whole card faces the customer */
+.b{width:63mm;height:88mm;position:relative;page-break-inside:avoid;break-inside:avoid;border:0.3mm dashed #bbb;background:#17110d;color:#f4ebde;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:6mm 5mm 4.5mm;text-align:center;overflow:hidden;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.b::before{content:"";position:absolute;inset:2.2mm;border:0.25mm solid #d9a06688;border-radius:2.5mm;pointer-events:none}
+.b .e{font:600 2.2mm/1 system-ui,sans-serif;letter-spacing:.9mm;color:#d9a066;text-transform:uppercase}
+.b .h{font:italic 500 6.2mm/1.05 Georgia,serif;margin-top:1.6mm}
+.b .q{width:36mm;height:36mm;background:#fff;border-radius:2.5mm;padding:2mm}.b .q svg{width:100%;height:100%;display:block}
+.b .l{font:600 2.35mm/1.4 system-ui,sans-serif;letter-spacing:.25mm}.b .l i{font-style:normal;color:#d9a066;padding:0 .8mm}
+.b .t{font:500 1.75mm/1.3 system-ui,sans-serif;opacity:.6;letter-spacing:.15mm}
+.sheet.bd{grid-template-columns:repeat(2,97mm);gap:4mm}
+.bd .b{width:97mm;height:137mm;padding:11mm 8mm 8mm}.bd .b::before{inset:3.5mm;border-radius:4mm}
+.bd .b .e{font-size:3.2mm;letter-spacing:1.4mm}.bd .b .h{font-size:10mm}.bd .b .q{width:58mm;height:58mm;padding:3mm;border-radius:4mm}.bd .b .l{font-size:3.6mm}.bd .b .t{font-size:2.5mm}
 @media print{body{background:#fff}.bar{display:none}.sheet{margin:0;padding:6mm 7.5mm}@page{size:A4;margin:0}}
 </style></head><body>
 <div class="bar"><span id="title">Loading…</span><span style="flex:1"></span><small>Print on A4 at 100%. Cut on the dashed border, then cut along the gold line: the QR half goes on the outside of the pack, the PIN half goes inside.</small><button id="csv" class="l">Download codes (CSV)</button><button onclick="print()">Print</button></div>
@@ -25,12 +36,13 @@
  if(!key)key=prompt("Admin key")||"";
  const r=await fetch("/api/admin",{method:"POST",headers:{"Content-Type":"application/json","x-admin-key":key},body:JSON.stringify({action:"prepaid-batch",id})});
  const j=await r.json().catch(()=>({}));if(!r.ok){document.getElementById("title").textContent=j.error||"Could not load the batch.";return}
- const b=j.batch,esc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])),site=b.tier==="site";
- document.getElementById("title").innerHTML=`<b>${esc(b.shop)}</b> · ${site?"VIP website":"Template card"} · ${b.codes.length} codes`;
+ const b=j.batch,esc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])),site=b.tier==="site",biz=b.tier==="biz",board=biz&&q.get("size")==="board";
+ document.getElementById("title").innerHTML=`<b>${esc(b.shop)}</b> · ${biz?"Business page QR":site?"VIP website":"Template card"} · ${b.codes.length} codes`+(biz?` · <a style="color:#e4c680" href="?batch=${encodeURIComponent(id)}${board?"":"&size=board"}">${board?"Switch to wallet cards":"Switch to counter boards (A6)"}</a>`:"");
+ if(biz)document.querySelector(".bar small").textContent=board?"Print on A4 at 100%: 4 counter boards per sheet. Cut on the dashed border and slot into an A6 stand or frame.":"Print on A4 at 100%, ideally on thick card. Cut on the dashed border. No PIN needed: the shop activates its page by paying online.";
  const base="https://getkeepsake.in";
  const qr=u=>{const x=qrcode(0,"M");x.addData(u);x.make();return x.createSvgTag({cellSize:3,margin:1,scalable:true}).replace(/fill="#000000"/g,'fill="#42070f"')};
- const cards=b.codes.map(c=>`<div class="c"><div class="f"><div class="k">Keepsake</div><div class="q">${qr(base+"/k/"+c.code)}</div><div class="s">Scan to make your ${site?"love-story website":"memory card"}</div><div class="t">${esc(b.shop)} · ${c.code}</div></div><div class="in"><div class="h">Your activation PIN · keep inside the pack</div><div class="p">${c.pin}</div><ol><li>Scan the QR on the front</li><li>Add your photos, song &amp; words</li><li>Tap Save, enter this PIN</li></ol><div style="margin-top:1mm;opacity:.7">For code ${c.code} · Prepaid, no online payment<br>Help: WhatsApp +91 63775 47759</div></div>${c.status==="claimed"?'<div class="used">USED</div>':c.locked?'<div class="used">LOCKED</div>':""}</div>`);
- const out=document.getElementById("out");for(let i=0;i<cards.length;i+=9)out.insertAdjacentHTML("beforeend",`<div class="sheet">${cards.slice(i,i+9).join("")}</div>`);
+ const cards=biz?b.codes.map(c=>`<div class="b"><div><div class="e">Scan me</div><div class="h">Menu, offers &amp; more</div></div><div class="q">${qr(base+"/k/"+c.code).replace(/fill="#42070f"/g,'fill="#17110d"')}</div><div><div class="l">Menu<i>·</i>Reviews<i>·</i>Instagram<i>·</i>Pay</div><div class="t" style="margin-top:1.4mm">${c.code} · Page by GetKeepsake</div></div>${c.status==="claimed"?'<div style="position:absolute;top:3.4mm;right:3.4mm;padding:.5mm 1.6mm;border-radius:2mm;background:#4ade80;color:#0b2a15;font:800 1.8mm system-ui,sans-serif;letter-spacing:.2mm">LIVE</div>':""}</div>`):b.codes.map(c=>`<div class="c"><div class="f"><div class="k">Keepsake</div><div class="q">${qr(base+"/k/"+c.code)}</div><div class="s">Scan to make your ${site?"love-story website":"memory card"}</div><div class="t">${esc(b.shop)} · ${c.code}</div></div><div class="in"><div class="h">Your activation PIN · keep inside the pack</div><div class="p">${c.pin}</div><ol><li>Scan the QR on the front</li><li>Add your photos, song &amp; words</li><li>Tap Save, enter this PIN</li></ol><div style="margin-top:1mm;opacity:.7">For code ${c.code} · Prepaid, no online payment<br>Help: WhatsApp +91 63775 47759</div></div>${c.status==="claimed"?'<div class="used">USED</div>':c.locked?'<div class="used">LOCKED</div>':""}</div>`);
+ const out=document.getElementById("out");const per=board?4:9;for(let i=0;i<cards.length;i+=per)out.insertAdjacentHTML("beforeend",`<div class="sheet${board?" bd":""}">${cards.slice(i,i+per).join("")}</div>`);
  document.getElementById("csv").onclick=()=>{const rows=[["code","pin","link","status","locked","batch","tier"],...b.codes.map(c=>[c.code,c.pin,base+"/k/"+c.code,c.status,c.locked?"yes":"no",b.shop,b.tier])];const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([rows.map(r=>r.join(",")).join("\n")],{type:"text/csv"}));a.download="keepsake-codes-"+b.id+".csv";a.click()};
 })();
 </script></body></html>

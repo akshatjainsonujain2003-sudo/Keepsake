@@ -45,7 +45,7 @@ button{background:#d6b06a;color:#2a0409;border:0;font-weight:700;cursor:pointer}
  <label><small>Batch label (shop or city, printed on the cards)</small><input id="batchPrefix" value="KS-JAIPUR" maxlength="40"></label>
  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
   <label><small>Quantity (max 200)</small><input id="batchQty" type="number" value="50" min="1" max="200"></label>
-  <label><small>Prepaid tier</small><select id="batchTier"><option value="card">Prepaid Template Card (₹99 value)</option><option value="vip">Prepaid VIP Website (₹299 value)</option></select></label>
+  <label><small>Prepaid tier</small><select id="batchTier"><option value="card">Prepaid Template Card (₹99 value)</option><option value="vip">Prepaid VIP Website (₹299 value)</option><option value="biz">Business page QR (shop pays ₹499 online)</option></select></label>
  </div>
  <button type="button" id="generateBatchBtn">Generate &amp; Export Print Sheet</button>
  <div id="batchStatus"></div>
@@ -87,7 +87,7 @@ $("#list").onclick=async e=>{const b=e.target.closest("button");if(!b)return;con
  else if(a==="remove"){if(!confirm("Delete "+s.name+" and ALL its cards? This cannot be undone."))return;await api({action:"remove",key:k})}
  else await api({action:a,key:k,days:30});load()}catch(x){$("#msg").textContent=x.message}};
 let PB=[];
-async function loadBatches(){try{PB=(await api({action:"prepaid-batches"})).batches;$("#batchList").innerHTML=PB.map(x=>`<div class="card"><b>${esc(x.shop)}</b> · ${x.tier==="site"?"VIP website":"Template card"} · ${x.count} codes<br><small>${new Date(x.created).toLocaleString()} · <span class="${x.claimed?"good":""}">${x.claimed} used</span>, ${x.count-x.claimed} unused</small><br><button class="g" data-b="${esc(x.id)}">Print sheet / codes</button></div>`).join("")||"<p>No batches yet.</p>"}catch(e){$("#msg").textContent=e.message}}
+async function loadBatches(){try{PB=(await api({action:"prepaid-batches"})).batches;$("#batchList").innerHTML=PB.map(x=>`<div class="card"><b>${esc(x.shop)}</b> · ${x.tier==="biz"?"Business page QR":x.tier==="site"?"VIP website":"Template card"} · ${x.count} codes<br><small>${new Date(x.created).toLocaleString()} · <span class="${x.claimed?"good":""}">${x.claimed} used</span>, ${x.count-x.claimed} unused</small><br><button class="g" data-b="${esc(x.id)}">Print sheet / codes</button></div>`).join("")||"<p>No batches yet.</p>"}catch(e){$("#msg").textContent=e.message}}
 $("#unlockBtn").onclick=async()=>{const st=$("#unlockStatus");try{const j=await api({action:"prepaid-unlock",code:$("#unlockCode").value.trim()});st.className="good";st.textContent=j.code+" unlocked. The buyer can try their PIN again."}catch(e){st.className="bad";st.textContent=e.message}};
 $("#batchList").onclick=e=>{const b=e.target.closest("button[data-b]");if(b)window.open("/print-codes?batch="+encodeURIComponent(b.dataset.b),"_blank")};
 $("#generateBatchBtn").onclick=async()=>{const st=$("#batchStatus"),btn=$("#generateBatchBtn");const qty=parseInt($("#batchQty").value)||50;st.className="";st.textContent="Generating batch codes…";btn.disabled=true;

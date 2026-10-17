@@ -15,14 +15,15 @@ const valid = c => /^KS[A-HJ-NP-Z2-9]{8}$/.test(c);
 const newCode = () => "KS" + [...crypto.randomBytes(8)].map(b => ALPHA[b % 32]).join("");
 const newPin = () => String(crypto.randomInt(0, 1000000)).padStart(6, "0");
 const MAX_FAILS = 10, HOURLY = Math.max(1, +process.env.PCLAIM_HOURLY || 8);
-const TIERS = { card: "Memory card", site: "Love-story website" };
+const TIERS = { card: "Memory card", site: "Love-story website", biz: "Business page" };
+const urlFor = (kind, id) => (kind === "site" ? "/s/" : kind === "biz" ? "/b/" : "/m/") + id;
 const same = (a, b) => { const x = Buffer.from(String(a || "")), y = Buffer.from(String(b || "")); return x.length === y.length && crypto.timingSafeEqual(x, y); };
 
 async function get(code) { code = norm(code); return valid(code) ? await db.getj("pcode:" + code) : null; }
 
 async function createBatch({ count, tier, shop, note }) {
   count = Math.round(+count); if (!(count >= 1 && count <= 200)) return { error: "Make between 1 and 200 codes at a time." };
-  if (!TIERS[tier]) return { error: "Choose card or website codes." };
+  if (!TIERS[tier]) return { error: "Choose card, website or business codes." };
   const id = db.rid(8), created = Date.now(), codes = [], pins = new Set();
   while (codes.length < count) {
     const code = newCode();
@@ -68,18 +69,21 @@ async function claim({ code, pin, id, user, ip }) {
   if (!rec) return { status: 404, error: "That code isn't valid. Check the card in your pack." };
   if (!/^[a-z0-9]{8,16}$/i.test(String(id || ""))) return { status: 400, error: "Save your keepsake first." };
   if (rec.status === "claimed") {
-    if (rec.memory === id && rec.owner === user.id) return { ok: true, url: (rec.kind === "site" ? "/s/" : "/m/") + id };
+    if (rec.memory === id && rec.owner === user.id) return { ok: true, url: urlFor(rec.kind, id) };
     return { status: 409, error: "This code has already been used." };
   }
+  if (rec.tier === "biz") return { status: 400, error: "Business QR cards switch on when you pay for your page. Open the card's QR to set it up." };
   if (rec.locked) return { status: 423, error: "This code is locked after too many wrong PINs. WhatsApp us on +91 63775 47759 with a photo of your card and we'll unlock it." };
   if (!same(rec.pin, String(pin || "").replace(/\D/g, ""))) {
     rec.fails = (rec.fails || 0) + 1; if (rec.fails >= MAX_FAILS) rec.locked = true;
     await db.setj("pcode:" + code, rec);
-    if (rec.locked) return { status: 423, error: "Too many wrong PINs, so this code is now locked. WhatsApp us on +91 63775 47759 with a photo of your card and we'll unlock it." };
+    if (rec.tier === "biz") return { status: 400, error: "Business QR cards switch on when you pay for your page. Open the card's QR to set it up." };
+  if (rec.locked) return { status: 423, error: "Too many wrong PINs, so this code is now locked. WhatsApp us on +91 63775 47759 with a photo of your card and we'll unlock it." };
     return { status: 401, error: `That PIN isn't right. It's the 6-digit number printed inside your box (${MAX_FAILS - rec.fails} tries left).` };
   }
   const mk = "customer-memory:" + id, memory = await db.getj(mk);
   if (!memory || memory.owner !== user.id) return { status: 404, error: "Keepsake not found in your account." };
+  if (memory.kind === "biz") return { status: 400, error: "This code is for a keepsake, not a business page." };
   const kind = memory.kind === "site" ? "site" : "card";
   if (rec.tier === "card" && kind === "site") return { status: 400, error: "This code is for a memory card. Make a card in the studio to use it, or WhatsApp us to upgrade." };
   if (memory.prepaid && memory.prepaid !== code) return { status: 409, error: "This keepsake already used a prepaid code." };
@@ -95,8 +99,19 @@ async function claim({ code, pin, id, user, ip }) {
     await db.setj("pcode:" + code, fresh);
     await db.cmd("INCR", "pbatch-claimed:" + fresh.batch);
     await db.cmd("DEL", tk);
-    return { ok: true, url: (kind === "site" ? "/s/" : "/m/") + id };
+    return { ok: true, url: urlFor(kind, id) };
   } finally { await db.cmd("DEL", "pclaim-lock:" + code); }
 }
 
-module.exports = { norm, valid, get, createBatch, batches, batchCodes, claim, unlock, TIERS };
+// Business QR cards have no PIN: the shop pays online, and the paid order links the card to its page.
+async function linkBiz(code, id, owner) {
+  const rec = await get(code);
+  if (!rec || rec.tier !== "biz") return null;
+  if (rec.status === "claimed") return rec.memory === id ? rec : null;
+  Object.assign(rec, { status: "claimed", memory: id, kind: "biz", owner, claimedAt: Date.now() });
+  await db.setj("pcode:" + rec.code, rec);
+  await db.cmd("INCR", "pbatch-claimed:" + rec.batch);
+  return rec;
+}
+
+module.exports = { norm, valid, get, createBatch, batches, batchCodes, claim, unlock, linkBiz, urlFor, TIERS };

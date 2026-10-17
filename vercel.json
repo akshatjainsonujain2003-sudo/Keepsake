@@ -25,6 +25,10 @@
       "destination": "/site"
     },
     {
+      "source": "/b/:id",
+      "destination": "/biz"
+    },
+    {
       "source": "/sitemap.xml",
       "destination": "/api/seo?f=sitemap"
     },

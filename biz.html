@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1f1611">
+<title>GetKeepsake</title>
+<meta property="og:type" content="website"><meta property="og:site_name" content="GetKeepsake">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&family=Inter:wght@400;500;600;700&display=swap">
+<link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
+<style>
+html,body{margin:0;background:#1f1611;min-height:100%}
+.msg{min-height:100svh;display:grid;place-items:center;padding:30px;text-align:center;color:#f4ebde;font:20px/1.5 Georgia,serif;background:radial-gradient(ellipse at top,#3a2a20,#140e0b 70%)}
+.msg small{display:block;font:15px/1.5 system-ui,sans-serif;opacity:.75;margin-top:8px}
+.msg a{color:#d9a066}
+.pbar{position:sticky;top:0;z-index:50;background:#d9a066;color:#1f1611;padding:11px 14px;text-align:center;font:600 14px/1.4 system-ui,sans-serif}
+.pbar a{color:#1f1611}
+</style>
+<script src="/assets/biz.v1.js"></script>
+</head>
+<body>
+<main id="biz" aria-live="polite"></main>
+<script>
+(async () => {
+  const root = document.getElementById("biz");
+  const say = (t, s) => { root.className = "msg"; root.innerHTML = ""; const d = document.createElement("div"); d.textContent = t; if (s) { const x = document.createElement("small"); x.textContent = s; d.appendChild(x); } root.appendChild(d); };
+  const m = location.pathname.match(/^\/b\/([a-z0-9]{8,16})\/?$/i);
+  if (!m) return say("This page could not be found.");
+  let j;
+  try { const r = await fetch("/api/customer-memories?id=" + m[1], { cache: "no-store" }); j = await r.json(); if (!r.ok) j.error = j.error || "x"; } catch (e) { j = { error: "x" }; }
+  if (j.error) return j.inactive ? say("This page isn’t live yet.", "If it’s your business, log in and activate it.") : say("This page could not be found.");
+  if (j.kind !== "biz") { location.replace((j.kind === "site" ? "/s/" : "/m/") + m[1]); return; }
+  KSBiz.render(root, j.data, { url: location.origin + "/b/" + m[1] });
+  document.title = (j.data.t || "Our shop") + (j.data.area ? " · " + j.data.area : "");
+  const set = (p, v) => { let e = document.querySelector(`meta[property="${p}"]`); if (!e) { e = document.createElement("meta"); e.setAttribute("property", p); document.head.appendChild(e); } e.content = v; };
+  set("og:title", document.title); if (j.data.tag) set("og:description", j.data.tag);
+  const bg = getComputedStyle(root).getPropertyValue("--bg").trim(); if (bg) { document.querySelector('meta[name=theme-color]').content = bg; document.body.style.background = bg; }
+  if (j.active === false) {
+    const b = document.createElement("div"); b.className = "pbar";
+    b.append("Preview: only you can see this until it’s activated. ");
+    const a = document.createElement("a"); a.href = "/business-studio?edit=" + encodeURIComponent(m[1]) + "#publish"; a.textContent = "Activate it"; b.appendChild(a);
+    document.body.prepend(b);
+  }
+})();
+</script>
+</body>
+</html>
