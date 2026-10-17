@@ -78,6 +78,13 @@ module.exports = async (req, res) => {
         if (pc.status !== "new" && pc.memory !== id) return db.reply(res, 409, { error: "That QR card is already linked to another page." });
         claim = pc.code;
       }
+      // Salesperson code typed by the shop owner (or the one the QR card was given to): gets the commission when paid.
+      let sp = null;
+      if (pay.kindOf(memory) === "biz") {
+        const S = require("./_sales");
+        if (b.sp) { const s = await S.get(b.sp); if (!s || s.active === false) return db.reply(res, 400, { error: "That salesperson code isn't valid. Check it, or leave it empty." }); sp = s.code; }
+        else if (claim) { const pc = await require("./_prepaid").get(claim), bt = pc && await db.getj("pbatch:" + pc.batch); if (bt && bt.sp) sp = bt.sp; }
+      }
       let address = null, frame = null;
       if (pay.isFrame(plan)) {
         const a = readAddress(b.address); if (a.error) return db.reply(res, 400, { error: a.error }); address = a.addr;
@@ -98,7 +105,7 @@ module.exports = async (req, res) => {
       const order = await pay.createOrder({ rupees: amt.rupees, receipt: "ks_" + id, notes: { memory: id, plan, customer: user.id } });
       await db.setj("order:" + order.id, {
         memory: id, title: memory.title || "", owner: user.id, name: user.name, email: user.email, phone: user.phone || "",
-        kind: pay.kindOf(memory), plan, frame, upgrade: amt.upgrade, amount: amt.rupees, ...(code ? { ref: code.code, refDiscount: off, commission } : {}), address, ...(claim ? { claim } : {}), status: "created", created: Date.now()
+        kind: pay.kindOf(memory), plan, frame, upgrade: amt.upgrade, amount: amt.rupees, ...(code ? { ref: code.code, refDiscount: off, commission } : {}), address, ...(claim ? { claim } : {}), ...(sp ? { sp } : {}), status: "created", created: Date.now()
       }, "EX", 60 * 60 * 24 * 30);
       return db.reply(res, 200, {
         keyId: pay.keyId(), orderId: order.id, amount: order.amount, currency: order.currency,

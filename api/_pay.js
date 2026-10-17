@@ -121,6 +121,7 @@ async function markPaid(orderId, paymentId) {
       await db.setj(mk, memory);
     }
     await db.cmd("ZADD", "orders-paid", order.paidAt, orderId);
+    if (order.sp) { try { await require("./_sales").credit(order.sp, order.memory); } catch (e) {} }
     if (order.claim) { try { await require("./_prepaid").linkBiz(order.claim, order.memory, order.owner); } catch (e) {} }
     if (order.ref) { await db.cmd("ZADD", "ref-orders:" + order.ref, order.paidAt, orderId); await db.cmd("SADD", "coupon-users:" + order.ref, order.owner); }
     return order;

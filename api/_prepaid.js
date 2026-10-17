@@ -21,7 +21,7 @@ const same = (a, b) => { const x = Buffer.from(String(a || "")), y = Buffer.from
 
 async function get(code) { code = norm(code); return valid(code) ? await db.getj("pcode:" + code) : null; }
 
-async function createBatch({ count, tier, shop, note, comm, phone }) {
+async function createBatch({ count, tier, shop, note, comm, phone, sp }) {
   count = Math.round(+count); if (!(count >= 1 && count <= 200)) return { error: "Make between 1 and 200 codes at a time." };
   if (!TIERS[tier]) return { error: "Choose card, website or business codes." };
   const id = db.rid(8), created = Date.now(), codes = [], pins = new Set();
@@ -33,7 +33,7 @@ async function createBatch({ count, tier, shop, note, comm, phone }) {
   }
   comm = Math.max(0, Math.min(5000, Math.round(+comm || 0)));
   const batch = { id, shop: String(shop || "").slice(0, 60) || "Direct", tier, count, note: String(note || "").slice(0, 120), created, codes,
-    comm, phone: String(phone || "").replace(/[^\d+ ]/g, "").slice(0, 16), key: db.rid(12), paidOut: 0, payouts: [] };
+    comm, phone: String(phone || "").replace(/[^\d+ ]/g, "").slice(0, 16), key: db.rid(12), paidOut: 0, payouts: [], ...(sp ? { sp } : {}) };
   await db.setj("pbatch:" + id, batch);
   await db.cmd("ZADD", "pbatches", created, id);
   return { batch };

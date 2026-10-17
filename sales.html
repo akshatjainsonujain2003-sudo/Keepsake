@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
-<title>My sales · GetKeepsake for Business</title>
+<title>Salesperson panel · GetKeepsake for Business</title>
 <meta name="theme-color" content="#f4f1ea">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Pinyon+Script&family=Inter:wght@400;500;600;700;800&display=swap">
@@ -47,6 +47,15 @@ summary{cursor:pointer;font-weight:700}
 .msg{padding:40px 10px;text-align:center;color:var(--mu)}
 .foot{margin-top:34px;color:var(--mu);font-size:13px;text-align:center}
 @media (max-width:420px){.money{grid-template-columns:1fr 1fr}.money .ow{grid-column:span 2}}
+.login{background:var(--pa);border:1px solid var(--ln);border-radius:24px;padding:22px;display:grid;gap:12px;margin-top:8px}
+.login label{display:grid;gap:6px;font:600 13px var(--fn)}
+.login input{font:600 20px ui-monospace,Menlo,monospace;letter-spacing:.12em;padding:14px;border-radius:14px;border:1.5px solid var(--ln);background:#fff;text-transform:uppercase;width:100%}
+.err{color:#b3362f;font-weight:600;min-height:1.3em;margin:0}
+.code{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:12px;padding:16px 18px;border-radius:22px;background:#ffd84d}
+.code small{display:block;font:700 11px var(--fn);letter-spacing:.18em;text-transform:uppercase}
+.code b{font:400 30px var(--fd);letter-spacing:.06em}
+.code button{border:0;border-radius:999px;padding:11px 16px;background:var(--ink);color:#fff;font:700 13px var(--fn);cursor:pointer}
+.out{background:none;border:0;color:var(--mu);font:600 13px var(--fn);text-decoration:underline;cursor:pointer;margin-top:20px}
 </style>
 </head>
 <body>
@@ -55,31 +64,69 @@ summary{cursor:pointer;font-weight:700}
   <div id="out"><p class="msg">Loading your sales…</p></div>
 </div>
 <script>
-(async () => {
-  const out = document.getElementById("out"), q = new URLSearchParams(location.search);
-  const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-  const rs = n => "₹" + (+n || 0).toLocaleString("en-IN");
-  const date = t => t ? new Date(t).toLocaleDateString("en-IN", { day: "numeric", month: "short" }) : "";
+(() => {
+const out = document.getElementById("out"), q = new URLSearchParams(location.search), KEY = "ks-sp";
+const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const rs = n => "₹" + (+n || 0).toLocaleString("en-IN");
+const date = t => t ? new Date(t).toLocaleDateString("en-IN", { day: "numeric", month: "short" }) : "";
+const saved = () => { try { return JSON.parse(localStorage.getItem(KEY) || "null"); } catch (e) { return null; } };
+const tools = code => {
+  const link = "https://getkeepsake.in/shops/studio?sp=" + code;
+  const pitch = `Hi! I'd like to show you GetKeepsake for Business: a beautiful page for your shop with your menu, offers, Google reviews, Instagram, UPI and WhatsApp orders, all behind one QR on your counter. ₹499 one-time, no monthly fees.\n\nSee examples: https://getkeepsake.in/shops\nCreate your page (my code ${code} is already filled in): ${link}`;
+  return `<h2>Sales tools</h2><div class="tools">
+    <a class="btn" href="/assets/getkeepsake-business-sales-sheet.pdf" target="_blank" rel="noopener">Download sales sheet (PDF)</a>
+    <a class="btn gh" href="/shops#examples" target="_blank" rel="noopener">Show live examples to a shop</a>
+    <a class="btn wa" href="https://wa.me/?text=${encodeURIComponent(pitch)}" target="_blank" rel="noopener">Send the pitch on WhatsApp</a></div>`;
+};
+function showLogin(msg) {
+  out.innerHTML = `<h1>Salesperson <em>login</em></h1><p class="sub">Use the code and 6-digit PIN GetKeepsake gave you.</p>
+    <form class="login" id="lf"><label>Your code<input id="lc" maxlength="12" autocomplete="username" placeholder="SPXXXX" required></label>
+    <label>PIN<input id="lp" type="password" inputmode="numeric" maxlength="6" autocomplete="current-password" placeholder="••••••" required></label>
+    <p class="err" id="le">${esc(msg || "")}</p><button class="btn" type="submit">Log in</button></form>
+    <p class="foot">Forgot your PIN? WhatsApp <a href="https://wa.me/916377547759">+91 63775 47759</a> and we'll send a new one.</p>`;
+  const sv = saved(); if (sv && sv.code) document.getElementById("lc").value = sv.code;
+  document.getElementById("lf").onsubmit = async e => {
+    e.preventDefault(); const le = document.getElementById("le"); le.textContent = "Checking…";
+    try {
+      const r = await fetch("/api/qr", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "sp-login", code: document.getElementById("lc").value, pin: document.getElementById("lp").value }) });
+      const j = await r.json(); if (!r.ok) throw new Error(j.error || "Couldn't log in.");
+      try { localStorage.setItem(KEY, JSON.stringify({ code: j.code, tok: j.tok })); } catch (x) {}
+      panel(j.code, j.tok);
+    } catch (x) { le.textContent = x.message; }
+  };
+}
+async function panel(code, tok) {
+  out.innerHTML = '<p class="msg">Loading your sales…</p>';
   let j;
-  try { const r = await fetch("/api/qr?sales=" + encodeURIComponent(q.get("b") || "") + "&key=" + encodeURIComponent(q.get("k") || ""), { cache: "no-store" }); j = await r.json(); if (!r.ok) throw new Error(j.error || "x"); }
-  catch (e) { out.innerHTML = `<p class="msg">${esc(e.message && e.message !== "x" ? e.message : "Couldn't load your sales. Check your link, or WhatsApp us on +91 63775 47759.")}</p>`; return; }
-  const pct = Math.round(j.activated * 100 / Math.max(1, j.count));
-  const pitch = "Hi! I'd like to show you GetKeepsake for Business: a beautiful page for your shop with your menu, offers, Google reviews, Instagram, UPI and WhatsApp orders, all behind one QR on your counter. ₹499 one-time, no monthly fees. See examples: https://getkeepsake.in/shops";
+  try { const r = await fetch("/api/qr?spme=" + encodeURIComponent(code) + "&t=" + encodeURIComponent(tok), { cache: "no-store" }); j = await r.json(); if (!r.ok) throw new Error(j.error); }
+  catch (e) { try { localStorage.removeItem(KEY); } catch (x) {} return showLogin(e.message || "Please log in again."); }
+  const shops = j.shopsList || [];
   out.innerHTML = `<h1>Hi ${esc(j.name.split(" ")[0])},<br><em>keep going</em></h1>
-    <p class="sub">Your GetKeepsake QR cards and commission, updated live.</p>
-    <div class="big"><small>Shops activated</small><div class="n">${j.activated}<span>of ${j.count} cards</span></div><div class="bar"><i style="width:${pct}%"></i></div><p>${j.unused} cards left to sell${j.comm ? ` · you earn ${rs(j.comm)} for every shop that activates` : ""}</p></div>
-    ${j.comm ? `<div class="money"><div><small>Earned</small><b>${rs(j.earned)}</b></div><div><small>Paid to you</small><b>${rs(j.paid)}</b></div><div class="ow"><small>Coming to you</small><b>${rs(j.owed)}</b></div></div>` : ""}
+    <p class="sub">Your shops and commission, updated live.</p>
+    <div class="code"><div><small>Your salesperson code</small><b>${esc(j.code)}</b></div><button type="button" id="cp">Copy</button></div>
+    <p style="margin:8px 4px 16px;color:var(--mu);font-size:14px">Ask every shop to type this code before paying ₹499. When their page goes live, ${j.comm ? `<b>${rs(j.comm)}</b> is added` : "your commission is added"} here.</p>
+    <div class="big"><small>Shops activated</small><div class="n">${j.shops}<span>${j.shops === 1 ? "shop" : "shops"}</span></div><p>${j.comm ? `You earn ${rs(j.comm)} for every shop that goes live with your code` : "Commission rate will be set by GetKeepsake"}</p></div>
+    <div class="money"><div><small>Earned</small><b>${rs(j.earned)}</b></div><div><small>Paid to you</small><b>${rs(j.paid)}</b></div><div class="ow"><small>Coming to you</small><b>${rs(j.owed)}</b></div></div>
     <h2>Your shops</h2>
-    ${j.shops.length ? j.shops.map(s => `<a class="shop" href="${esc(s.url)}" target="_blank" rel="noopener"><i>${esc((s.name || "S").charAt(0).toUpperCase())}</i><div><b>${esc(s.name)}</b><small>Activated ${date(s.at)} · card ${esc(s.code)}</small></div><span>View →</span></a>`).join("") : `<div class="empty">No shops yet. Your first one is one conversation away.</div>`}
-    <h2>Sales tools</h2>
-    <div class="tools">
-      <a class="btn" href="/assets/getkeepsake-business-sales-sheet.pdf" target="_blank" rel="noopener">Download sales sheet (PDF)</a>
-      <a class="btn gh" href="/shops#examples" target="_blank" rel="noopener">Show live examples to a shop</a>
-      <a class="btn wa" href="https://wa.me/?text=${encodeURIComponent(pitch)}" target="_blank" rel="noopener">Send the pitch on WhatsApp</a>
-    </div>
-    <details><summary>My card numbers (${j.count})</summary><div class="codes">${j.codes.map(c => `<span class="${c.status === "claimed" ? "u" : ""}">${esc(c.code)}</span>`).join("")}</div><p style="margin:10px 0 0;font-size:13px;color:var(--mu)">Crossed out = activated.</p></details>
+    ${shops.length ? shops.map(s => `<a class="shop" href="${esc(s.url)}" target="_blank" rel="noopener"><i>${esc((s.name || "S").charAt(0).toUpperCase())}</i><div><b>${esc(s.name)}</b><small>Activated ${date(s.at)}${s.area ? " · " + esc(s.area) : ""}${j.comm ? " · +" + rs(j.comm) : ""}</small></div><span>View →</span></a>`).join("") : `<div class="empty">No shops yet. Your first one is one conversation away.</div>`}
+    ${tools(j.code)}
     ${j.payouts.length ? `<details><summary>Payments received (${j.payouts.length})</summary>${j.payouts.slice().reverse().map(p => `<p style="margin:10px 0 0">${date(p.at)}: <b>${rs(p.amount)}</b> for ${p.shops} shop${p.shops > 1 ? "s" : ""}</p>`).join("")}</details>` : ""}
-    <p class="foot">Questions about your commission? WhatsApp <a href="https://wa.me/916377547759">+91 63775 47759</a>. Please keep this link private.</p>`;
+    <p class="foot">Questions about your commission? WhatsApp <a href="https://wa.me/916377547759">+91 63775 47759</a>.</p>
+    <div style="text-align:center"><button class="out" id="lo">Log out</button></div>`;
+  document.getElementById("cp").onclick = async e => { try { await navigator.clipboard.writeText(j.code); e.target.textContent = "Copied ✓"; } catch (x) {} };
+  document.getElementById("lo").onclick = () => { try { localStorage.removeItem(KEY); } catch (x) {} showLogin(); };
+}
+// Older per-batch links (?b=…&k=…) still work
+async function legacy() {
+  let j;
+  try { const r = await fetch("/api/qr?sales=" + encodeURIComponent(q.get("b")) + "&key=" + encodeURIComponent(q.get("k") || ""), { cache: "no-store" }); j = await r.json(); if (!r.ok) throw new Error(j.error); }
+  catch (e) { return showLogin(); }
+  out.innerHTML = `<h1>${esc(j.name)}</h1><div class="big"><small>Shops activated</small><div class="n">${j.activated}<span>of ${j.count} cards</span></div></div>
+    <h2>Shops</h2>${j.shops.map(s => `<a class="shop" href="${esc(s.url)}"><i>${esc(s.name.charAt(0))}</i><div><b>${esc(s.name)}</b><small>${date(s.at)}</small></div></a>`).join("") || '<div class="empty">No shops yet.</div>'}
+    <p class="foot"><a href="/sales">Log in with your salesperson code</a></p>`;
+}
+if (q.get("b")) legacy();
+else { const sv = saved(); if (sv && sv.code && sv.tok) panel(sv.code, sv.tok); else showLogin(); }
 })();
 </script>
 </body>

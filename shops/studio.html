@@ -162,7 +162,7 @@ textarea.in{resize:vertical;min-height:74px}
 .bst{margin:0;padding:16px;border-radius:16px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1)}.bst .bh{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}.bst .bh b{font-size:34px;line-height:1}.bst .bh span{opacity:.8}.bst em{font-style:normal;font-weight:700;margin-left:4px}.bst em.up{color:#7fd6a0}.bst em.dn{color:#ff9aa8}.bst .bars{display:flex;gap:6px;align-items:flex-end;height:70px;margin:14px 0 4px}.bst .bars i{flex:1;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:4px;font-style:normal}.bst .bars u{display:block;width:100%;border-radius:6px 6px 3px 3px;background:linear-gradient(#e8cf8e,#b88a3e)}.bst .bars small{font-size:10px;opacity:.6}.bst .bt{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 0}.bst .bt span{padding:5px 10px;border-radius:999px;background:rgba(255,255,255,.08);font-size:13px}.live .bst .bh b{display:inline;font:500 34px/1 var(--fs);margin:0}.live .bst .bt b{display:inline;font:700 13px var(--fn);margin:0}.live .bst .bt span{display:inline-block}</style>
 <script src="/assets/biz.v4.js"></script>
 <script src="/assets/biz-demos.v2.js"></script>
-<script src="/assets/ks-checkout.v8.js"></script>
+<script src="/assets/ks-checkout.v9.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js" defer></script>
 </head>
 <body>
@@ -296,6 +296,7 @@ textarea.in{resize:vertical;min-height:74px}
       <h2 id="pubT">Ready to go live?</h2>
       <p id="pubP">Save your page, then activate it once. After that you can change your menu, offers and photos whenever you like.</p>
       <div class="price"><b>₹<span id="price">499</span></b><span>one-time · no monthly fees</span></div>
+      <label class="f" id="spF"><span>Salesperson code <em>(if someone from GetKeepsake helped you)</em></span><input class="in" id="spIn" maxlength="12" placeholder="e.g. SPK7Q2" autocapitalize="characters" autocomplete="off" style="text-transform:uppercase;letter-spacing:.08em"><span class="hint" id="spHint"></span></label>
       <div><button type="button" class="btn" id="saveBtn">Save my page</button></div>
       <div class="status" id="status" role="status"></div>
       <div id="payPanel" hidden></div>
@@ -320,7 +321,7 @@ textarea.in{resize:vertical;min-height:74px}
 const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
 const esc = KSBiz.esc, DRAFT = "ks-biz-draft", CKEY = "ks-bizclaim", DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const WA = '<a href="https://wa.me/916377547759">+91 63775 47759</a>';
-let STATS = null, D = null, USER = null, EDIT_ID = null, ACTIVE = false, CLAIM = null, CHECKOUT = null, dirty = false;
+let SP = "", STATS = null, D = null, USER = null, EDIT_ID = null, ACTIVE = false, CLAIM = null, CHECKOUT = null, dirty = false;
 
 const status = (t, cls) => { const s = $("#status"); s.textContent = t || ""; s.className = "status" + (cls ? " " + cls : ""); if (t) $("#saveS").textContent = t; };
 const get = (o, p) => p.split(".").reduce((x, k) => x == null ? x : x[k], o);
@@ -517,11 +518,27 @@ async function claimInit() {
   return info;
 }
 
+// ---------- salesperson code (typed, from ?sp= link, or from the QR card's salesperson) ----------
+const SPKEY = "ks-bizsp";
+async function spSet(code, quiet) {
+  code = String(code || "").toUpperCase().replace(/[^A-Z0-9]/g, ""); $("#spIn").value = code; const h = $("#spHint");
+  if (!code) { SP = ""; h.textContent = ""; h.style.color = ""; try { localStorage.removeItem(SPKEY); } catch (e) {} return true; }
+  try {
+    const r = await fetch("/api/qr?spcheck=" + encodeURIComponent(code), { cache: "no-store" }); const j = await r.json();
+    if (!r.ok) throw new Error(j.error);
+    SP = j.code; h.textContent = "✓ " + j.name + "'s code. Thank you!"; h.style.color = "var(--ok)";
+    try { localStorage.setItem(SPKEY, JSON.stringify({ code: j.code, at: Date.now() })); } catch (e) {}
+    return true;
+  } catch (e) { SP = ""; if (!quiet) { h.textContent = "That code isn't valid. Check it, or leave it empty."; h.style.color = "var(--bad)"; } return false; }
+}
+$("#spIn").onchange = () => spSet($("#spIn").value);
+
 // ---------- save, pay, live ----------
 async function saveBiz() {
   if (!(D.t || "").trim()) { $('[data-s="basics"]').open = true; const i = $('[data-k="t"]'); i.focus(); i.classList.add("bad"); status("Add your business name first.", "bad"); return; }
   $('[data-k="t"]').classList.remove("bad");
   for (const i of $$("[data-v]")) { if (check(i)) { i.closest("details").open = true; i.focus(); status(i.parentNode.querySelector(".err").textContent, "bad"); return; } }
+  if ($("#spIn").value.trim() && !SP && !(await spSet($("#spIn").value))) { $("#spIn").focus(); status("Check the salesperson code, or leave it empty.", "bad"); return; }
   if (!USER) { save(); status("Log in to save your page. Everything you've typed is kept.", "ok"); setTimeout(() => location.href = "/account?next=" + encodeURIComponent("/shops/studio?resume=1"), 700); return; }
   const bs = [$("#saveBtn"), $("#saveBtn2")]; bs.forEach(b => b.disabled = true); status("Saving…");
   try {
@@ -539,7 +556,7 @@ $("#saveBtn").onclick = $("#saveBtn2").onclick = saveBiz;
 function setEdit(id) { EDIT_ID = id; const u = new URL(location.href); u.searchParams.set("edit", id); u.searchParams.delete("resume"); history.replaceState(null, "", u.pathname + u.search + u.hash); }
 function checkout() {
   $("#pubT").textContent = "Activate your page"; $("#pubP").textContent = CLAIM ? "Pay once and your QR card #" + CLAIM.code + " will open this page for good." : "Pay once and your page goes live with its own link and QR code.";
-  if (!CHECKOUT) CHECKOUT = KSCheckout.mount($("#payPanel"), { kind: "biz", getId: () => EDIT_ID, claim: () => CLAIM && CLAIM.code, customer: () => USER,
+  if (!CHECKOUT) CHECKOUT = KSCheckout.mount($("#payPanel"), { kind: "biz", getId: () => EDIT_ID, claim: () => CLAIM && CLAIM.code, sp: () => SP, customer: () => USER,
     onPaid: v => { const had = CLAIM; ACTIVE = true; CLAIM = null; try { localStorage.removeItem(CKEY); } catch (e) {} $("#banner").innerHTML = ""; live(v.url, had); status(had ? "Paid. Your page is live and your QR card now opens it." : "Paid. Your page is live.", "ok"); } });
   $("#payPanel").hidden = false; $("#livePanel").hidden = true;
   CHECKOUT.open("activate").then(() => $("#publish").scrollIntoView({ behavior: "smooth", block: "start" }));
@@ -547,7 +564,7 @@ function checkout() {
 function live(path, card) {
   const url = location.origin + path;
   $("#pubT").textContent = "Your page is live"; $("#pubP").textContent = "Edit anything above and tap Save. Changes show up on your page straight away.";
-  $(".price").hidden = true; $("#saveBtn").textContent = "Save changes"; $("#payPanel").hidden = true;
+  $(".price").hidden = true; $("#spF").hidden = true; $("#saveBtn").textContent = "Save changes"; $("#payPanel").hidden = true;
   const p = $("#livePanel"); p.hidden = false;
   p.innerHTML = `<div class="live"><div class="qr" id="qr"></div><div><b>${card ? "Your QR card #" + esc(card.code) + " is linked" : "Print this QR for your counter"}</b><code>${esc(url)}</code><div class="row"><a class="btn gold" href="${esc(path)}" target="_blank" rel="noopener">Open page</a><button type="button" class="btn ghost" id="cpy">Copy link</button><button type="button" class="btn ghost" id="dl">Download QR</button></div></div></div>`;
   $("#cpy").onclick = async () => { try { await navigator.clipboard.writeText(url); $("#cpy").textContent = "Copied"; } catch (e) {} };
@@ -569,6 +586,9 @@ addEventListener("beforeunload", e => { if (dirty && EDIT_ID) { e.preventDefault
   $("#nav").innerHTML = USER ? '<a class="chip" href="/dashboard">My pages</a>' : '<a class="chip" href="/account?next=%2Fshops%2Fstudio%3Fresume%3D1">Log in</a>';
   try { const c = await KSCheckout.catalog(); const p = c && c.products && c.products.biz; if (p) $("#price").textContent = $("#priceTop").textContent = String(p.price); } catch (e) {}
   CLAIM = await claimInit();
+  { const u = new URL(location.href), qsp = u.searchParams.get("sp"); let sv = null; try { sv = JSON.parse(localStorage.getItem(SPKEY) || "null"); } catch (e) {}
+    if (qsp) { u.searchParams.delete("sp"); history.replaceState(null, "", u.pathname + u.search + u.hash); }
+    const c = qsp || (CLAIM && CLAIM.sp) || (sv && Date.now() - sv.at < 30 * 864e5 ? sv.code : ""); if (c) spSet(c, true); }
   const q = new URLSearchParams(location.search), id = q.get("edit");
   let dr = null; try { dr = JSON.parse(localStorage.getItem(DRAFT) || "null"); } catch (e) {}
   if (id && USER) {

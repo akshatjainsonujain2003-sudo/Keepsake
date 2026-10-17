@@ -244,6 +244,7 @@
       const body = { action: "create", id, plan: state.plan };
       if (state.code && state.mode !== "upgrade") body.ref = state.code.code;
       const claim = typeof opts.claim === "function" ? opts.claim() : opts.claim; if (claim) body.claim = claim;
+      const sp = typeof opts.sp === "function" ? opts.sp() : opts.sp; if (sp) body.sp = sp;
       if (state.plan !== "digital") {
         if (!state.print) { status("Choose what to print in the frame.", "bad"); return; }
         if (state.print === "photo" && !state.photo) { status("Upload the photo you'd like printed.", "bad"); return; }
