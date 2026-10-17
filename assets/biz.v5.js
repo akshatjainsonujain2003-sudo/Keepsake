@@ -533,7 +533,7 @@
       si, n: clip(s && s.n || "Section", 24),
       items: (s && Array.isArray(s.items) ? s.items : []).map((x, ii) => x && x.n ? { key: si + "." + ii, n: clip(x.n, 50), p: prop ? clip(String(x.p || "").replace(/^\s*(₹|rs\.?|inr)\s*/i, ""), 24) : cleanP(x.p), d: clip(x.d, 140), b: !!x.b, img: safeImg(x.i), price: num(x.p), st: prop && PST[x.s] ? x.s : "" } : null).filter(Boolean).slice(0, 60)
     })).filter(s => s.items.length);
-    const f = d.ft && d.ft.on && d.ft.title ? { label: clip(d.ft.label || "New", 24), title: clip(d.ft.title, 50), text: clip(d.ft.text, 200), p: cleanP(d.ft.p), was: cleanP(d.ft.was), img: safeImg(d.ft.img) } : null;
+    const f = d.ft && d.ft.on && d.ft.title ? { label: clip(d.ft.label || "New", 24), title: clip(d.ft.title, 50), text: clip(d.ft.text, 200), p: prop ? clip(String(d.ft.p || "").replace(/^\s*(₹|rs\.?|inr)\s*/i, ""), 24) : cleanP(d.ft.p), was: cleanP(d.ft.was), img: safeImg(d.ft.img) } : null;
     return {
       d, th, lay, name, cat, area: clip(d.area, 40), tag: clip(d.tag, 140), cover: safeImg(d.cover), logo: safeImg(d.logo),
       hl: clip(d.hl, 60), sc: clip(d.sc, 24),

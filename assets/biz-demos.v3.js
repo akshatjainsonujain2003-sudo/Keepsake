@@ -80,15 +80,16 @@ window.KSBizDemos = (function () {
     }),
     realestate: Object.assign(B("realestate"), {
       t: "Shree Ram Properties", area: "Vaishali Nagar, Jaipur", tag: "Flats, villas and plots across Jaipur. Verified listings, honest prices and site visits any day.",
-      cover: z + "clinic-building.webp", phone: "9829012345", review: "https://g.page/r/example/review", addr: "Vaishali Nagar, Jaipur",
+      cover: z + "re-cover.webp", phone: "9829012345", review: "https://g.page/r/example/review", addr: "Vaishali Nagar, Jaipur", ig: "shreeramproperties",
       hours: hrs("10:00", "20:00"),
       stats: [{ v: "250+", l: "Families settled" }, { v: "12 yrs", l: "In Jaipur" }, { v: "JDA", l: "Approved projects" }, { v: "0", l: "Hidden charges" }],
       offer: { on: true, label: "This month", title: "Free site visit with pickup", text: "Book on WhatsApp and we'll pick you up.", till: "30 Nov" },
       menu: [
-        { n: "For sale", items: [{ n: "3 BHK Flat, Vaishali Nagar", p: "85 Lakh", d: "1,450 sq ft · 2 parking · East facing · Lift", s: "ready", b: true, i: "" }, { n: "4 BHK Villa, Jagatpura", p: "1.6 Cr", d: "2,800 sq ft · Private garden · Gated society", s: "new", b: false, i: "" }, { n: "Plot, Ajmer Road", p: "42 Lakh", d: "200 sq yd · JDA approved · Corner plot", s: "sale", b: false, i: "" }] },
-        { n: "For rent", items: [{ n: "2 BHK Flat, Malviya Nagar", p: "18,000/month", d: "1,050 sq ft · Semi-furnished · Family only", s: "rent", b: false, i: "" }, { n: "Shop, MI Road", p: "45,000/month", d: "320 sq ft · Main road frontage", s: "rent", b: false, i: "" }] }
+        { n: "For sale", items: [{ n: "3 BHK Flat, Vaishali Nagar", p: "85 Lakh", d: "1,450 sq ft · 2 parking · East facing · Lift", s: "ready", b: true, i: z + "re-living.webp" }, { n: "4 BHK Villa, Jagatpura", p: "1.6 Cr", d: "2,800 sq ft · Private garden · Gated society", s: "new", b: false, i: z + "re-villa.webp" }, { n: "Plot, Ajmer Road", p: "42 Lakh", d: "200 sq yd · JDA approved · Corner plot", s: "sale", b: false, i: z + "re-plot.webp" }] },
+        { n: "For rent", items: [{ n: "2 BHK Flat, Malviya Nagar", p: "18,000/month", d: "1,050 sq ft · Semi-furnished · Family only", s: "rent", b: false, i: z + "re-bedroom.webp" }, { n: "Shop, MI Road", p: "45,000/month", d: "320 sq ft · Main road frontage", s: "rent", b: false, i: z + "re-shop.webp" }] }
       ],
-      gal: [], upi: { id: "", name: "" }
+      ft: { on: true, label: "New launch", title: "Skyline Residency, Jagatpura", text: "2 & 3 BHK homes with pool, clubhouse and landscaped gardens. Possession Dec 2027.", p: "62 Lakh onwards", was: "", img: z + "re-society.webp" },
+      gal: [z + "re-kitchen.webp", z + "re-society.webp", z + "re-garden.webp", z + "re-living.webp"], upi: { id: "", name: "" }
     })
   };
 })();
