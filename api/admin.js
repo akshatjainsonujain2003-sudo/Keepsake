@@ -36,6 +36,8 @@ module.exports = async (req, res) => {
       if (b.action === "hq-orders") return db.reply(res, 200, { orders: await H.orders() });
       if (b.action === "hq-pages") return db.reply(res, 200, { pages: await H.pages() });
       if (b.action === "hq-people") return db.reply(res, 200, { people: await H.people() });
+      if (b.action === "hq-team") return db.reply(res, 200, { team: await require("./_sales").team() });
+      if (b.action === "hq-sp") { const x = await require("./_sales").detail(b.code); return x ? db.reply(res, 200, { sp: x }) : db.reply(res, 404, { error: "Salesperson not found." }); }
       if (b.action === "push-key") return db.reply(res, 200, { key: (await H.vapid()).pub });
       if (b.action === "push-sub") { const r = await H.subscribe(b.sub, b.label); return db.reply(res, r.error ? 400 : 200, r); }
       if (b.action === "push-unsub") return db.reply(res, 200, await H.unsubscribe(b.endpoint));

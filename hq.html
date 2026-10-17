@@ -35,7 +35,7 @@ a{color:var(--gd)}
 .ib{width:42px;height:42px;border-radius:50%;border:1px solid var(--ln);background:var(--card);display:grid;place-items:center;cursor:pointer;flex:none}
 .ib svg{width:20px;height:20px}.ib.spin svg{animation:sp .8s linear infinite}@keyframes sp{to{transform:rotate(360deg)}}
 nav{position:fixed;left:0;right:0;bottom:0;z-index:20;background:#121110ee;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--ln);padding:8px 8px calc(var(--sa) + 8px);display:flex;justify-content:center}
-nav .in2{display:grid;grid-template-columns:repeat(5,1fr);width:100%;max-width:640px}
+nav .in2{display:grid;grid-template-columns:repeat(6,1fr);width:100%;max-width:640px}
 nav button{background:none;border:0;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;font-weight:600;color:var(--mu);padding:4px 0;cursor:pointer;position:relative}
 nav button svg{width:23px;height:23px}nav button.on{color:var(--gd)}
 nav .dot{position:absolute;top:0;left:calc(50% + 6px);min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--rd);color:#121110;font-size:11px;font-weight:800;display:grid;place-items:center}
@@ -80,7 +80,7 @@ nav .dot{position:absolute;top:0;left:calc(50% + 6px);min-width:18px;height:18px
 .box h4{margin:0 0 8px;font-size:14px;color:var(--mu);font-weight:600}
 .toast{position:fixed;left:50%;top:calc(var(--st) + 14px);transform:translate(-50%,-160%);z-index:60;background:var(--gd);color:#121110;padding:12px 18px;border-radius:999px;font-weight:700;transition:transform .3s;box-shadow:0 10px 30px #0008;max-width:calc(100% - 32px);text-align:center}
 .toast.on{transform:translate(-50%,0)}
-.li{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--ln)}.li:last-child{border-bottom:0}.li small{display:block;color:var(--mu);font-size:13px}
+.li{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--ln)}.li>a,.li>small{flex:none;white-space:nowrap}.li:last-child{border-bottom:0}.li small{display:block;color:var(--mu);font-size:13px}
 .sw{width:50px;height:30px;border-radius:15px;background:#3a3631;border:0;position:relative;cursor:pointer;flex:none}.sw:after{content:"";position:absolute;left:3px;top:3px;width:24px;height:24px;border-radius:50%;background:#fff;transition:.2s}.sw.on{background:var(--gn)}.sw.on:after{left:23px}
 </style></head>
 <body>
@@ -95,6 +95,7 @@ nav .dot{position:absolute;top:0;left:calc(50% + 6px);min-width:18px;height:18px
   <button data-t="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Home</button>
   <button data-t="orders"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l9-4 9 4-9 4z"/><path d="M3 7v10l9 4 9-4V7M12 11v10"/></svg>Orders<span class="dot" id="shipDot" hidden></span></button>
   <button data-t="shops"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9l1.5-5h13L20 9M4 9h16v11H4zM4 9a3 3 0 0 0 5.3 1.9A3 3 0 0 0 12 12a3 3 0 0 0 2.7-1.1A3 3 0 0 0 20 9"/></svg>Shops</button>
+  <button data-t="team"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/></svg>Team</button>
   <button data-t="people"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.5a3.5 3.5 0 0 1 0 7M18 14a6 6 0 0 1 3.5 6"/></svg>People</button>
   <button data-t="more"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg>More</button>
 </div></nav>
@@ -105,7 +106,7 @@ nav .dot{position:absolute;top:0;left:calc(50% + 6px);min-width:18px;height:18px
 const $ = s => document.querySelector(s), esc = t => String(t == null ? "" : t).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 const rs = n => "₹" + Number(n || 0).toLocaleString("en-IN");
 const KK = "ks-hq-key"; let KEY = ""; try { KEY = localStorage.getItem(KK) || ""; } catch (e) {}
-const S = { sum: null, orders: null, pages: null, people: null, tab: "home", of: "ship", pf: "live", q: { orders: "", shops: "", people: "" } };
+const S = { sum: null, orders: null, pages: null, people: null, team: null, tp: "week", tab: "home", of: "ship", pf: "live", q: { orders: "", shops: "", people: "" } };
 const IC = { biz: "🏪", site: "💌", card: "🎴" };
 const ago = t => { if (!t) return ""; const s = (Date.now() - t) / 1000; if (s < 60) return "just now"; if (s < 3600) return Math.floor(s / 60) + "m ago"; if (s < 86400) return Math.floor(s / 3600) + "h ago"; if (s < 172800) return "yesterday"; return new Date(t).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: new Date(t).getFullYear() === new Date().getFullYear() ? undefined : "numeric" }); };
 const when = t => t ? new Date(t).toLocaleString("en-IN", { day: "numeric", month: "short", hour: "numeric", minute: "2-digit" }) : "";
@@ -139,13 +140,13 @@ $("#go").onclick = login; $("#key").onkeydown = e => { if (e.key === "Enter") lo
 // ---------- shell ----------
 function start() {
   $("#login").hidden = true; $("#app").hidden = $("#nav").hidden = false;
-  const t = (location.hash || "#home").slice(1); go(["home", "orders", "shops", "people", "more"].includes(t) ? t : "home");
+  const t = (location.hash || "#home").slice(1); go(["home", "orders", "shops", "team", "people", "more"].includes(t) ? t : "home");
   setInterval(() => { if (document.visibilityState === "visible") poll(); }, 60000);
   document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") poll(); });
   if ("serviceWorker" in navigator) navigator.serviceWorker.register("/hq-sw.js", { scope: "/hq" }).catch(() => {});
 }
 document.querySelectorAll("nav button").forEach(b => b.onclick = () => go(b.dataset.t));
-addEventListener("hashchange", () => { const t = location.hash.slice(1); if (t && t !== S.tab && ["home", "orders", "shops", "people", "more"].includes(t)) go(t); });
+addEventListener("hashchange", () => { const t = location.hash.slice(1); if (t && t !== S.tab && ["home", "orders", "shops", "team", "people", "more"].includes(t)) go(t); });
 function go(t) {
   S.tab = t; if (location.hash.slice(1) !== t) history.replaceState(null, "", "#" + t);
   document.querySelectorAll("nav button").forEach(b => b.classList.toggle("on", b.dataset.t === t));
@@ -156,13 +157,14 @@ async function load(t, force) {
     if (t === "home" && (force || !S.sum)) S.sum = await api({ action: "hq-summary" });
     if (t === "orders" && (force || !S.orders)) S.orders = (await api({ action: "hq-orders" })).orders;
     if (t === "shops" && (force || !S.pages)) S.pages = (await api({ action: "hq-pages" })).pages;
+    if (t === "team" && (force || !S.team)) S.team = (await api({ action: "hq-team" })).team;
     if (t === "people" && (force || !S.people)) S.people = (await api({ action: "hq-people" })).people;
     if (t === "more" && (force || !S.sum)) S.sum = await api({ action: "hq-summary" });
     if (S.tab === t) draw();
   } catch (e) { toast(e.message); }
   dot();
 }
-async function refresh() { const b = $("#rf"); if (b) b.classList.add("spin"); S[{ home: "sum", orders: "orders", shops: "pages", people: "people", more: "sum" }[S.tab]] = null; await load(S.tab, true); if (S.tab !== "home") { try { S.sum = await api({ action: "hq-summary" }); } catch (e) {} } dot(); }
+async function refresh() { const b = $("#rf"); if (b) b.classList.add("spin"); S[{ home: "sum", orders: "orders", shops: "pages", team: "team", people: "people", more: "sum" }[S.tab]] = null; await load(S.tab, true); if (S.tab !== "home") { try { S.sum = await api({ action: "hq-summary" }); } catch (e) {} } dot(); }
 let lastN = null;
 async function poll() {
   try {
@@ -181,6 +183,7 @@ function draw() {
   if (S.tab === "home") A.innerHTML = home();
   if (S.tab === "orders") A.innerHTML = orders();
   if (S.tab === "shops") A.innerHTML = shops();
+  if (S.tab === "team") A.innerHTML = team();
   if (S.tab === "people") A.innerHTML = people();
   if (S.tab === "more") A.innerHTML = more();
   const rf = $("#rf"); if (rf) rf.onclick = refresh;
@@ -188,6 +191,9 @@ function draw() {
   A.querySelectorAll("[data-f]").forEach(b => b.onclick = () => { if (S.tab === "orders") S.of = b.dataset.f; else S.pf = b.dataset.f; draw(); });
   A.querySelectorAll("[data-o]").forEach(b => b.onclick = () => orderSheet(b.dataset.o));
   A.querySelectorAll("[data-p]").forEach(b => b.onclick = () => pageSheet(b.dataset.p));
+  A.querySelectorAll("[data-sp]").forEach(b => b.onclick = () => spSheet(b.dataset.sp));
+  A.querySelectorAll("[data-tp]").forEach(b => b.onclick = () => { S.tp = b.dataset.tp; draw(); });
+  const ad = $("#addSp"); if (ad) ad.onclick = addSp;
   A.querySelectorAll("[data-u]").forEach(b => b.onclick = () => personSheet(b.dataset.u));
   A.querySelectorAll("[data-go]").forEach(b => b.onclick = () => { if (b.dataset.of) S.of = b.dataset.of; go(b.dataset.go); });
   const al = $("#alertBtn"); if (al) al.onclick = toggleAlerts;
@@ -274,6 +280,57 @@ function pageSheet(id) {
   <div class="acts">${ph ? `<a class="bt sm" href="${wa(ph)}?text=${msg}" target="_blank" rel="noopener">WhatsApp</a><a class="bt sm gh" href="${tel(ph)}">Call</a>` : ""}${p.owner.email ? `<a class="bt sm gh" href="mailto:${esc(p.owner.email)}">Email</a>` : ""}</div>${!ph ? `<small style="color:var(--mu)">No phone saved. Use email.</small>` : ""}</div>
   <dl class="kv"><dt>Opens</dt><dd>${p.views}</dd><dt>Created</dt><dd>${when(p.created)}</dd><dt>Last edit</dt><dd>${when(p.updated)}</dd>${p.qr ? `<dt>Printed QRs</dt><dd>${p.qr}</dd>` : ""}<dt>ID</dt><dd>${esc(p.id)}</dd></dl>
   ${p.live ? `<a class="bt w" href="${esc(p.path)}" target="_blank" rel="noopener">Open page ↗</a>` : ""}`);
+}
+
+// ---------- team (salespeople) ----------
+const VST = { sold: ["Sold", "g"], interested: ["Interested", "y"], follow: ["Call back", "y"], no: ["Not interested", "r"] };
+function team() {
+  if (!S.team) return top("Team") + loading();
+  const T = S.team, p = S.tp, L = { today: "Today", week: "7 days", month: "30 days", all: "All time" };
+  const owed = T.reduce((a, s) => a + s.owed, 0), shops = T.reduce((a, s) => a + s.shops[p], 0), vis = T.reduce((a, s) => a + s.visits[p], 0);
+  const rank = T.slice().sort((a, b) => b.shops[p] - a.shops[p] || b.visits[p] - a.visits[p] || b.shops.all - a.shops.all);
+  return top("Team", T.length + " salespeople") +
+  `<div class="chips">${Object.keys(L).map(k => `<button data-tp="${k}" class="${p === k ? "on" : ""}">${L[k]}</button>`).join("")}</div>
+  <div class="g3"><div class="card"><small>Shops sold</small><b class="fd">${shops}</b><small>${L[p]}</small></div><div class="card"><small>Visits</small><b class="fd">${vis}</b><small>${vis ? Math.round(shops * 100 / vis) + "% converted" : L[p]}</small></div><div class="card"><small>You owe</small><b class="fd" style="color:${owed ? "var(--gd)" : "inherit"}">${rs(owed)}</b><small>commission</small></div></div>
+  <button class="bt w gh" id="addSp" style="margin:0 0 14px">+ Add salesperson</button>` +
+  (rank.map((s, i) => `<button class="row" data-sp="${esc(s.code)}"><span class="av fd" style="color:${i < 3 && s.shops[p] ? "var(--gd)" : "var(--mu)"}">${i + 1}</span><span class="mid"><b>${esc(s.name)} ${s.active ? "" : '<span class="tag r">Paused</span>'}</b><small>${s.visits[p]} visit${s.visits[p] === 1 ? "" : "s"} · ${s.follow} to follow up · active ${s.last ? ago(s.last) : "never"}</small></span><span class="rt"><b class="fd">${s.shops[p]}</b><small>${s.owed ? rs(s.owed) + " owed" : "shops"}</small></span></button>`).join("") || `<div class="empty">No salespeople yet. Add your first one above.</div>`);
+}
+function spShare(sp, pin) {
+  return encodeURIComponent(`Hi ${sp.name.split(" ")[0]}! Your GetKeepsake salesperson login:\n\nOpen: https://getkeepsake.in/sales\nCode: ${sp.code}\nPIN: ${pin}\n\nLog every shop visit there, and ask shops to type your code ${sp.code} before paying ₹499. You earn ${rs(sp.comm)} for every shop that goes live.`);
+}
+function addSp() {
+  sheet(`<h3>Add salesperson</h3><p class="sub">They get a code and a 6-digit PIN to log in at getkeepsake.in/sales.</p>
+  <div style="display:grid;gap:10px"><input class="in" id="nN" placeholder="Full name" maxlength="50"><input class="in" id="nP" type="tel" inputmode="numeric" placeholder="Mobile number" maxlength="14"><input class="in" id="nC" type="number" inputmode="numeric" placeholder="Commission per shop (₹)" value="100"><button class="bt w" id="nGo">Create login</button></div><div class="err" id="nE"></div>`);
+  $("#nGo").onclick = async () => {
+    try { const r = await api({ action: "sp-create", name: $("#nN").value, phone: $("#nP").value, comm: $("#nC").value }); S.team = null;
+      sheet(`<h3>${esc(r.sp.name)} is ready ✓</h3><p class="sub">Send these to them now. The PIN is shown only once.</p><div class="g3" style="grid-template-columns:1fr 1fr"><div class="card"><small>Code</small><b class="fd">${esc(r.sp.code)}</b></div><div class="card"><small>PIN</small><b class="fd">${esc(r.pin)}</b></div></div>
+      <a class="bt w" href="${wa(r.sp.phone) || "https://wa.me/"}?text=${spShare(r.sp, r.pin)}" target="_blank" rel="noopener">Send login on WhatsApp</a>`);
+      load("team", true);
+    } catch (e) { $("#nE").textContent = e.message; }
+  };
+}
+async function spSheet(code) {
+  sheet(loading());
+  let s; try { s = (await api({ action: "hq-sp", code })).sp; } catch (e) { sheet(`<div class="err">${esc(e.message)}</div>`); return; }
+  const vs = s.visits, mapU = v => `https://www.google.com/maps?q=${v.lat},${v.lng}`;
+  const days = {}; vs.forEach(v => { const d = new Date(v.at).toLocaleDateString("en-IN", { weekday: "short", day: "numeric", month: "short" }); (days[d] = days[d] || []).push(v); });
+  const fu = vs.filter(v => v.status === "interested" || v.status === "follow");
+  sheet(`<h3>${esc(s.name)} ${s.active ? "" : '<span class="tag r">Paused</span>'}</h3><p class="sub">${esc(s.code)} · ${rs(s.comm)} per shop · since ${when(s.created).split(",")[0]}</p>
+  <div class="acts">${s.phone ? `<a class="bt sm" href="${wa(s.phone)}" target="_blank" rel="noopener">WhatsApp</a><a class="bt sm gh" href="${tel(s.phone)}">Call</a>` : ""}</div>
+  <div class="g3"><div class="card"><small>Shops · 7d</small><b class="fd">${s.shopsN.week}</b><small>${s.shopsN.all} all time</small></div><div class="card"><small>Visits · 7d</small><b class="fd">${s.visitsN.week}</b><small>${s.visitsN.today} today</small></div><div class="card"><small>Owed</small><b class="fd">${rs(s.owed)}</b><small>${rs(s.paid)} paid</small></div></div>
+  ${s.owed ? `<button class="bt w" id="payOut">Mark ${rs(s.owed)} as paid</button>` : ""}
+  <div class="box"><h4>Visits</h4>${Object.keys(days).length ? Object.entries(days).slice(0, 14).map(([d, list]) => `<div style="margin:10px 0 4px;font-weight:700;font-size:13px;color:var(--mu)">${d} · ${list.length} visit${list.length === 1 ? "" : "s"}${list.some(v => v.lat) ? ` · <a href="https://www.google.com/maps/dir/${list.filter(v => v.lat).reverse().map(v => v.lat + "," + v.lng).join("/")}" target="_blank" rel="noopener">route ↗</a>` : ""}</div>` + list.map(v => `<div class="li"><div><b>${esc(v.shop)} <span class="tag ${VST[v.status][1]}">${VST[v.status][0]}</span></b><small>${new Date(v.at).toLocaleTimeString("en-IN", { hour: "numeric", minute: "2-digit" })}${v.area ? " · " + esc(v.area) : ""}${v.kind ? " · " + esc(v.kind) : ""}${v.phone ? " · " + esc(v.phone) : ""}</small>${v.note ? `<small style="color:var(--tx)">${esc(v.note)}</small>` : ""}</div>${v.lat ? `<a href="${mapU(v)}" target="_blank" rel="noopener" title="±${v.acc || "?"} m">📍 Map</a>` : '<small>no location</small>'}</div>`).join("")).join("") : '<small style="color:var(--mu)">No visits logged yet.</small>'}</div>
+  ${fu.length ? `<div class="box"><h4>Interested shops to follow up (${fu.length})</h4>${fu.slice(0, 30).map(v => `<div class="li"><div><b>${esc(v.shop)}</b><small>${ago(v.at)}${v.area ? " · " + esc(v.area) : ""}</small></div>${v.phone ? `<a href="${wa(v.phone)}" target="_blank" rel="noopener">WhatsApp</a>` : ""}</div>`).join("")}</div>` : ""}
+  <div class="box"><h4>Shops activated (${s.shops.length})</h4>${s.shops.map(x => `<div class="li"><div><b>${esc(x.name)}</b><small>${when(x.at)}${x.area ? " · " + esc(x.area) : ""}</small></div>${x.live ? `<a href="/b/${esc(x.id)}" target="_blank" rel="noopener">Open ↗</a>` : ""}</div>`).join("") || '<small style="color:var(--mu)">None yet.</small>'}</div>
+  ${s.batches.length ? `<div class="box"><h4>QR cards given to them</h4>${s.batches.map(b => `<div class="li"><div><b>${esc(b.shop)}</b><small>${b.claimed} of ${b.count} used · ${when(b.created).split(",")[0]}</small></div><span class="tag ${b.claimed < b.count ? "y" : "g"}">${b.count - b.claimed} left</span></div>`).join("")}</div>` : ""}
+  ${s.payouts.length ? `<div class="box"><h4>Payments made</h4>${s.payouts.map(p => `<div class="li"><div><b>${rs(p.amount)}</b><small>${when(p.at)}</small></div><small>${p.shops} shop${p.shops === 1 ? "" : "s"}</small></div>`).join("")}</div>` : ""}
+  <div class="box"><h4>Settings</h4><div style="display:flex;gap:8px;align-items:center"><input class="in" id="cm" type="number" inputmode="numeric" value="${s.comm}" style="padding:11px 14px"><button class="bt sm" id="cmGo">Save ₹/shop</button></div>
+  <div class="acts"><button class="bt sm gh" id="rPin">Reset PIN</button><button class="bt sm gh" id="tAct">${s.active ? "Pause" : "Resume"}</button></div></div>`);
+  const upd = async (f, msg) => { try { const r = await api({ action: "sp-update", code, ...f }); S.team = null; load("team", true); if (r.pin) { sheet(`<h3>New PIN for ${esc(s.name)}</h3><p class="sub">Their old login stops working now.</p><div class="card"><small>PIN</small><b class="fd" style="font-size:30px">${esc(r.pin)}</b></div><a class="bt w" href="${wa(s.phone) || "https://wa.me/"}?text=${spShare(s, r.pin)}" target="_blank" rel="noopener">Send on WhatsApp</a>`); } else { toast(msg); spSheet(code); } } catch (e) { toast(e.message); } };
+  $("#cmGo").onclick = () => upd({ comm: $("#cm").value }, "Commission saved");
+  $("#rPin").onclick = () => { if (confirm("Reset " + s.name + "'s PIN? Their current login will stop working.")) upd({ resetPin: true }); };
+  $("#tAct").onclick = () => upd({ active: !s.active }, s.active ? "Paused: their code no longer works" : "Resumed");
+  const po = $("#payOut"); if (po) po.onclick = async () => { if (!confirm("Mark " + rs(s.owed) + " as paid to " + s.name + "?")) return; try { const r = await api({ action: "sp-payout", code }); toast("Marked " + rs(r.paid) + " paid ✓"); S.team = null; load("team", true); spSheet(code); } catch (e) { toast(e.message); } };
 }
 
 // ---------- people ----------
