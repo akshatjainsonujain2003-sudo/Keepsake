@@ -55,6 +55,23 @@ summary{cursor:pointer;font-weight:700}
 .code small{display:block;font:700 11px var(--fn);letter-spacing:.18em;text-transform:uppercase}
 .code b{font:400 30px var(--fd);letter-spacing:.06em}
 .code button{border:0;border-radius:999px;padding:11px 16px;background:var(--ink);color:#fff;font:700 13px var(--fn);cursor:pointer}
+.vf{background:var(--pa);border:1px solid var(--ln);border-radius:24px;padding:18px;display:grid;gap:12px}
+.vf label{display:grid;gap:6px;font:600 13px var(--fn)}
+.vf input,.vf select,.vf textarea{font:500 16px var(--fn);padding:12px 14px;border-radius:14px;border:1.5px solid var(--ln);background:#fff;width:100%;color:var(--ink)}
+.vf textarea{min-height:64px;resize:vertical}
+.vf .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.oc{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.oc button{padding:12px 8px;border-radius:14px;border:1.5px solid var(--ln);background:#fff;font:700 14px var(--fn);cursor:pointer;color:var(--ink)}
+.oc button.on{border-color:var(--ink);background:var(--ink);color:#fff}
+.oc button[data-s=sold].on{background:var(--ok);border-color:var(--ok)}
+.geo{display:flex!important;grid-template-columns:none!important;align-items:center;gap:10px!important;font-weight:500!important;color:var(--mu)}
+.geo input{width:20px!important;height:20px;padding:0!important}
+.vs{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border-radius:16px;background:var(--pa);border:1px solid var(--ln);margin-bottom:8px}
+.vs div{flex:1;min-width:0}.vs b{display:block}.vs small{color:var(--mu);display:block}
+.st{display:inline-block;padding:2px 8px;border-radius:99px;font:700 11px var(--fn);background:var(--bg)}
+.st.sold{background:#1f8a4c22;color:var(--ok)}.st.interested,.st.follow{background:#ffd84d66;color:#6b5200}.st.no{background:#b3362f18;color:#b3362f}
+.vs a{flex:none;align-self:center;padding:8px 12px;border-radius:99px;background:#25d366;color:#05301a;font:700 13px var(--fn);text-decoration:none}
+.ok2{color:var(--ok);font-weight:700;min-height:1.3em;margin:0}
 .out{background:none;border:0;color:var(--mu);font:600 13px var(--fn);text-decoration:underline;cursor:pointer;margin-top:20px}
 </style>
 </head>
@@ -105,7 +122,19 @@ async function panel(code, tok) {
     <p class="sub">Your shops and commission, updated live.</p>
     <div class="code"><div><small>Your salesperson code</small><b>${esc(j.code)}</b></div><button type="button" id="cp">Copy</button></div>
     <p style="margin:8px 4px 16px;color:var(--mu);font-size:14px">Ask every shop to type this code before paying ₹499. When their page goes live, ${j.comm ? `<b>${rs(j.comm)}</b> is added` : "your commission is added"} here.</p>
-    <div class="big"><small>Shops activated</small><div class="n">${j.shops}<span>${j.shops === 1 ? "shop" : "shops"}</span></div><p>${j.comm ? `You earn ${rs(j.comm)} for every shop that goes live with your code` : "Commission rate will be set by GetKeepsake"}</p></div>
+    <h2>Log a shop visit</h2>
+    <form class="vf" id="vf">
+      <label>Shop name<input id="vShop" maxlength="60" required placeholder="e.g. Sharma Sweets"></label>
+      <div class="two"><label>Area<input id="vArea" maxlength="60" placeholder="e.g. Raja Park"></label><label>Owner's mobile<input id="vPh" type="tel" inputmode="numeric" maxlength="14" placeholder="Optional"></label></div>
+      <label>Type of business<select id="vKind"><option value="">Choose…</option>${["Café / Restaurant", "Sweets / Bakery", "Salon / Spa", "Boutique / Clothing", "Gym / Fitness", "Clinic / Doctor", "Kirana / Store", "Mobile / Electronics", "Other"].map(k => `<option>${k}</option>`).join("")}</select></label>
+      <div><div style="font:600 13px var(--fn);margin-bottom:6px">How did it go?</div><div class="oc">${[["sold", "✓ Sold"], ["interested", "Interested"], ["follow", "Call back later"], ["no", "Not interested"]].map(([k, l]) => `<button type="button" data-s="${k}">${l}</button>`).join("")}</div></div>
+      <label>Note<textarea id="vNote" maxlength="240" placeholder="e.g. Owner wants to see the salon example. Visit again Saturday."></textarea></label>
+      <label class="geo"><input type="checkbox" id="vGeo" checked> Add my location (shows GetKeepsake where you visited)</label>
+      <p class="err" id="vErr"></p><p class="ok2" id="vOk"></p>
+      <button class="btn" type="submit" id="vBtn">Save visit</button>
+    </form>
+    <div id="vList"></div>
+    <div class="big" style="margin-top:22px"><small>Shops activated</small><div class="n">${j.shops}<span>${j.shops === 1 ? "shop" : "shops"}</span></div><p>${j.comm ? `You earn ${rs(j.comm)} for every shop that goes live with your code` : "Commission rate will be set by GetKeepsake"}</p></div>
     <div class="money"><div><small>Earned</small><b>${rs(j.earned)}</b></div><div><small>Paid to you</small><b>${rs(j.paid)}</b></div><div class="ow"><small>Coming to you</small><b>${rs(j.owed)}</b></div></div>
     <h2>Your shops</h2>
     ${shops.length ? shops.map(s => `<a class="shop" href="${esc(s.url)}" target="_blank" rel="noopener"><i>${esc((s.name || "S").charAt(0).toUpperCase())}</i><div><b>${esc(s.name)}</b><small>Activated ${date(s.at)}${s.area ? " · " + esc(s.area) : ""}${j.comm ? " · +" + rs(j.comm) : ""}</small></div><span>View →</span></a>`).join("") : `<div class="empty">No shops yet. Your first one is one conversation away.</div>`}
@@ -113,8 +142,40 @@ async function panel(code, tok) {
     ${j.payouts.length ? `<details><summary>Payments received (${j.payouts.length})</summary>${j.payouts.slice().reverse().map(p => `<p style="margin:10px 0 0">${date(p.at)}: <b>${rs(p.amount)}</b> for ${p.shops} shop${p.shops > 1 ? "s" : ""}</p>`).join("")}</details>` : ""}
     <p class="foot">Questions about your commission? WhatsApp <a href="https://wa.me/916377547759">+91 63775 47759</a>.</p>
     <div style="text-align:center"><button class="out" id="lo">Log out</button></div>`;
+  visitsUI(code, tok, j);
   document.getElementById("cp").onclick = async e => { try { await navigator.clipboard.writeText(j.code); e.target.textContent = "Copied ✓"; } catch (x) {} };
   document.getElementById("lo").onclick = () => { try { localStorage.removeItem(KEY); } catch (x) {} showLogin(); };
+}
+const ST = { sold: "Sold", interested: "Interested", follow: "Call back", no: "Not interested" };
+const when = t => new Date(t).toLocaleString("en-IN", { day: "numeric", month: "short", hour: "numeric", minute: "2-digit" });
+function visitsUI(code, tok, j) {
+  let vs = j.visits || [], status = "";
+  const $ = id => document.getElementById(id);
+  const pitch = name => encodeURIComponent(`Hi${name ? " " + name : ""}! Thanks for your time today. Here are real example pages from GetKeepsake: https://getkeepsake.in/shops\nCreate yours (my code ${code} is filled in): https://getkeepsake.in/shops/studio?sp=${code}`);
+  const row = v => `<div class="vs"><div><b>${esc(v.shop)} <span class="st ${v.status}">${ST[v.status] || ""}</span></b><small>${when(v.at)}${v.area ? " · " + esc(v.area) : ""}${v.kind ? " · " + esc(v.kind) : ""}</small>${v.note ? `<small style="color:var(--ink)">${esc(v.note)}</small>` : ""}</div>${v.phone && v.status !== "no" ? `<a href="https://wa.me/91${esc(v.phone)}?text=${pitch("")}" target="_blank" rel="noopener">WhatsApp</a>` : ""}</div>`;
+  const draw = () => {
+    const t0 = new Date(); t0.setHours(0, 0, 0, 0);
+    const today = vs.filter(v => v.at >= t0.getTime()), fu = vs.filter(v => (v.status === "interested" || v.status === "follow") && v.at < t0.getTime() && Date.now() - v.at < 30 * 864e5);
+    $("vList").innerHTML = `<h2 style="margin-top:22px">Today · ${today.length} visit${today.length === 1 ? "" : "s"}</h2>${today.map(row).join("") || '<div class="empty">No visits logged today yet.</div>'}` +
+      (fu.length ? `<h2>Follow up (${fu.length})</h2><p style="color:var(--mu);margin:-4px 0 10px;font-size:14px">Interested shops from the last 30 days. A quick WhatsApp often closes them.</p>${fu.map(row).join("")}` : "");
+  };
+  draw();
+  document.querySelectorAll(".oc button").forEach(b => b.onclick = () => { status = b.dataset.s; document.querySelectorAll(".oc button").forEach(x => x.classList.toggle("on", x === b)); });
+  const where = () => new Promise(ok => { if (!$("vGeo").checked || !navigator.geolocation) return ok(null); navigator.geolocation.getCurrentPosition(p => ok(p.coords), () => ok(null), { enableHighAccuracy: true, timeout: 8000, maximumAge: 60000 }); });
+  $("vf").onsubmit = async e => {
+    e.preventDefault(); $("vErr").textContent = ""; $("vOk").textContent = "";
+    if (!status) { $("vErr").textContent = "Choose how the visit went."; return; }
+    const btn = $("vBtn"); btn.disabled = true; btn.textContent = "Saving…";
+    try {
+      const c = await where();
+      const visit = { shop: $("vShop").value, area: $("vArea").value, phone: $("vPh").value, kind: $("vKind").value, status, note: $("vNote").value, ...(c ? { lat: c.latitude, lng: c.longitude, acc: c.accuracy } : {}) };
+      const r = await fetch("/api/qr", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "sp-visit", code, tok, visit }) });
+      const x = await r.json(); if (!r.ok) throw new Error(x.error || "Couldn't save the visit.");
+      vs.unshift(x.visit); draw();
+      const area = $("vArea").value; $("vf").reset(); $("vArea").value = area; status = ""; document.querySelectorAll(".oc button").forEach(b => b.classList.remove("on"));
+      $("vOk").textContent = "Saved ✓ " + (x.visit.status === "sold" ? "Great work!" : "Next shop!");
+    } catch (x) { $("vErr").textContent = x.message; } finally { btn.disabled = false; btn.textContent = "Save visit"; }
+  };
 }
 // Older per-batch links (?b=…&k=…) still work
 async function legacy() {
