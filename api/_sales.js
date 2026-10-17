@@ -42,7 +42,10 @@ async function update(code, f) {
 async function credit(code, pageId) {
   const s = await get(code); if (!s || s.active === false) return false;
   if ((await db.cmd("SET", "sp-credit:" + pageId, s.code, "NX")) !== "OK") return false;
-  await db.cmd("ZADD", "sp-shops:" + s.code, Date.now(), pageId); return true;
+  await db.cmd("ZADD", "sp-shops:" + s.code, Date.now(), pageId);
+  // Phone alert to the salesperson's app (best effort).
+  try { const H = require("./_hq"); await Promise.race([H.notify("sp-push:" + s.code), new Promise(r => setTimeout(r, 5000))]); } catch (e) {}
+  return true;
 }
 async function summary(s) {
   const ids = await db.cmd("ZRANGE", "sp-shops:" + s.code, 0, -1, "REV"), n = ids.length, comm = s.comm || 0, paid = Math.min(s.paidOut || 0, n);
@@ -76,7 +79,7 @@ async function me(code, tok) {
     return m ? { name: String(m.title || "Shop").slice(0, 60), at, url: "/b/" + id, area: String((m.data && m.data.area) || "").slice(0, 40) } : null;
   }))).filter(Boolean);
   delete x.ids;
-  const vs = await visits(s.code, 60), t0 = dayStart(Date.now());
+  const vs = await visits(s.code, 250), t0 = dayStart(Date.now());
   return { ...x, shopsList: shops, payouts: (s.payouts || []).map(p => ({ at: p.at, amount: p.amount, shops: p.shops })), visits: vs, visitsToday: vs.filter(v => v.at >= t0).length };
 }
 // ---------- field visits ----------
@@ -133,4 +136,14 @@ async function detail(code) {
   return { ...pub(s), shopsN: periods(sh.map(x => x.at), now), visitsN: periods(vs.map(x => x.at), now), earned: n * comm, paid: paid * comm, owed: (n - paid) * comm,
     shops, visits: vs, payouts: (s.payouts || []).slice().reverse(), batches };
 }
-module.exports = { norm, valid, get, create, update, credit, list, payout, login, me, pub, logVisit, visits, team, detail, STATUS };
+// Phone alerts for the salesperson app.
+async function push(code, tok, b) {
+  const s = await auth(code, tok); if (!s) return { status: 401, error: "Please log in again." };
+  const H = require("./_hq"), set = "sp-push:" + s.code;
+  if (b.action === "sp-push-key") return { key: (await H.vapid()).pub };
+  if (b.action === "sp-push-sub") { const r = await H.subscribe(b.sub, s.code, set); return r.error ? { status: 400, error: r.error } : r; }
+  if (b.action === "sp-push-unsub") return H.unsubscribe(b.endpoint, set);
+  if (b.action === "sp-push-test") return H.notify(set);
+  return { status: 400, error: "Unknown action." };
+}
+module.exports = { norm, valid, get, create, update, credit, list, payout, login, me, pub, logVisit, visits, team, detail, STATUS, push };

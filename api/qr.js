@@ -37,6 +37,7 @@ module.exports = async (req, res) => {
       return res.redirect(302, (rec.tier === "site" ? "/builder" : rec.tier === "biz" ? "/shops/studio" : "/studio") + "?claim=" + rec.code);
     }
     if (req.method !== "POST") { res.setHeader("Allow", "GET, POST"); return db.reply(res, 405, { error: "Method not allowed." }); }
+    if (/^sp-push-/.test(String((req.body || {}).action || ""))) { const b = req.body, r = await require("./_sales").push(b.code, b.tok, b); return r.error ? db.reply(res, r.status, { error: r.error }) : db.reply(res, 200, r); }
     if ((req.body || {}).action === "sp-visit") { const r = await require("./_sales").logVisit(req.body.code, req.body.tok, req.body.visit); return r.error ? db.reply(res, r.status, { error: r.error }) : db.reply(res, 200, r); }
     if ((req.body || {}).action === "sp-login") { const r = await require("./_sales").login(req.body.code, req.body.pin, ip(req)); return r.error ? db.reply(res, r.status, { error: r.error }) : db.reply(res, 200, r); }
     const user = await auth.currentUser(req);

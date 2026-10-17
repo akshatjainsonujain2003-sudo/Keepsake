@@ -85,30 +85,31 @@ async function vapid() {
   return v;
 }
 const subKey = ep => "push-sub:" + crypto.createHash("sha256").update(ep).digest("hex").slice(0, 32);
-async function subscribe(sub, label) {
+// set = which group of phones: "push-subs" (admin) or "sp-push:<CODE>" (one salesperson).
+async function subscribe(sub, label, set = "push-subs") {
   const ep = String((sub && sub.endpoint) || "");
   if (!/^https:\/\/[^\s]{10,800}$/.test(ep)) return { error: "Bad subscription." };
-  const k = subKey(ep); await db.setj(k, { endpoint: ep, label: String(label || "").slice(0, 60), at: Date.now() }); await db.cmd("SADD", "push-subs", k);
+  const k = subKey(ep); await db.setj(k, { endpoint: ep, label: String(label || "").slice(0, 60), at: Date.now() }); await db.cmd("SADD", set, k);
   return { ok: true };
 }
-async function unsubscribe(ep) { const k = subKey(String(ep || "")); await db.cmd("DEL", k); await db.cmd("SREM", "push-subs", k); return { ok: true }; }
-async function subCount() { return +(await db.cmd("SCARD", "push-subs")) || 0; }
+async function unsubscribe(ep, set = "push-subs") { const k = subKey(String(ep || "")); await db.cmd("SREM", set, k); return { ok: true }; }
+async function subCount(set = "push-subs") { return +(await db.cmd("SCARD", set)) || 0; }
 
 function jwt(aud, v) {
   const h = b64u(JSON.stringify({ typ: "JWT", alg: "ES256" })), p = b64u(JSON.stringify({ aud, exp: Math.floor(Date.now() / 1000) + 12 * 3600, sub: "https://getkeepsake.in" }));
   const key = crypto.createPrivateKey({ key: v.priv, format: "jwk" });
   return h + "." + p + "." + b64u(crypto.sign("sha256", Buffer.from(h + "." + p), { key, dsaEncoding: "ieee-p1363" }));
 }
-async function notify() {
-  const ks = await db.cmd("SMEMBERS", "push-subs"); if (!ks.length) return { sent: 0 };
+async function notify(set = "push-subs") {
+  const ks = await db.cmd("SMEMBERS", set); if (!ks.length) return { sent: 0 };
   const v = await vapid(), subs = await mget(ks); let sent = 0;
   await Promise.all(subs.map(async (s, i) => {
-    if (!s) { await db.cmd("SREM", "push-subs", ks[i]); return; }
+    if (!s) { await db.cmd("SREM", set, ks[i]); return; }
     try {
       const u = new URL(s.endpoint), ac = new AbortController(), t = setTimeout(() => ac.abort(), 4000);
       const r = await fetch(s.endpoint, { method: "POST", signal: ac.signal, headers: { Authorization: `vapid t=${jwt(u.origin, v)}, k=${v.pub}`, TTL: "86400", Urgency: "high", "Content-Length": "0" } });
       clearTimeout(t);
-      if (r.status === 404 || r.status === 410) { await db.cmd("DEL", ks[i]); await db.cmd("SREM", "push-subs", ks[i]); } else if (r.ok) sent++;
+      if (r.status === 404 || r.status === 410) { await db.cmd("SREM", set, ks[i]); } else if (r.ok) sent++;
     } catch (e) {}
   }));
   return { sent };
@@ -121,4 +122,4 @@ async function latest() {
   return { id: o.id, at: o.paidAt, amount: o.amount, title: o.title || "", what, ship: SHIP(o.plan) };
 }
 
-module.exports = { summary, orders, pages, people, vapid, subscribe, unsubscribe, notify, latest };
+module.exports = { summary, orders, pages, people, vapid, subscribe, unsubscribe, notify, latest, subCount };

@@ -4,190 +4,336 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
-<title>Salesperson panel · GetKeepsake for Business</title>
+<title>GetKeepsake Sales</title>
 <meta name="theme-color" content="#f4f1ea">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="apple-mobile-web-app-title" content="KS Sales">
+<link rel="manifest" href="/sales.webmanifest">
+<link rel="icon" href="/favicon.ico" sizes="any"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Pinyon+Script&family=Inter:wght@400;500;600;700;800&display=swap">
-<link rel="icon" href="/favicon.ico" sizes="any">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js" defer></script>
 <style>
-:root{--bg:#f4f1ea;--pa:#fffdf8;--ink:#121110;--mu:#6c665d;--ln:#e2dccf;--ac:#ff5b2e;--ok:#1f8a4c;--fd:'Archivo Black','Arial Black',sans-serif;--fsc:'Pinyon Script',cursive;--fn:'Inter',system-ui,sans-serif}
-*{box-sizing:border-box}[hidden]{display:none!important}
+:root{--bg:#f4f1ea;--pa:#fffdf8;--ink:#121110;--mu:#6c665d;--ln:#e2dccf;--ac:#ff5b2e;--ok:#1f8a4c;--y:#ffd84d;--fd:'Archivo Black','Arial Black',sans-serif;--fsc:'Pinyon Script',cursive;--fn:'Inter',system-ui,sans-serif;--sa:env(safe-area-inset-bottom);--st:env(safe-area-inset-top)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}[hidden]{display:none!important}
 html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 var(--fn);-webkit-font-smoothing:antialiased}
-.wrap{max-width:640px;margin:0 auto;padding:18px 18px 60px}
-.top{display:flex;align-items:baseline;gap:8px;margin-bottom:22px}
-.top b{font:400 18px var(--fd)}.top span{font:400 22px var(--fsc);color:var(--ac)}
-h1{margin:0;font:400 clamp(34px,10vw,52px)/.95 var(--fd);text-transform:uppercase;letter-spacing:-.02em}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:inherit}
+.wrap{max-width:640px;margin:0 auto;padding:calc(var(--st) + 16px) 18px calc(var(--sa) + 96px)}
+.brand{display:flex;align-items:baseline;gap:8px}.brand b{font:400 17px var(--fd)}.brand span{font:400 21px var(--fsc);color:var(--ac)}
+.hd{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:16px}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:999px;background:var(--y);font:700 13px ui-monospace,Menlo,monospace;letter-spacing:.06em;border:0;cursor:pointer}
+h1{margin:0 0 4px;font:400 clamp(30px,9vw,44px)/.98 var(--fd);text-transform:uppercase;letter-spacing:-.02em}
 h1 em{font:400 .9em var(--fsc);text-transform:none;color:var(--ac);letter-spacing:0}
-.sub{color:var(--mu);margin:10px 0 22px}
-.big{background:var(--ink);color:#fff;border-radius:26px;padding:24px;position:relative;overflow:hidden}
-.big small{font:700 11px var(--fn);letter-spacing:.2em;text-transform:uppercase;color:#ffd84d}
-.big .n{font:400 64px/1 var(--fd);margin:10px 0 4px}
-.big .n span{font:500 20px var(--fn);color:#bdb6a8;margin-left:6px}
-.bar{height:10px;border-radius:99px;background:#ffffff22;margin:14px 0 6px;overflow:hidden}.bar i{display:block;height:100%;background:linear-gradient(90deg,#ffd84d,var(--ac));border-radius:99px}
-.big p{margin:0;color:#cfc9bd;font-size:14px}
-.money{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
-.money div{background:var(--pa);border:1px solid var(--ln);border-radius:20px;padding:14px}
-.money small{display:block;font:600 11.5px var(--fn);color:var(--mu)}
-.money b{display:block;font:400 22px var(--fd);margin-top:4px}
-.money .ow{background:#ffd84d;border-color:transparent}
-h2{font:400 22px var(--fd);text-transform:uppercase;margin:34px 0 12px}
-.shop{display:flex;align-items:center;gap:12px;padding:14px;border-radius:18px;background:var(--pa);border:1px solid var(--ln);margin-bottom:8px;text-decoration:none;color:inherit}
-.shop i{width:42px;height:42px;border-radius:12px;background:var(--ink);color:#fff;display:grid;place-items:center;font:400 18px var(--fd);font-style:normal;flex:none}
-.shop div{flex:1;min-width:0}.shop b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.shop small{color:var(--mu)}
-.shop span{font:700 13px var(--fn);color:var(--ac)}
+h2{font:400 19px var(--fd);text-transform:uppercase;margin:26px 0 10px;display:flex;justify-content:space-between;align-items:baseline}
+h2 small{font:600 13px var(--fn);text-transform:none;color:var(--mu)}
+.sub{color:var(--mu);margin:0 0 16px}
+.dark{background:var(--ink);color:#fff;border-radius:26px;padding:20px;position:relative;overflow:hidden}
+.dark small{font:700 11px var(--fn);letter-spacing:.2em;text-transform:uppercase;color:var(--y)}
+.goal{display:flex;align-items:center;gap:18px}
+.ring{--p:0;width:96px;height:96px;border-radius:50%;flex:none;background:conic-gradient(var(--y) calc(var(--p)*1%),#ffffff22 0);display:grid;place-items:center}
+.ring div{width:76px;height:76px;border-radius:50%;background:var(--ink);display:grid;place-items:center;text-align:center;line-height:1}
+.ring b{font:400 28px var(--fd)}.ring span{display:block;font:600 11px var(--fn);color:#bdb6a8;margin-top:3px}
+.goal p{margin:6px 0 0;color:#cfc9bd;font-size:14px}
+.goal .n{font:400 22px var(--fd);margin-top:4px}
+.btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:16px 18px;border-radius:999px;background:var(--ink);color:#fff;font:700 16px var(--fn);text-decoration:none;border:0;cursor:pointer}
+.btn.ac{background:var(--ac)}.btn.wa{background:#25d366;color:#05301a}.btn.gh{background:transparent;color:var(--ink);border:1.5px solid var(--ink)}.btn.sm{width:auto;padding:10px 14px;font-size:14px}
+.btn:disabled{opacity:.6}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+.g3 div{background:var(--pa);border:1px solid var(--ln);border-radius:18px;padding:12px}
+.g3 small{display:block;font:600 11.5px var(--fn);color:var(--mu)}.g3 b{display:block;font:400 21px var(--fd);margin-top:4px}
+.g3 .ow{background:var(--y);border-color:transparent}
+.it{display:flex;gap:12px;align-items:flex-start;padding:13px 14px;border-radius:18px;background:var(--pa);border:1px solid var(--ln);margin-bottom:8px}
+.it .ic{width:40px;height:40px;border-radius:12px;background:var(--ink);color:#fff;display:grid;place-items:center;font:400 17px var(--fd);flex:none}
+.it .m{flex:1;min-width:0}.it b{display:block}.it small{color:var(--mu);display:block;font-size:13px}
+.it .ac{display:flex;flex-direction:column;gap:6px;flex:none;align-self:center}
+.it .ac a,.it .ac button{padding:7px 12px;border-radius:99px;font:700 12.5px var(--fn);text-decoration:none;border:0;cursor:pointer;text-align:center}
+.wa1{background:#25d366;color:#05301a}.cl1{background:var(--bg);color:var(--ink);border:1px solid var(--ln)!important}
+.st{display:inline-block;padding:2px 8px;border-radius:99px;font:700 11px var(--fn);background:var(--bg);vertical-align:1px}
+.st.sold{background:#1f8a4c22;color:var(--ok)}.st.interested,.st.follow{background:#ffd84d88;color:#5e4800}.st.no{background:#b3362f18;color:#b3362f}
 .empty{padding:22px;border-radius:18px;border:1.5px dashed var(--ln);color:var(--mu);text-align:center}
-.tools{display:grid;gap:10px}
-.btn{display:flex;align-items:center;justify-content:center;gap:10px;padding:15px 18px;border-radius:999px;background:var(--ink);color:#fff;font:700 15px var(--fn);text-decoration:none;border:0;cursor:pointer}
-.btn.wa{background:#25d366;color:#05301a}.btn.gh{background:transparent;color:var(--ink);border:1.5px solid var(--ink)}
-details{background:var(--pa);border:1px solid var(--ln);border-radius:18px;padding:14px 16px;margin-top:10px}
-summary{cursor:pointer;font-weight:700}
-.codes{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
-.codes span{font:600 12px ui-monospace,Menlo,monospace;padding:5px 8px;border-radius:8px;background:var(--bg)}
-.codes span.u{background:#1f8a4c22;color:var(--ok);text-decoration:line-through}
-.msg{padding:40px 10px;text-align:center;color:var(--mu)}
-.foot{margin-top:34px;color:var(--mu);font-size:13px;text-align:center}
-@media (max-width:420px){.money{grid-template-columns:1fr 1fr}.money .ow{grid-column:span 2}}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:0 0 12px;scrollbar-width:none}.chips::-webkit-scrollbar{display:none}
+.chips button{flex:none;padding:8px 14px;border-radius:999px;border:1px solid var(--ln);background:var(--pa);font-weight:600;font-size:14px;cursor:pointer}
+.chips button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.card{background:var(--pa);border:1px solid var(--ln);border-radius:22px;padding:16px;margin-bottom:10px}
+.qrbox{background:#fff;border-radius:18px;padding:16px;width:min(260px,70vw);margin:6px auto 10px;aspect-ratio:1}
+.qrbox svg{width:100%;height:100%;display:block}
+.li{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--ln)}.li:last-child{border-bottom:0}.li small{display:block;color:var(--mu);font-size:13px}
+.sw{width:50px;height:30px;border-radius:15px;background:#d8d1c3;border:0;position:relative;cursor:pointer;flex:none}.sw:after{content:"";position:absolute;left:3px;top:3px;width:24px;height:24px;border-radius:50%;background:#fff;transition:.2s;box-shadow:0 1px 3px #0003}.sw.on{background:var(--ok)}.sw.on:after{left:23px}
+.q{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:14px;background:#ffd84d66;font-size:14px;margin-bottom:12px}
+nav{position:fixed;left:0;right:0;bottom:0;z-index:20;background:#f4f1eaee;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--ln);padding:8px 8px calc(var(--sa) + 8px)}
+nav .in2{display:grid;grid-template-columns:repeat(5,1fr);max-width:640px;margin:0 auto}
+nav button{background:none;border:0;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;font-weight:700;color:var(--mu);padding:4px 0;cursor:pointer;position:relative}
+nav button svg{width:23px;height:23px}nav button.on{color:var(--ac)}
+nav .dot{position:absolute;top:0;left:calc(50% + 6px);min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--ac);color:#fff;font-size:11px;font-weight:800;display:grid;place-items:center}
+.fab{position:fixed;right:18px;bottom:calc(var(--sa) + 84px);z-index:21;width:62px;height:62px;border-radius:50%;background:var(--ac);color:#fff;border:0;box-shadow:0 10px 26px #ff5b2e66;display:grid;place-items:center;cursor:pointer}
+.fab svg{width:28px;height:28px}
+/* sheet */
+.ov{position:fixed;inset:0;z-index:40;background:#1211108a;opacity:0;pointer-events:none;transition:.2s}.ov.on{opacity:1;pointer-events:auto}
+.sh{position:fixed;left:0;right:0;bottom:0;z-index:41;max-height:92dvh;overflow:auto;background:var(--bg);border-radius:26px 26px 0 0;padding:10px 18px calc(var(--sa) + 22px);transform:translateY(105%);transition:transform .25s ease;max-width:640px;margin:0 auto}
+.sh.on{transform:none}.sh .gr{width:40px;height:5px;border-radius:3px;background:#d3cbbb;margin:0 auto 12px}
+.vf{display:grid;gap:12px}
+.vf label{display:grid;gap:6px;font:600 13px var(--fn)}
+.vf input,.vf select,.vf textarea{font:500 16px var(--fn);padding:12px 14px;border-radius:14px;border:1.5px solid var(--ln);background:#fff;width:100%}
+.vf textarea{min-height:64px;resize:vertical}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.oc{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.oc button{padding:13px 8px;border-radius:14px;border:1.5px solid var(--ln);background:#fff;font:700 14px var(--fn);cursor:pointer}
+.oc button.on{border-color:var(--ink);background:var(--ink);color:#fff}.oc button[data-s=sold].on{background:var(--ok);border-color:var(--ok)}
+.geo{display:flex!important;align-items:center;gap:10px!important;font-weight:500!important;color:var(--mu)}
+.geo input{width:20px!important;height:20px;padding:0!important}
+.err{color:#b3362f;font-weight:600;min-height:1.3em;margin:0}
+.toast{position:fixed;left:50%;top:calc(var(--st) + 14px);transform:translate(-50%,-170%);z-index:60;background:var(--ink);color:#fff;padding:12px 18px;border-radius:999px;font-weight:700;transition:transform .3s;box-shadow:0 10px 30px #0004;max-width:calc(100% - 32px);text-align:center}
+.toast.on{transform:translate(-50%,0)}
+/* login */
 .login{background:var(--pa);border:1px solid var(--ln);border-radius:24px;padding:22px;display:grid;gap:12px;margin-top:8px}
 .login label{display:grid;gap:6px;font:600 13px var(--fn)}
 .login input{font:600 20px ui-monospace,Menlo,monospace;letter-spacing:.12em;padding:14px;border-radius:14px;border:1.5px solid var(--ln);background:#fff;text-transform:uppercase;width:100%}
-.err{color:#b3362f;font-weight:600;min-height:1.3em;margin:0}
-.code{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:12px;padding:16px 18px;border-radius:22px;background:#ffd84d}
-.code small{display:block;font:700 11px var(--fn);letter-spacing:.18em;text-transform:uppercase}
-.code b{font:400 30px var(--fd);letter-spacing:.06em}
-.code button{border:0;border-radius:999px;padding:11px 16px;background:var(--ink);color:#fff;font:700 13px var(--fn);cursor:pointer}
-.vf{background:var(--pa);border:1px solid var(--ln);border-radius:24px;padding:18px;display:grid;gap:12px}
-.vf label{display:grid;gap:6px;font:600 13px var(--fn)}
-.vf input,.vf select,.vf textarea{font:500 16px var(--fn);padding:12px 14px;border-radius:14px;border:1.5px solid var(--ln);background:#fff;width:100%;color:var(--ink)}
-.vf textarea{min-height:64px;resize:vertical}
-.vf .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.oc{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.oc button{padding:12px 8px;border-radius:14px;border:1.5px solid var(--ln);background:#fff;font:700 14px var(--fn);cursor:pointer;color:var(--ink)}
-.oc button.on{border-color:var(--ink);background:var(--ink);color:#fff}
-.oc button[data-s=sold].on{background:var(--ok);border-color:var(--ok)}
-.geo{display:flex!important;grid-template-columns:none!important;align-items:center;gap:10px!important;font-weight:500!important;color:var(--mu)}
-.geo input{width:20px!important;height:20px;padding:0!important}
-.vs{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border-radius:16px;background:var(--pa);border:1px solid var(--ln);margin-bottom:8px}
-.vs div{flex:1;min-width:0}.vs b{display:block}.vs small{color:var(--mu);display:block}
-.st{display:inline-block;padding:2px 8px;border-radius:99px;font:700 11px var(--fn);background:var(--bg)}
-.st.sold{background:#1f8a4c22;color:var(--ok)}.st.interested,.st.follow{background:#ffd84d66;color:#6b5200}.st.no{background:#b3362f18;color:#b3362f}
-.vs a{flex:none;align-self:center;padding:8px 12px;border-radius:99px;background:#25d366;color:#05301a;font:700 13px var(--fn);text-decoration:none}
-.ok2{color:var(--ok);font-weight:700;min-height:1.3em;margin:0}
-.out{background:none;border:0;color:var(--mu);font:600 13px var(--fn);text-decoration:underline;cursor:pointer;margin-top:20px}
+.foot{margin-top:26px;color:var(--mu);font-size:13px;text-align:center}
+.msg{padding:40px 10px;text-align:center;color:var(--mu)}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <div class="top"><b>GetKeepsake</b><span>for business</span></div>
-  <div id="out"><p class="msg">Loading your sales…</p></div>
-</div>
+<div class="wrap" id="out"><p class="msg">Loading…</p></div>
+<button class="fab" id="fab" hidden aria-label="Log a visit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+<nav id="nav" hidden><div class="in2">
+  <button data-t="today"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.1 7-11.5A7 7 0 0 0 5 9.5C5 14.9 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg>Today</button>
+  <button data-t="leads"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>Leads<span class="dot" id="leadDot" hidden></span></button>
+  <button data-t="earn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4h10M7 8h10M14 20 8 12h2a4 4 0 0 0 0-8"/></svg>Earnings</button>
+  <button data-t="tools"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><path d="M14 14h2v2h-2zM18 18h2v2h-2zM14 18h2M18 14h2"/></svg>Show QR</button>
+  <button data-t="me"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>Me</button>
+</div></nav>
+<div class="ov" id="ov"></div><div class="sh" id="sh"></div><div class="toast" id="toast"></div>
 <script>
 (() => {
-const out = document.getElementById("out"), q = new URLSearchParams(location.search), KEY = "ks-sp";
+const out = document.getElementById("out"), $ = s => document.querySelector(s), q = new URLSearchParams(location.search), KEY = "ks-sp", QK = "ks-sp-queue", GK = "ks-sp-goal";
 const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const rs = n => "₹" + (+n || 0).toLocaleString("en-IN");
 const date = t => t ? new Date(t).toLocaleDateString("en-IN", { day: "numeric", month: "short" }) : "";
-const saved = () => { try { return JSON.parse(localStorage.getItem(KEY) || "null"); } catch (e) { return null; } };
-const tools = code => {
-  const link = "https://getkeepsake.in/shops/studio?sp=" + code;
-  const pitch = `Hi! I'd like to show you GetKeepsake for Business: a beautiful page for your shop with your menu, offers, Google reviews, Instagram, UPI and WhatsApp orders, all behind one QR on your counter. ₹499 one-time, no monthly fees.\n\nSee examples: https://getkeepsake.in/shops\nCreate your page (my code ${code} is already filled in): ${link}`;
-  return `<h2>Sales tools</h2><div class="tools">
-    <a class="btn" href="/assets/getkeepsake-business-sales-sheet.pdf" target="_blank" rel="noopener">Download sales sheet (PDF)</a>
-    <a class="btn gh" href="/shops#examples" target="_blank" rel="noopener">Show live examples to a shop</a>
-    <a class="btn wa" href="https://wa.me/?text=${encodeURIComponent(pitch)}" target="_blank" rel="noopener">Send the pitch on WhatsApp</a></div>`;
-};
+const time = t => new Date(t).toLocaleTimeString("en-IN", { hour: "numeric", minute: "2-digit" });
+const ago = t => { const s = (Date.now() - t) / 1000; if (s < 3600) return Math.max(1, Math.floor(s / 60)) + "m ago"; if (s < 86400) return Math.floor(s / 3600) + "h ago"; if (s < 172800) return "yesterday"; return Math.floor(s / 86400) + " days ago"; };
+const ls = { get: (k, d) => { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } }, set: (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }, del: k => { try { localStorage.removeItem(k); } catch (e) {} } };
+const ST = { sold: "Sold", interested: "Interested", follow: "Call back", no: "Not interested" };
+const KINDS = ["Café / Restaurant", "Sweets / Bakery", "Salon / Spa", "Boutique / Clothing", "Gym / Fitness", "Clinic / Doctor", "Kirana / Store", "Mobile / Electronics", "Other"];
+let A = null, J = null, TAB = "today", LF = "open";
+function toast(t) { const e = $("#toast"); e.textContent = t; e.classList.add("on"); clearTimeout(toast.t); toast.t = setTimeout(() => e.classList.remove("on"), 3000); }
+const studio = () => "https://getkeepsake.in/shops/studio?sp=" + A.code;
+const pitch = () => `Hi! I'd like to show you GetKeepsake for Business: a beautiful page for your shop with your menu, offers, Google reviews, Instagram, UPI and WhatsApp orders, all behind one QR on your counter. ₹499 one-time, no monthly fees.\n\nSee examples: https://getkeepsake.in/shops\nCreate your page (my code ${A.code} is already filled in): ${studio()}`;
+const pitchHi = () => `नमस्ते! GetKeepsake से आपकी दुकान का अपना सुंदर पेज बनाइए: मेन्यू, ऑफ़र, Google रिव्यू, Instagram, UPI और WhatsApp ऑर्डर, सब एक QR में। सिर्फ़ ₹499, एक बार। कोई मंथली फ़ीस नहीं।\n\nउदाहरण देखें: https://getkeepsake.in/shops\nअपना पेज बनाएँ (मेरा कोड ${A.code}): ${studio()}`;
+const follow = v => encodeURIComponent(`Hi! Thanks for your time today. Here are real GetKeepsake pages for shops like yours: https://getkeepsake.in/shops\nMake yours in 5 minutes (my code ${A.code} is filled in): ${studio()}`);
+
+// ---------- login ----------
 function showLogin(msg) {
-  out.innerHTML = `<h1>Salesperson <em>login</em></h1><p class="sub">Use the code and 6-digit PIN GetKeepsake gave you.</p>
+  $("#nav").hidden = $("#fab").hidden = true;
+  out.innerHTML = `<div class="brand" style="margin-bottom:22px"><b>GetKeepsake</b><span>sales</span></div><h1>Salesperson <em>login</em></h1><p class="sub">Use the code and 6-digit PIN GetKeepsake gave you.</p>
     <form class="login" id="lf"><label>Your code<input id="lc" maxlength="12" autocomplete="username" placeholder="SPXXXX" required></label>
     <label>PIN<input id="lp" type="password" inputmode="numeric" maxlength="6" autocomplete="current-password" placeholder="••••••" required></label>
     <p class="err" id="le">${esc(msg || "")}</p><button class="btn" type="submit">Log in</button></form>
     <p class="foot">Forgot your PIN? WhatsApp <a href="https://wa.me/916377547759">+91 63775 47759</a> and we'll send a new one.</p>`;
-  const sv = saved(); if (sv && sv.code) document.getElementById("lc").value = sv.code;
-  document.getElementById("lf").onsubmit = async e => {
-    e.preventDefault(); const le = document.getElementById("le"); le.textContent = "Checking…";
+  const sv = ls.get(KEY, null); if (sv && sv.code) $("#lc").value = sv.code;
+  $("#lf").onsubmit = async e => {
+    e.preventDefault(); const le = $("#le"); le.textContent = "Checking…";
     try {
-      const r = await fetch("/api/qr", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "sp-login", code: document.getElementById("lc").value, pin: document.getElementById("lp").value }) });
+      const r = await fetch("/api/qr", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "sp-login", code: $("#lc").value, pin: $("#lp").value }) });
       const j = await r.json(); if (!r.ok) throw new Error(j.error || "Couldn't log in.");
-      try { localStorage.setItem(KEY, JSON.stringify({ code: j.code, tok: j.tok })); } catch (x) {}
-      panel(j.code, j.tok);
+      A = { code: j.code, tok: j.tok }; ls.set(KEY, A); keepAuth(); start();
     } catch (x) { le.textContent = x.message; }
   };
 }
-async function panel(code, tok) {
+async function keepAuth() { try { const c = await caches.open("sales"); await c.put("/sp-auth", new Response(JSON.stringify(A))); } catch (e) {} }
+function logout() { ls.del(KEY); try { caches.delete("sales"); } catch (e) {} A = null; J = null; showLogin(); }
+
+// ---------- data ----------
+async function load() {
+  const r = await fetch("/api/qr?spme=" + encodeURIComponent(A.code) + "&t=" + encodeURIComponent(A.tok), { cache: "no-store" });
+  const j = await r.json(); if (r.status === 401) { ls.del(KEY); throw Object.assign(new Error(j.error || "Please log in again."), { auth: true }); }
+  if (!r.ok) throw new Error(j.error || "Couldn't load.");
+  const prev = J && J.shops; J = j; if (prev !== undefined && prev !== null && j.shops > prev) { toast("🎉 New shop live! +" + rs(j.comm)); try { navigator.vibrate && navigator.vibrate([80, 60, 80]); } catch (e) {} }
+  ls.set("ks-sp-cache", j);
+}
+async function start() {
+  $("#nav").hidden = $("#fab").hidden = false;
   out.innerHTML = '<p class="msg">Loading your sales…</p>';
-  let j;
-  try { const r = await fetch("/api/qr?spme=" + encodeURIComponent(code) + "&t=" + encodeURIComponent(tok), { cache: "no-store" }); j = await r.json(); if (!r.ok) throw new Error(j.error); }
-  catch (e) { try { localStorage.removeItem(KEY); } catch (x) {} return showLogin(e.message || "Please log in again."); }
-  const shops = j.shopsList || [];
-  out.innerHTML = `<h1>Hi ${esc(j.name.split(" ")[0])},<br><em>keep going</em></h1>
-    <p class="sub">Your shops and commission, updated live.</p>
-    <div class="code"><div><small>Your salesperson code</small><b>${esc(j.code)}</b></div><button type="button" id="cp">Copy</button></div>
-    <p style="margin:8px 4px 16px;color:var(--mu);font-size:14px">Ask every shop to type this code before paying ₹499. When their page goes live, ${j.comm ? `<b>${rs(j.comm)}</b> is added` : "your commission is added"} here.</p>
-    <h2>Log a shop visit</h2>
-    <form class="vf" id="vf">
-      <label>Shop name<input id="vShop" maxlength="60" required placeholder="e.g. Sharma Sweets"></label>
-      <div class="two"><label>Area<input id="vArea" maxlength="60" placeholder="e.g. Raja Park"></label><label>Owner's mobile<input id="vPh" type="tel" inputmode="numeric" maxlength="14" placeholder="Optional"></label></div>
-      <label>Type of business<select id="vKind"><option value="">Choose…</option>${["Café / Restaurant", "Sweets / Bakery", "Salon / Spa", "Boutique / Clothing", "Gym / Fitness", "Clinic / Doctor", "Kirana / Store", "Mobile / Electronics", "Other"].map(k => `<option>${k}</option>`).join("")}</select></label>
-      <div><div style="font:600 13px var(--fn);margin-bottom:6px">How did it go?</div><div class="oc">${[["sold", "✓ Sold"], ["interested", "Interested"], ["follow", "Call back later"], ["no", "Not interested"]].map(([k, l]) => `<button type="button" data-s="${k}">${l}</button>`).join("")}</div></div>
-      <label>Note<textarea id="vNote" maxlength="240" placeholder="e.g. Owner wants to see the salon example. Visit again Saturday."></textarea></label>
-      <label class="geo"><input type="checkbox" id="vGeo" checked> Add my location (shows GetKeepsake where you visited)</label>
-      <p class="err" id="vErr"></p><p class="ok2" id="vOk"></p>
-      <button class="btn" type="submit" id="vBtn">Save visit</button>
-    </form>
-    <div id="vList"></div>
-    <div class="big" style="margin-top:22px"><small>Shops activated</small><div class="n">${j.shops}<span>${j.shops === 1 ? "shop" : "shops"}</span></div><p>${j.comm ? `You earn ${rs(j.comm)} for every shop that goes live with your code` : "Commission rate will be set by GetKeepsake"}</p></div>
-    <div class="money"><div><small>Earned</small><b>${rs(j.earned)}</b></div><div><small>Paid to you</small><b>${rs(j.paid)}</b></div><div class="ow"><small>Coming to you</small><b>${rs(j.owed)}</b></div></div>
-    <h2>Your shops</h2>
-    ${shops.length ? shops.map(s => `<a class="shop" href="${esc(s.url)}" target="_blank" rel="noopener"><i>${esc((s.name || "S").charAt(0).toUpperCase())}</i><div><b>${esc(s.name)}</b><small>Activated ${date(s.at)}${s.area ? " · " + esc(s.area) : ""}${j.comm ? " · +" + rs(j.comm) : ""}</small></div><span>View →</span></a>`).join("") : `<div class="empty">No shops yet. Your first one is one conversation away.</div>`}
-    ${tools(j.code)}
-    ${j.payouts.length ? `<details><summary>Payments received (${j.payouts.length})</summary>${j.payouts.slice().reverse().map(p => `<p style="margin:10px 0 0">${date(p.at)}: <b>${rs(p.amount)}</b> for ${p.shops} shop${p.shops > 1 ? "s" : ""}</p>`).join("")}</details>` : ""}
-    <p class="foot">Questions about your commission? WhatsApp <a href="https://wa.me/916377547759">+91 63775 47759</a>.</p>
-    <div style="text-align:center"><button class="out" id="lo">Log out</button></div>`;
-  visitsUI(code, tok, j);
-  document.getElementById("cp").onclick = async e => { try { await navigator.clipboard.writeText(j.code); e.target.textContent = "Copied ✓"; } catch (x) {} };
-  document.getElementById("lo").onclick = () => { try { localStorage.removeItem(KEY); } catch (x) {} showLogin(); };
+  try { await load(); } catch (e) { if (e.auth) return showLogin(e.message); J = ls.get("ks-sp-cache", null); if (!J) { out.innerHTML = `<p class="msg">${esc(e.message)}<br><br><button class="btn sm" onclick="location.reload()">Try again</button></p>`; return; } toast("Offline: showing your last saved data"); }
+  const t = location.hash.slice(1); go(["today", "leads", "earn", "tools", "me"].includes(t) ? t : "today");
+  flush();
+  if ("serviceWorker" in navigator) navigator.serviceWorker.register("/sales-sw.js", { scope: "/sales" }).catch(() => {});
+  addEventListener("online", flush);
+  document.addEventListener("visibilitychange", async () => { if (document.visibilityState === "visible" && A) { try { await load(); draw(); } catch (e) {} } });
 }
-const ST = { sold: "Sold", interested: "Interested", follow: "Call back", no: "Not interested" };
-const when = t => new Date(t).toLocaleString("en-IN", { day: "numeric", month: "short", hour: "numeric", minute: "2-digit" });
-function visitsUI(code, tok, j) {
-  let vs = j.visits || [], status = "";
-  const $ = id => document.getElementById(id);
-  const pitch = name => encodeURIComponent(`Hi${name ? " " + name : ""}! Thanks for your time today. Here are real example pages from GetKeepsake: https://getkeepsake.in/shops\nCreate yours (my code ${code} is filled in): https://getkeepsake.in/shops/studio?sp=${code}`);
-  const row = v => `<div class="vs"><div><b>${esc(v.shop)} <span class="st ${v.status}">${ST[v.status] || ""}</span></b><small>${when(v.at)}${v.area ? " · " + esc(v.area) : ""}${v.kind ? " · " + esc(v.kind) : ""}</small>${v.note ? `<small style="color:var(--ink)">${esc(v.note)}</small>` : ""}</div>${v.phone && v.status !== "no" ? `<a href="https://wa.me/91${esc(v.phone)}?text=${pitch("")}" target="_blank" rel="noopener">WhatsApp</a>` : ""}</div>`;
-  const draw = () => {
-    const t0 = new Date(); t0.setHours(0, 0, 0, 0);
-    const today = vs.filter(v => v.at >= t0.getTime()), fu = vs.filter(v => (v.status === "interested" || v.status === "follow") && v.at < t0.getTime() && Date.now() - v.at < 30 * 864e5);
-    $("vList").innerHTML = `<h2 style="margin-top:22px">Today · ${today.length} visit${today.length === 1 ? "" : "s"}</h2>${today.map(row).join("") || '<div class="empty">No visits logged today yet.</div>'}` +
-      (fu.length ? `<h2>Follow up (${fu.length})</h2><p style="color:var(--mu);margin:-4px 0 10px;font-size:14px">Interested shops from the last 30 days. A quick WhatsApp often closes them.</p>${fu.map(row).join("")}` : "");
-  };
-  draw();
+document.querySelectorAll("nav button").forEach(b => b.onclick = () => go(b.dataset.t));
+$("#fab").onclick = () => visitSheet();
+function go(t) { TAB = t; history.replaceState(null, "", "#" + t); document.querySelectorAll("nav button").forEach(b => b.classList.toggle("on", b.dataset.t === t)); scrollTo(0, 0); draw(); }
+
+// Latest status per shop (a later visit to the same shop updates it).
+function leads() {
+  const seen = new Map();
+  for (const v of (J.visits || []).concat(queue().map(x => ({ ...x, at: x.at, queued: true })))) {
+    const k = (v.shop || "").toLowerCase().trim() + "|" + (v.phone || "");
+    const cur = seen.get(k); if (!cur || v.at > cur.at) seen.set(k, v);
+  }
+  return [...seen.values()].sort((a, b) => b.at - a.at);
+}
+function draw() {
+  if (!J) return;
+  const L = leads(), open = L.filter(v => (v.status === "interested" || v.status === "follow") && Date.now() - v.at < 60 * 864e5);
+  const d = $("#leadDot"); d.hidden = !open.length; d.textContent = open.length;
+  $("#fab").hidden = !(TAB === "today" || TAB === "leads");
+  const head = `<div class="hd"><div class="brand"><b>GetKeepsake</b><span>sales</span></div><button class="chip" id="cp">${esc(J.code)} ⧉</button></div>`;
+  out.innerHTML = head + ({ today, leads: leadsTab, earn, tools, me })[TAB](L, open);
+  const cp = $("#cp"); if (cp) cp.onclick = async () => { try { await navigator.clipboard.writeText(J.code); toast("Code copied"); } catch (e) {} };
+  wire();
+}
+const row = (v, actions) => `<div class="it"><span class="ic">${esc((v.shop || "S").charAt(0).toUpperCase())}</span><div class="m"><b>${esc(v.shop)} <span class="st ${v.status}">${ST[v.status] || ""}</span></b><small>${v.queued ? "⏳ waiting for network · " : ""}${TAB === "today" ? time(v.at) : ago(v.at)}${v.area ? " · " + esc(v.area) : ""}${v.kind ? " · " + esc(v.kind) : ""}</small>${v.note ? `<small style="color:var(--ink)">${esc(v.note)}</small>` : ""}</div>${actions ? `<div class="ac">${v.phone && v.status !== "no" ? `<a class="wa1" href="https://wa.me/91${esc(v.phone)}?text=${follow(v)}" target="_blank" rel="noopener">WhatsApp</a><a class="cl1" href="tel:+91${esc(v.phone)}">Call</a>` : ""}${v.status !== "sold" && v.status !== "no" ? `<button class="cl1" data-upd="${esc(v.id || "")}">Update</button>` : ""}</div>` : ""}</div>`;
+
+// ---------- tabs ----------
+function today(L, open) {
+  const t0 = new Date(); t0.setHours(0, 0, 0, 0);
+  const vs = (J.visits || []).concat(queue().map(x => ({ ...x, queued: true }))).filter(v => v.at >= t0.getTime()).sort((a, b) => b.at - a.at);
+  const goal = ls.get(GK, 10), sold = vs.filter(v => v.status === "sold").length, h = new Date().getHours();
+  const qn = queue().length;
+  return `<h1>${h < 12 ? "Good morning" : h < 17 ? "Good afternoon" : "Good evening"},<br><em>${esc(J.name.split(" ")[0])}</em></h1><p class="sub">${new Date().toLocaleDateString("en-IN", { weekday: "long", day: "numeric", month: "long" })}</p>
+  ${qn ? `<div class="q">⏳ ${qn} visit${qn > 1 ? "s" : ""} saved offline. They'll upload when you're back online.</div>` : ""}
+  <div class="dark"><div class="goal"><div class="ring" style="--p:${Math.min(100, Math.round(vs.length * 100 / goal))}"><div><div><b>${vs.length}</b><span>of ${goal}</span></div></div></div><div><small>Today's visits</small><div class="n">${vs.length >= goal ? "Goal done! 🔥" : (goal - vs.length) + " to go"}</div><p>${sold} sold today · ${open.length} lead${open.length === 1 ? "" : "s"} to follow up</p></div></div></div>
+  <div style="margin-top:12px"><button class="btn ac" id="logV">+ Log a shop visit</button></div>
+  <h2>Today <small>${vs.length} visit${vs.length === 1 ? "" : "s"}</small></h2>${vs.map(v => row(v, true)).join("") || '<div class="empty">No visits yet today. Tap <b>+ Log a shop visit</b> after every shop.</div>'}`;
+}
+function leadsTab(L, open) {
+  const F = { open: v => (v.status === "interested" || v.status === "follow") && Date.now() - v.at < 60 * 864e5, sold: v => v.status === "sold", no: v => v.status === "no", all: () => true };
+  const list = L.filter(F[LF]);
+  return `<h1>Your <em>leads</em></h1><p class="sub">Shops you visited. A WhatsApp the same evening closes most sales.</p>
+  <div class="chips">${[["open", "To follow up"], ["sold", "Sold"], ["no", "Not interested"], ["all", "All shops"]].map(([k, l]) => `<button data-lf="${k}" class="${LF === k ? "on" : ""}">${l} · ${L.filter(F[k]).length}</button>`).join("")}</div>
+  ${list.map(v => row(v, true)).join("") || `<div class="empty">${LF === "open" ? "No open leads. Every interested shop you log shows up here." : "Nothing here yet."}</div>`}`;
+}
+function earn() {
+  const shops = J.shopsList || [], wk = shops.filter(s => Date.now() - s.at < 7 * 864e5).length, mo = shops.filter(s => Date.now() - s.at < 30 * 864e5).length;
+  return `<h1>Your <em>earnings</em></h1><p class="sub">${J.comm ? `You earn <b>${rs(J.comm)}</b> for every shop that goes live with your code.` : "Commission rate will be set by GetKeepsake."}</p>
+  <div class="dark"><small>Shops activated</small><div style="font:400 58px/1 var(--fd);margin:8px 0 4px">${J.shops}</div><p style="margin:0;color:#cfc9bd">${wk} this week · ${mo} in 30 days</p></div>
+  <div class="g3"><div><small>Earned</small><b>${rs(J.earned)}</b></div><div><small>Paid to you</small><b>${rs(J.paid)}</b></div><div class="ow"><small>Coming to you</small><b>${rs(J.owed)}</b></div></div>
+  <h2>Your shops <small>${shops.length}</small></h2>${shops.map(s => `<a class="it" href="${esc(s.url)}" target="_blank" rel="noopener" style="text-decoration:none"><span class="ic">${esc((s.name || "S").charAt(0).toUpperCase())}</span><div class="m"><b>${esc(s.name)}</b><small>Live since ${date(s.at)}${s.area ? " · " + esc(s.area) : ""}${J.comm ? " · +" + rs(J.comm) : ""}</small></div><span style="align-self:center;font:700 13px var(--fn);color:var(--ac)">View →</span></a>`).join("") || '<div class="empty">No shops yet. Your first one is one conversation away.</div>'}
+  ${J.payouts && J.payouts.length ? `<h2>Payments received</h2><div class="card">${J.payouts.slice().reverse().map(p => `<div class="li"><div><b>${rs(p.amount)}</b><small>${date(p.at)}</small></div><small>${p.shops} shop${p.shops > 1 ? "s" : ""}</small></div>`).join("")}</div>` : ""}`;
+}
+function tools() {
+  return `<h1>Show the <em>shop owner</em></h1><p class="sub">Let them scan this with their phone camera. It opens the page maker with your code already filled in.</p>
+  <div class="card" style="text-align:center"><div class="qrbox" id="qr"></div><b style="font:400 22px var(--fd)">${esc(J.code)}</b><small style="display:block;color:var(--mu)">Your code is added automatically</small></div>
+  <div style="display:grid;gap:10px">
+    <a class="btn" href="/shops#examples" target="_blank" rel="noopener">Show live example pages</a>
+    <a class="btn wa" href="https://wa.me/?text=${encodeURIComponent(pitch())}" target="_blank" rel="noopener">Send the pitch on WhatsApp</a>
+    <a class="btn wa" href="https://wa.me/?text=${encodeURIComponent(pitchHi())}" target="_blank" rel="noopener">हिंदी में भेजें (WhatsApp)</a>
+    <button class="btn gh" id="cpl">Copy my link</button>
+    <a class="btn gh" href="/assets/getkeepsake-business-sales-sheet.pdf" target="_blank" rel="noopener">Sales sheet (PDF)</a>
+  </div>
+  <div class="card" style="margin-top:14px"><b>What to say in 20 seconds</b><p style="margin:6px 0 0;color:var(--mu);font-size:15px">“Your shop gets its own page: menu, offers, Google reviews, UPI and WhatsApp orders, behind one QR on your counter. ₹499 once, no monthly fee. Let me show you a café like yours…” Then open an example and let them scroll.</p></div>`;
+}
+function me() {
+  const std = matchMedia("(display-mode: standalone)").matches || navigator.standalone;
+  return `<h1>${esc(J.name)}</h1><p class="sub">Code ${esc(J.code)} · ${rs(J.comm)} per shop</p>
+  <div class="card"><div class="li"><div><b>New shop alerts</b><small id="alTxt">Get a notification when a shop goes live with your code.</small></div><button class="sw" id="alBtn" aria-label="Alerts"></button></div>
+  <div class="li"><div><b>Daily visit goal</b><small>Shown on your Today screen</small></div><select id="goal" style="padding:8px 10px;border-radius:10px;border:1px solid var(--ln);background:#fff">${[5, 8, 10, 12, 15, 20, 25, 30].map(n => `<option${n === ls.get(GK, 10) ? " selected" : ""}>${n}</option>`).join("")}</select></div></div>
+  ${std ? "" : `<div class="card"><b>Install this app</b><p style="margin:6px 0 4px;color:var(--mu);font-size:15px"><b>Android (Chrome):</b> tap ⋮ → <b>Install app</b>.</p><p style="margin:0;color:var(--mu);font-size:15px"><b>iPhone (Safari):</b> Share → <b>Add to Home Screen</b>, then open it from your home screen.</p></div>`}
+  <div class="card"><b>Need help?</b><p style="margin:6px 0 10px;color:var(--mu);font-size:15px">Questions about a shop or your commission?</p><a class="btn wa" href="https://wa.me/916377547759" target="_blank" rel="noopener">WhatsApp GetKeepsake</a></div>
+  <button class="btn gh" id="lo">Log out</button>`;
+}
+function wire() {
+  const lv = $("#logV"); if (lv) lv.onclick = () => visitSheet();
+  document.querySelectorAll("[data-lf]").forEach(b => b.onclick = () => { LF = b.dataset.lf; draw(); });
+  document.querySelectorAll("[data-upd]").forEach(b => b.onclick = () => { const v = leads().find(x => (x.id || "") === b.dataset.upd); if (v) visitSheet(v); });
+  if (TAB === "tools") { const draw = () => { if (!window.qrcode) return setTimeout(draw, 300); const x = qrcode(0, "M"); x.addData(studio()); x.make(); $("#qr").innerHTML = x.createSvgTag({ cellSize: 6, margin: 0, scalable: true }); }; draw();
+    $("#cpl").onclick = async () => { try { await navigator.clipboard.writeText(studio()); toast("Link copied"); } catch (e) {} }; }
+  if (TAB === "me") { $("#lo").onclick = logout; $("#goal").onchange = e => { ls.set(GK, +e.target.value); toast("Goal saved"); }; $("#alBtn").onclick = toggleAlerts; alertState(); }
+}
+
+// ---------- visits (with offline queue) ----------
+const queue = () => ls.get(QK, []);
+function sheet(html) { $("#sh").innerHTML = '<div class="gr"></div>' + html; $("#sh").classList.add("on"); $("#ov").classList.add("on"); $("#sh").scrollTop = 0; }
+function closeSheet() { $("#sh").classList.remove("on"); $("#ov").classList.remove("on"); }
+$("#ov").onclick = closeSheet;
+function visitSheet(prev) {
+  let status = "";
+  const lastArea = ls.get("ks-sp-area", "");
+  sheet(`<h2 style="margin:0 0 4px">${prev ? "Update " + esc(prev.shop) : "Log a shop visit"}</h2><p class="sub" style="margin-bottom:12px">${prev ? "How did the follow-up go?" : "Takes 15 seconds. Do it right after you leave the shop."}</p>
+  <form class="vf" id="vf">
+    <label>Shop name<input id="vShop" maxlength="60" required value="${esc(prev ? prev.shop : "")}" placeholder="e.g. Sharma Sweets"></label>
+    <div class="two"><label>Area<input id="vArea" maxlength="60" value="${esc(prev ? prev.area : lastArea)}" placeholder="e.g. Raja Park"></label><label>Owner's mobile<input id="vPh" type="tel" inputmode="numeric" maxlength="14" value="${esc(prev ? prev.phone : "")}" placeholder="Optional"></label></div>
+    <label>Type of business<select id="vKind"><option value="">Choose…</option>${KINDS.map(k => `<option${prev && prev.kind === k ? " selected" : ""}>${k}</option>`).join("")}</select></label>
+    <div><div style="font:600 13px var(--fn);margin-bottom:6px">How did it go?</div><div class="oc">${[["sold", "✓ Sold"], ["interested", "Interested"], ["follow", "Call back later"], ["no", "Not interested"]].map(([k, l]) => `<button type="button" data-s="${k}">${l}</button>`).join("")}</div></div>
+    <label>Note<textarea id="vNote" maxlength="240" placeholder="e.g. Owner wants to see the salon example. Visit again Saturday."></textarea></label>
+    <label class="geo"><input type="checkbox" id="vGeo" checked> Add my location (shows GetKeepsake where you visited)</label>
+    <p class="err" id="vErr"></p>
+    <button class="btn ac" type="submit" id="vBtn">Save visit</button>
+  </form>`);
   document.querySelectorAll(".oc button").forEach(b => b.onclick = () => { status = b.dataset.s; document.querySelectorAll(".oc button").forEach(x => x.classList.toggle("on", x === b)); });
-  const where = () => new Promise(ok => { if (!$("vGeo").checked || !navigator.geolocation) return ok(null); navigator.geolocation.getCurrentPosition(p => ok(p.coords), () => ok(null), { enableHighAccuracy: true, timeout: 8000, maximumAge: 60000 }); });
-  $("vf").onsubmit = async e => {
-    e.preventDefault(); $("vErr").textContent = ""; $("vOk").textContent = "";
-    if (!status) { $("vErr").textContent = "Choose how the visit went."; return; }
-    const btn = $("vBtn"); btn.disabled = true; btn.textContent = "Saving…";
+  const where = () => new Promise(ok => { if (!$("#vGeo").checked || !navigator.geolocation) return ok(null); navigator.geolocation.getCurrentPosition(p => ok(p.coords), () => ok(null), { enableHighAccuracy: true, timeout: 8000, maximumAge: 60000 }); });
+  $("#vf").onsubmit = async e => {
+    e.preventDefault(); $("#vErr").textContent = "";
+    if (!$("#vShop").value.trim()) { $("#vErr").textContent = "Enter the shop name."; return; }
+    if (!status) { $("#vErr").textContent = "Choose how the visit went."; return; }
+    const btn = $("#vBtn"); btn.disabled = true; btn.textContent = "Saving…";
+    const c = await where();
+    const visit = { shop: $("#vShop").value, area: $("#vArea").value, phone: $("#vPh").value, kind: $("#vKind").value, status, note: $("#vNote").value, ...(c ? { lat: c.latitude, lng: c.longitude, acc: c.accuracy } : {}) };
+    ls.set("ks-sp-area", visit.area);
     try {
-      const c = await where();
-      const visit = { shop: $("vShop").value, area: $("vArea").value, phone: $("vPh").value, kind: $("vKind").value, status, note: $("vNote").value, ...(c ? { lat: c.latitude, lng: c.longitude, acc: c.accuracy } : {}) };
-      const r = await fetch("/api/qr", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "sp-visit", code, tok, visit }) });
-      const x = await r.json(); if (!r.ok) throw new Error(x.error || "Couldn't save the visit.");
-      vs.unshift(x.visit); draw();
-      const area = $("vArea").value; $("vf").reset(); $("vArea").value = area; status = ""; document.querySelectorAll(".oc button").forEach(b => b.classList.remove("on"));
-      $("vOk").textContent = "Saved ✓ " + (x.visit.status === "sold" ? "Great work!" : "Next shop!");
-    } catch (x) { $("vErr").textContent = x.message; } finally { btn.disabled = false; btn.textContent = "Save visit"; }
+      const x = await send(visit);
+      J.visits = [x.visit].concat(J.visits || []); closeSheet(); draw();
+      toast(status === "sold" ? "Saved ✓ Great work! 🎉" : "Saved ✓ On to the next shop");
+    } catch (er) {
+      if (er.offline) { const qq = queue(); qq.push({ ...visit, at: Date.now(), id: "q" + Date.now() }); ls.set(QK, qq); closeSheet(); draw(); toast("No network: saved on your phone, will upload later"); }
+      else { $("#vErr").textContent = er.message; btn.disabled = false; btn.textContent = "Save visit"; }
+    }
   };
 }
+async function send(visit) {
+  let r;
+  try { r = await fetch("/api/qr", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "sp-visit", code: A.code, tok: A.tok, visit }) }); }
+  catch (e) { throw Object.assign(new Error("offline"), { offline: true }); }
+  const x = await r.json().catch(() => ({})); if (!r.ok) throw new Error(x.error || "Couldn't save the visit."); return x;
+}
+let flushing = false;
+async function flush() {
+  if (flushing || !A) return; const qq = queue(); if (!qq.length) return; flushing = true; let done = 0;
+  for (const v of qq) { try { const { at, id, ...visit } = v; const x = await send(visit); J.visits = [x.visit].concat(J.visits || []); done++; } catch (e) { if (e.offline) break; done++; } }
+  ls.set(QK, qq.slice(done)); flushing = false; if (done) { toast(done + " offline visit" + (done > 1 ? "s" : "") + " uploaded ✓"); draw(); }
+}
+
+// ---------- alerts ----------
+const pushOK = () => "serviceWorker" in navigator && "PushManager" in window && "Notification" in window;
+const post = b => fetch("/api/qr", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ code: A.code, tok: A.tok, ...b }) }).then(async r => { const j = await r.json().catch(() => ({})); if (!r.ok) throw new Error(j.error || "Error"); return j; });
+async function curSub() { if (!pushOK()) return null; const r = await navigator.serviceWorker.getRegistration("/sales"); return r ? r.pushManager.getSubscription() : null; }
+async function alertState() {
+  const b = $("#alBtn"), t = $("#alTxt"); if (!b) return; let s = null; try { s = await curSub(); } catch (e) {}
+  const on = !!s && Notification.permission === "granted"; b.classList.toggle("on", on);
+  if (!pushOK()) t.textContent = /iPhone|iPad/.test(navigator.userAgent) ? "Install the app to your home screen first, then turn this on." : "This browser can't show alerts.";
+  else if (Notification.permission === "denied") t.textContent = "Blocked. Allow notifications for getkeepsake.in in your phone settings.";
+  else t.textContent = on ? "On: you'll hear about every shop that goes live with your code." : "Get a notification when a shop goes live with your code.";
+}
+const u8 = b => { const p = "=".repeat((4 - b.length % 4) % 4), r = atob((b + p).replace(/-/g, "+").replace(/_/g, "/")); return Uint8Array.from([...r].map(c => c.charCodeAt(0))); };
+async function toggleAlerts() {
+  if (!pushOK()) { toast(/iPhone|iPad/.test(navigator.userAgent) ? "Add this app to your home screen first." : "This browser can't show alerts."); return; }
+  try {
+    const old = await curSub();
+    if (old && Notification.permission === "granted") { await post({ action: "sp-push-unsub", endpoint: old.endpoint }); await old.unsubscribe(); toast("Alerts off"); }
+    else {
+      if ((await Notification.requestPermission()) !== "granted") { toast("Notifications weren't allowed."); return alertState(); }
+      await keepAuth(); const reg = await navigator.serviceWorker.register("/sales-sw.js", { scope: "/sales" }); await navigator.serviceWorker.ready;
+      const { key } = await post({ action: "sp-push-key" });
+      const sub = (await reg.pushManager.getSubscription()) || await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: u8(key) });
+      await post({ action: "sp-push-sub", sub: sub.toJSON() }); toast("Alerts on ✓");
+    }
+  } catch (e) { toast(e.message || "Couldn't turn on alerts."); }
+  alertState();
+}
+
 // Older per-batch links (?b=…&k=…) still work
 async function legacy() {
   let j;
   try { const r = await fetch("/api/qr?sales=" + encodeURIComponent(q.get("b")) + "&key=" + encodeURIComponent(q.get("k") || ""), { cache: "no-store" }); j = await r.json(); if (!r.ok) throw new Error(j.error); }
   catch (e) { return showLogin(); }
-  out.innerHTML = `<h1>${esc(j.name)}</h1><div class="big"><small>Shops activated</small><div class="n">${j.activated}<span>of ${j.count} cards</span></div></div>
-    <h2>Shops</h2>${j.shops.map(s => `<a class="shop" href="${esc(s.url)}"><i>${esc(s.name.charAt(0))}</i><div><b>${esc(s.name)}</b><small>${date(s.at)}</small></div></a>`).join("") || '<div class="empty">No shops yet.</div>'}
+  out.innerHTML = `<h1>${esc(j.name)}</h1><div class="dark"><small>Shops activated</small><div style="font:400 58px/1 var(--fd);margin:8px 0">${j.activated}<span style="font:500 18px var(--fn);color:#bdb6a8"> of ${j.count} cards</span></div></div>
+    <h2>Shops</h2>${j.shops.map(s => `<a class="it" href="${esc(s.url)}"><span class="ic">${esc(s.name.charAt(0))}</span><div class="m"><b>${esc(s.name)}</b><small>${date(s.at)}</small></div></a>`).join("") || '<div class="empty">No shops yet.</div>'}
     <p class="foot"><a href="/sales">Log in with your salesperson code</a></p>`;
 }
 if (q.get("b")) legacy();
-else { const sv = saved(); if (sv && sv.code && sv.tok) panel(sv.code, sv.tok); else showLogin(); }
+else { A = ls.get(KEY, null); if (A && A.code && A.tok) { keepAuth(); start(); } else showLogin(); }
 })();
 </script>
 </body>
