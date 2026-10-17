@@ -31,7 +31,7 @@
 .qc.fr h3{position:relative;margin:1.6mm 0 0;font:400 5.7mm/0.98 'Archivo Black','Arial Black',sans-serif;text-transform:uppercase;text-align:center;letter-spacing:-.15mm}
 .qc.fr h3 em,.qc.bd h3 em{font-style:normal;color:#ff5b2e}
 .qc.fr .qw{position:relative;margin-top:4mm;width:39mm;height:39mm;background:#fff;border-radius:3mm;padding:3mm}
-.qc.fr .qw svg{width:100%;height:100%;display:block}
+.qc.fr .qw svg{width:100%;height:100%;display:block;aspect-ratio:1}
 .qc.fr .qw i{position:absolute;width:5.5mm;height:5.5mm;border:.8mm solid #ff5b2e}
 .qc.fr .qw i:nth-child(1){left:-1.6mm;top:-1.6mm;border-right:0;border-bottom:0;border-radius:2mm 0 0 0}
 .qc.fr .qw i:nth-child(2){right:-1.6mm;top:-1.6mm;border-left:0;border-bottom:0;border-radius:0 2mm 0 0}
@@ -79,32 +79,75 @@
 .qc.bd .ft{position:relative;margin-top:auto;width:100%;display:flex;justify-content:space-between;font:500 2mm Inter,sans-serif;color:#8d877c}
 .qc.bd .ft b{color:#fff}
 .qc .live{position:absolute;top:2.4mm;right:2.4mm;z-index:3;padding:.5mm 1.6mm;border-radius:2mm;background:#4ade80;color:#0b2a15;font:800 1.8mm Inter,sans-serif;letter-spacing:.2mm}
+
+/* ---------- front styles (card + board) ---------- */
+.s-cream{background:#f6efe2!important;color:#3a1410!important}
+.s-cream .glow{background:radial-gradient(circle,#c98f4f33,transparent 65%)!important}
+.s-cream .ey{color:#a8692f!important}
+.s-cream h3{font-family:'Playfair Display',Georgia,serif!important;font-weight:600!important;text-transform:none!important;letter-spacing:0!important;font-style:italic}
+.s-cream h3 em{color:#a8692f!important}
+.s-cream .qw{box-shadow:0 0 0 .5mm #3a1410}.s-cream.bd .qw{box-shadow:0 0 0 .8mm #3a1410}
+.s-cream .qw i{border-color:#a8692f!important}
+.s-cream .ics span{color:#5c3a2e!important}.s-cream .ics svg{color:#a8692f!important}
+.s-cream .ft{color:#8a6a5a!important}.s-cream .ft b{color:#3a1410!important}
+.s-cream .rv{border-color:#3a141033!important;color:#3a1410!important}.s-cream .rv svg{color:#a8692f!important;fill:#a8692f!important}
+.s-cream::after{content:"";position:absolute;inset:2.2mm;border:.3mm solid #a8692f88;border-radius:2mm;pointer-events:none}.s-cream.bd::after{inset:3.5mm;border-radius:3mm}
+.s-mono{background:#fff!important;color:#0f1419!important;outline-color:#bbb!important}
+.s-mono .glow{display:none}
+.s-mono .ey{color:#1f6f8b!important}
+.s-mono h3{font-family:'Inter Tight','Inter',sans-serif!important;font-weight:300!important;letter-spacing:-.3mm!important}
+.s-mono h3 em{color:#1f6f8b!important;font-weight:600}
+.s-mono .qw{border:.35mm solid #0f1419;border-radius:2mm!important}.s-mono .qw i{display:none}
+.s-mono .ics span{color:#3d4752!important}.s-mono .ics svg{color:#1f6f8b!important}
+.s-mono .ft{color:#7a858f!important}.s-mono .ft b{color:#0f1419!important}
+.s-mono .rv{border-color:#0f141933!important;color:#0f1419!important}.s-mono .rv svg{color:#f5b301!important;fill:#f5b301!important}
+.s-mono::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2.2mm;background:#1f6f8b}.s-mono.bd::after{height:3.5mm}
+.s-riot{background:#e3d44a!important;color:#121110!important}
+.s-riot .glow{display:none}
+.s-riot .ey{color:#121110!important;background:#fff;padding:.8mm 2mm;border-radius:5mm}.s-riot.bd .ey{padding:1.2mm 3mm}
+.s-riot h3{font-family:'Anton',Impact,sans-serif!important;font-size:5.9mm!important;line-height:1.08!important;letter-spacing:.15mm!important}.s-riot.bd h3{font-size:10.5mm!important}
+.s-riot h3 em{color:#121110!important;background:#9bc0e2;padding:0 .8mm;border-radius:1mm}
+.s-riot .qw{background:#fff;border:.35mm solid #121110;box-shadow:.9mm .9mm 0 #121110;width:37mm!important;height:37mm!important;padding:4.8mm!important}.s-riot.bd .qw{border-width:.9mm;box-shadow:2mm 2mm 0 #121110;width:52mm!important;height:52mm!important;padding:5mm!important}
+.s-riot .qw i{display:none}
+.s-riot .ics span{color:#121110!important}.s-riot .ics svg{color:#121110!important}
+.s-riot .ft{color:#4a4630!important}.s-riot .ft b{color:#121110!important}
+.s-riot .rv{border-color:#121110!important;color:#121110!important;background:#fff}.s-riot .rv svg{color:#121110!important;fill:#121110!important}
+.s-sage{background:#e9ede3!important;color:#1e2a20!important}
+.s-sage .glow{background:radial-gradient(circle,#9aa57a55,transparent 65%)!important}
+.s-sage .ey{color:#4d6b4b!important}
+.s-sage h3{font-family:'Playfair Display',Georgia,serif!important;font-weight:600!important;text-transform:none!important;letter-spacing:0!important}
+.s-sage h3 em{color:#4d6b4b!important;font-style:italic}
+.s-sage .qw{border-radius:50% 50% 3mm 3mm/30% 30% 3mm 3mm!important;width:36mm!important;padding:7mm 4.4mm 4.4mm!important;height:auto!important;background:#fff}.s-sage.bd .qw{width:54mm!important;padding:12mm 6mm 6mm!important}
+.s-sage .qw i{display:none}
+.s-sage .ics span{color:#3f5040!important}.s-sage .ics svg{color:#4d6b4b!important}
+.s-sage .ft{color:#6e7a6c!important}.s-sage .ft b{color:#1e2a20!important}
+.s-sage .rv{border-color:#1e2a2033!important;color:#1e2a20!important}.s-sage .rv svg{color:#4d6b4b!important;fill:#4d6b4b!important}
 @media print{.qs{margin:0;padding-top:9mm}.qs .lbl{display:none}.qc{outline-color:#ddd}}
 `;
   function css() { if (document.getElementById("ks-qrc-css")) return; const s = document.createElement("style"); s.id = "ks-qrc-css"; s.textContent = CSS; document.head.appendChild(s); }
 
   const icons = cls => `<div class="ics">${[["menu", "Menu"], ["wa", "Order"], ["pay", "Pay UPI"], ["star", "Review"]].map(([k, l]) => `<span>${ic(k)}${l}</span>`).join("")}</div>`;
   const corners = "<i></i><i></i><i></i><i></i>";
-  const front = (c, base) => `<div class="qc fr"><div class="glow"></div><div class="ey">Scan me</div><h3>Menu, offers<br><em>&amp;</em> more</h3><div class="qw">${corners}${qr(base + "/k/" + c.code)}</div>${icons()}<div class="ft">Point your phone camera · <b>no app needed</b></div>${c.status === "claimed" ? '<span class="live">LIVE</span>' : ""}</div>`;
+  const front = (c, base, st) => `<div class="qc fr s-${st}"><div class="glow"></div><div class="ey">Scan me</div><h3>Menu, offers<br><em>&amp;</em> more</h3><div class="qw">${corners}${qr(base + "/k/" + c.code)}</div>${icons()}<div class="ft">Point your phone camera · <b>no app needed</b></div>${c.status === "claimed" ? '<span class="live">LIVE</span>' : ""}</div>`;
   const back = (c, label) => `<div class="qc bk"><div class="ey">For the shop owner</div><h4>Your shop, <em>online</em><br>in 5 minutes</h4>
     <ol><li><i>1</i><div><b>Scan the front</b>Opens your page setup.</div></li><li><i>2</i><div><b>Add your details</b>Menu, photos, offers, UPI, reviews.</div></li><li><i>3</i><div><b>Pay once, go live</b>Customers scan this card to see it.</div></li></ol>
     <div class="for">Cafés · Salons · Gyms · Boutiques · Clinics · Stores</div>
     <div class="pr"><b>₹499</b><small>one-time<br>no monthly fees</small></div>
     <div class="no"><div><small>Card no.</small><b>${esc(c.code)}</b></div><span>Help: WhatsApp<br>+91 63775 47759</span></div></div>`;
-  const board = (c, base) => `<div class="qc bd"><div class="glow"></div><div class="ey">Scan me</div><h3>Menu, offers<br><em>&amp;</em> more</h3><div class="qw">${corners}${qr(base + "/k/" + c.code)}</div>
+  const board = (c, base, st) => `<div class="qc bd s-${st}"><div class="glow"></div><div class="ey">Scan me</div><h3>Menu, offers<br><em>&amp;</em> more</h3><div class="qw">${corners}${qr(base + "/k/" + c.code)}</div>
     <div class="ics">${[["menu", "See the menu"], ["wa", "Order on WhatsApp"], ["pay", "Pay by UPI"], ["ig", "Follow us"]].map(([k, l]) => `<span>${ic(k)}${l}</span>`).join("")}</div>
     <div class="rv">${ic("star")} Loved it? Leave us a Google review</div>
     <div class="ft"><span>Point your phone camera · <b>no app needed</b></span><span>${esc(c.code)}</span></div>${c.status === "claimed" ? '<span class="live">LIVE</span>' : ""}</div>`;
 
   function render(out, codes, o) {
-    css(); o = o || {}; const base = o.base || "https://getkeepsake.in", label = o.label || "";
+    css(); o = o || {}; const st = STYLES[o.style] ? o.style : "noir", base = o.base || "https://getkeepsake.in", label = o.label || "";
     const H = [];
     if (o.size === "board") {
-      for (let i = 0; i < codes.length; i += 4) H.push(`<div class="qs board"><div class="lbl">${esc(label)} · counter boards ${i + 1}–${Math.min(codes.length, i + 4)} · cut on the dashed line</div>${codes.slice(i, i + 4).map(c => board(c, base)).join("")}</div>`);
+      for (let i = 0; i < codes.length; i += 4) H.push(`<div class="qs board"><div class="lbl">${esc(label)} · counter boards ${i + 1}–${Math.min(codes.length, i + 4)} · cut on the dashed line</div>${codes.slice(i, i + 4).map(c => board(c, base, st)).join("")}</div>`);
     } else {
       for (let i = 0; i < codes.length; i += 9) {
         const pg = codes.slice(i, i + 9);
-        H.push(`<div class="qs card"><div class="lbl">${esc(label)} · cards ${i + 1}–${i + pg.length}${o.oneSided ? "" : " · FRONT"}</div>${pg.map(c => front(c, base)).join("")}</div>`);
+        H.push(`<div class="qs card"><div class="lbl">${esc(label)} · cards ${i + 1}–${i + pg.length}${o.oneSided ? "" : " · FRONT"}</div>${pg.map(c => front(c, base, st)).join("")}</div>`);
         if (o.oneSided) continue;
         // back sheet: each row mirrored left↔right so it lines up when printed double-sided (flip on long edge)
         const rows = []; for (let r = 0; r < pg.length; r += 3) { const row = pg.slice(r, r + 3); while (row.length < 3) row.push(null); rows.push(row.reverse()); }
@@ -113,5 +156,6 @@
     }
     out.innerHTML = H.join("");
   }
-  window.KSQRCards = { render };
+  const STYLES = { noir: "Noir (dark & orange)", cream: "Café cream", mono: "Clean white", riot: "Bold yellow", sage: "Botanical sage" };
+  window.KSQRCards = { render, STYLES };
 })();
