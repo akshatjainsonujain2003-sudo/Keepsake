@@ -133,10 +133,9 @@ module.exports = async (req, res) => {
         items: (Array.isArray(g.items) ? g.items : []).slice(0, 150).map(i => ({
           n: clip(i.n, 140),
           p: clip(i.p, 60),
-          d: clip(i.d, 240),
+          d: clip([i.d, ...(Array.isArray(i.variants) ? i.variants.slice(0, 20).map(v => clip(v, 100)) : [])].filter(Boolean).join(" · "), 240),
           b: !!i.b,
-          i: "",
-          ...(i.variants && i.variants.length ? { v: i.variants.slice(0, 20).map(v => clip(v, 100)) } : {})
+          i: ""
         })).filter(i => i.n)
       })).filter(g => g.items.length);
       if (!cleanGroups.length) return reply(res, 400, { error: "Add at least one item before publishing." });
