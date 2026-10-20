@@ -198,7 +198,7 @@ textarea.in{resize:vertical;min-height:74px}
 <script src="/assets/biz.v6.js"></script>
 <script src="/assets/biz-demos.v5.js"></script>
 <script src="/assets/ks-checkout.v11.js"></script>
-<script src="/assets/menu-ocr.v1.js" defer></script>
+<script src="/assets/menu-ocr.v2.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js" defer></script>
 </head>
 <body>
@@ -631,12 +631,13 @@ async function freeScan(files) {
   const show = (t, f) => out.innerHTML = `<div class="scp"><i></i>${esc(t)}</div><div class="bar"><i style="width:${Math.round((f || 0) * 100)}%"></i></div>`;
   try {
     show("Getting the scanner ready…", 0);
-    if (!window.KSMenuOCR) await new Promise(r => setTimeout(r, 800));
+    for (let k = 0; !window.KSMenuOCR && k < 20; k++) await new Promise(r => setTimeout(r, 300));
+    if (!window.KSMenuOCR) throw new Error("The scanner didn't load. Refresh the page and try again.");
     const PR = !!(KSBiz.CATS[D.cat] || {}).prop, name = D.menuTitle || (PR ? "Properties" : "Menu");
     const found = await KSMenuOCR.read(files, { hindi: $("#scanHi").checked, defaultName: name, onProgress: show });
     SCAN = found.map(s => ({ n: s.n, items: s.items.map(x => ({ ...x, on: true })) }));
     review();
-  } catch (x) { out.innerHTML = `<div class="scerr">${esc(x.message || "Couldn't read that file. Try a clearer photo.")}</div>`; }
+  } catch (x) { console.error("scan", x); out.innerHTML = `<div class="scerr">${esc(String((x && x.message) || x || "") || "Couldn't read that file. Try a clearer photo.")}</div>`; }
   finally { lb.classList.remove("busy"); }
 }
 function review(errs) {

@@ -111,8 +111,9 @@
   }
 
   // ---------- browser: read photos / PDFs with Tesseract.js ----------
-  const TJS = "https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js";
-  const PDFJS = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js", PDFW = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+  // Everything is served from our own site (some mobile networks in India block public CDNs).
+  const BASE = "/assets/ocr5/", TJS = BASE + "tesseract.min.js", PDFJS = BASE + "pdf.min.js", PDFW = BASE + "pdf.worker.min.js";
+  const within = (p, ms, msg) => Promise.race([p, new Promise((_, no) => setTimeout(() => no(new Error(msg)), ms))]);
   const load = src => new Promise((ok, no) => { if (document.querySelector(`script[src="${src}"]`)) return ok(); const s = document.createElement("script"); s.src = src; s.onload = ok; s.onerror = () => no(new Error("Couldn't load the scanner. Check your internet and try again.")); document.head.appendChild(s); });
 
   // Photos: straighten size (small photos read badly, huge ones are slow) and make them grey.
@@ -137,9 +138,11 @@
     say("Getting the scanner ready…", 0);
     await load(TJS);
     let cur = 0, total = 1;
-    const worker = await root.Tesseract.createWorker(opts.hindi ? "eng+hin" : "eng", 1, {
-      logger: m => { if (m.status === "recognizing text") say(`Reading ${total > 1 ? "page " + (cur + 1) + " of " + total : "your menu"}… ${Math.round(m.progress * 100)}%`, (cur + m.progress) / total); }
-    });
+    const worker = await within(root.Tesseract.createWorker(opts.hindi ? "eng+hin" : "eng", 1, {
+      workerPath: BASE + "worker.min.js", corePath: BASE, langPath: BASE + "lang", workerBlobURL: false,
+      errorHandler: e => console.error("ocr", e),
+      logger: m => { if (/loading|initializ/.test(m.status || "")) say("Getting the scanner ready… " + Math.round((m.progress || 0) * 100) + "%", 0); if (m.status === "recognizing text") say(`Reading ${total > 1 ? "page " + (cur + 1) + " of " + total : "your menu"}… ${Math.round(m.progress * 100)}%`, (cur + m.progress) / total); }
+    }), 120000, "The scanner took too long to start. Check your internet and try again.");
     try {
       await worker.setParameters({ preserve_interword_spaces: "1", tessedit_pageseg_mode: "3" });
       const pages = [];
