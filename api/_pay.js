@@ -44,6 +44,9 @@ function catalog() {
   // PRICE_BIZ_QR is added to the ₹499 page (default ₹99). PRICE_BIZ_QR_REORDER is for a page that's already live.
   c.delivery.bizQr = { name: "Printed QR, delivered", price: rupees0(env.PRICE_BIZ_QR, 99), reorder: rupees(env.PRICE_BIZ_QR_REORDER, 149),
     desc: "Your QR printed on our black & gold counter board, couriered to your shop anywhere in India." };
+  // Loyalty stamp card add-on for a live business page (one-time). PRICE_LOYALTY changes it.
+  c.delivery.loyalty = { name: "Loyalty card add-on", price: rupees(env.PRICE_LOYALTY, 799),
+    desc: "A digital stamp card on your page: customers collect a stamp every visit and get your reward. Staff PIN, member list and WhatsApp reminders." };
   if (!c.frames) { delete c.delivery.frameQr; delete c.delivery.frameNfc; }
   return c;
 }
@@ -60,6 +63,12 @@ function amountFor(memory, plan) {
   if (kindOf(memory) === "biz" && isFrame(plan)) return { error: "Business pages are digital only." };
   if (plan === "bizQr" && kindOf(memory) !== "biz") return { error: "Printed QRs are for business pages." };
   const active = memory.paid !== false, base = c.products[kindOf(memory)].price;
+  if (plan === "loyalty") {
+    if (kindOf(memory) !== "biz") return { error: "The loyalty card is for business pages." };
+    if (!active) return { error: "Activate your page first, then add the loyalty card." };
+    if (memory.loyalty) return { error: "The loyalty card is already unlocked on this page." };
+    return { rupees: c.delivery.loyalty.price, upgrade: true };
+  }
   // A live business page ordering another sticker pays the reorder price.
   if (plan === "bizQr") return active ? { rupees: c.delivery.bizQr.reorder, upgrade: true, ship: c.delivery.bizQr.reorder } : { rupees: base + c.delivery.bizQr.price, upgrade: false, ship: c.delivery.bizQr.price };
   if (active && !isFrame(plan)) return { error: "This keepsake is already active." };
@@ -128,6 +137,7 @@ async function markPaid(orderId, paymentId) {
     if (memory) {
       memory.paid = true; memory.activatedAt = memory.activatedAt || order.paidAt;
       memory.plan = isFrame(order.plan) ? order.plan : (memory.plan || "digital");
+      if (order.plan === "loyalty") { memory.loyalty = true; memory.loyaltyAt = order.paidAt; }
       if (order.plan === "bizQr") memory.qrOrders = [...(memory.qrOrders || []), orderId].slice(-10);
       memory.orders = [...(memory.orders || []), orderId].slice(-20);
       await db.setj(mk, memory);

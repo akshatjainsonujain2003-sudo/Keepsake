@@ -8,6 +8,9 @@
 //   loy-pin:<page>      = { salt, hash } (staff PIN, never sent anywhere)
 const crypto = require("crypto");
 const db = require("./_db");
+const pay = require("./_pay");
+// Paid add-on (₹799): runs only once bought, or for free while payments aren't set up yet.
+const unlocked = m => !!m.loyalty || !pay.configured();
 
 const ID = /^[a-z0-9]{8,16}$/i, COOL = 4 * 3600e3, MAXM = 2000;
 const ph10 = p => { const d = String(p || "").replace(/\D/g, "").replace(/^(91|0)(?=\d{10}$)/, ""); return /^[6-9]\d{9}$/.test(d) ? d : ""; };
@@ -20,11 +23,11 @@ async function shop(id) {
   const m = await db.getj("customer-memory:" + id);
   if (!m || m.kind !== "biz") return null;
   const l = (m.data && m.data.loy) || {}, n = Math.round(+l.n);
-  const cfg = l.on && n >= 2 && n <= 30 ? { n, r: clip(l.r, 40) || "A free treat" } : null;
-  return { m, cfg, live: m.paid !== false };
+  const cfg = unlocked(m) && l.on && n >= 2 && n <= 30 ? { n, r: clip(l.r, 40) || "A free treat" } : null;
+  return { m, cfg, live: m.paid !== false, paid: unlocked(m) };
 }
 const key = (id, p) => "loy:" + id + ":" + p;
-const view = (c, cfg) => ({ name: c.name, phone: c.phone, s: Math.min(c.s, cfg.n), n: cfg.n, reward: cfg.r, ready: c.s >= cfg.n, rewards: c.r || 0, last: c.last || 0,
+const view = (c, cfg) => ({ name: c.name, phone: c.phone, s: Math.min(c.s, cfg.n), n: cfg.n, reward: cfg.r, ready: c.s >= cfg.n, rewards: c.r || 0, visits: c.v || 0, last: c.last || 0,
   wait: c.lastStamp && Date.now() - c.lastStamp < COOL ? COOL - (Date.now() - c.lastStamp) : 0 });
 const own = c => ({ ...c, tok: undefined, h: (c.h || []).slice(-10) });
 
@@ -44,7 +47,7 @@ function addStamp(c, cfg, by) {
     const mins = Math.ceil((COOL - (Date.now() - c.lastStamp)) / 6e4);
     return E(429, "Today's stamp is already on the card. Next one after " + (mins >= 60 ? Math.floor(mins / 60) + " h " + (mins % 60) + " min" : mins + " min") + ".");
   }
-  c.s++; c.lastStamp = c.last = Date.now(); c.h = (c.h || []).concat({ t: c.last, k: "s", by }).slice(-50); return null;
+  c.s++; c.v = (c.v || 0) + 1; c.lastStamp = c.last = Date.now(); c.h = (c.h || []).concat({ t: c.last, k: "s", by }).slice(-50); return null;
 }
 function redeem(c, cfg, by) {
   if (c.s < cfg.n) return E(409, "Not yet: " + (cfg.n - c.s) + " more visit" + (cfg.n - c.s > 1 ? "s" : "") + " to go.");
@@ -78,9 +81,10 @@ async function handle(b, ctx) {
       const cs = phones.length ? await db.cmd("MGET", ...phones.map(p => key(id, p))) : [];
       const list = cs.map(v => { try { return v && JSON.parse(v); } catch (e) { return null; } }).filter(Boolean).map(own);
       const wk = Date.now() - 7 * 864e5;
-      return { ok: true, pin: !!(await db.cmd("EXISTS", "loy-pin:" + id)), cfg: sh.cfg, members: list,
+      return { ok: true, unlocked: sh.paid, pin: !!(await db.cmd("EXISTS", "loy-pin:" + id)), cfg: sh.cfg, members: list,
         sum: { members: list.length, week: list.reduce((n, c) => n + (c.h || []).filter(x => x.k === "s" && x.t >= wk).length, 0), rewards: list.reduce((n, c) => n + (c.r || 0), 0), ready: list.filter(c => sh.cfg && c.s >= sh.cfg.n).length } };
     }
+    if (!sh.paid) return E(402, "Unlock the loyalty card add-on first.");
     if (!sh.cfg) return E(409, "Turn on the loyalty card and save your page first.");
     const phone = ph10(b.phone); if (!phone) return E(400, "Enter the customer's 10-digit mobile number.");
     let c = await db.getj(key(id, phone));

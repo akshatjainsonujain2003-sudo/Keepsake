@@ -189,26 +189,28 @@
     const $ = s => el.querySelector(s);
     const state = { mode: "activate", plan: "digital", print: "", photo: "", cat: null, code: null };
     const status = (t, cls) => { const s = $(".ks-status"); s.textContent = t || ""; s.className = "ks-status" + (cls ? " " + cls : ""); };
-    const full = plan => { const c = state.cat; if (!c || !c.delivery[plan]) return { sum: 0, frame: 0 }; const pr = c.products[opts.kind], up = state.mode === "upgrade", base = up ? 0 : pr.price, fr = plan === "bizQr" && up ? c.delivery.bizQr.reorder || 0 : c.delivery[plan].price; return { sum: base + fr, frame: fr, was: (up ? 0 : pr.was || pr.price) + fr }; };
+    const full = plan => { const c = state.cat; if (!c || !c.delivery[plan]) return { sum: 0, frame: 0 }; const pr = c.products[opts.kind], up = state.mode !== "activate", base = up ? 0 : pr.price, fr = plan === "bizQr" && up ? c.delivery.bizQr.reorder || 0 : c.delivery[plan].price; return { sum: base + fr, frame: fr, was: (up ? 0 : pr.was || pr.price) + fr }; };
     // A creator's code takes its discount off the keepsake itself, never a frame (same as api/_ref.js).
     const total = plan => { const f = full(plan), cd = state.code; if (!cd) return f.sum; const dig = Math.max(0, f.sum - f.frame); return f.sum - (cd.off ? Math.min(cd.off, Math.max(0, dig - 1)) : Math.round(dig * (cd.discount || 0) / 100)); };
 
     function render() {
       const c = state.cat, prod = c.products[opts.kind];
       const biz = opts.kind === "biz";
-      $(".ks-title").textContent = state.mode === "upgrade" ? (biz ? "Order your printed QR" : "Get it in a photo frame") : "Activate your " + (opts.kind === "site" ? "website" : opts.kind === "biz" ? "business page" : "keepsake");
-      $(".ks-note").textContent = state.mode === "upgrade" && biz
+      $(".ks-title").textContent = state.mode === "loyalty" ? "Unlock the loyalty card" : state.mode === "upgrade" ? (biz ? "Order your printed QR" : "Get it in a photo frame") : "Activate your " + (opts.kind === "site" ? "website" : opts.kind === "biz" ? "business page" : "keepsake");
+      $(".ks-note").textContent = state.mode === "loyalty"
+        ? "A digital stamp card on your page. Customers collect a stamp every visit and get your reward. You get the staff PIN, a member list and WhatsApp reminders. Pay once; it stays on for good."
+        : state.mode === "upgrade" && biz
         ? "We'll print your page's QR on our black & gold counter board and courier it to your shop. Stick it up or stand it on the counter: customers scan it to open your page."
         : state.mode === "upgrade"
         ? "We'll print a photo frame for this keepsake and deliver it to you. Your link stays the same."
         : opts.kind === "biz" ? "Your page is saved. Pay once to switch it on" + ((typeof opts.claim === "function" ? opts.claim() : opts.claim) ? " and link it to your QR card" : "") + ". It stays live for good, and you can update your menu, offers and photos any time."
         : `Your ${opts.kind === "site" ? "website" : "card"} is saved. Pay once to switch on its link, QR code and NFC link. It stays live for good, and you can keep editing it.` + (c.sale ? ` 🎉 ${c.sale.name}: ${c.sale.percent}% off right now.` : "");
-      const plans = (biz ? (state.mode === "upgrade" ? ["bizQr"] : ["digital", "bizQr"]) : state.mode === "upgrade" ? ["frameQr", "frameNfc"] : ["digital", "frameQr", "frameNfc"]).filter(p => c.delivery[p]);
+      const plans = state.mode === "loyalty" ? ["loyalty"] : (biz ? (state.mode === "upgrade" ? ["bizQr"] : ["digital", "bizQr"]) : state.mode === "upgrade" ? ["frameQr", "frameNfc"] : ["digital", "frameQr", "frameNfc"]).filter(p => c.delivery[p]);
       $(".ks-opts").hidden = $(".ks-dq").hidden = plans.length < 2;
       if (!plans.includes(state.plan)) state.plan = plans[0];
       $(".ks-opts").style.gridTemplateColumns = plans.length === 2 ? "1fr 1fr" : "";
       $(".ks-opts").innerHTML = plans.map(p => { const d = c.delivery[p]; return `<button type="button" class="ks-opt${p === state.plan ? " on" : ""}" data-plan="${p}"><b>${esc(p === "digital" ? prod.name + (biz ? " · Online only" : " · Digital") : d.name)}</b><span class="ks-pp">${full(p).was > total(p) ? `<s class="ks-was">${money(full(p).was)}</s> ` : ""}${money(total(p))}</span><small>${esc(p === "digital" && biz ? "Your page with its own link, plus a QR you can download and print yourself." : d.desc || "")}</small></button>`; }).join("");
-      const frame = state.plan !== "digital";
+      const frame = state.plan !== "digital" && state.plan !== "loyalty";
       $(".ks-frame").hidden = !frame; $(".ks-pq").hidden = state.plan === "bizQr";
       $(".ks-dq").textContent = biz ? "Want a printed QR delivered?" : "How would you like it?";
       el.querySelectorAll(".ks-pill").forEach(b => b.classList.toggle("on", b.dataset.print === state.print));
@@ -216,10 +218,10 @@
       const img = $(".ks-photo img"); img.hidden = !state.photo; if (state.photo) img.src = state.photo;
       $(".ks-up").firstChild.textContent = state.photo ? "Change photo" : "Upload photo to print";
       const cd = state.code, off = cd ? full(state.plan).sum - total(state.plan) : 0;
-      $(".ks-code").hidden = state.mode === "upgrade"; $(".ks-con").hidden = !cd; $(".ks-cask").hidden = !!cd; if (cd) $(".ks-crow").hidden = true;
+      $(".ks-code").hidden = state.mode !== "activate"; $(".ks-con").hidden = !cd; $(".ks-cask").hidden = !!cd; if (cd) $(".ks-crow").hidden = true;
       if (cd) $(".ks-con").innerHTML = `<span class="ks-on">✓ Code ${esc(cd.code)} applied: ${cd.off ? money(cd.off) : cd.discount + "%"} off${off ? " (you save " + money(off) + ")" : ""}</span> · <button type="button" class="ks-link ks-cdel">Remove</button>`;
       const was = full(state.plan).was;
-      $(".ks-pay").innerHTML = "Pay " + money(total(state.plan)) + (was > total(state.plan) ? `<span class="ks-was">${money(was)}</span>` : "") + (state.mode === "upgrade" ? (biz ? " & order QR" : " & order frame") : state.plan === "bizQr" ? " & go live" : " & activate");
+      $(".ks-pay").innerHTML = "Pay " + money(total(state.plan)) + (was > total(state.plan) ? `<span class="ks-was">${money(was)}</span>` : "") + (state.mode === "loyalty" ? " & unlock" : state.mode === "upgrade" ? (biz ? " & order QR" : " & order frame") : state.plan === "bizQr" ? " & go live" : " & activate");
     }
 
     el.addEventListener("click", e => {
@@ -246,11 +248,11 @@
     async function pay() {
       const id = opts.getId(); if (!id) { status("Save first ♡", "bad"); return; }
       const body = { action: "create", id, plan: state.plan };
-      if (state.code && state.mode !== "upgrade") body.ref = state.code.code;
+      if (state.code && state.mode === "activate") body.ref = state.code.code;
       const claim = typeof opts.claim === "function" ? opts.claim() : opts.claim; if (claim) body.claim = claim;
       const sp = typeof opts.sp === "function" ? opts.sp() : opts.sp; if (sp) body.sp = sp;
       if (state.plan === "bizQr") { body.address = {}; el.querySelectorAll("[data-a]").forEach(i => body.address[i.dataset.a] = i.value); }
-      else if (state.plan !== "digital") {
+      else if (state.plan !== "digital" && state.plan !== "loyalty") {
         if (!state.print) { status("Choose what to print in the frame.", "bad"); return; }
         if (state.print === "photo" && !state.photo) { status("Upload the photo you'd like printed.", "bad"); return; }
         body.print = state.print; body.photo = state.photo;
@@ -278,10 +280,11 @@
 
     return {
       async open(mode) {
-        state.mode = mode === "upgrade" ? "upgrade" : "activate";
+        state.mode = mode === "upgrade" || mode === "loyalty" ? mode : "activate";
+        if (state.mode === "loyalty") state.plan = "loyalty"; else if (state.plan === "loyalty") state.plan = "digital";
         if (state.mode === "upgrade" && state.plan === "digital") state.plan = opts.kind === "biz" ? "bizQr" : "frameQr";
         state.cat = await catalog(); status("");
-        if (!state.code && state.mode !== "upgrade") { const saved = savedCode(); if (saved) await applyCode(saved, false); }
+        if (!state.code && state.mode === "activate") { const saved = savedCode(); if (saved) await applyCode(saved, false); }
         const cu = opts.customer && opts.customer();
         if (cu) { const n = el.querySelector('[data-a="name"]'), ph = el.querySelector('[data-a="phone"]'); if (!n.value) n.value = cu.name || ""; if (!ph.value) ph.value = cu.phone || ""; }
         render();

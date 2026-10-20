@@ -23,6 +23,10 @@
 .bz .lmc .who{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:16px;background:var(--sf);margin-bottom:6px}
 .bz .lmc .who b{display:block;font:600 15px var(--fn)}.bz .lmc .who small{font:500 12.5px var(--fn);color:var(--mu)}
 .bz .lmc .who span{width:42px;height:42px;flex:none;border-radius:50%;display:grid;place-items:center;background:var(--ac);color:var(--on)}
+.bz .loy .lsx{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:0 0 4px}
+.bz .loy .lsx div{padding:10px 6px;border-radius:14px;background:var(--sf2);text-align:center}.bz .loy .lsx b{display:block;font:700 20px/1.1 var(--fn);color:var(--tx)}.bz .loy .lsx small{font:600 10.5px var(--fn);letter-spacing:.06em;text-transform:uppercase;color:var(--mu)}
+.bz .lfab{position:fixed;right:14px;bottom:calc(14px + env(safe-area-inset-bottom));z-index:55;display:flex;align-items:center;gap:7px;padding:10px 15px;border-radius:999px;border:0;background:var(--ac);color:var(--on);font:700 13.5px var(--fn);box-shadow:0 10px 26px -8px #0007;cursor:pointer}
+.bz .bk.on~.lfab{display:none}
 .bz .loy .lw{font:500 12.5px/1.4 var(--fn);color:var(--mu);text-align:center}`;
 
   function mount(root, id) {
@@ -46,17 +50,27 @@
         const on = i < s; d.className = (on ? "on" : "") + (i === n - 1 ? " gf" : "") + (on && prev >= 0 && i >= prev ? " pop" : "");
         d.innerHTML = i === n - 1 && !on ? GIFT : on ? (i === n - 1 ? GIFT : CHECK) : `<u>${i + 1}</u>`;
       });
-      prev = s;
+      prev = s; fab();
       el.querySelector("[data-lc]").textContent = card ? s + " / " + n : "Free to join";
       const lp = el.querySelector("[data-lp]"), la = el.querySelector("[data-la]");
       if (!card) { lp.innerHTML = note; la.innerHTML = `<button type="button" class="btn" data-lj>${GIFT} Get my free card</button>`; return; }
       const first = esc(String(card.name || "").split(" ")[0]);
+      const left = n - s;
       lp.innerHTML = ready ? `🎉 ${first}, your <b>${esc(reward)}</b> is ready! Show this card at the counter.`
-        : `Hi ${first}! ${n - s} more visit${n - s > 1 ? "s" : ""} to your ${esc(reward.toLowerCase())}.${card.rewards ? ` You've claimed it ${card.rewards}× already.` : ""}`;
-      la.innerHTML = (ready ? `<button type="button" class="btn" data-lr>${GIFT} Claim my reward</button>` : `<button type="button" class="btn" data-ls>${STAMP} Add today's stamp</button>`)
+        : s ? `Hi ${first}! You've collected <b>${s} of ${n}</b> stamps. Just <b>${left} more visit${left > 1 ? "s" : ""}</b> to your ${esc(reward.toLowerCase())}.`
+        : `Hi ${first}! Your card is ready. Get your first stamp on this visit, ${left} visits to your ${esc(reward.toLowerCase())}.`;
+      la.innerHTML = `<div class="lsx"><div><b>${card.visits || s}</b><small>Visits</small></div><div><b>${ready ? "0" : left}</b><small>To go</small></div><div><b>${card.rewards || 0}</b><small>Rewards won</small></div></div>`
+        + (ready ? `<button type="button" class="btn" data-lr>${GIFT} Claim my reward</button>` : `<button type="button" class="btn" data-ls>${STAMP} Add today's stamp</button>`)
         + `<div class="lw">At the counter, staff type their PIN on your phone.</div><button type="button" class="lk" data-lo>Not ${first}? Use another number</button>`;
     }
 
+    // A small "My card" button so a returning customer finds their card straight away.
+    function fab() {
+      let f = root.querySelector(".lfab");
+      if (!card) { if (f) f.remove(); return; }
+      if (!f) { f = document.createElement("button"); f.type = "button"; f.className = "lfab"; f.onclick = () => el.scrollIntoView({ behavior: "smooth", block: "center" }); root.appendChild(f); }
+      f.innerHTML = GIFT + (card.ready ? " Reward ready!" : " My card " + card.s + "/" + n);
+    }
     function sheet(html) {
       close(); const w = document.createElement("div"); w.className = "lm"; w.innerHTML = `<div class="lmc" role="dialog" aria-modal="true">${html}</div>`;
       w.onclick = e => { if (e.target === w || e.target.closest("[data-x]")) close(); };

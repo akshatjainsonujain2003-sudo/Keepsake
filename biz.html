@@ -33,7 +33,7 @@ html,body{margin:0;background:#1f1611;min-height:100%}
   try { const r = await fetch("/api/customer-memories?id=" + m[1], { cache: "no-store" }); j = await r.json(); if (!r.ok) j.error = j.error || "x"; } catch (e) { j = { error: "x" }; }
   if (j.error) return j.inactive ? say("This page isn’t live yet.", "If it’s your business, log in and activate it.") : say("This page could not be found.");
   if (j.kind !== "biz") { location.replace((j.kind === "site" ? "/s/" : "/m/") + m[1]); return; }
-  const loy = j.active !== false && j.data.loy && j.data.loy.on;
+  const loy = j.active !== false && j.loyalty && j.data.loy && j.data.loy.on;
   KSBiz.render(root, j.data, { url: location.origin + "/b/" + m[1], id: j.owner ? "" : m[1], loyLive: !!loy });
   if (loy) { const s = document.createElement("script"); s.src = "/assets/loyal.v1.js"; s.onload = () => KSLoyal.mount(root, m[1]); document.head.appendChild(s); }
   document.title = (j.data.t || "Our shop") + (j.data.area ? " · " + j.data.area : "");
