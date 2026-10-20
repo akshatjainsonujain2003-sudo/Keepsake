@@ -1,7 +1,7 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Prepaid code sheet · GetKeepsake</title>
 <link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
-<script src="/assets/qr-cards.v2.js"></script>
+<script src="/assets/qr-cards.v3.js"></script>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Pinyon+Script&family=Anton&family=Inter+Tight:wght@300;600&family=Playfair+Display:ital,wght@0,600;1,600&family=Inter:wght@400;500;600;700;800&family=Rozha+One&family=Mukta:wght@600;700&display=swap">
 <style>
 *{box-sizing:border-box}body{margin:0;background:#eee;font-family:system-ui,-apple-system,sans-serif;color:#2a0409}
@@ -44,7 +44,7 @@
  if(stampB){const tone=q.get("tone")||"red",paper=q.get("paper")||"a4",go=(k,v)=>{const u=new URL(location.href);u.searchParams.set(k,v);location.href=u.toString()};
   const sel=(k,cur,opts)=>{const e=document.createElement("select");e.setAttribute("aria-label",k);e.innerHTML=opts.map(([v,l])=>`<option value="${v}"${v===cur?" selected":""}>${l}</option>`).join("");e.onchange=()=>go(k,e.value);return e};
   const bar=document.querySelector(".bar"),sp=bar.querySelector("span[style]");
-  bar.insertBefore(sel("tone",tone,[["red","Sindoor Red"],["blue","Peacock Blue"],["marigold","Marigold"],["green","Mehendi Green"],["jamun","Jamun Purple"],["mix","Mix all 5 colours"]]),sp.nextSibling);
+  bar.insertBefore(sel("tone",tone,[["red","Sindoor Red"],["blue","Peacock Blue"],["marigold","Marigold"],["green","Mehendi Green"],["jamun","Jamun Purple"],["whitegold","White & Gold"],["mix","Mix all 5 colours"]]),sp.nextSibling);
   bar.insertBefore(sel("paper",paper,[["a4","A4 · 4 per sheet"],["a3","A3 · 9 per sheet"],["12x18","12×18 in · 9 per sheet"],["13x19","13×19 in · 9 per sheet"]]),sp.nextSibling.nextSibling);
   document.querySelector(".bar small").textContent="Print at 100% (Actual size), Background graphics ON, on 300gsm card. Boards touch each other: cut straight along the crop marks, each board is 3.5 × 5 in.";
   KSQRCards.render(document.getElementById("out"),b.codes,{size:"stamp",label:b.shop,base:"https://getkeepsake.in",tone,paper});setCsv();return}
