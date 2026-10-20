@@ -60,8 +60,8 @@
         : s ? `Hi ${first}! You've collected <b>${s} of ${n}</b> stamps. Just <b>${left} more visit${left > 1 ? "s" : ""}</b> to your ${esc(reward.toLowerCase())}.`
         : `Hi ${first}! Your card is ready. Get your first stamp on this visit, ${left} visits to your ${esc(reward.toLowerCase())}.`;
       la.innerHTML = `<div class="lsx"><div><b>${card.visits || s}</b><small>Visits</small></div><div><b>${ready ? "0" : left}</b><small>To go</small></div><div><b>${card.rewards || 0}</b><small>Rewards won</small></div></div>`
-        + (ready ? `<button type="button" class="btn" data-lr>${GIFT} Claim my reward</button>` : `<button type="button" class="btn" data-ls>${STAMP} Add today's stamp</button>`)
-        + `<div class="lw">At the counter, staff type their PIN on your phone.</div><button type="button" class="lk" data-lo>Not ${first}? Use another number</button>`;
+        + (ready ? `<button type="button" class="btn" data-lr>${GIFT} Claim my reward</button>` : (card.today ? `<button type="button" class="btn" disabled style="opacity:.6">${CHECK} Today's stamp added · see you tomorrow</button>` : `<button type="button" class="btn" data-ls>${STAMP} Add today's stamp</button>`))
+        + `<div class="lw">One stamp a day. At the counter, staff type their PIN on your phone.</div><button type="button" class="lk" data-lo>Not ${first}? Use another number</button>`;
     }
 
     // A small "My card" button so a returning customer finds their card straight away.

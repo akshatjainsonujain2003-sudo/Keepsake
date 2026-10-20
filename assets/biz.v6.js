@@ -593,7 +593,7 @@
       const demo = m.preview ? Math.min(3, l.n - 1) : 0;
       const dots = Array.from({ length: l.n }, (_, i) => `<i class="${i < demo ? "on" : ""}${i === l.n - 1 ? " gf" : ""}">${i === l.n - 1 ? ic("gift", 18) : i < demo ? ic("check", 16) : `<u>${i + 1}</u>`}</i>`).join("");
       return `<div class="sec rv" id="bz-loy"><div class="loy" data-loy data-n="${l.n}"><div class="lh"><span class="lb">${ic("star", 13)} Loyalty card</span><span class="lc" data-lc>${demo ? demo + " / " + l.n : "Free to join"}</span></div>
-        <b class="lr">${esc(l.r)}</b><p class="lp" data-lp>${l.t ? esc(l.t) : `Collect ${l.n} stamps, one every visit, and the ${esc(l.r.toLowerCase())} is on us.`}</p>
+        <b class="lr">${esc(l.r)}</b><p class="lp" data-lp>${l.t ? esc(l.t) : `Collect ${l.n} stamps, one a day when you visit, and the ${esc(l.r.toLowerCase())} is on us.`}</p>
         <div class="lst${l.n > 10 ? " sm" : ""}" data-lst>${dots}</div><div class="la" data-la><button type="button" class="btn" data-ljoin>${ic("gift", 17)} Get my free card</button></div></div></div>`;
     },
     review: m => m.review ? `<div class="sec rv"><div class="card rev"><div style="flex:1"><div class="st">${Array(5).fill(ic("star", 18)).join("")}</div><b>Loved your visit?</b><p>A quick Google review helps us a lot.</p></div><a class="btn" href="${esc(m.review)}" target="_blank" rel="noopener">Review us</a></div></div>` : "",

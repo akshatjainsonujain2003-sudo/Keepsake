@@ -267,13 +267,13 @@ textarea.in{resize:vertical;min-height:74px}
 
   <details class="sec" data-s="loy"><summary><span class="n">6</span><span class="ti"><b>Loyalty card</b><small>Visit 10 times, get a free coffee · add-on</small></span><svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></summary>
     <div class="body">
-      <div class="sw"><div><b>Run a loyalty card</b><div class="hint">Customers get a free stamp card on your page. One stamp per visit; when it's full they get the reward.</div></div><label class="switch"><input type="checkbox" id="loyOn" aria-label="Run a loyalty card"><i></i></label></div>
+      <div class="sw"><div><b>Run a loyalty card</b><div class="hint">Customers get a free stamp card on your page. One stamp a day when they visit; when it's full they get the reward.</div></div><label class="switch"><input type="checkbox" id="loyOn" aria-label="Run a loyalty card"><i></i></label></div>
       <div id="loyF" class="body" style="padding:0">
         <div class="g2" style="grid-template-columns:130px 1fr">
           <label class="f">Visits needed<select class="in" data-k="loy.n" id="loyN"></select></label>
           <label class="f">Reward<input class="in" data-k="loy.r" maxlength="40" placeholder="Free coffee"></label>
         </div>
-        <label class="f"><span>Rules <em>(optional)</em></span><input class="in" data-k="loy.t" maxlength="120" placeholder="One stamp per visit on bills above ₹150."></label>
+        <label class="f"><span>Rules <em>(optional)</em></span><input class="in" data-k="loy.t" maxlength="120" placeholder="Stamp on bills above ₹150."></label>
         <div class="loyb loyu" id="loyBuy">
           <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px"><b>Loyalty card add-on</b><b class="loyp">+ ₹<span id="loyPrice">300</span> <small>one-time</small></b></div>
           <div class="hint" id="loyBuyT">Turn it on above to see it in your preview. Customers see the card once you unlock it. With the ₹<span id="loyBase">499</span> page it's ₹<span id="loyCombo">799</span> in total.</div>
@@ -529,6 +529,7 @@ $("#loyPinSave").onclick = async () => {
   st.textContent = "Saving…"; const j = await loyApi({ action: "loy-own-pin", pin: v });
   st.textContent = j.error || "Saved. Tell your staff the new PIN."; if (!j.error) { $("#loyPin").value = ""; loyList(); }
 };
+const dayIST = t => new Date(t + 5.5 * 3600e3).toISOString().slice(0, 10);
 const ago = t => { const d = Math.floor((Date.now() - t) / 864e5); return d <= 0 ? "today" : d === 1 ? "yesterday" : d + " days ago"; };
 async function loyList() {
   if (!EDIT_ID) return;
@@ -537,7 +538,7 @@ async function loyList() {
   const s = j.sum, n = j.cfg ? j.cfg.n : +D.loy.n || 10;
   $("#loySum").innerHTML = [[s.members, "members"], [s.week, "stamps this week"], [s.ready, "rewards ready"], [s.rewards, "rewards given"]].map(([v, l]) => `<div><b>${v}</b><small>${l}</small></div>`).join("");
   $("#loyList").innerHTML = j.members.length ? j.members.map(c => `<div class="loyi" data-ph="${esc(c.phone)}"><div class="w"><b>${esc(c.name)}</b><small>${esc(c.phone.replace(/(\d{5})(\d{5})/, "$1 $2"))} · ${ago(c.last)}${c.r ? " · " + c.r + " reward" + (c.r > 1 ? "s" : "") : ""}</small></div>
-    <span class="st${c.s >= n ? " r" : ""}">${c.s >= n ? "🎁 Ready" : c.s + "/" + n}</span>${c.s >= n ? `<button type="button" class="go" data-lred>Give reward</button>` : `<button type="button" data-lst>+1</button>`}<a href="https://wa.me/91${esc(c.phone)}?text=${encodeURIComponent("Hi " + c.name.split(" ")[0] + "! " + (c.s >= n ? "Your " + (j.cfg ? j.cfg.r : "reward") + " is ready at " + (D.t || "our shop") + ". See you soon!" : "You have " + c.s + " of " + n + " stamps at " + (D.t || "our shop") + ". Only " + (n - c.s) + " more to your " + (j.cfg ? j.cfg.r.toLowerCase() : "reward") + "!"))}" target="_blank" rel="noopener" aria-label="WhatsApp">WA</a></div>`).join("")
+    <span class="st${c.s >= n ? " r" : ""}">${c.s >= n ? "🎁 Ready" : c.s + "/" + n}</span>${c.s >= n ? `<button type="button" class="go" data-lred>Give reward</button>` : c.lastStamp && dayIST(c.lastStamp) === dayIST(Date.now()) ? `<button type="button" disabled title="One stamp a day">✓ today</button>` : `<button type="button" data-lst>+1</button>`}<a href="https://wa.me/91${esc(c.phone)}?text=${encodeURIComponent("Hi " + c.name.split(" ")[0] + "! " + (c.s >= n ? "Your " + (j.cfg ? j.cfg.r : "reward") + " is ready at " + (D.t || "our shop") + ". See you soon!" : "You have " + c.s + " of " + n + " stamps at " + (D.t || "our shop") + ". Only " + (n - c.s) + " more to your " + (j.cfg ? j.cfg.r.toLowerCase() : "reward") + "!"))}" target="_blank" rel="noopener" aria-label="WhatsApp">WA</a></div>`).join("")
     : `<div class="hint">No members yet. Customers join from the loyalty card on your page.</div>`;
 }
 $("#loyLoad").onclick = loyList;

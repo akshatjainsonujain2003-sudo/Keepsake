@@ -12,7 +12,10 @@ const pay = require("./_pay");
 // Paid add-on (₹300, or ₹799 with the page): runs only once bought, or for free while payments aren't set up yet.
 const unlocked = m => !!m.loyalty || !pay.configured();
 
-const ID = /^[a-z0-9]{8,16}$/i, COOL = 4 * 3600e3, MAXM = 2000;
+const ID = /^[a-z0-9]{8,16}$/i, MAXM = 2000;
+// One stamp per customer per day (India time): the shop's staff and the owner alike.
+const day = t => new Date(t + 5.5 * 3600e3).toISOString().slice(0, 10);
+const today = c => !!c.lastStamp && day(c.lastStamp) === day(Date.now());
 const ph10 = p => { const d = String(p || "").replace(/\D/g, "").replace(/^(91|0)(?=\d{10}$)/, ""); return /^[6-9]\d{9}$/.test(d) ? d : ""; };
 const clip = (v, n) => String(v == null ? "" : v).replace(/[<>]/g, "").trim().slice(0, n);
 const hash = (pin, salt) => crypto.scryptSync(String(pin), salt, 32).toString("hex");
@@ -28,7 +31,7 @@ async function shop(id) {
 }
 const key = (id, p) => "loy:" + id + ":" + p;
 const view = (c, cfg) => ({ name: c.name, phone: c.phone, s: Math.min(c.s, cfg.n), n: cfg.n, reward: cfg.r, ready: c.s >= cfg.n, rewards: c.r || 0, visits: c.v || 0, last: c.last || 0,
-  wait: c.lastStamp && Date.now() - c.lastStamp < COOL ? COOL - (Date.now() - c.lastStamp) : 0 });
+  today: today(c) });
 const own = c => ({ ...c, tok: undefined, h: (c.h || []).slice(-10) });
 
 async function limit(k, max, secs) { const n = await db.cmd("INCR", k); if (n === 1) await db.cmd("EXPIRE", k, secs); return n > max; }
@@ -43,10 +46,7 @@ async function pinOk(id, pin, ip) {
 }
 function addStamp(c, cfg, by) {
   if (c.s >= cfg.n) return E(409, "This card is full. Claim the " + cfg.r + " first.");
-  if (by === "pin" && c.lastStamp && Date.now() - c.lastStamp < COOL) {
-    const mins = Math.ceil((COOL - (Date.now() - c.lastStamp)) / 6e4);
-    return E(429, "Today's stamp is already on the card. Next one after " + (mins >= 60 ? Math.floor(mins / 60) + " h " + (mins % 60) + " min" : mins + " min") + ".");
-  }
+  if (today(c)) return E(429, "Today's stamp is already on " + (by === "owner" ? (c.name || "this") + "'s" : "the") + " card. One stamp a day. Come back tomorrow!");
   c.s++; c.v = (c.v || 0) + 1; c.lastStamp = c.last = Date.now(); c.h = (c.h || []).concat({ t: c.last, k: "s", by }).slice(-50); return null;
 }
 function redeem(c, cfg, by) {
