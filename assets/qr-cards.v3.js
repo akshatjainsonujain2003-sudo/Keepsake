@@ -113,9 +113,10 @@
     blue: { ...LIGHT, edge: "#0D3F57", tabInk: "#0D3F57", bg: grad("rgba(159,216,236,.5)", "#0E6A8C", "#0A2238") },
     marigold: { ink: "#2A1405", pill: "rgba(255,255,255,.34)", stroke: "rgba(42,20,5,.4)", dot: "#B3121F", tab: "#2A1405", tabInk: "#FFE9B0", edge: "#B4440C", bg: grad("rgba(255,236,150,.85)", "#F59E0B", "#C2410C") },
     green: { ...LIGHT, edge: "#0B4A35", tabInk: "#0B4A35", bg: grad("rgba(155,232,196,.45)", "#108A60", "#0B2E24") },
-    jamun: { ...LIGHT, edge: "#3E1A63", tabInk: "#3E1A63", bg: grad("rgba(215,168,255,.5)", "#6D2E9E", "#1E0F33") }
+    jamun: { ...LIGHT, edge: "#3E1A63", tabInk: "#3E1A63", bg: grad("rgba(215,168,255,.5)", "#6D2E9E", "#1E0F33") },
+    whitegold: { ink: "#2A1F14", hi: "#9A6B1F", pill: "rgba(184,134,43,.14)", stroke: "rgba(184,134,43,.5)", dot: "#B8862B", tab: "linear-gradient(160deg,#D9B160 0%,#A9781F 100%)", tabInk: "#FFFDF8", edge: "linear-gradient(160deg,#E2BF6E 0%,#B8862B 50%,#8C6118 100%)", bg: "radial-gradient(ellipse 80% 55% at 50% 25%,#FFF3D6 0%,transparent 70%),#FFFDF8" }
   };
-  const TONE_LIST = ["red", "blue", "marigold", "green", "jamun"];
+  const TONE_LIST = ["red", "blue", "marigold", "green", "jamun"]; // "mix" rotates these; whitegold is picked on its own
   const qrH = u => { const x = qrcode(0, "H"); x.addData(u); x.make(); return x.createSvgTag({ cellSize: 3, margin: 0, scalable: true }).replace(/fill="#000000"/g, 'fill="#1A1210"').replace(/fill="#ffffff"/g, 'fill="transparent"'); };
   const STAMP_CSS = `
 .ss,.ss *{box-sizing:border-box}
@@ -158,7 +159,7 @@
   <div class="sp" style="background:${t.bg}">
     <div class="scan" style="-webkit-text-stroke-color:${t.stroke}" aria-hidden="true">SCAN</div>
     <div class="top"><div class="br"><b>GetKeepsake<span style="color:${t.dot}">.</span></b><small>for business</small></div><div class="in2"><span>भारत</span><span>INDIA</span></div></div>
-    <div class="hi"><b>नमस्ते</b><span>Point your camera here for the menu</span></div>
+    <div class="hi"><b${t.hi ? ` style="color:${t.hi}"` : ""}>नमस्ते</b><span>Point your camera here for the menu</span></div>
     <div class="qw"><div class="tab" style="background:${t.tab};color:${t.tabInk}">SCAN ME</div>${qrH(base + "/k/" + c.code)}<div class="bdg" style="background:${t.edge}">GK</div></div>
     <div class="chips">${[["menu", "Menu"], ["offer", "Offers"], ["pay", "Pay"], ["star", "Review"]].map(([k, l]) => `<span style="background:${t.pill}">${ci(k)}${l}</span>`).join("")}</div>
     <div class="ft"><span>No app needed · just open your camera</span><span>${esc(c.code)}</span></div>
