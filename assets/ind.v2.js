@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&family=Inter:wght@400;500;600;700&display=swap">
 <script src="/assets/biz.v6.js"><\/script><script src="/assets/biz-demos.v5.js"><\/script></head><body><main id="b"></main><script>
 var D=${JSON.stringify(d)};var d=D.demo&&KSBizDemos[D.demo]?JSON.parse(JSON.stringify(KSBizDemos[D.demo])):Object.assign(KSBiz.blank(D.cat||""),KSBizDemos[D.base||"clinic"]||{},D.data||{});
-var b=document.getElementById("b");KSBiz.render(b,d,{preview:true});document.body.style.background=getComputedStyle(b).getPropertyValue("--bg");<\/script></body></html>`;
+var b=document.getElementById("b");KSBiz.render(b,d,{preview:true});document.body.style.background=getComputedStyle(b).getPropertyValue("--bg");if(D.y)setTimeout(function(){scrollTo(0,(document.body.scrollHeight-innerHeight)*D.y)},400);<\/script></body></html>`;
   const fit = f => { const s = f.parentNode; f.style.transform = "scale(" + (s.clientWidth / 375) + ")"; f.style.height = Math.ceil(s.clientHeight * 375 / s.clientWidth) + "px"; };
   const load = f => { if (f.dataset.ld) return; f.dataset.ld = "1"; let o = {}; try { o = JSON.parse(f.dataset.live); } catch (e) {} f.srcdoc = DOC(o); };
   const frames = [...document.querySelectorAll("iframe[data-live]")];

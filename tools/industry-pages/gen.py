@@ -2,6 +2,10 @@ import json, html, re, sys, os
 sys.path.insert(0, os.path.dirname(__file__))
 from data import P, ORDER
 REPO = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+CHIPS = {"cafe": ["Cafés", "Restaurants", "Bakeries", "Cloud kitchens", "Juice bars"], "salon": ["Salons", "Beauty parlours", "Spas", "Barbers", "Bridal makeup"], "gym": ["Gyms", "Yoga studios", "CrossFit", "Dance classes", "Martial arts"],
+ "real-estate": ["Property dealers", "Builders", "Rentals & PG", "Plots & land", "Interiors"], "general-store": ["Kirana", "General stores", "Dairy", "Hardware", "Mobile shops"],
+ "boutique": ["Boutiques", "Sarees & ethnic", "Menswear", "Kids wear", "Jewellery"], "pharmacy": ["Pharmacies", "Chemists", "Medical stores", "Surgical", "Ayurveda"], "clinic": ["Clinics", "Dentists", "Physiotherapy", "Diagnostic labs", "Eye clinics"]}
+TAB = {"cafe": "Menu", "salon": "Services", "gym": "Plans", "real-estate": "Properties", "general-store": "Products", "boutique": "Collection", "pharmacy": "Products", "clinic": "Services"}
 COVER = {"cafe": "cafe-interior.webp", "salon": "salon-cover.webp", "gym": "gym-cover.webp", "real-estate": "re-villa.webp", "general-store": "kirana-cover.webp", "boutique": "bq-store1.webp", "pharmacy": "clinic-micro.webp", "clinic": "clinic-cover.webp"}
 esc = lambda s: html.escape(s, quote=True)
 strip = lambda s: re.sub("<[^>]+>", "", s)
@@ -68,6 +72,7 @@ def page(slug):
         {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in d["faq"]]},
         {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "GetKeepsake for business", "item": "https://getkeepsake.in/shops"}, {"@type": "ListItem", "position": 2, "name": d["label"], "item": url}]}]}
     live = esc(json.dumps(d["live"], ensure_ascii=False))
+    side = lambda y: esc(json.dumps(dict(d["live"], y=y), ensure_ascii=False))
     return f'''<!doctype html>
 <html lang="en-IN">
 <head>
@@ -84,23 +89,27 @@ def page(slug):
 <link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Pinyon+Script&family=Inter:wght@400;500;600;700;800&family=Mukta:wght@600;700&display=swap">
-<link rel="stylesheet" href="/assets/ind.v2.css">
+<link rel="stylesheet" href="/assets/ind.v3.css">
 <script type="application/ld+json">{json.dumps(ld, ensure_ascii=False).replace("</", "<\\/")}</script>
 </head>
 <body>
 {nav()}
 <main>
 <section class="hr"><div class="w">
-  <div>
-    <span class="ki"><i></i>{esc(d["kicker"])}</span>
+  <div class="tx">
+    <span class="nj">NOW IN JAIPUR</span>
+    <span class="ki">{esc(d["kicker"])}</span>
     <h1 style="{H1S(d)}">{H1(d)}</h1>
-    <p class="sub">{esc(d["sub"])}</p>
     <p class="hi" lang="hi">{HI(d["hi"])}</p>
+    <p class="sub">{esc(d["sub"])}</p>
     <div class="ct"><a class="b p" href="{studio}">{esc(d["cta"])} · ₹499</a><a class="b s" href="{live_link}">See a live {esc(d["word"])} page</a></div>
+    <div class="ch">{"".join(f"<span>{esc(c)}</span>" for c in CHIPS[slug])}</div>
     <div class="tr"><span>No app needed</span><span>Ready in 5 minutes</span><span>No monthly fees</span></div>
   </div>
-  <div class="ar"><div class="bg"></div>
-    <div class="ph"><div class="sc"><iframe data-live="{live}" title="A live example {esc(d["word"])} page" loading="lazy"></iframe></div></div>
+  <div class="ar">
+    <div class="ph l"><div class="sc"><iframe data-live="{side(0.32)}" title="" aria-hidden="true" tabindex="-1" loading="lazy"></iframe></div></div>
+    <div class="ph r"><div class="sc"><iframe data-live="{side(0.58)}" title="" aria-hidden="true" tabindex="-1" loading="lazy"></iframe></div></div>
+    <div class="ph c"><div class="sc"><iframe data-live="{live}" title="A live example {esc(d["word"])} page" loading="lazy"></iframe></div></div>
     {fl_a}{fl_c}
   </div>
 </div></section>
@@ -144,7 +153,7 @@ def page(slug):
 </div></section>
 </main>
 {footer()}
-<script src="/assets/ind.v1.js" defer></script>
+<script src="/assets/ind.v2.js" defer></script>
 <script src="/assets/ks-pixel.v1.js" defer></script>
 </body>
 </html>
