@@ -340,7 +340,7 @@ textarea.in{resize:vertical;min-height:74px}
     <div class="body">
       <div class="scan" id="scanBox">
         <div class="scanh"><span class="scani" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2M7 12h10"/></svg></span>
-          <div style="flex:1"><b id="scanT">Scan your menu or rate card</b><div class="hint" id="scanH">Upload photos or a PDF of the printed menu, price list or services. We read every name and price and arrange them for you to check. Free, and the photo never leaves your phone.</div></div></div>
+          <div style="flex:1"><b id="scanT">Scan your menu or rate card</b><div class="hint" id="scanH">Upload photos or a PDF of the printed menu, price list or services. We read every name and price and arrange them for you to check. Free to use.</div></div></div>
         <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap"><label class="btn sm scanb"><input type="file" id="scanIn" accept="image/*,application/pdf" multiple hidden>Upload photos or PDF</label>
           <label class="hint" style="display:flex;gap:6px;align-items:center;font-weight:600"><input type="checkbox" id="scanHi"> Menu has Hindi</label></div>
         <div class="hint">Tips: one page per photo, straight on, in good light, nothing cut off at the edges.</div>
@@ -621,11 +621,13 @@ $("#scanIn").onchange = async e => {
     } catch (x) { errs.push((files.length > 1 ? files[i].name + ": " : "") + x.message); }
   }
   lb.classList.remove("busy");
+  // AI couldn't read anything (no quota left, offline…): offer the free reader that runs on this phone.
+  if (!found.length && errs.length) { LASTFILES = files; $("#scanOut").innerHTML = errs.map(t => `<div class="scerr">${esc(t)}</div>`).join("") + `<button type="button" class="btn sm" id="scFree" style="margin-top:8px">Read it on this phone instead</button>`; return; }
   SCAN = found.map(s => ({ n: s.n, items: s.items.map(x => ({ ...x, on: true })) }));
   review(errs);
 };
 // Free scanner: Tesseract reads the text right here in the browser, then KSMenuOCR.parse arranges it.
-let CFG = null; fetch("/api/config").then(r => r.json()).then(c => CFG = c).catch(() => {});
+let CFG = null, LASTFILES = null; fetch("/api/config").then(r => r.json()).then(c => CFG = c).catch(() => {});
 async function freeScan(files) {
   const out = $("#scanOut"), lb = $(".scanb"); lb.classList.add("busy");
   const show = (t, f) => out.innerHTML = `<div class="scp"><i></i>${esc(t)}</div><div class="bar"><i style="width:${Math.round((f || 0) * 100)}%"></i></div>`;
@@ -667,9 +669,10 @@ $("#scanOut").oninput = e => {
 };
 $("#scanOut").onclick = e => {
   if (e.target.id === "scX") { SCAN = null; $("#scanOut").innerHTML = ""; return; }
+  if (e.target.id === "scFree" && LASTFILES) { freeScan(LASTFILES); return; }
   if (e.target.id !== "scAdd") return;
   const PR = !!(KSBiz.CATS[D.cat] || {}).prop, mode = (document.querySelector('input[name="scm"]:checked') || {}).value || "add";
-  const picked = SCAN.map(s => ({ n: (s.n || "Menu").trim() || "Menu", items: s.items.filter(x => x.on).map(x => ({ n: x.n, p: x.p, d: x.d, b: false, i: "", ...(PR ? { s: "sale" } : {}) })) })).filter(s => s.items.length);
+  const picked = SCAN.map(s => ({ n: (s.n || "Menu").trim() || "Menu", items: s.items.filter(x => x.on).map(x => ({ n: x.n, p: x.p, d: x.d, b: !!x.b, i: "", ...(PR ? { s: "sale" } : {}) })) })).filter(s => s.items.length);
   const n = picked.reduce((a, s) => a + s.items.length, 0);
   let menuNow = mode === "rep" ? [] : (D.menu || []).map(s => ({ ...s, items: s.items.filter(x => x.n) })).filter(s => s.items.length);
   picked.forEach(s => { const same = menuNow.find(x => (x.n || "").toLowerCase() === s.n.toLowerCase()); if (same) same.items.push(...s.items); else menuNow.push(s); });
