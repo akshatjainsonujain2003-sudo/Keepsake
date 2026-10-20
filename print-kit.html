@@ -1,0 +1,117 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Owner kit cards · GetKeepsake</title>
+<link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700;800&family=Mukta:wght@600;700&family=Rozha+One&display=swap">
+<style>
+*{box-sizing:border-box}body{margin:0;background:#eee;font-family:system-ui,-apple-system,sans-serif;color:#2a0409}
+.bar{position:sticky;top:0;z-index:2;display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:12px 16px;background:#2a0409;color:#f8f0df}
+.bar b{color:#e4c680}.bar button{padding:9px 16px;border-radius:999px;border:0;background:#d6b06a;color:#2a0409;font-weight:700;cursor:pointer}
+.bar small{opacity:.8;flex-basis:100%}.bar select,.bar input{padding:7px 10px;border-radius:999px;border:1px solid #e4c68088;background:#2a0409;color:#f8f0df;font-weight:600}.bar input{width:70px}
+.bar label{display:flex;gap:6px;align-items:center;font-size:13px}
+/* sheet */
+.ss{position:relative;background:#fff;margin:12px auto;page-break-after:always;break-after:page;overflow:hidden;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.ss .grid{position:absolute;display:grid}
+.ss .lbl{position:absolute;left:0;right:0;top:10px;text-align:center;font:600 9px Inter,system-ui,sans-serif;color:#9a9a9a}
+.ss .cm{position:absolute;background:#000}
+/* a card is drawn at 525 × 750 and scaled to 336 × 480 px = 3.5 × 5 in at 100% */
+.kc{width:336px;height:480px;overflow:hidden;position:relative}
+.kd,.kd *{box-sizing:border-box}
+.kd{position:absolute;left:0;top:0;width:525px;height:750px;transform:scale(.64);transform-origin:0 0;font-family:Inter,system-ui,sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.kd .pf{position:absolute;inset:0}
+.kd .sp{position:absolute;inset:12.5px;overflow:hidden;display:flex;flex-direction:column}
+.kd .ab{font:400 21px/1 'Archivo Black','Arial Black',sans-serif;letter-spacing:-.6px}
+.kd .fb{margin-top:4px;font:700 9.5px/1 Inter,sans-serif;letter-spacing:.26em;text-transform:uppercase}
+.kd .in2{display:flex;align-items:baseline;gap:6px}.kd .in2 span:first-child{font:700 15px/1 Mukta,sans-serif}.kd .in2 span+span{font:700 10.5px/1 Inter,sans-serif;letter-spacing:.22em}
+/* how-to (front) */
+.hd{padding:20px 26px 18px;position:relative;overflow:hidden}
+.hd .how{position:absolute;right:-10px;top:6px;font:400 92px/.8 'Archivo Black',sans-serif;letter-spacing:-3px;color:transparent;-webkit-text-stroke-width:1.5px}
+.hd .ab{font-size:17px;letter-spacing:-.4px}.hd .fb{margin-top:3px;font-size:8px}
+.hd h1{margin:16px 0 0;font:800 28px/1.05 Inter,sans-serif;letter-spacing:-.8px;position:relative}
+.hd .hi{margin-top:5px;font:600 15.5px/1.2 Mukta,sans-serif;position:relative}
+.steps{padding:16px 24px 0;display:flex;flex-direction:column;gap:11px}
+.step{display:flex;gap:12px;align-items:flex-start}
+.step .n{width:29px;height:29px;flex:none;border-radius:50%;display:grid;place-items:center;font:400 13.5px/1 'Archivo Black',sans-serif}
+.step b{display:block;font:800 15.5px/1.25 Inter,sans-serif}.step b small{font-size:11.5px;font-weight:700}
+.step p{margin:2px 0 0;font:400 13px/1.36 Inter,sans-serif}.step p strong{font-weight:700}
+.qb{margin:0 16px 16px;padding:11px;border-radius:15px;display:flex;gap:13px;align-items:center;border:1px solid}
+.qb .q{width:82px;height:82px;flex:none;border-radius:10px;background:#fff;display:grid;place-items:center}.qb .q svg{width:68px;height:68px;display:block}
+.qb b{display:block;font:800 14px/1.25 Inter,sans-serif}.qb p{margin:3px 0 0;font:400 12px/1.4 Inter,sans-serif}.qb .wa{margin-top:5px;font:700 12px/1.3 Inter,sans-serif}
+/* about us (back) */
+.fr{position:absolute;inset:9px;border:1px solid;border-radius:4px;padding:20px 24px 16px;display:flex;flex-direction:column}
+.fr .top{display:flex;justify-content:space-between;align-items:center}
+.fr .ey{margin-top:26px;display:flex;align-items:center;gap:10px;font:700 12px/1 Inter,sans-serif;letter-spacing:.22em;text-transform:uppercase}.fr .ey i{width:22px;height:1.5px}
+.fr h2{margin:10px 0 0;font:800 32px/1.08 Inter,sans-serif;letter-spacing:-1px}
+.fr .lead{margin:13px 0 0;font:500 14.5px/1.5 Inter,sans-serif}
+.tiles{margin-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tiles div{padding:11px 14px;border-radius:12px;border:1px solid}.tiles b{display:block;font:800 19.5px/1.2 Inter,sans-serif}.tiles span{display:block;margin-top:2px;font:600 12px/1.3 Inter,sans-serif}
+.ty{text-align:center}.ty b{display:inline-block;font:400 52px/1.08 'Rozha One',serif;-webkit-background-clip:text;background-clip:text;color:transparent}.ty span{display:block;margin-top:2px;font:600 13px/1.3 Inter,sans-serif}
+.ft{margin-top:13px;padding-top:11px;border-top:1px solid;display:flex;justify-content:space-between;gap:8px;font:700 11px/1.2 Inter,sans-serif}
+.grow{flex-grow:1}
+@media print{body{background:#fff}.bar{display:none}.ss{margin:0}}
+</style></head><body>
+<div class="bar"><span><b>Owner kit cards</b> · how-to (front) + about us (back) · 3.5 × 5 in</span><span style="flex:1"></span>
+<label>Colour <select id="tone"><option value="blackgold">Black &amp; Gold</option><option value="whitegold">White &amp; Gold</option><option value="blackwhite">Black &amp; White</option></select></label>
+<label>Paper <select id="paper"><option value="a4">A4 · 4 per sheet</option><option value="a3">A3 · 9 per sheet</option><option value="12x18">12×18 in · 9 per sheet</option><option value="13x19">13×19 in · 9 per sheet</option></select></label>
+<label>Sheets <input id="sheets" type="number" min="1" max="50" value="1"></label>
+<label>Print <select id="sides"><option value="both">Both sides (front, back, front, back…)</option><option value="front">Fronts only (how-to)</option><option value="back">Backs only (about us)</option></select></label>
+<button id="print">Print</button>
+<small id="tip"></small></div>
+<div id="out"></div>
+<script>
+(()=>{
+const W=336,H=480;
+const PAPER={a4:{w:8.27,h:11.69,cols:2,rows:2,name:"A4"},a3:{w:11.69,h:16.54,cols:3,rows:3,name:"A3"},"12x18":{w:12,h:18,cols:3,rows:3,name:"12×18 in"},"13x19":{w:13,h:19,cols:3,rows:3,name:"13×19 in"}};
+const goldEdge="linear-gradient(160deg,#E2BF6E 0%,#B8862B 50%,#8C6118 100%)",goldHead="radial-gradient(ellipse 80% 90% at 85% 0%,rgba(255,240,200,.75) 0%,transparent 70%),linear-gradient(160deg,#E8C877 0%,#C99A3C 55%,#A87A26 100%)",goldBadge="linear-gradient(160deg,#D9B160 0%,#A9781F 100%)";
+const T={
+ blackgold:{ink:"#F7EFE0",sub:"#CFC3AE",acc:"#DDB868",dot:"#DDB868",num:"#E6C77E",line:"rgba(221,184,104,.6)",tile:"rgba(221,184,104,.09)",tileLine:"rgba(221,184,104,.4)",edge:goldEdge,card:"#13110E",aboutBg:"radial-gradient(ellipse 90% 50% at 50% 0%,rgba(221,184,104,.16) 0%,transparent 70%),#13110E",thanks:"linear-gradient(180deg,#F1D78F 0%,#B8862B 100%)",head:goldHead,headInk:"#13110E",how:"rgba(19,17,14,.28)",headDot:"#13110E",badge:goldBadge,badgeInk:"#13110E"},
+ whitegold:{ink:"#2A1F14",sub:"#4A3D2E",acc:"#9A6B1F",dot:"#B8862B",num:"#8C6118",line:"#D9B66A",tile:"#FBF3E0",tileLine:"#EAD6A6",edge:goldEdge,card:"#FFFDF8",aboutBg:"radial-gradient(ellipse 90% 50% at 50% 0%,#FFF6DF 0%,transparent 70%),#FFFDF8",thanks:"linear-gradient(180deg,#D4A64A 0%,#8C6118 100%)",head:goldHead,headInk:"#2A1F14",how:"rgba(255,253,248,.7)",headDot:"#FFFDF8",badge:goldBadge,badgeInk:"#FFFDF8"},
+ blackwhite:{ink:"#FFFFFF",sub:"#C9C9C9",acc:"#FFFFFF",dot:"#FFFFFF",num:"#FFFFFF",line:"rgba(255,255,255,.45)",tile:"rgba(255,255,255,.07)",tileLine:"rgba(255,255,255,.3)",edge:"#1C1C1C",card:"#0E0E0E",aboutBg:"radial-gradient(ellipse 90% 50% at 50% 0%,rgba(255,255,255,.1) 0%,transparent 70%),#0E0E0E",thanks:"linear-gradient(180deg,#FFFFFF 0%,#BDBDBD 100%)",head:"#FFFFFF",headInk:"#0E0E0E",how:"rgba(14,14,14,.2)",headDot:"#0E0E0E",badge:"#FFFFFF",badgeInk:"#0E0E0E"}
+};
+const qrSvg=u=>{const x=qrcode(0,"M");x.addData(u);x.make();return x.createSvgTag({cellSize:3,margin:0,scalable:true}).replace(/fill="#000000"/g,'fill="#1A1210"').replace(/fill="#ffffff"/g,'fill="transparent"')};
+const QR=qrSvg("https://getkeepsake.in/dashboard");
+// perforation: 25 px tiles in drawing units = 16 px printed, same bite as the QR boards, holes centred on the cut line
+const pf=t=>`<div class="pf" style="background:radial-gradient(circle,#fff 7.8px,transparent 8.6px) -12.5px -12.5px/25px 25px,${t.edge}"></div>`;
+const STEPS=[["Scan your QR","It opens your shop page. First time? Fill in your details and go live."],["Edit anytime, free","Log in at <strong>getkeepsake.in/dashboard</strong> and tap Edit. Menu, prices, offers, photos and hours change instantly. Your QR stays the same."],["Scan your old menu","In the editor, upload a photo of your printed menu or rate card. Items and prices fill in by themselves."],["See who visits","Your dashboard shows how many people opened your page and tapped Call, WhatsApp or Directions."],["Reward regulars","A loyalty stamp card on your page, like 10 visits = 1 free coffee. Staff add stamps with a PIN.",true]];
+const front=t=>`<div class="kc"><div class="kd" style="color:${t.ink}">${pf(t)}<div class="sp" style="background:${t.card}">
+ <div class="hd" style="background:${t.head};color:${t.headInk}"><div class="how" style="-webkit-text-stroke-color:${t.how}" aria-hidden="true">HOW</div>
+  <div style="position:relative"><div class="ab">GetKeepsake<span style="color:${t.headDot}">.</span></div><div class="fb">for business</div></div>
+  <h1>Your shop page,<br>how it works</h1><div class="hi">आपका पेज, आपके हाथ में</div></div>
+ <div class="steps">${STEPS.map(([h,p,add],i)=>`<div class="step"><div class="n" style="background:${t.badge};color:${t.badgeInk}">${i+1}</div><div><b>${h}${add?` <small style="color:${t.acc}">· add-on ₹300</small>`:""}</b><p style="color:${t.sub}">${p}</p></div></div>`).join("")}</div>
+ <div class="grow"></div>
+ <div class="qb" style="background:${t.tile};border-color:${t.tileLine}"><div class="q">${QR}</div><div><b>Scan to open your dashboard</b><p style="color:${t.sub}">Log in with the email you used to make your page.</p><div class="wa">Help on WhatsApp: +91 63775 47759</div></div></div>
+</div></div></div>`;
+const TILES=[["₹499","one-time, no monthly fee"],["0%","commission on orders"],["Free","unlimited edits, forever"],["No app","customers just scan"]];
+const back=t=>`<div class="kc"><div class="kd" style="color:${t.ink}">${pf(t)}<div class="sp" style="background:${t.aboutBg}"><div class="fr" style="border-color:${t.line}">
+ <div class="top"><div><div class="ab">GetKeepsake<span style="color:${t.dot}">.</span></div><div class="fb" style="color:${t.acc}">for business</div></div><div class="in2" style="color:${t.acc}"><span>भारत</span><span>INDIA</span></div></div>
+ <div class="ey" style="color:${t.acc}"><i style="background:${t.acc}"></i>About us</div>
+ <h2>Made for every shop,<br><span style="color:${t.acc}">café, salon and clinic.</span></h2>
+ <p class="lead" style="color:${t.sub}">We help businesses go online in minutes. One QR on your counter opens a beautiful page with your menu, offers, UPI payments, Google reviews and WhatsApp orders.</p>
+ <div class="tiles">${TILES.map(([b,s])=>`<div style="background:${t.tile};border-color:${t.tileLine}"><b style="color:${t.num}">${b}</b><span>${s}</span></div>`).join("")}</div>
+ <div class="grow"></div>
+ <div class="ty"><b style="background-image:${t.thanks}">धन्यवाद</b><span>Thank you for choosing GetKeepsake</span></div>
+ <div class="ft" style="border-color:${t.line}"><span>getkeepsake.in</span><span>WhatsApp +91 63775 47759</span><span>Insta @getkeepsake.business</span></div>
+</div></div></div></div>`;
+const $=s=>document.getElementById(s);
+const q=new URLSearchParams(location.search);
+for(const k of["tone","paper","sheets","sides"])if(q.get(k))$(k).value=q.get(k);
+function draw(){
+ const t=T[$("tone").value]||T.blackgold,P=PAPER[$("paper").value]||PAPER.a4,n=Math.max(1,Math.min(50,parseInt($("sheets").value,10)||1)),sides=$("sides").value;
+ const pw=Math.round(P.w*96),ph=Math.round(P.h*96),gw=P.cols*W,gh=P.rows*H,gx=Math.round((pw-gw)/2),gy=Math.round((ph-gh)/2),per=P.cols*P.rows;
+ let pg=$("pgsz");if(!pg){pg=document.createElement("style");pg.id="pgsz";document.head.appendChild(pg)}
+ pg.textContent=`@media print{@page{size:${P.w}in ${P.h}in;margin:0}}`;
+ const m=[],L=18,G=6;
+ for(let i=0;i<=P.cols;i++){const x=gx+i*W;m.push(`<i class="cm" style="left:${x-.25}px;top:${gy-G-L}px;width:.5px;height:${L}px"></i><i class="cm" style="left:${x-.25}px;top:${gy+gh+G}px;width:.5px;height:${L}px"></i>`)}
+ for(let j=0;j<=P.rows;j++){const y=gy+j*H;m.push(`<i class="cm" style="top:${y-.25}px;left:${gx-G-L}px;height:.5px;width:${L}px"></i><i class="cm" style="top:${y-.25}px;left:${gx+gw+G}px;height:.5px;width:${L}px"></i>`)}
+ // the grid is centred on the sheet, so the back lines up with the front when flipped on the long edge
+ const sheet=(card,name,i)=>`<div class="ss" style="width:${pw}px;height:${ph}px"><div class="lbl">Owner kit · sheet ${i} · ${name} · ${per} cards · 3.5 × 5 in · ${P.name} · print at 100%, cut on the crop marks</div>${m.join("")}<div class="grid" style="left:${gx}px;top:${gy}px;grid-template-columns:repeat(${P.cols},${W}px);grid-auto-rows:${H}px">${card.repeat(per)}</div></div>`;
+ const F=front(t),B=back(t),out=[];
+ for(let i=1;i<=n;i++){if(sides!=="back")out.push(sheet(F,sides==="both"?"FRONT (how-to)":"how-to",i));if(sides!=="front")out.push(sheet(B,sides==="both"?"BACK (about us) · print on the reverse, flip on long edge":"about us",i))}
+ $("out").innerHTML=out.join("");
+ $("tip").textContent=(sides==="both"?"Print double-sided, flip on the long edge: odd pages are fronts, even pages are backs. ":"")+`Print at 100% (Actual size), Background graphics ON, on 300gsm card. ${n*per} cards. Cards touch each other: cut straight along the crop marks, each card is 3.5 × 5 in.`;
+ const u=new URL(location.href);for(const k of["tone","paper","sheets","sides"])u.searchParams.set(k,$(k).value);history.replaceState(null,"",u);
+}
+for(const k of["tone","paper","sheets","sides"])$(k).onchange=draw;
+$("print").onclick=()=>(document.fonts?document.fonts.ready:Promise.resolve()).then(()=>print());
+draw();
+})();
+</script></body></html>
