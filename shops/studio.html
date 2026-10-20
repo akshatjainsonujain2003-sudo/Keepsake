@@ -55,7 +55,11 @@ label.f em{font-style:normal;font-weight:400;color:var(--mu)}
 .scs{border-radius:14px;background:#fff;border:1px solid var(--ln);overflow:hidden}
 .scsh{display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--bg);font-size:14px}.scsh input[type=text]{flex:1;min-width:0;border:0;background:none;font:700 14px inherit;color:var(--tx);padding:2px 0}.scsh small{color:var(--mu);font-weight:600}
 .sci{display:flex;align-items:center;gap:10px;padding:9px 12px;border-top:1px solid #f0e8dc;font-size:13.5px;cursor:pointer}.sci span{flex:1;min-width:0}.sci span small{display:block;color:var(--mu);font-size:12px}.sci em{font-style:normal;font-weight:700;white-space:nowrap}
-.sci.off{opacity:.45}
+.sci.off{opacity:.45}.sci input.nm,.sci input.pr{border:1px solid transparent;border-radius:8px;background:none;font:500 13.5px inherit;color:var(--tx);padding:5px 6px;min-width:0}
+.sci input.nm{flex:1}.sci input.pr{width:76px;text-align:right;font-weight:700}.sci input.nm:focus,.sci input.pr:focus{border-color:var(--ac);background:#fff;outline:0}
+.sci .w{flex:1;min-width:0;display:grid}.sci .w small{color:var(--mu);font-size:12px;padding:0 6px}
+.sci.chk{background:#fff7e0}.sci .ck{flex:none;padding:2px 7px;border-radius:99px;background:#f5c542;color:#4a3500;font:700 10.5px inherit;text-transform:uppercase;letter-spacing:.04em}
+.bar{height:6px;border-radius:9px;background:#efe6d8;overflow:hidden}.bar i{display:block;height:100%;background:var(--ink);transition:width .3s}
 .sco{display:flex;gap:16px;flex-wrap:wrap;font-size:13.5px;font-weight:600}.sco label{display:flex;gap:6px;align-items:center;cursor:pointer}
 .scbt{display:flex;gap:14px;align-items:center}
 .sec[hidden]{display:none!important}
@@ -194,6 +198,7 @@ textarea.in{resize:vertical;min-height:74px}
 <script src="/assets/biz.v6.js"></script>
 <script src="/assets/biz-demos.v5.js"></script>
 <script src="/assets/ks-checkout.v11.js"></script>
+<script src="/assets/menu-ocr.v1.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js" defer></script>
 </head>
 <body>
@@ -335,8 +340,10 @@ textarea.in{resize:vertical;min-height:74px}
     <div class="body">
       <div class="scan" id="scanBox">
         <div class="scanh"><span class="scani" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2M7 12h10"/></svg></span>
-          <div style="flex:1"><b id="scanT">Scan your menu or rate card</b><div class="hint" id="scanH">Upload photos or a PDF of the printed menu, price list or services. We read every name and price and arrange them for you to check.</div></div></div>
-        <label class="btn sm scanb"><input type="file" id="scanIn" accept="image/*,application/pdf" multiple hidden>Upload photos or PDF</label>
+          <div style="flex:1"><b id="scanT">Scan your menu or rate card</b><div class="hint" id="scanH">Upload photos or a PDF of the printed menu, price list or services. We read every name and price and arrange them for you to check. Free, and the photo never leaves your phone.</div></div></div>
+        <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap"><label class="btn sm scanb"><input type="file" id="scanIn" accept="image/*,application/pdf" multiple hidden>Upload photos or PDF</label>
+          <label class="hint" style="display:flex;gap:6px;align-items:center;font-weight:600"><input type="checkbox" id="scanHi"> Menu has Hindi</label></div>
+        <div class="hint">Tips: one page per photo, straight on, in good light, nothing cut off at the edges.</div>
         <div id="scanOut"></div>
       </div>
       <div class="sw" id="ordRow"><div><b>Orders on WhatsApp</b><div class="hint">Customers tap + on items and send you the order on WhatsApp, with the total worked out.</div></div><label class="switch"><input type="checkbox" id="ordOn" aria-label="Orders on WhatsApp"><i></i></label></div>
@@ -598,6 +605,7 @@ const shrink = f => new Promise((ok, no) => {
 });
 $("#scanIn").onchange = async e => {
   const files = [...e.target.files].slice(0, 8); e.target.value = ""; if (!files.length) return;
+  if (!(CFG && CFG.scanAI)) return freeScan(files);
   if (!USER) { save(); $("#scanOut").innerHTML = `<div class="scerr">Log in first to scan. What you've typed is kept. <a href="/account?next=${encodeURIComponent("/shops/studio?resume=1")}">Log in</a></div>`; return; }
   const out = $("#scanOut"), lb = $(".scanb"); lb.classList.add("busy");
   const found = [], errs = [];
@@ -616,15 +624,30 @@ $("#scanIn").onchange = async e => {
   SCAN = found.map(s => ({ n: s.n, items: s.items.map(x => ({ ...x, on: true })) }));
   review(errs);
 };
+// Free scanner: Tesseract reads the text right here in the browser, then KSMenuOCR.parse arranges it.
+let CFG = null; fetch("/api/config").then(r => r.json()).then(c => CFG = c).catch(() => {});
+async function freeScan(files) {
+  const out = $("#scanOut"), lb = $(".scanb"); lb.classList.add("busy");
+  const show = (t, f) => out.innerHTML = `<div class="scp"><i></i>${esc(t)}</div><div class="bar"><i style="width:${Math.round((f || 0) * 100)}%"></i></div>`;
+  try {
+    show("Getting the scanner ready…", 0);
+    if (!window.KSMenuOCR) await new Promise(r => setTimeout(r, 800));
+    const PR = !!(KSBiz.CATS[D.cat] || {}).prop, name = D.menuTitle || (PR ? "Properties" : "Menu");
+    const found = await KSMenuOCR.read(files, { hindi: $("#scanHi").checked, defaultName: name, onProgress: show });
+    SCAN = found.map(s => ({ n: s.n, items: s.items.map(x => ({ ...x, on: true })) }));
+    review();
+  } catch (x) { out.innerHTML = `<div class="scerr">${esc(x.message || "Couldn't read that file. Try a clearer photo.")}</div>`; }
+  finally { lb.classList.remove("busy"); }
+}
 function review(errs) {
   const out = $("#scanOut"), err = (errs || []).map(t => `<div class="scerr">${esc(t)}</div>`).join("");
   if (!SCAN || !SCAN.length) { out.innerHTML = err || `<div class="scerr">No items found. Try a clearer, straight photo in good light.</div>`; return; }
   const total = SCAN.reduce((a, s) => a + s.items.length, 0), on = SCAN.reduce((a, s) => a + s.items.filter(x => x.on).length, 0);
   const has = (D.menu || []).some(s => s.items.some(x => x.n));
   out.innerHTML = `${err}<div class="scr"><b>Found ${total} item${total > 1 ? "s" : ""} in ${SCAN.length} section${SCAN.length > 1 ? "s" : ""}</b><label><input type="checkbox" id="scAll"${on === total ? " checked" : ""}> All</label></div>
-    <div class="hint">Untick anything you don't want. Section names can be edited here; everything else you can fix in the editor after adding.</div>
+    <div class="hint">Untick anything you don't want and fix any name or price by tapping it.${SCAN.some(s => s.items.some(x => x.chk)) ? " Rows marked <b>check</b> were hard to read." : ""}</div>
     <div class="scl">${SCAN.map((s, ci) => `<div class="scs"><div class="scsh"><input type="checkbox" data-scs="${ci}"${s.items.every(x => x.on) ? " checked" : ""} aria-label="Whole section"><input type="text" data-scn="${ci}" value="${esc(s.n)}" maxlength="24" aria-label="Section name"><small>${s.items.length}</small></div>
-      ${s.items.map((x, ii) => `<label class="sci${x.on ? "" : " off"}"><input type="checkbox" data-sci="${ci}.${ii}"${x.on ? " checked" : ""}><span>${esc(x.n)}${x.d ? `<small>${esc(x.d)}</small>` : ""}</span><em>${x.p ? "₹" + esc(x.p) : "—"}</em></label>`).join("")}</div>`).join("")}</div>
+      ${s.items.map((x, ii) => `<div class="sci${x.on ? "" : " off"}${x.chk ? " chk" : ""}"><input type="checkbox" data-sci="${ci}.${ii}"${x.on ? " checked" : ""} aria-label="Include"><span class="w"><input class="nm" data-se="${ci}.${ii}.n" value="${esc(x.n)}" maxlength="50" aria-label="Name">${x.d ? `<small>${esc(x.d)}</small>` : ""}</span>${x.chk ? '<span class="ck">check</span>' : ""}<input class="pr" data-se="${ci}.${ii}.p" value="${esc(x.p)}" maxlength="12" inputmode="decimal" placeholder="₹" aria-label="Price"></div>`).join("")}</div>`).join("")}</div>
     ${has ? `<div class="sco"><label><input type="radio" name="scm" value="add" checked> Add to my menu</label><label><input type="radio" name="scm" value="rep"> Replace my menu</label></div>` : ""}
     <div class="scbt"><button type="button" class="btn sm" id="scAdd"${on ? "" : " disabled"}>Add ${on} item${on === 1 ? "" : "s"} to my page</button><button type="button" class="lnk" id="scX">Cancel</button></div>`;
 }
@@ -636,7 +659,11 @@ $("#scanOut").onchange = e => {
   else return;
   const y = $(".scl") ? $(".scl").scrollTop : 0; review(); if ($(".scl")) $(".scl").scrollTop = y;
 };
-$("#scanOut").oninput = e => { const t = e.target; if (SCAN && t.dataset.scn) SCAN[+t.dataset.scn].n = t.value.slice(0, 24); };
+$("#scanOut").oninput = e => {
+  const t = e.target; if (!SCAN) return;
+  if (t.dataset.scn) SCAN[+t.dataset.scn].n = t.value.slice(0, 24);
+  if (t.dataset.se) { const [a, b, k] = t.dataset.se.split("."); SCAN[+a].items[+b][k] = k === "p" ? t.value.replace(/[^\d.,–\- ]/g, "") : t.value; if (k === "p" && t.value !== SCAN[+a].items[+b].p) t.value = SCAN[+a].items[+b].p; }
+};
 $("#scanOut").onclick = e => {
   if (e.target.id === "scX") { SCAN = null; $("#scanOut").innerHTML = ""; return; }
   if (e.target.id !== "scAdd") return;
