@@ -4,7 +4,7 @@ module.exports = (req, res) => {
   if ((req.query || {}).f === "config") { // public settings: Meta Pixel ID from META_PIXEL_ID
     const id = String(process.env.META_PIXEL_ID || "").trim();
     res.setHeader("Content-Type", "application/json; charset=utf-8"); res.setHeader("Cache-Control", "public, max-age=300");
-    return res.status(200).send(JSON.stringify({ pixel: /^\d{6,20}$/.test(id) ? id : "" }));
+    return res.status(200).send(JSON.stringify({ pixel: /^\d{6,20}$/.test(id) ? id : "", scanAI: !!(process.env.GEMINI_API_KEY || process.env.ANTHROPIC_API_KEY) }));
   }
   res.setHeader("Cache-Control", "public, max-age=3600");
   if ((req.query || {}).f === "robots") {

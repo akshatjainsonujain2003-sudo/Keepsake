@@ -7,6 +7,13 @@ module.exports = async (req, res) => {
   try {
     if (req.method === "POST") {
       const b = req.body || {};
+      // Read a menu / rate card photo or PDF with AI and return its items (nothing is stored).
+      if (b.action === "scan") {
+        const user = await auth.currentUser(req);
+        if (!user) return db.reply(res, 401, { error: "Please log in to scan a menu." });
+        const r = await require("./_scan").scan(b, user);
+        return r.error ? db.reply(res, r.status || 400, { error: r.error }) : db.reply(res, 200, r);
+      }
       // Uploader is either a logged-in customer or (kept for later) a shop with an active key.
       let owner;
       if (b.key) {
