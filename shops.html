@@ -203,19 +203,24 @@ footer a{color:#fff}
 .nav summary::after{content:"";display:inline-block;width:6px;height:6px;margin:0 0 3px 8px;border-right:2px solid;border-bottom:2px solid;transform:rotate(45deg)}
 .nav .dd{position:absolute;top:calc(100% + 14px);left:-18px;width:300px;padding:10px;border-radius:22px;background:var(--pa);border:1px solid var(--ln);box-shadow:0 30px 60px -30px #0007;display:grid;gap:2px}
 .nav .dd a{display:flex;justify-content:space-between;padding:10px 12px;border-radius:12px;opacity:1}.nav .dd a:hover{background:var(--bg)}.nav .dd small{color:var(--mu);font-weight:500}
-.hero{background:var(--ink);color:#f4f1ea;padding:58px 0 0}
-.hero::before{content:"";position:absolute;right:-180px;top:-220px;width:820px;height:820px;border-radius:50%;background:radial-gradient(circle,#ff5b2e40,transparent 62%);pointer-events:none}
-.hero .wrap{position:relative}
-.hero .nj{display:inline-block;padding:6px 12px;border-radius:99px;background:var(--ac2);color:var(--ink);font:800 11px var(--fn);letter-spacing:.18em;margin-bottom:16px}
+.hero{background:var(--bg);color:var(--ink);padding:52px 0 0}
+.hero::after{content:"";position:absolute;right:6%;bottom:-160px;width:600px;height:600px;border-radius:50%;background:var(--ac2);pointer-events:none}
+.gkb{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 10px;margin:0 0 14px;font:400 clamp(24px,2.6vw,34px)/1 'Archivo Black','Arial Black',sans-serif;letter-spacing:-.02em;color:#121110}
+.gkb span{font:400 clamp(30px,3.2vw,42px)/1 'Pinyon Script',cursive;letter-spacing:0;color:#ff5b2e}
+.gkb i{font-style:normal;align-self:center;margin-left:4px;padding:5px 11px;border-radius:99px;background:#ffd84d;color:#121110;font:800 10.5px Inter,sans-serif;letter-spacing:.18em}
+
+.hero::before{content:"";position:absolute;right:-180px;top:-220px;width:820px;height:820px;border-radius:50%;background:radial-gradient(circle,#ff5b2e2e,transparent 62%);pointer-events:none}
+.hero .wrap{position:relative;z-index:1}
+.hero .nj{display:none;padding:6px 12px;border-radius:99px;background:var(--ac2);color:var(--ink);font:800 11px var(--fn);letter-spacing:.18em;margin-bottom:16px}
 .nav .btn{background:var(--ac)}
-.hero h1{color:#f4f1ea;font-size:clamp(50px,7.2vw,104px)}.hero h1 .s{color:var(--ac2)}
+.hero h1{color:var(--ink);font-size:clamp(50px,7.2vw,104px)}.hero h1 .s{color:var(--ac)}
 .hero .row{align-items:center;margin-top:18px}.hero .phones{margin-top:10px}
-.hero .hi{margin:0 0 14px;font:700 21px/1.35 'Mukta',var(--fn);color:#fff}.hero .hi span{color:var(--ac2)}
-.hero p.lead{color:#cfc9bd}.hero p.lead b{color:#fff}
-.hero .btn.gh{color:#fff;border-color:#ffffff80}.cta small{color:#a9a296}
+.hero .hi{margin:0 0 14px;font:700 21px/1.35 'Mukta',var(--fn);color:var(--ink)}.hero .hi span{background:var(--ac2);padding:0 6px;border-radius:6px}
+.hero p.lead{color:#3b3731}.hero p.lead b{color:var(--ink)}
+.cta small{color:var(--mu)}
 .hero .bz{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
-.hero .bz a{padding:7px 14px;border-radius:99px;border:1px solid #ffffff38;font:600 13.5px var(--fn);color:#e9e4d8;text-decoration:none;transition:background .15s,color .15s,border-color .15s}
-.hero .bz a:hover{background:#fff;color:var(--ink);border-color:#fff}
+.hero .bz a{padding:7px 14px;border-radius:99px;border:1px solid #12111033;background:var(--pa);font:600 13.5px var(--fn);color:var(--ink);text-decoration:none;transition:background .15s,color .15s,border-color .15s}
+.hero .bz a:hover{background:var(--ink);color:#fff;border-color:var(--ink)}
 .hero .phones{margin-bottom:-60px}
 .hero .gk-perf{margin-top:60px}
 .mq{background:var(--ac);color:var(--ink);margin-top:0;position:relative;z-index:2}.mq i{color:#fff}
@@ -239,8 +244,8 @@ footer a{color:#fff}
 </div></header>
 
 <main>
-<section class="hero gk-grain"><div class="wrap">
-  <span class="nj" data-gk-in>NOW IN JAIPUR</span>
+<section class="hero"><div class="wrap">
+  <div class="gkb" data-gk-in>GetKeepsake<span>for business</span><i>NOW IN JAIPUR</i></div>
   <div class="eyebrow" data-gk-in>For cafés, salons, gyms, boutiques, clinics &amp; every kind of business</div>
   <h1 data-gk-h1>Your shop<span class="o">.</span><br>One scan <span class="s">away</span></h1>
   <div class="row">
@@ -257,7 +262,6 @@ footer a{color:#fff}
     </div>
   </div>
 </div>
-<div class="gk-perf" aria-hidden="true" style="--perf:#121110"></div>
 </section>
 <div class="mq" aria-hidden="true"><div id="mq"></div></div>
 
