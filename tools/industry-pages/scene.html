@@ -1,0 +1,82 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@500;600;700;800&display=swap">
+<style>
+*{box-sizing:border-box}html,body{margin:0}
+body{width:900px;height:1000px;overflow:hidden;background:#141210;font-family:Inter,sans-serif;position:relative}
+.glow{position:absolute;left:50%;top:46%;width:900px;height:900px;margin:-450px 0 0 -450px;border-radius:50%;background:radial-gradient(circle,#ff5b2e3a,transparent 62%)}
+.ring{position:absolute;left:50%;top:50%;width:640px;height:640px;margin:-320px 0 0 -320px;border-radius:50%;border:2px dashed #ffffff1c}
+.ph{position:absolute;left:50%;top:50%;width:344px;height:712px;margin:-356px 0 0 -172px;transform:scale(1.2);border-radius:52px;background:#0b0a09;padding:10px;box-shadow:0 60px 90px -40px #000,inset 0 0 0 1.5px #ffffff22}
+.ph::before{content:"";position:absolute;top:20px;left:50%;width:96px;height:28px;margin-left:-48px;border-radius:16px;background:#0b0a09;z-index:9}
+.sc{position:relative;width:100%;height:100%;border-radius:43px;overflow:hidden;background:#111}
+/* camera */
+.cam{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 40%,#3a2a20,#120d0a 75%)}
+.board{position:absolute;left:50%;top:44%;width:170px;height:240px;margin:-120px 0 0 -85px;border-radius:12px;background:linear-gradient(170deg,#C8102E,#4A0E14);filter:blur(2.5px);transform:rotate(-4deg)}
+.board i{position:absolute;left:30px;top:78px;width:110px;height:110px;border-radius:12px;background:#F7F1E6}
+.board i::after{content:"";position:absolute;inset:16px;background:repeating-linear-gradient(90deg,#1a1210 0 9px,transparent 9px 16px),repeating-linear-gradient(0deg,#1a1210 0 7px,transparent 7px 15px);opacity:.75}
+.br{position:absolute;left:50%;top:44%;width:200px;height:200px;margin:-68px 0 0 -100px}
+.br b{position:absolute;width:44px;height:44px;border:4px solid #ffd84d}
+.br b:nth-child(1){left:0;top:0;border-right:0;border-bottom:0;border-radius:14px 0 0 0}
+.br b:nth-child(2){right:0;top:0;border-left:0;border-bottom:0;border-radius:0 14px 0 0}
+.br b:nth-child(3){left:0;bottom:0;border-right:0;border-top:0;border-radius:0 0 0 14px}
+.br b:nth-child(4){right:0;bottom:0;border-left:0;border-top:0;border-radius:0 0 14px 0}
+.pill{position:absolute;left:18px;right:18px;top:60px;padding:12px 14px;border-radius:18px;background:#fffffff2;display:flex;align-items:center;gap:10px;font:600 13px Inter;color:#121110}
+.pill i{width:30px;height:30px;border-radius:9px;background:#ff5b2e;flex:none;display:grid;place-items:center;color:#fff;font:800 12px Inter;font-style:normal}
+.pill small{display:block;color:#6c665d;font-weight:500;font-size:11.5px}
+.tap{position:absolute;width:60px;height:60px;margin:-30px 0 0 -30px;border-radius:50%;background:#ffffff66;border:2px solid #fff}
+/* page */
+.pg{position:absolute;left:0;top:0;width:100%;height:100%;overflow:hidden;background:var(--pbg)}
+.pg img{position:absolute;left:0;top:0;width:324px;display:block}
+/* floating cards */
+.cd{position:absolute;z-index:5;padding:18px 20px;border-radius:22px;font:600 17px/1.35 Inter;box-shadow:0 30px 50px -24px #000;min-width:220px}
+.cd b{display:block;font:800 18px Inter}
+.wa{background:#25d366;color:#0b3d22}
+.wa .ic{display:flex;align-items:center;gap:8px;margin-bottom:4px;font:800 12px Inter;letter-spacing:.06em;opacity:.8}
+.lo{background:#fff;color:#121110}.lo b{color:#ff5b2e}
+.lo .st{display:flex;gap:6px;margin-top:10px}.lo .st i{width:22px;height:22px;border-radius:50%;box-shadow:inset 0 0 0 2px #d8cfc2}.lo .st i.on{background:#ffd84d;box-shadow:none}
+.rv{background:#121110;color:#fff;border:1px solid #ffffff22}.rv .s{color:#ffd84d;font-size:20px;letter-spacing:2px}
+</style></head>
+<body>
+<div class="glow"></div><div class="ring"></div>
+<div class="ph"><div class="sc">
+  <div class="cam" id="cam"><div class="board"><i></i></div><div class="br" id="br"><b></b><b></b><b></b><b></b></div>
+    <div class="pill" id="pill"><i>GK</i><div>__SHOP__<small>getkeepsake.in · Open page</small></div></div>
+    <div class="tap" id="tap"></div></div>
+  <div class="pg" id="pg"><img id="img" src="__IMG__"></div>
+</div></div>
+<div class="cd wa" id="c1"><div class="ic">WHATSAPP</div><b>__C1T__</b>__C1S__</div>
+<div class="cd lo" id="c2"><b>__C2T__</b><span id="c2s" data-a="__C2A__">__C2S__</span><div class="st" id="st"></div></div>
+<div class="cd rv" id="c3"><div class="s">★★★★★</div><b>New Google review</b>“Loved it, will come again!”</div>
+<script>
+const N=+"__N__", HAVE=+"__HAVE__", IMGH=+"__IMGH__";
+document.getElementById("st").innerHTML = N ? Array.from({length:Math.min(N,10)},(_,i)=>`<i class="${i<HAVE?'on':''}"></i>`).join("") : "";
+if(!N) document.getElementById("st").remove();
+const $=id=>document.getElementById(id);
+const cl=(x,a,b)=>Math.max(a,Math.min(b,x)), ease=x=>x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2, out=x=>1-Math.pow(1-x,3);
+const seg=(t,a,b)=>cl((t-a)/(b-a),0,1);
+const back=x=>{const c1=1.7,c3=c1+1;return 1+c3*Math.pow(x-1,3)+c1*Math.pow(x-1,2)};
+const VIEW=692, maxScroll=(IMGH*324/750)-VIEW;
+function render(t){
+  // camera + scan
+  const br=1+0.04*Math.sin(t*9); $("br").style.transform=`scale(${t<1.6?br:1})`;
+  const p=back(seg(t,0.7,1.15)); $("pill").style.transform=`translateY(${(1-p)*-90}px)`; $("pill").style.opacity=seg(t,0.7,0.9);
+  const tp=seg(t,1.35,1.75); $("tap").style.left="172px"; $("tap").style.top="88px"; $("tap").style.opacity=tp>0&&tp<1?1-tp:0; $("tap").style.transform=`scale(${0.6+tp*0.8})`;
+  // page in, scroll, back up, page out (loop to camera)
+  let y; const pin=ease(seg(t,1.7,2.3)), pout=ease(seg(t,11.3,11.9));
+  $("pg").style.transform=`translateY(${(1-pin)*100+pout*100}%)`;
+  const s1=ease(seg(t,3.0,6.2)), s2=ease(seg(t,9.6,11.0));
+  y=maxScroll*0.42*s1*(1-s2);
+  $("img").style.transform=`translateY(${-y}px)`;
+  // cards
+  const card=(id,a,b,from,x,yy,r)=>{const i=back(seg(t,a,a+.55)), o=seg(t,b,b+.4); const e=$(id);
+    e.style.opacity=Math.min(seg(t,a,a+.25),1-o); e.style.left=x+"px"; e.style.top=yy+"px";
+    e.style.transform=`translateX(${(1-i)*from}px) rotate(${r}deg) scale(${0.9+0.1*i})`;};
+  card("c1",5.0,10.4,160,560,250,3);
+  card("c2",6.6,10.6,-160,96,470,-4);
+  card("c3",8.4,10.8,160,560,690,2);
+  if(N){const on=t>7.6; const st=document.querySelectorAll("#st i"); const k=Math.min(HAVE,st.length-1);
+    st[k].className=on?"on":""; const c=$("c2s"); if(!c.dataset.b)c.dataset.b=c.textContent; c.textContent=on?c.dataset.a:c.dataset.b; st[k].style.transform=on?`scale(${1+0.35*(1-seg(t,7.6,8.0))})`:"";}
+}
+window.render=render; render(0);
+</script>
+</body></html>
