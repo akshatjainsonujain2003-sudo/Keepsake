@@ -1,0 +1,25 @@
+/* GetKeepsake for Business · shared brand + motion layer (used by /shops and the business-type pages) */
+::selection{background:#ffd84d;color:#121110}
+/* scroll progress */
+.gk-pg{position:fixed;left:0;top:0;height:3px;width:100%;transform-origin:0 50%;transform:scaleX(0);background:linear-gradient(90deg,#ff5b2e,#ffd84d);z-index:100;pointer-events:none}
+/* film grain on dark bands, for a printed, tactile feel */
+.gk-grain{position:relative;isolation:isolate}
+.gk-grain::after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:.07;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+/* perforated stamp edge, the QR board's signature, used as a divider */
+.gk-perf{height:16px;background:radial-gradient(circle at 8px 16px,transparent 5.5px,var(--perf,#141210) 6px) 0 0/16px 16px repeat-x}
+.gk-perf.up{background:radial-gradient(circle at 8px 0,transparent 5.5px,var(--perf,#141210) 6px) 0 0/16px 16px repeat-x}
+/* nav hides on scroll down, returns on scroll up */
+.gk-nav{transition:transform .35s cubic-bezier(.2,.7,.2,1),box-shadow .25s}
+.gk-nav.gk-hide{transform:translateY(-100%)}
+.gk-nav.gk-sh{box-shadow:0 10px 30px -22px #0008}
+/* motion hooks: headline line masks and handwritten script wipes */
+.gk-ln{display:block;overflow:hidden;padding:.14em 0 .08em;margin:-.14em 0 -.08em}
+.gk-li{display:block}
+.gkm [data-gk-h1]{visibility:hidden}
+/* magnetic buttons get a soft glow while hovered */
+.gk-anim{transition:none!important}
+.gk-mag{will-change:transform;transition:box-shadow .15s,background .15s!important}
+@media (prefers-reduced-motion:reduce){.gk-pg{display:none}.gkm [data-gk-h1]{visibility:visible}}
+
+/* GSAP drives the hero entrance, so the CSS one steps aside */
+.hr .tx,.hr .ar .ph,.hero .row>*,.hero .ph{animation:none!important}
