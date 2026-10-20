@@ -1,5 +1,7 @@
 /* GetKeepsake business QR cards: print sheets for blank business QR codes.
-   KSQRCards.render(outEl, codes, { size: "card"|"board", label, base })
+   KSQRCards.render(outEl, codes, { size: "stamp"|"card"|"board", label, base, tone, paper })
+   stamp = 3.5 × 5 in gradient stamp board (design F2), packed edge to edge with crop marks in the margin.
+           tone: red|blue|marigold|green|jamun|mix (mix rotates).  paper: a4 (2×2) | a3 | 12x18 | 13x19 (3×3)
    card  = 55 × 85 mm wallet card, two-sided (front sheet, then back sheet mirrored for duplex), 9 per A4
    board = A6 counter board 105 × 148 mm, one-sided, 4 per A4
    Needs qrcode-generator (window.qrcode). */
@@ -98,8 +100,96 @@
     <div class="rv">${ic("star")} Loved your visit? Leave us a Google review</div>
     <div class="ft"><span>Hours, offers, prices &amp; more · <b>no app needed</b></span><span>${esc(c.code)}</span></div>${c.status === "claimed" ? '<span class="live">LIVE</span>' : ""}</div>`;
 
+
+  // ---------- stamp board (3.5 × 5 in), design F2 ----------
+  // 1 CSS px = 1/96 in when printed at 100%, so a board is 336 × 480 px. Boards touch each other on the sheet;
+  // the perforation bites sit on the cut line, so one straight cut gives each board its stamp edge.
+  const W = 336, H = 480;
+  const PAPER = { a4: { w: 8.27, h: 11.69, cols: 2, rows: 2, name: "A4" }, a3: { w: 11.69, h: 16.54, cols: 3, rows: 3, name: "A3" }, "12x18": { w: 12, h: 18, cols: 3, rows: 3, name: "12×18 in" }, "13x19": { w: 13, h: 19, cols: 3, rows: 3, name: "13×19 in" } };
+  const grad = (glow, a, b) => `radial-gradient(ellipse 80% 55% at 50% 25%, ${glow} 0%, transparent 70%), linear-gradient(170deg, ${a} 0%, ${b} 100%)`;
+  const LIGHT = { ink: "#FFF6EE", pill: "rgba(0,0,0,.2)", stroke: "rgba(255,246,238,.45)", dot: "#FFD84D", tab: "#FFF6EE" };
+  const TONES = {
+    red: { ...LIGHT, edge: "#8E1424", tabInk: "#8E1424", bg: grad("rgba(255,107,125,.55)", "#C8102E", "#4A0E14") },
+    blue: { ...LIGHT, edge: "#0D3F57", tabInk: "#0D3F57", bg: grad("rgba(159,216,236,.5)", "#0E6A8C", "#0A2238") },
+    marigold: { ink: "#2A1405", pill: "rgba(255,255,255,.34)", stroke: "rgba(42,20,5,.4)", dot: "#B3121F", tab: "#2A1405", tabInk: "#FFE9B0", edge: "#B4440C", bg: grad("rgba(255,236,150,.85)", "#F59E0B", "#C2410C") },
+    green: { ...LIGHT, edge: "#0B4A35", tabInk: "#0B4A35", bg: grad("rgba(155,232,196,.45)", "#108A60", "#0B2E24") },
+    jamun: { ...LIGHT, edge: "#3E1A63", tabInk: "#3E1A63", bg: grad("rgba(215,168,255,.5)", "#6D2E9E", "#1E0F33") }
+  };
+  const TONE_LIST = ["red", "blue", "marigold", "green", "jamun"];
+  const qrH = u => { const x = qrcode(0, "H"); x.addData(u); x.make(); return x.createSvgTag({ cellSize: 3, margin: 0, scalable: true }).replace(/fill="#000000"/g, 'fill="#1A1210"').replace(/fill="#ffffff"/g, 'fill="transparent"'); };
+  const STAMP_CSS = `
+.ss,.ss *{box-sizing:border-box}
+.ss{position:relative;background:#fff;margin:12px auto;page-break-after:always;break-after:page;overflow:hidden;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.ss .grid{position:absolute;display:grid}
+.ss .lbl{position:absolute;left:0;right:0;top:10px;text-align:center;font:600 9px Inter,system-ui,sans-serif;color:#9a9a9a}
+.ss .cm{position:absolute;background:#000}
+.st{position:relative;width:${W}px;height:${H}px;overflow:hidden;font-family:Inter,system-ui,sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.st .pf{position:absolute;inset:0}
+.st .sp{position:absolute;left:8px;top:8px;right:8px;bottom:8px;overflow:hidden}
+.st .scan{position:absolute;left:0;right:0;top:44px;text-align:center;font:400 96px/0.8 'Archivo Black','Arial Black',sans-serif;letter-spacing:-2.5px;color:transparent;-webkit-text-stroke-width:1.3px;white-space:nowrap}
+.st .top{position:absolute;left:18px;right:18px;top:15px;display:flex;justify-content:space-between;align-items:center}
+.st .br b{display:block;font:400 13px/1 'Archivo Black','Arial Black',sans-serif;letter-spacing:-.35px}
+.st .br small{display:block;margin-top:2.5px;font:700 6px/1 Inter,sans-serif;letter-spacing:.26em;text-transform:uppercase}
+.st .in2{display:flex;align-items:baseline;gap:4px}.st .in2 span:first-child{font:700 9.5px/1 Mukta,sans-serif}.st .in2 span+span{font:700 6.5px/1 Inter,sans-serif;letter-spacing:.22em}
+.st .hi{position:absolute;left:0;right:0;top:92px;text-align:center}
+.st .hi b{display:block;font:400 50px/1.05 'Rozha One',serif}
+.st .hi span{display:block;margin-top:2px;font:600 10px/1.2 Inter,sans-serif}
+.st .qw{position:absolute;left:50%;top:197px;margin-left:-88px;width:176px;height:176px;border-radius:16px;background:#F7F1E6;display:grid;place-items:center;box-shadow:0 11px 22px -12px rgba(0,0,0,.6)}
+.st .qw svg{width:146px;height:146px;display:block}
+.st .tab{position:absolute;left:50%;top:-10px;transform:translateX(-50%);padding:5px 10px;border-radius:999px;font:400 7.5px/1 'Archivo Black',sans-serif;letter-spacing:.2em;white-space:nowrap}
+.st .bdg{position:absolute;left:50%;top:50%;width:30px;height:30px;margin:-17.5px 0 0 -17.5px;border-radius:8px;border:2.5px solid #F7F1E6;box-sizing:content-box;display:grid;place-items:center;font:400 9.5px/1 'Archivo Black',sans-serif;letter-spacing:-.5px;color:#F7F1E6}
+.st .chips{position:absolute;left:12px;right:12px;top:390px;display:flex;gap:5px;justify-content:center}
+.st .chips span{display:flex;align-items:center;gap:4px;padding:5px 8px 5px 6px;border-radius:999px;font:700 8px/1 Inter,sans-serif}
+.st .chips svg{width:10px;height:10px}
+.st .ft{position:absolute;left:18px;right:18px;bottom:11px;display:flex;justify-content:space-between;font:600 7px/1 Inter,sans-serif}
+.st .ft span+span{font-family:ui-monospace,Menlo,monospace;letter-spacing:.06em}
+@media print{.ss{margin:0}}`;
+  const CI = {
+    menu: '<path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5Z"/><path d="M20 5.5A1.5 1.5 0 0 0 18.5 4H13v16h5.5a1.5 1.5 0 0 0 1.5-1.5Z"/>',
+    offer: '<path d="M3 12V4h8l10 10-8 8L3 12Z"/><circle cx="7.5" cy="8.5" r="1.5"/>',
+    pay: '<path d="M7 5h10M7 9h10M7 5c6 0 6 8 0 8h-1l8 7"/>',
+    star: '<path d="m12 3.5 2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.8-5.2 2.8 1-5.8-4.3-4.1 5.9-.9Z"/>'
+  };
+  const ci = n => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${CI[n]}</svg>`;
+  const stamp = (c, base, tn) => {
+    const t = TONES[tn] || TONES.red;
+    return `<div class="st" style="color:${t.ink}">
+  <div class="pf" style="background:radial-gradient(circle,#fff 5px,transparent 5.6px) -8px -8px/16px 16px,${t.edge}"></div>
+  <div class="sp" style="background:${t.bg}">
+    <div class="scan" style="-webkit-text-stroke-color:${t.stroke}" aria-hidden="true">SCAN</div>
+    <div class="top"><div class="br"><b>GetKeepsake<span style="color:${t.dot}">.</span></b><small>for business</small></div><div class="in2"><span>भारत</span><span>INDIA</span></div></div>
+    <div class="hi"><b>नमस्ते</b><span>Point your camera here for the menu</span></div>
+    <div class="qw"><div class="tab" style="background:${t.tab};color:${t.tabInk}">SCAN ME</div>${qrH(base + "/k/" + c.code)}<div class="bdg" style="background:${t.edge}">GK</div></div>
+    <div class="chips">${[["menu", "Menu"], ["offer", "Offers"], ["pay", "Pay"], ["star", "Review"]].map(([k, l]) => `<span style="background:${t.pill}">${ci(k)}${l}</span>`).join("")}</div>
+    <div class="ft"><span>No app needed · just open your camera</span><span>${esc(c.code)}</span></div>
+  </div>
+</div>`;
+  };
+  function renderStamps(out, codes, o) {
+    if (!document.getElementById("ks-qrs-css")) { const s = document.createElement("style"); s.id = "ks-qrs-css"; s.textContent = STAMP_CSS; document.head.appendChild(s); }
+    const P = PAPER[o.paper] || PAPER.a4, per = P.cols * P.rows, base = o.base || "https://getkeepsake.in";
+    const tone = TONES[o.tone] || o.tone === "mix" ? o.tone : "red";
+    const pw = Math.round(P.w * 96), ph = Math.round(P.h * 96), gw = P.cols * W, gh = P.rows * H, gx = Math.round((pw - gw) / 2), gy = Math.round((ph - gh) / 2);
+    // page size for the browser's print dialog
+    let pg = document.getElementById("ks-qrs-page"); if (!pg) { pg = document.createElement("style"); pg.id = "ks-qrs-page"; document.head.appendChild(pg); }
+    pg.textContent = `@media print{@page{size:${P.w}in ${P.h}in;margin:0}}`;
+    // crop marks: short lines in the margin, in line with every cut, never touching a board
+    const marks = []; const L = 18, G = 6;
+    for (let i = 0; i <= P.cols; i++) { const x = gx + i * W; marks.push(`<i class="cm" style="left:${x - 0.25}px;top:${gy - G - L}px;width:.5px;height:${L}px"></i><i class="cm" style="left:${x - 0.25}px;top:${gy + gh + G}px;width:.5px;height:${L}px"></i>`); }
+    for (let j = 0; j <= P.rows; j++) { const y = gy + j * H; marks.push(`<i class="cm" style="top:${y - 0.25}px;left:${gx - G - L}px;height:.5px;width:${L}px"></i><i class="cm" style="top:${y - 0.25}px;left:${gx + gw + G}px;height:.5px;width:${L}px"></i>`); }
+    const H2 = [];
+    for (let i = 0, k = 0; i < codes.length; i += per) {
+      const pgc = codes.slice(i, i + per);
+      const cells = pgc.map(c => stamp(c, base, tone === "mix" ? TONE_LIST[(k++) % TONE_LIST.length] : tone)).join("");
+      H2.push(`<div class="ss" style="width:${pw}px;height:${ph}px"><div class="lbl">${esc(o.label || "")} · QR boards ${i + 1}–${i + pgc.length} · 3.5 × 5 in · ${P.name} · print at 100%, cut on the crop marks</div>${marks.join("")}<div class="grid" style="left:${gx}px;top:${gy}px;grid-template-columns:repeat(${P.cols},${W}px);grid-auto-rows:${H}px">${cells}</div></div>`);
+    }
+    out.innerHTML = H2.join("");
+  }
+
   function render(out, codes, o) {
-    css(); o = o || {}; const st = "", base = o.base || "https://getkeepsake.in", label = o.label || "";
+    o = o || {};
+    if (o.size === "stamp") return renderStamps(out, codes, o);
+    css(); const st = "", base = o.base || "https://getkeepsake.in", label = o.label || "";
     const H = [];
     if (o.size === "board") {
       for (let i = 0; i < codes.length; i += 4) H.push(`<div class="qs board"><div class="lbl">${esc(label)} · counter boards ${i + 1}–${Math.min(codes.length, i + 4)} · cut on the dashed line</div>${codes.slice(i, i + 4).map(c => board(c, base)).join("")}</div>`);
@@ -115,5 +205,5 @@
     }
     out.innerHTML = H.join("");
   }
-  window.KSQRCards = { render };
+  window.KSQRCards = { render, TONES: TONE_LIST, PAPER };
 })();
