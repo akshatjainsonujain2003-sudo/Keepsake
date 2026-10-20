@@ -118,7 +118,7 @@ async function notify(set = "push-subs") {
 // What the phone shows when an alert arrives: the newest paid order.
 async function latest() {
   const [o] = await orders(1); if (!o) return null;
-  const what = o.plan === "bizQr" ? (o.upgrade ? "Printed QR reorder" : "Business page + printed QR") : o.upgrade ? "Photo frame" : o.kind === "biz" ? "Business page" : o.kind === "site" ? "Website" : "Memory card";
+  const what = o.plan === "loyalty" ? (o.upgrade ? "Loyalty card add-on" : "Business page + loyalty card") : o.plan === "bizQr" ? (o.upgrade ? "Printed QR reorder" : "Business page + printed QR") : o.upgrade ? "Photo frame" : o.kind === "biz" ? "Business page" : o.kind === "site" ? "Website" : "Memory card";
   return { id: o.id, at: o.paidAt, amount: o.amount, title: o.title || "", what, ship: SHIP(o.plan) };
 }
 

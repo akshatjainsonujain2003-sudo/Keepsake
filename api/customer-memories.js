@@ -77,7 +77,9 @@ module.exports = async (req, res) => {
       }
       if (!isOwner) { await db.cmd("INCR", "customer-memory-views:" + id); if (memory.kind === "biz") await require("./_stats").view(id); }
       if (isOwner && memory.kind === "biz") base.stats = await require("./_stats").week(id);
-      return db.reply(res, 200, { ...base, ...(isOwner ? ownerLock(memory) : {}), data: memory.data, title: memory.title, active: true, owner: isOwner });
+      // The loyalty card add-on shows only once it's paid for (the owner still sees it in their own preview).
+      const loyalty = !!memory.loyalty || !pay.configured(), data = !isOwner && !loyalty && memory.data && memory.data.loy ? { ...memory.data, loy: undefined } : memory.data;
+      return db.reply(res, 200, { ...base, ...(isOwner ? ownerLock(memory) : {}), data, title: memory.title, active: true, owner: isOwner, ...(memory.kind === "biz" ? { loyalty } : {}) });
     }
     const user = await auth.currentUser(req);
     if (!user) return db.reply(res, 401, { error: "Please log in to manage your memories." });

@@ -1,4 +1,4 @@
-/* Sample business pages for the /shops landing page and the studio's "See an example". Needs biz.v5.js first.
+/* Sample business pages for the /shops landing page and the studio's "See an example". Needs biz.v6.js first.
    One demo per business group: food (cafe), fashion (boutique), beauty (salon), services (gym), health (clinic), stores (kirana), real estate (realestate). */
 window.KSBizDemos = (function () {
   const B = KSBiz.blank, z = "/assets/demo/biz/";
@@ -7,7 +7,7 @@ window.KSBizDemos = (function () {
   return {
     cafe: Object.assign(B("cafe"), {
       t: "Brew & Bloom", area: "C-Scheme, Jaipur", tag: "Slow coffee, warm bakes and a corner made for long conversations.",
-      cover: z + "cafe-cover.webp", phone: "9876543210", ig: "brewandbloom", review: "https://g.page/r/example/review", addr: "12 Prithviraj Rd, C-Scheme, Jaipur",
+      loy: { on: true, n: 10, r: "Free coffee", t: "" }, cover: z + "cafe-cover.webp", phone: "9876543210", ig: "brewandbloom", review: "https://g.page/r/example/review", addr: "12 Prithviraj Rd, C-Scheme, Jaipur",
       hours: hrs("09:00", "22:30"), offer: { on: true, label: "Today's offer", title: "Buy 1 Get 1 on Cold Brews", text: "Weekdays 3–6 pm. Show this page at the counter.", till: "31 Oct" },
       ft: { on: true, label: "New drink", title: "Blood Orange Tonic", text: "Fresh blood orange, rosemary and sparkling tonic over ice.", p: "260", was: "320", img: z + "cafe-orange-wide.webp" },
       menu: [
@@ -31,7 +31,7 @@ window.KSBizDemos = (function () {
     }),
     salon: Object.assign(B("salon"), {
       t: "Ivy Salon & Spa", area: "Raja Park, Jaipur", tag: "Precision cuts, calming rituals and nails done right, in a space made to unwind.",
-      th: "sage", cover: z + "salon-cover.webp", phone: "9845012345", ig: "ivysalon", review: "https://g.page/r/example/review", addr: "80 Feet Road, Koramangala, Bengaluru",
+      loy: { on: true, n: 5, r: "Free head massage", t: "" }, th: "sage", cover: z + "salon-cover.webp", phone: "9845012345", ig: "ivysalon", review: "https://g.page/r/example/review", addr: "80 Feet Road, Koramangala, Bengaluru",
       hours: hrs("10:00", "20:30"), offer: { on: true, label: "Weekday special", title: "Hair spa + blow-dry at ₹1,299", text: "Monday to Thursday. Book on WhatsApp.", till: "30 Nov" },
       ft: { on: true, label: "Signature ritual", title: "Ivy Hair Spa", text: "A 60-minute scalp massage, deep conditioning and a soft blow-dry.", p: "1,499", was: "1,899", img: z + "salon-wash-wide.webp" },
       menu: [
