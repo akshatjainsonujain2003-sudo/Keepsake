@@ -125,7 +125,7 @@
 .ss .cm{position:absolute;background:#000}
 .st{position:relative;width:${W}px;height:${H}px;overflow:hidden;font-family:Inter,system-ui,sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 .st .pf{position:absolute;inset:0}
-.st .in{position:absolute;left:8px;top:8px;right:8px;bottom:8px;overflow:hidden}
+.st .sp{position:absolute;left:8px;top:8px;right:8px;bottom:8px;overflow:hidden}
 .st .scan{position:absolute;left:0;right:0;top:44px;text-align:center;font:400 96px/0.8 'Archivo Black','Arial Black',sans-serif;letter-spacing:-2.5px;color:transparent;-webkit-text-stroke-width:1.3px;white-space:nowrap}
 .st .top{position:absolute;left:18px;right:18px;top:15px;display:flex;justify-content:space-between;align-items:center}
 .st .br b{display:block;font:400 13px/1 'Archivo Black','Arial Black',sans-serif;letter-spacing:-.35px}
@@ -155,7 +155,7 @@
     const t = TONES[tn] || TONES.red;
     return `<div class="st" style="color:${t.ink}">
   <div class="pf" style="background:radial-gradient(circle,#fff 5px,transparent 5.6px) -8px -8px/16px 16px,${t.edge}"></div>
-  <div class="in" style="background:${t.bg}">
+  <div class="sp" style="background:${t.bg}">
     <div class="scan" style="-webkit-text-stroke-color:${t.stroke}" aria-hidden="true">SCAN</div>
     <div class="top"><div class="br"><b>GetKeepsake<span style="color:${t.dot}">.</span></b><small>for business</small></div><div class="in2"><span>भारत</span><span>INDIA</span></div></div>
     <div class="hi"><b>नमस्ते</b><span>Point your camera here for the menu</span></div>
