@@ -1,5 +1,5 @@
 // robots.txt, sitemap.xml and /api/config, in one function (the hosting plan allows at most 12).
-const pages = ["/", "/digital-gifts", "/gifts/girlfriend", "/gifts/boyfriend", "/gifts/anniversary", "/gifts/birthday", "/gifts/karva-chauth", "/gifts/long-distance", "/designs", "/builder", "/studio", "/contact", "/terms", "/privacy", "/refunds", "/shipping"];
+const pages = ["/", "/shops", "/digital-gifts", "/gifts/girlfriend", "/gifts/boyfriend", "/gifts/anniversary", "/gifts/birthday", "/gifts/karva-chauth", "/gifts/long-distance", "/designs", "/builder", "/studio", "/contact", "/terms", "/privacy", "/refunds", "/shipping"];
 module.exports = (req, res) => {
   if ((req.query || {}).f === "config") { // public settings: Meta Pixel ID from META_PIXEL_ID
     const id = String(process.env.META_PIXEL_ID || "").trim();

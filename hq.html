@@ -110,8 +110,9 @@ const S = { sum: null, orders: null, pages: null, people: null, team: null, tp: 
 const IC = { biz: "🏪", site: "💌", card: "🎴" };
 const ago = t => { if (!t) return ""; const s = (Date.now() - t) / 1000; if (s < 60) return "just now"; if (s < 3600) return Math.floor(s / 60) + "m ago"; if (s < 86400) return Math.floor(s / 3600) + "h ago"; if (s < 172800) return "yesterday"; return new Date(t).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: new Date(t).getFullYear() === new Date().getFullYear() ? undefined : "numeric" }); };
 const when = t => t ? new Date(t).toLocaleString("en-IN", { day: "numeric", month: "short", hour: "numeric", minute: "2-digit" }) : "";
-const SHIP = p => p === "frameQr" || p === "frameNfc" || p === "bizQr";
-const PLAN = { digital: "Digital", frameQr: "Photo frame + QR", frameNfc: "Photo frame + NFC", bizQr: "Printed QR delivered" };
+const SHIP = (p, o) => p === "frameQr" || p === "frameNfc" || p === "bizQr" || !!(o && o.withQr);
+const PLAN = { digital: "Digital", frameQr: "Photo frame + QR", frameNfc: "Photo frame + NFC", bizQr: "Printed QR delivered", loyalty: "Loyalty card" };
+const planName = o => (PLAN[o.plan] || o.plan) + (o.withQr ? " + printed QR" : "");
 const KIND = { biz: "Business page", site: "Website", card: "Memory card" };
 const wa = p => { p = String(p || "").replace(/\D/g, ""); if (p.length === 10) p = "91" + p; return p.length >= 11 ? "https://wa.me/" + p : ""; };
 const tel = p => { p = String(p || "").replace(/\D/g, ""); return p ? "tel:+" + (p.length === 10 ? "91" + p : p) : ""; };
@@ -222,13 +223,13 @@ function home() {
 
 // ---------- orders ----------
 function orderRow(o) {
-  const st = SHIP(o.plan) ? (o.ship === "shipped" ? '<span class="tag g">Shipped</span>' : '<span class="tag r">To ship</span>') : '<span class="tag m">Digital</span>';
-  return `<button class="row" data-o="${esc(o.id)}"><span class="av">${IC[o.kind] || "🎴"}</span><span class="mid"><b>${esc(o.title || KIND[o.kind] || "Order")}</b><small>${esc(o.name || "")} · ${o.upgrade ? esc(PLAN[o.plan] || "") + " (added)" : esc(KIND[o.kind] || "") + (o.plan !== "digital" ? " + " + esc((PLAN[o.plan] || "").toLowerCase()) : "")}</small></span><span class="rt"><b>${rs(o.amount)}</b>${st}<small style="display:block">${ago(o.paidAt)}</small></span></button>`;
+  const st = SHIP(o.plan, o) ? (o.ship === "shipped" ? '<span class="tag g">Shipped</span>' : '<span class="tag r">To ship</span>') : '<span class="tag m">Digital</span>';
+  return `<button class="row" data-o="${esc(o.id)}"><span class="av">${IC[o.kind] || "🎴"}</span><span class="mid"><b>${esc(o.title || KIND[o.kind] || "Order")}</b><small>${esc(o.name || "")} · ${o.upgrade ? esc(planName(o)) + " (added)" : esc(KIND[o.kind] || "") + (o.plan !== "digital" ? " + " + esc((PLAN[o.plan] || "").toLowerCase()) : "")}</small></span><span class="rt"><b>${rs(o.amount)}</b>${st}<small style="display:block">${ago(o.paidAt)}</small></span></button>`;
 }
 function orders() {
   if (!S.orders) return top("Orders") + loading();
   const os = S.orders, q = S.q.orders.toLowerCase().trim();
-  const F = { ship: o => SHIP(o.plan) && o.ship !== "shipped", all: () => true, shipped: o => SHIP(o.plan) && o.ship === "shipped", biz: o => o.kind === "biz", keep: o => o.kind !== "biz" };
+  const F = { ship: o => SHIP(o.plan, o) && o.ship !== "shipped", all: () => true, shipped: o => SHIP(o.plan, o) && o.ship === "shipped", biz: o => o.kind === "biz", keep: o => o.kind !== "biz" };
   const n = k => os.filter(F[k]).length;
   const list = os.filter(F[S.of]).filter(o => !q || [o.title, o.name, o.email, o.phone, o.id, o.paymentId, o.qrCode, o.address && o.address.city, o.address && o.address.phone].join(" ").toLowerCase().includes(q));
   return top("Orders", os.length + " paid orders") + srch("orders", "Search name, phone, shop, city…") +
@@ -237,12 +238,12 @@ function orders() {
 }
 function orderSheet(id) {
   const o = (S.orders || []).concat(S.sum ? S.sum.recent : []).find(x => x.id === id); if (!o) return;
-  const a = o.address, ship = SHIP(o.plan), sh = o.ship === "shipped", ph = o.phone || (a && a.phone);
+  const a = o.address, ship = SHIP(o.plan, o), sh = o.ship === "shipped", ph = o.phone || (a && a.phone);
   const addr = a ? [a.name, a.phone, a.line1, a.line2, a.city + ", " + a.state + " " + a.pincode].filter(Boolean).join("\n") : "";
   const msg = encodeURIComponent(`Hi ${o.name || ""}, thank you for your GetKeepsake order${o.title ? ' for "' + o.title + '"' : ""}! ` + (ship ? (sh ? "Your order has been shipped" + (o.tracking ? ", tracking: " + o.tracking : "") + "." : "We're preparing it now and will share tracking soon.") : "Your page is live."));
-  const print = o.plan === "bizQr" ? (o.qrBatch ? `<div class="acts"><a class="bt sm" href="/print-codes?batch=${encodeURIComponent(o.qrBatch)}&size=stamp" target="_blank" rel="noopener">Print counter board</a><a class="bt sm gh" href="/print-codes?batch=${encodeURIComponent(o.qrBatch)}&sides=1" target="_blank" rel="noopener">Print wallet card</a></div><small style="color:var(--mu)">QR #${esc(o.qrCode)} opens ${esc(o.title)}. Admin key needed on the print page: it uses the one saved in this browser.</small>` : `<small style="color:var(--mu)">QR is being made. Pull to refresh in a minute.</small>`)
+  const print = (o.plan === "bizQr" || o.withQr) ? (o.qrBatch ? `<div class="acts"><a class="bt sm" href="/print-codes?batch=${encodeURIComponent(o.qrBatch)}&size=stamp&tone=${encodeURIComponent(o.qrTone || "red")}" target="_blank" rel="noopener">Print counter board · ${esc(({red:"Red",blue:"Blue",marigold:"Orange",green:"Green",jamun:"Purple",whitegold:"White & Gold"})[o.qrTone] || "Red")}</a><a class="bt sm gh" href="/print-codes?batch=${encodeURIComponent(o.qrBatch)}&sides=1" target="_blank" rel="noopener">Print wallet card</a></div><small style="color:var(--mu)">QR #${esc(o.qrCode)} opens ${esc(o.title)}. Admin key needed on the print page: it uses the one saved in this browser.</small>` : `<small style="color:var(--mu)">QR is being made. Pull to refresh in a minute.</small>`)
     : o.frame ? (o.frame.print === "photo" ? `<a class="bt sm gh" href="${esc(o.frame.photo)}" target="_blank" rel="noopener">Open photo to print</a>` : "<small>Print the card design</small>") : "";
-  sheet(`<h3>${esc(o.title || KIND[o.kind])}</h3><p class="sub">${rs(o.amount)} · ${esc(KIND[o.kind] || "")}${o.plan !== "digital" ? " · " + esc(PLAN[o.plan] || o.plan) : ""}${o.upgrade ? " (added later)" : ""} · ${when(o.paidAt)}</p>
+  sheet(`<h3>${esc(o.title || KIND[o.kind])}</h3><p class="sub">${rs(o.amount)} · ${esc(KIND[o.kind] || "")}${o.plan !== "digital" ? " · " + esc(planName(o)) : ""}${o.upgrade ? " (added later)" : ""} · ${when(o.paidAt)}</p>
   ${ship ? `<div class="box"><h4>${sh ? "Shipped ✓" + (o.tracking ? " · " + esc(o.tracking) : "") : "To print & ship"}</h4>${print}
     ${addr ? `<div class="addr" style="margin-top:12px">${esc(addr)}</div><div class="acts"><button class="bt sm gh" id="cpA">Copy address</button></div>` : ""}
     ${sh ? `<button class="bt sm gh" id="unS">Mark not shipped</button>` : `<div style="display:flex;gap:8px;margin-top:6px"><input class="in" id="trk" placeholder="Courier tracking no. (optional)" style="padding:11px 14px"><button class="bt sm" id="doS">Mark shipped</button></div>`}</div>` : ""}

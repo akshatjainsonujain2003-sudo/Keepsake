@@ -43,7 +43,7 @@ function catalog() {
   // Printed QR sticker for a business page, couriered to the shop (all India).
   // PRICE_BIZ_QR is added to the ₹499 page (default ₹99). PRICE_BIZ_QR_REORDER is for a page that's already live.
   c.delivery.bizQr = { name: "Printed QR, delivered", price: rupees0(env.PRICE_BIZ_QR, 99), reorder: rupees(env.PRICE_BIZ_QR_REORDER, 149),
-    desc: "Your QR printed on our black & gold counter board, couriered to your shop anywhere in India." };
+    desc: "Your QR printed on a 3.5 × 5 in counter board in the colour you pick, couriered to your shop anywhere in India." };
   // Loyalty stamp card add-on for a business page, one-time: ₹499 page + ₹300 = ₹799 together, or ₹300 later. PRICE_LOYALTY changes it.
   c.delivery.loyalty = { name: "Loyalty card", price: rupees(env.PRICE_LOYALTY, 300),
     desc: "A stamp card for repeat customers, e.g. 10 visits = a free coffee. Staff PIN and member list." };
@@ -53,11 +53,14 @@ function catalog() {
 const isFrame = plan => plan === "frameQr" || plan === "frameNfc";
 // Anything that gets printed and couriered (photo frames, business QR stickers).
 const isShip = plan => isFrame(plan) || plan === "bizQr";
+// A business order that includes a printed QR: the QR on its own, or page + loyalty card + QR together.
+const hasQr = o => !!o && (o.plan === "bizQr" || !!o.withQr);
 const kindOf = memory => (memory.kind === "site" || memory.kind === "biz" ? memory.kind : "card");
 
 // What this customer pays for a delivery option on this memory.
 // An already-active memory only pays for the frame.
-function amountFor(memory, plan) {
+function amountFor(memory, plan, extra) {
+  extra = extra || {};
   const c = catalog();
   if (!c.delivery[plan]) return { error: "Choose how you'd like it delivered." };
   if (kindOf(memory) === "biz" && isFrame(plan)) return { error: "Business pages are digital only." };
@@ -67,7 +70,9 @@ function amountFor(memory, plan) {
     if (kindOf(memory) !== "biz") return { error: "The loyalty card is for business pages." };
     if (memory.loyalty) return { error: "The loyalty card is already unlocked on this page." };
     // A live page pays only the add-on; a new page pays page + add-on and goes live with it.
-    return active ? { rupees: c.delivery.loyalty.price, upgrade: true } : { rupees: base + c.delivery.loyalty.price, upgrade: false };
+    // With a printed QR too (extra.qr): the QR is added at its delivery price (reorder price for a live page).
+    const q = extra.qr ? (active ? c.delivery.bizQr.reorder : c.delivery.bizQr.price) : 0;
+    return active ? { rupees: c.delivery.loyalty.price + q, upgrade: true, ...(q ? { ship: q } : {}) } : { rupees: base + c.delivery.loyalty.price + q, upgrade: false, ...(q ? { ship: q } : {}) };
   }
   // A live business page ordering another sticker pays the reorder price.
   if (plan === "bizQr") return active ? { rupees: c.delivery.bizQr.reorder, upgrade: true, ship: c.delivery.bizQr.reorder } : { rupees: base + c.delivery.bizQr.price, upgrade: false, ship: c.delivery.bizQr.price };
@@ -75,8 +80,9 @@ function amountFor(memory, plan) {
   const total = (active ? 0 : base) + c.delivery[plan].price;
   return { rupees: total, upgrade: active };
 }
-function describe(memory, plan, upgrade) {
+function describe(memory, plan, upgrade, withQr) {
   const c = catalog(), product = c.products[kindOf(memory)].name;
+  if (plan === "loyalty" && withQr) return upgrade ? "Loyalty card + printed QR delivered" : `${product} + loyalty card + printed QR delivered`;
   if (upgrade) return c.delivery[plan].name;
   if (plan === "bizQr") return `${product} + printed QR delivered`;
   if (plan === "loyalty") return `${product} + loyalty card`;
@@ -132,14 +138,14 @@ async function markPaid(orderId, paymentId) {
     if (!order) return null;
     if (order.status === "paid") return order;
     order.status = "paid"; order.paymentId = String(paymentId || ""); order.paidAt = Date.now();
-    if (isShip(order.plan)) order.ship = "to-ship";
+    if (isShip(order.plan) || order.withQr) order.ship = "to-ship";
     await db.setj(key, order);
     const mk = "customer-memory:" + order.memory, memory = await db.getj(mk);
     if (memory) {
       memory.paid = true; memory.activatedAt = memory.activatedAt || order.paidAt;
       memory.plan = isFrame(order.plan) ? order.plan : (memory.plan || "digital");
       if (order.plan === "loyalty") { memory.loyalty = true; memory.loyaltyAt = order.paidAt; }
-      if (order.plan === "bizQr") memory.qrOrders = [...(memory.qrOrders || []), orderId].slice(-10);
+      if (hasQr(order)) memory.qrOrders = [...(memory.qrOrders || []), orderId].slice(-10);
       memory.orders = [...(memory.orders || []), orderId].slice(-20);
       await db.setj(mk, memory);
     }
@@ -149,7 +155,7 @@ async function markPaid(orderId, paymentId) {
     if (order.sp) { try { await require("./_sales").credit(order.sp, order.memory); } catch (e) {} }
     if (order.claim) { try { await require("./_prepaid").linkBiz(order.claim, order.memory, order.owner); } catch (e) {} }
     // Printed QR to deliver: make its own QR code (getkeepsake.in/k/CODE) already linked to this page, ready to print in admin.
-    if (order.plan === "bizQr" && !order.qrCode) {
+    if (hasQr(order) && !order.qrCode) {
       try {
         const P = require("./_prepaid"), r = await P.createBatch({ count: 1, tier: "biz", shop: "Online · " + String(order.title || "Shop").slice(0, 50), note: "Delivery for order " + orderId });
         const code = r.batch.codes[0]; await P.linkBiz(code, order.memory, order.owner);
@@ -163,4 +169,4 @@ async function markPaid(orderId, paymentId) {
   }
 }
 
-module.exports = { catalog, amountFor, describe, isFrame, isShip, kindOf, keyId, configured, createOrder, verifyPayment, verifyWebhook, markPaid };
+module.exports = { catalog, amountFor, describe, isFrame, isShip, hasQr, kindOf, keyId, configured, createOrder, verifyPayment, verifyWebhook, markPaid };

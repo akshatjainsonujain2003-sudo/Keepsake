@@ -18,7 +18,7 @@ async function scan(pattern, cap = 5000) {
   do { const r = await db.cmd("SCAN", cur, "MATCH", pattern, "COUNT", 500); cur = String(r[0]); keys.push(...r[1]); } while (cur !== "0" && keys.length < cap);
   return [...new Set(keys)];
 }
-const SHIP = p => p === "frameQr" || p === "frameNfc" || p === "bizQr";
+const SHIP = (p, o) => p === "frameQr" || p === "frameNfc" || p === "bizQr" || !!(o && o.withQr);
 const pathFor = (kind, id) => (kind === "biz" ? "/b/" : kind === "site" ? "/s/" : "/m/") + id;
 
 // Paid orders, newest first (up to 2000).
@@ -40,7 +40,7 @@ async function summary() {
   return {
     today: { rev: sum(today), n: cnt(today) }, week: { rev: sum(today - 6 * DAY), n: cnt(today - 6 * DAY) },
     month: { rev: sum(today - 29 * DAY), n: cnt(today - 29 * DAY) }, all: { rev: sum(0), n: os.length },
-    toShip: os.filter(o => SHIP(o.plan) && o.ship !== "shipped").length,
+    toShip: os.filter(o => SHIP(o.plan, o) && o.ship !== "shipped").length,
     newShops: os.filter(o => o.kind === "biz" && !o.upgrade && o.paidAt >= today - 6 * DAY).length,
     days, kinds, recent: os.slice(0, 8), alerts: await subCount()
   };
@@ -118,8 +118,8 @@ async function notify(set = "push-subs") {
 // What the phone shows when an alert arrives: the newest paid order.
 async function latest() {
   const [o] = await orders(1); if (!o) return null;
-  const what = o.plan === "loyalty" ? (o.upgrade ? "Loyalty card add-on" : "Business page + loyalty card") : o.plan === "bizQr" ? (o.upgrade ? "Printed QR reorder" : "Business page + printed QR") : o.upgrade ? "Photo frame" : o.kind === "biz" ? "Business page" : o.kind === "site" ? "Website" : "Memory card";
-  return { id: o.id, at: o.paidAt, amount: o.amount, title: o.title || "", what, ship: SHIP(o.plan) };
+  const what = o.plan === "loyalty" ? (o.upgrade ? "Loyalty card add-on" : "Business page + loyalty card") + (o.withQr ? " + printed QR" : "") : o.plan === "bizQr" ? (o.upgrade ? "Printed QR reorder" : "Business page + printed QR") : o.upgrade ? "Photo frame" : o.kind === "biz" ? "Business page" : o.kind === "site" ? "Website" : "Memory card";
+  return { id: o.id, at: o.paidAt, amount: o.amount, title: o.title || "", what, ship: SHIP(o.plan, o) };
 }
 
 module.exports = { summary, orders, pages, people, vapid, subscribe, unsubscribe, notify, latest, subCount };
