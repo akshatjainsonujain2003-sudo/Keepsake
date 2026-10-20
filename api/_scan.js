@@ -60,24 +60,42 @@ Rules:
 const up = o => o && typeof o === "object" ? Object.fromEntries(Object.entries(o).map(([k, v]) => [k, k === "type" ? String(v).toUpperCase() : k === "required" ? v : up(v)])) : o;
 const GSCHEMA = up(TOOL.input_schema);
 
+// Tries the configured model (or a few free Flash models in turn). If Google rejects the structured-output
+// options, retries once with plain JSON mode. Google's own error is passed back so problems are easy to see.
+const SHAPE = '\nReply with JSON only, shaped like {"sections":[{"name":"...","items":[{"name":"...","price":"...","desc":"...","best":false}]}]}.';
 async function gemini(m, prompt, signal) {
-  const model = env.GEMINI_MODEL || "gemini-2.5-flash";
-  const r = await fetch("https://generativelanguage.googleapis.com/v1beta/models/" + encodeURIComponent(model) + ":generateContent", {
-    method: "POST", signal, headers: { "x-goog-api-key": env.GEMINI_API_KEY, "content-type": "application/json" },
-    body: JSON.stringify({ contents: [{ role: "user", parts: [{ inline_data: { mime_type: m[1], data: m[2] } }, { text: prompt + "\nReturn the result as JSON." }] }],
-      generationConfig: { responseMimeType: "application/json", responseSchema: GSCHEMA, temperature: 0, maxOutputTokens: 16000,
-        // Reading a menu doesn't need "thinking": switching it off on 2.5 Flash makes it several times faster.
-        ...(/^gemini-2\.5-flash/.test(model) ? { thinkingConfig: { thinkingBudget: 0 } } : {}) } })
-  });
-  const j = await r.json().catch(() => ({}));
-  if (!r.ok) {
-    console.error("scan: gemini", r.status, j && j.error && j.error.message);
-    return { status: 502, error: r.status === 400 && /API key/i.test((j.error || {}).message || "") ? "The Gemini key in Vercel isn't valid." : r.status === 429 ? "Today's free scanning limit is used up, or it's busy. Try again in a minute." : "Couldn't read that file. Try a clearer photo." };
+  const models = env.GEMINI_MODEL ? [env.GEMINI_MODEL] : ["gemini-2.5-flash", "gemini-flash-latest", "gemini-2.0-flash"];
+  let last = "";
+  for (const model of models) {
+    for (const strict of [true, false]) {
+      const cfg = { responseMimeType: "application/json", temperature: 0, maxOutputTokens: 16000 };
+      if (strict) { cfg.responseSchema = GSCHEMA; if (/^gemini-2\.5-flash/.test(model)) cfg.thinkingConfig = { thinkingBudget: 0 }; } // no "thinking": much faster
+      const r = await fetch("https://generativelanguage.googleapis.com/v1beta/models/" + encodeURIComponent(model) + ":generateContent", {
+        method: "POST", signal, headers: { "x-goog-api-key": env.GEMINI_API_KEY, "content-type": "application/json" },
+        body: JSON.stringify({ contents: [{ role: "user", parts: [{ inline_data: { mime_type: m[1], data: m[2] } }, { text: prompt + SHAPE }] }], generationConfig: cfg })
+      });
+      const j = await r.json().catch(() => ({})), msg = String((j.error && (j.error.status ? j.error.status + ": " : "") + j.error.message) || "").slice(0, 220);
+      if (!r.ok) {
+        console.error("scan: gemini", model, strict, r.status, msg);
+        last = msg || "HTTP " + r.status;
+        if (/API key not valid|API_KEY_INVALID/i.test(msg)) return { status: 502, error: "The Gemini key in Vercel isn't valid. Copy it again from AI Studio." };
+        if (r.status === 403) return { status: 502, error: "Google refused the key (" + msg + "). Check the key's project in AI Studio." };
+        if (r.status === 429) return { status: 429, error: "The free Gemini limit is used up for now. Wait a minute (or until tomorrow) and try again." };
+        if (r.status === 404 || /not found|not supported|is not available|no longer available|deprecated/i.test(msg)) break;   // try the next model
+        if (r.status === 400 && strict) continue;                                                                              // retry without the schema options
+        return { status: 502, error: "Gemini couldn't read it: " + last };
+      }
+      const c = (j.candidates || [])[0] || {}, txt = ((c.content || {}).parts || []).filter(p => !p.thought).map(p => p.text || "").join("");
+      let out = null; try { out = JSON.parse(txt); } catch (e) { const x = txt.indexOf("{"), y = txt.lastIndexOf("}"); try { out = JSON.parse(txt.slice(x, y + 1)); } catch (z) {} }
+      if (out && Array.isArray(out.sections)) return { sections: out.sections, cut: c.finishReason === "MAX_TOKENS" };
+      const why = (j.promptFeedback && j.promptFeedback.blockReason) || c.finishReason || "no answer";
+      console.error("scan: gemini empty", model, strict, why, txt.slice(0, 200));
+      if (c.finishReason === "MAX_TOKENS") return { status: 502, error: "That menu is very long. Scan it one page at a time." };
+      last = "Gemini gave no menu (" + why + ")";
+      if (strict) continue;
+    }
   }
-  const c = (j.candidates || [])[0] || {}, txt = ((c.content || {}).parts || []).map(p => p.text || "").join("");
-  let out = null; try { out = JSON.parse(txt); } catch (e) { const a = txt.indexOf("{"), b = txt.lastIndexOf("}"); try { out = JSON.parse(txt.slice(a, b + 1)); } catch (x) {} }
-  if (!out) return { status: 502, error: c.finishReason === "MAX_TOKENS" ? "That menu is very long. Scan it one page at a time." : "Couldn't read that file. Try a clearer photo." };
-  return { sections: Array.isArray(out.sections) ? out.sections : [], cut: c.finishReason === "MAX_TOKENS" };
+  return { status: 502, error: last ? (/^Gemini/.test(last) ? last : "Gemini couldn't read it: " + last) : "Couldn't read that file. Try a clearer photo." };
 }
 
 async function claude(m, prompt, signal) {
@@ -115,7 +133,7 @@ async function scan(b, user) {
   const ac = new AbortController(), t = setTimeout(() => ac.abort(), 55000);
   let r;
   try { r = await (env.GEMINI_API_KEY ? gemini(m, PROMPT + hint, ac.signal) : claude(m, PROMPT + hint, ac.signal)); }
-  catch (e) { return { status: 504, error: e.name === "AbortError" ? "That took too long. Try one page at a time." : "Couldn't reach the scanner. Try again." }; }
+  catch (e) { return { status: 504, error: e.name === "AbortError" ? "That took too long. Try one page at a time." : "Couldn't reach the scanner (" + String(e.message || e).slice(0, 120) + "). Try again." }; }
   finally { clearTimeout(t); }
   if (r.error) return r;
   const raw = r.sections;
