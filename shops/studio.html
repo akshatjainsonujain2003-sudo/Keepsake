@@ -45,6 +45,19 @@ button,input,select,textarea{font:inherit;color:inherit}
 label.f{display:grid;gap:6px;font-size:13px;font-weight:600;color:#4a3d31}
 label.f em{font-style:normal;font-weight:400;color:var(--mu)}
 #ordRow[hidden]{display:none!important}
+.scan{display:grid;gap:12px;padding:16px;border-radius:16px;border:1.5px dashed #d4b48a;background:linear-gradient(160deg,#fff8ec,#fffdf8)}
+.scanh{display:flex;gap:12px;align-items:flex-start}.scanh b{font-size:15px}.scani{width:40px;height:40px;flex:none;border-radius:12px;display:grid;place-items:center;background:var(--ink);color:#fff}
+.scanb{justify-self:start;cursor:pointer}.scanb.busy{opacity:.5;pointer-events:none}
+.scp{display:flex;align-items:center;gap:10px;font-size:13.5px;font-weight:600}.scp i{width:16px;height:16px;border-radius:50%;border:2.5px solid #d8ccba;border-top-color:var(--ink);animation:scsp .8s linear infinite}@keyframes scsp{to{transform:rotate(360deg)}}
+.scerr{font-size:13px;font-weight:600;color:#b42318}
+.scr{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:14px}.scr label{font-size:13px;font-weight:600;display:flex;gap:6px;align-items:center}
+.scl{display:grid;gap:10px;max-height:460px;overflow:auto;padding:2px}
+.scs{border-radius:14px;background:#fff;border:1px solid var(--ln);overflow:hidden}
+.scsh{display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--bg);font-size:14px}.scsh input[type=text]{flex:1;min-width:0;border:0;background:none;font:700 14px inherit;color:var(--tx);padding:2px 0}.scsh small{color:var(--mu);font-weight:600}
+.sci{display:flex;align-items:center;gap:10px;padding:9px 12px;border-top:1px solid #f0e8dc;font-size:13.5px;cursor:pointer}.sci span{flex:1;min-width:0}.sci span small{display:block;color:var(--mu);font-size:12px}.sci em{font-style:normal;font-weight:700;white-space:nowrap}
+.sci.off{opacity:.45}
+.sco{display:flex;gap:16px;flex-wrap:wrap;font-size:13.5px;font-weight:600}.sco label{display:flex;gap:6px;align-items:center;cursor:pointer}
+.scbt{display:flex;gap:14px;align-items:center}
 .sec[hidden]{display:none!important}
 #loyPay.ksco{--ink:#1d1712;--muted:#7a6c5d;--line:#e6dccb;--gold:#a8692f;--field:#fff;padding:18px;border:1px solid var(--ln);border-radius:18px;background:#fffdf8}#loyPay .ks-pay{color:#1d1712;font-weight:700}
 .loyu{border:1.5px solid var(--ac);background:#fffaf0!important}.loyp{font-size:18px}.loyp small{font-size:12px;font-weight:500;color:var(--mu)}.loyx{margin:0;padding-left:18px;font-size:13px;line-height:1.7;color:var(--tx)}
@@ -320,6 +333,12 @@ textarea.in{resize:vertical;min-height:74px}
 
   <details class="sec" data-s="menu"><summary><span class="n">8</span><span class="ti"><b>Menu or price list</b><small id="menuSub">Sections, items and prices</small></span><svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></summary>
     <div class="body">
+      <div class="scan" id="scanBox">
+        <div class="scanh"><span class="scani" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2M7 12h10"/></svg></span>
+          <div style="flex:1"><b id="scanT">Scan your menu or rate card</b><div class="hint" id="scanH">Upload photos or a PDF of the printed menu, price list or services. We read every name and price and arrange them for you to check.</div></div></div>
+        <label class="btn sm scanb"><input type="file" id="scanIn" accept="image/*,application/pdf" multiple hidden>Upload photos or PDF</label>
+        <div id="scanOut"></div>
+      </div>
       <div class="sw" id="ordRow"><div><b>Orders on WhatsApp</b><div class="hint">Customers tap + on items and send you the order on WhatsApp, with the total worked out.</div></div><label class="switch"><input type="checkbox" id="ordOn" aria-label="Orders on WhatsApp"><i></i></label></div>
       <label class="f">Heading<input class="in" data-k="menuTitle" maxlength="24" placeholder="Menu, Services, Price list…"></label>
       <div id="menu" style="display:grid;gap:12px"></div>
@@ -566,6 +585,69 @@ $("#loyList").onclick = async e => {
   const act = e.target.closest("[data-lst]") ? "loy-own-stamp" : e.target.closest("[data-lred]") ? "loy-own-redeem" : ""; if (!act) return;
   if (act === "loy-own-redeem" && !confirm("Give the reward and start a new card?")) return;
   e.target.disabled = true; const j = await loyApi({ action: act, phone: r.dataset.ph }); if (j.error) alert(j.error); loyList();
+};
+
+// ---------- scan a menu / rate card (AI reads names and prices) ----------
+let SCAN = null;
+const shrink = f => new Promise((ok, no) => {
+  if (f.type === "application/pdf") { if (f.size > 3.2e6) return no(new Error(f.name + " is over 3 MB. Send the pages as photos instead.")); const r = new FileReader(); r.onload = () => ok(r.result); r.onerror = () => no(new Error("Couldn't open " + f.name)); r.readAsDataURL(f); return; }
+  const u = URL.createObjectURL(f), im = new Image();
+  im.onload = () => { const k = Math.min(1, 2000 / Math.max(im.width, im.height)), c = document.createElement("canvas"); c.width = Math.round(im.width * k); c.height = Math.round(im.height * k);
+    const x = c.getContext("2d"); x.fillStyle = "#fff"; x.fillRect(0, 0, c.width, c.height); x.drawImage(im, 0, 0, c.width, c.height); URL.revokeObjectURL(u); ok(c.toDataURL("image/jpeg", 0.85)); };
+  im.onerror = () => { URL.revokeObjectURL(u); no(new Error("Couldn't open " + f.name + ". Try a JPG or PNG photo.")); }; im.src = u;
+});
+$("#scanIn").onchange = async e => {
+  const files = [...e.target.files].slice(0, 8); e.target.value = ""; if (!files.length) return;
+  if (!USER) { save(); $("#scanOut").innerHTML = `<div class="scerr">Log in first to scan. What you've typed is kept. <a href="/account?next=${encodeURIComponent("/shops/studio?resume=1")}">Log in</a></div>`; return; }
+  const out = $("#scanOut"), lb = $(".scanb"); lb.classList.add("busy");
+  const found = [], errs = [];
+  for (let i = 0; i < files.length; i++) {
+    out.innerHTML = `<div class="scp"><i></i>Reading ${files.length > 1 ? "file " + (i + 1) + " of " + files.length : "your file"}… this takes up to a minute.</div>`;
+    try {
+      const data = await shrink(files[i]);
+      const r = await fetch("/api/img", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "scan", data, cat: (KSBiz.CATS[D.cat] || {}).name || "" }) });
+      const j = await r.json().catch(() => ({ error: "The scanner didn't answer. Try again." }));
+      if (!r.ok) throw new Error(j.error || "Couldn't read that file.");
+      if (j.cut) errs.push(files[i].name + ": very long, some items at the end may be missing. Scan it in parts.");
+      j.sections.forEach(s => { const same = found.find(x => x.n.toLowerCase() === s.n.toLowerCase()); if (same) same.items.push(...s.items); else found.push(s); });
+    } catch (x) { errs.push((files.length > 1 ? files[i].name + ": " : "") + x.message); }
+  }
+  lb.classList.remove("busy");
+  SCAN = found.map(s => ({ n: s.n, items: s.items.map(x => ({ ...x, on: true })) }));
+  review(errs);
+};
+function review(errs) {
+  const out = $("#scanOut"), err = (errs || []).map(t => `<div class="scerr">${esc(t)}</div>`).join("");
+  if (!SCAN || !SCAN.length) { out.innerHTML = err || `<div class="scerr">No items found. Try a clearer, straight photo in good light.</div>`; return; }
+  const total = SCAN.reduce((a, s) => a + s.items.length, 0), on = SCAN.reduce((a, s) => a + s.items.filter(x => x.on).length, 0);
+  const has = (D.menu || []).some(s => s.items.some(x => x.n));
+  out.innerHTML = `${err}<div class="scr"><b>Found ${total} item${total > 1 ? "s" : ""} in ${SCAN.length} section${SCAN.length > 1 ? "s" : ""}</b><label><input type="checkbox" id="scAll"${on === total ? " checked" : ""}> All</label></div>
+    <div class="hint">Untick anything you don't want. Section names can be edited here; everything else you can fix in the editor after adding.</div>
+    <div class="scl">${SCAN.map((s, ci) => `<div class="scs"><div class="scsh"><input type="checkbox" data-scs="${ci}"${s.items.every(x => x.on) ? " checked" : ""} aria-label="Whole section"><input type="text" data-scn="${ci}" value="${esc(s.n)}" maxlength="24" aria-label="Section name"><small>${s.items.length}</small></div>
+      ${s.items.map((x, ii) => `<label class="sci${x.on ? "" : " off"}"><input type="checkbox" data-sci="${ci}.${ii}"${x.on ? " checked" : ""}><span>${esc(x.n)}${x.d ? `<small>${esc(x.d)}</small>` : ""}</span><em>${x.p ? "₹" + esc(x.p) : "—"}</em></label>`).join("")}</div>`).join("")}</div>
+    ${has ? `<div class="sco"><label><input type="radio" name="scm" value="add" checked> Add to my menu</label><label><input type="radio" name="scm" value="rep"> Replace my menu</label></div>` : ""}
+    <div class="scbt"><button type="button" class="btn sm" id="scAdd"${on ? "" : " disabled"}>Add ${on} item${on === 1 ? "" : "s"} to my page</button><button type="button" class="lnk" id="scX">Cancel</button></div>`;
+}
+$("#scanOut").onchange = e => {
+  const t = e.target; if (!SCAN) return;
+  if (t.id === "scAll") SCAN.forEach(s => s.items.forEach(x => x.on = t.checked));
+  else if (t.dataset.scs) SCAN[+t.dataset.scs].items.forEach(x => x.on = t.checked);
+  else if (t.dataset.sci) { const [a, b] = t.dataset.sci.split(".").map(Number); SCAN[a].items[b].on = t.checked; }
+  else return;
+  const y = $(".scl") ? $(".scl").scrollTop : 0; review(); if ($(".scl")) $(".scl").scrollTop = y;
+};
+$("#scanOut").oninput = e => { const t = e.target; if (SCAN && t.dataset.scn) SCAN[+t.dataset.scn].n = t.value.slice(0, 24); };
+$("#scanOut").onclick = e => {
+  if (e.target.id === "scX") { SCAN = null; $("#scanOut").innerHTML = ""; return; }
+  if (e.target.id !== "scAdd") return;
+  const PR = !!(KSBiz.CATS[D.cat] || {}).prop, mode = (document.querySelector('input[name="scm"]:checked') || {}).value || "add";
+  const picked = SCAN.map(s => ({ n: (s.n || "Menu").trim() || "Menu", items: s.items.filter(x => x.on).map(x => ({ n: x.n, p: x.p, d: x.d, b: false, i: "", ...(PR ? { s: "sale" } : {}) })) })).filter(s => s.items.length);
+  const n = picked.reduce((a, s) => a + s.items.length, 0);
+  let menuNow = mode === "rep" ? [] : (D.menu || []).map(s => ({ ...s, items: s.items.filter(x => x.n) })).filter(s => s.items.length);
+  picked.forEach(s => { const same = menuNow.find(x => (x.n || "").toLowerCase() === s.n.toLowerCase()); if (same) same.items.push(...s.items); else menuNow.push(s); });
+  D.menu = menuNow; SCAN = null; menu(); changed();
+  $("#scanOut").innerHTML = `<div class="scp" style="color:#1f7a3a">✓ Added ${n} item${n === 1 ? "" : "s"}. Check prices below, add photos if you like, then save.</div>`;
+  $("#menu").scrollIntoView({ behavior: "smooth", block: "start" });
 };
 
 // ---------- offer ----------
