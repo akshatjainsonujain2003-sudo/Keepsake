@@ -9,7 +9,7 @@
 const crypto = require("crypto");
 const db = require("./_db");
 const pay = require("./_pay");
-// Paid add-on (₹799): runs only once bought, or for free while payments aren't set up yet.
+// Paid add-on (₹300, or ₹799 with the page): runs only once bought, or for free while payments aren't set up yet.
 const unlocked = m => !!m.loyalty || !pay.configured();
 
 const ID = /^[a-z0-9]{8,16}$/i, COOL = 4 * 3600e3, MAXM = 2000;

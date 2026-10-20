@@ -44,9 +44,9 @@ function catalog() {
   // PRICE_BIZ_QR is added to the ₹499 page (default ₹99). PRICE_BIZ_QR_REORDER is for a page that's already live.
   c.delivery.bizQr = { name: "Printed QR, delivered", price: rupees0(env.PRICE_BIZ_QR, 99), reorder: rupees(env.PRICE_BIZ_QR_REORDER, 149),
     desc: "Your QR printed on our black & gold counter board, couriered to your shop anywhere in India." };
-  // Loyalty stamp card add-on for a live business page (one-time). PRICE_LOYALTY changes it.
-  c.delivery.loyalty = { name: "Loyalty card add-on", price: rupees(env.PRICE_LOYALTY, 799),
-    desc: "A digital stamp card on your page: customers collect a stamp every visit and get your reward. Staff PIN, member list and WhatsApp reminders." };
+  // Loyalty stamp card add-on for a business page, one-time: ₹499 page + ₹300 = ₹799 together, or ₹300 later. PRICE_LOYALTY changes it.
+  c.delivery.loyalty = { name: "Loyalty card", price: rupees(env.PRICE_LOYALTY, 300),
+    desc: "A stamp card for repeat customers, e.g. 10 visits = a free coffee. Staff PIN and member list." };
   if (!c.frames) { delete c.delivery.frameQr; delete c.delivery.frameNfc; }
   return c;
 }
@@ -65,9 +65,9 @@ function amountFor(memory, plan) {
   const active = memory.paid !== false, base = c.products[kindOf(memory)].price;
   if (plan === "loyalty") {
     if (kindOf(memory) !== "biz") return { error: "The loyalty card is for business pages." };
-    if (!active) return { error: "Activate your page first, then add the loyalty card." };
     if (memory.loyalty) return { error: "The loyalty card is already unlocked on this page." };
-    return { rupees: c.delivery.loyalty.price, upgrade: true };
+    // A live page pays only the add-on; a new page pays page + add-on and goes live with it.
+    return active ? { rupees: c.delivery.loyalty.price, upgrade: true } : { rupees: base + c.delivery.loyalty.price, upgrade: false };
   }
   // A live business page ordering another sticker pays the reorder price.
   if (plan === "bizQr") return active ? { rupees: c.delivery.bizQr.reorder, upgrade: true, ship: c.delivery.bizQr.reorder } : { rupees: base + c.delivery.bizQr.price, upgrade: false, ship: c.delivery.bizQr.price };
@@ -79,6 +79,7 @@ function describe(memory, plan, upgrade) {
   const c = catalog(), product = c.products[kindOf(memory)].name;
   if (upgrade) return c.delivery[plan].name;
   if (plan === "bizQr") return `${product} + printed QR delivered`;
+  if (plan === "loyalty") return `${product} + loyalty card`;
   return isFrame(plan) ? `${product} + ${c.delivery[plan].name.toLowerCase()}` : `${product} (digital)`;
 }
 

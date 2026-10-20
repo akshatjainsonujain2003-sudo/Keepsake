@@ -205,14 +205,14 @@
         ? "We'll print a photo frame for this keepsake and deliver it to you. Your link stays the same."
         : opts.kind === "biz" ? "Your page is saved. Pay once to switch it on" + ((typeof opts.claim === "function" ? opts.claim() : opts.claim) ? " and link it to your QR card" : "") + ". It stays live for good, and you can update your menu, offers and photos any time."
         : `Your ${opts.kind === "site" ? "website" : "card"} is saved. Pay once to switch on its link, QR code and NFC link. It stays live for good, and you can keep editing it.` + (c.sale ? ` 🎉 ${c.sale.name}: ${c.sale.percent}% off right now.` : "");
-      const plans = state.mode === "loyalty" ? ["loyalty"] : (biz ? (state.mode === "upgrade" ? ["bizQr"] : ["digital", "bizQr"]) : state.mode === "upgrade" ? ["frameQr", "frameNfc"] : ["digital", "frameQr", "frameNfc"]).filter(p => c.delivery[p]);
+      const plans = state.mode === "loyalty" ? ["loyalty"] : (biz ? (state.mode === "upgrade" ? ["bizQr"] : ["digital", "bizQr", "loyalty"]) : state.mode === "upgrade" ? ["frameQr", "frameNfc"] : ["digital", "frameQr", "frameNfc"]).filter(p => c.delivery[p]);
       $(".ks-opts").hidden = $(".ks-dq").hidden = plans.length < 2;
       if (!plans.includes(state.plan)) state.plan = plans[0];
       $(".ks-opts").style.gridTemplateColumns = plans.length === 2 ? "1fr 1fr" : "";
-      $(".ks-opts").innerHTML = plans.map(p => { const d = c.delivery[p]; return `<button type="button" class="ks-opt${p === state.plan ? " on" : ""}" data-plan="${p}"><b>${esc(p === "digital" ? prod.name + (biz ? " · Online only" : " · Digital") : d.name)}</b><span class="ks-pp">${full(p).was > total(p) ? `<s class="ks-was">${money(full(p).was)}</s> ` : ""}${money(total(p))}</span><small>${esc(p === "digital" && biz ? "Your page with its own link, plus a QR you can download and print yourself." : d.desc || "")}</small></button>`; }).join("");
+      $(".ks-opts").innerHTML = plans.map(p => { const d = c.delivery[p]; return `<button type="button" class="ks-opt${p === state.plan ? " on" : ""}" data-plan="${p}"><b>${esc(p === "digital" ? prod.name + (biz ? " · Online only" : " · Digital") : p === "loyalty" && state.mode === "activate" ? "Page + loyalty card" : d.name)}</b><span class="ks-pp">${full(p).was > total(p) ? `<s class="ks-was">${money(full(p).was)}</s> ` : ""}${money(total(p))}</span><small>${esc(p === "digital" && biz ? "Your page with its own link, plus a QR you can download and print yourself." : d.desc || "")}</small></button>`; }).join("");
       const frame = state.plan !== "digital" && state.plan !== "loyalty";
       $(".ks-frame").hidden = !frame; $(".ks-pq").hidden = state.plan === "bizQr";
-      $(".ks-dq").textContent = biz ? "Want a printed QR delivered?" : "How would you like it?";
+      $(".ks-dq").textContent = biz ? "Add a printed QR or a loyalty card?" : "How would you like it?";
       el.querySelectorAll(".ks-pill").forEach(b => b.classList.toggle("on", b.dataset.print === state.print));
       $(".ks-photo").hidden = state.print !== "photo";
       const img = $(".ks-photo img"); img.hidden = !state.photo; if (state.photo) img.src = state.photo;
@@ -279,10 +279,11 @@
     }
 
     return {
-      async open(mode) {
+      async open(mode, plan) {
         state.mode = mode === "upgrade" || mode === "loyalty" ? mode : "activate";
         if (state.mode === "loyalty") state.plan = "loyalty"; else if (state.plan === "loyalty") state.plan = "digital";
         if (state.mode === "upgrade" && state.plan === "digital") state.plan = opts.kind === "biz" ? "bizQr" : "frameQr";
+        if (plan) state.plan = plan;
         state.cat = await catalog(); status("");
         if (!state.code && state.mode === "activate") { const saved = savedCode(); if (saved) await applyCode(saved, false); }
         const cu = opts.customer && opts.customer();

@@ -275,10 +275,10 @@ textarea.in{resize:vertical;min-height:74px}
         </div>
         <label class="f"><span>Rules <em>(optional)</em></span><input class="in" data-k="loy.t" maxlength="120" placeholder="One stamp per visit on bills above ₹150."></label>
         <div class="loyb loyu" id="loyBuy">
-          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px"><b>Loyalty card add-on</b><b class="loyp">₹<span id="loyPrice">799</span> <small>one-time</small></b></div>
-          <div class="hint" id="loyBuyT">Turn it on above to see it in your preview. Customers see the card once you unlock it.</div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px"><b>Loyalty card add-on</b><b class="loyp">+ ₹<span id="loyPrice">300</span> <small>one-time</small></b></div>
+          <div class="hint" id="loyBuyT">Turn it on above to see it in your preview. Customers see the card once you unlock it. With the ₹<span id="loyBase">499</span> page it's ₹<span id="loyCombo">799</span> in total.</div>
           <ul class="loyx"><li>Stamp card on your page, no app for customers</li><li>Staff PIN so only your shop can add stamps</li><li>Member list with WhatsApp reminders</li></ul>
-          <button type="button" class="btn sm" id="loyUnlock">Unlock for ₹799</button>
+          <button type="button" class="btn sm" id="loyUnlock">Unlock for ₹300</button>
           <div id="loyPay" class="ksco" hidden></div>
         </div>
         <div class="loyb" id="loyPinBox">
@@ -513,7 +513,7 @@ function loy() {
   $("#loyN").value = String(D.loy.n || 10);
   $("#loyOn").checked = !!D.loy.on; $("#loyF").hidden = !D.loy.on;
   const saved = !!EDIT_ID; $("#loyPinBox").hidden = $("#loyMem").hidden = !(saved && LOYAL); $("#loyBuy").hidden = LOYAL;
-  $("#loyUnlock").textContent = ACTIVE ? "Unlock for ₹" + $("#loyPrice").textContent : "Activate your page first";
+  $("#loyUnlock").textContent = ACTIVE ? "Unlock for ₹" + $("#loyPrice").textContent : "Go live with the loyalty card · ₹" + $("#loyCombo").textContent;
   $("#loyUnlock").disabled = false; $("#loyUnlock").hidden = !$("#loyPay").hidden;
   if (D.loy.on && saved && LOYAL && !loy.done) { loy.done = 1; loyList(); }
 }
@@ -542,7 +542,8 @@ async function loyList() {
 }
 $("#loyLoad").onclick = loyList;
 $("#loyUnlock").onclick = async () => {
-  if (!ACTIVE) { const pub = $("#publish"); if (pub) pub.scrollIntoView({ behavior: "smooth", block: "start" }); return; }
+  // Not live yet: page + loyalty card together (₹499 + ₹300) in the main checkout.
+  if (!ACTIVE) { if (dirty || !EDIT_ID) await saveBiz(); if (EDIT_ID && !ACTIVE) checkout("loyalty"); return; }
   if (dirty) await saveBiz();
   const box = $("#loyPay"); box.hidden = false; $("#loyUnlock").hidden = true;
   if (!LOYCO) LOYCO = KSCheckout.mount(box, { kind: "biz", getId: () => EDIT_ID, customer: () => USER, onPaid: async () => {
@@ -553,7 +554,7 @@ $("#loyUnlock").onclick = async () => {
   } });
   await LOYCO.open("loyalty"); box.scrollIntoView({ behavior: "smooth", block: "center" });
 };
-(async () => { try { const c = await KSCheckout.catalog(); const d = c && c.delivery && c.delivery.loyalty; if (d) { $("#loyPrice").textContent = String(d.price); if (D) loy(); } } catch (e) {} })();
+(async () => { try { const c = await KSCheckout.catalog(); const d = c && c.delivery && c.delivery.loyalty; const p = c && c.products && c.products.biz; if (d) { $("#loyPrice").textContent = String(d.price); if (p) { $("#loyBase").textContent = String(p.price); $("#loyCombo").textContent = String(p.price + d.price); } if (D) loy(); } } catch (e) {} })();
 $("#loyAdd").onclick = async () => {
   const ph = $("#loyPh").value; if (!ph.trim()) { $("#loyPh").focus(); return; }
   const j = await loyApi({ action: "loy-own-stamp", phone: ph }); if (j.error) { alert(j.error); return; }
@@ -676,12 +677,13 @@ async function saveBiz() {
 }
 $("#saveBtn").onclick = $("#saveBtn2").onclick = saveBiz;
 function setEdit(id) { EDIT_ID = id; if (D) setTimeout(loy, 0); const u = new URL(location.href); u.searchParams.set("edit", id); u.searchParams.delete("resume"); history.replaceState(null, "", u.pathname + u.search + u.hash); }
-function checkout() {
+function checkout(plan) {
   $("#pubT").textContent = "Activate your page"; $("#pubP").textContent = CLAIM ? "Pay once and your QR card #" + CLAIM.code + " will open this page for good." : "Pay once and your page goes live with its own link and QR code.";
   if (!CHECKOUT) CHECKOUT = KSCheckout.mount($("#payPanel"), { kind: "biz", getId: () => EDIT_ID, claim: () => CLAIM && CLAIM.code, sp: () => SP, customer: () => USER,
-    onPaid: v => { const had = CLAIM; ACTIVE = true; CLAIM = null; try { localStorage.removeItem(CKEY); } catch (e) {} $("#banner").innerHTML = ""; live(v.url, had); status(v.plan === "bizQr" ? "Paid. Your page is live, and we'll print your QR and courier it to you in 5–7 days." : had ? "Paid. Your page is live and your QR card now opens it." : "Paid. Your page is live.", "ok"); } });
+    onPaid: async v => { if (v.plan === "loyalty") { LOYAL = true; loy.done = 0; if (!D.loy || !D.loy.on) { D.loy = D.loy || {}; D.loy.on = true; changed(); } loy(); if (dirty) await saveBiz(); }
+      const had = CLAIM; ACTIVE = true; CLAIM = null; try { localStorage.removeItem(CKEY); } catch (e) {} $("#banner").innerHTML = ""; live(v.url, had); status(v.plan === "loyalty" ? "Paid. Your page is live with its loyalty card. Set a staff PIN in section 6." : v.plan === "bizQr" ? "Paid. Your page is live, and we'll print your QR and courier it to you in 5–7 days." : had ? "Paid. Your page is live and your QR card now opens it." : "Paid. Your page is live.", "ok"); } });
   $("#payPanel").hidden = false; $("#livePanel").hidden = true;
-  CHECKOUT.open("activate").then(() => $("#publish").scrollIntoView({ behavior: "smooth", block: "start" }));
+  CHECKOUT.open("activate", plan).then(() => $("#publish").scrollIntoView({ behavior: "smooth", block: "start" }));
 }
 function live(path, card) {
   const url = location.origin + path;
