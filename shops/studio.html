@@ -613,17 +613,24 @@ $("#scanIn").onchange = async e => {
     out.innerHTML = `<div class="scp"><i></i>AI is reading ${files.length > 1 ? "photo " + (i + 1) + " of " + files.length : "your menu"}… usually 10–40 seconds.</div>`;
     try {
       const data = await shrink(files[i]);
-      const r = await fetch("/api/img", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "scan", data, cat: (KSBiz.CATS[D.cat] || {}).name || "" }) });
-      const j = await r.json().catch(() => ({ error: "The scanner didn't answer. Try again." }));
+      // Gemini's free models are sometimes "busy": wait and try again by itself (up to 3 tries) before giving up.
+      let r, j;
+      for (let tryN = 1; ; tryN++) {
+        r = await fetch("/api/img", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "scan", data, cat: (KSBiz.CATS[D.cat] || {}).name || "" }) });
+        j = await r.json().catch(() => ({ error: "The scanner didn't answer. Try again." }));
+        if (!(j.busy && tryN < 3)) break;
+        for (let w = 20; w > 0; w--) { out.innerHTML = `<div class="scp"><i></i>Gemini is busy. Trying again in ${w}s… (try ${tryN + 1} of 3)</div>`; await new Promise(z => setTimeout(z, 1000)); }
+        out.innerHTML = `<div class="scp"><i></i>AI is reading ${files.length > 1 ? "photo " + (i + 1) + " of " + files.length : "your menu"}… try ${tryN + 1} of 3</div>`;
+      }
       if (r.status === 501) { lb.classList.remove("busy"); return freeScan(files); }
-      if (!r.ok) throw new Error(j.error || "Couldn't read that file.");
+      if (!r.ok) throw new Error((j.busy ? "Gemini is still busy after 3 tries. Wait a few minutes and tap Upload again, or read it on this phone." : j.error || "Couldn't read that file.") + (j.detail ? "\n\nGoogle said: " + j.detail : ""));
       if (j.cut) errs.push(files[i].name + ": very long, some items at the end may be missing. Scan it in parts.");
       j.sections.forEach(s => { const same = found.find(x => x.n.toLowerCase() === s.n.toLowerCase()); if (same) same.items.push(...s.items); else found.push(s); });
     } catch (x) { errs.push((files.length > 1 ? files[i].name + ": " : "") + x.message); }
   }
   lb.classList.remove("busy");
   // AI couldn't read anything (no quota left, offline…): offer the free reader that runs on this phone.
-  if (!found.length && errs.length) { LASTFILES = files; $("#scanOut").innerHTML = errs.map(t => `<div class="scerr">${esc(t)}</div>`).join("") + `<button type="button" class="btn sm" id="scFree" style="margin-top:8px">Read it on this phone instead</button>`; return; }
+  if (!found.length && errs.length) { LASTFILES = files; $("#scanOut").innerHTML = errs.map(t => { const [a, b] = t.split("\n\nGoogle said: "); return `<div class="scerr">${esc(a)}</div>${b ? `<div class="hint" style="font-size:11.5px;word-break:break-word">Google said: ${esc(b)}</div>` : ""}`; }).join("") + `<button type="button" class="btn sm" id="scFree" style="margin-top:8px">Read it on this phone instead</button>`; return; }
   SCAN = found.map(s => ({ n: s.n, items: s.items.map(x => ({ ...x, on: true })) }));
   review(errs);
 };
