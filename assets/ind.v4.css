@@ -27,24 +27,30 @@ em{font-style:normal}
 .nv .dd small{color:var(--mu);font-weight:500}
 .nv .b{min-height:44px;padding:0 18px;font-size:14px}
 /* hero: dark band, three live phones */
-.hr{position:relative;background:#141210;color:#f4f1ea;padding:58px 0 0;overflow:hidden}
-.hr::before{content:"";position:absolute;right:-160px;top:-200px;width:760px;height:760px;border-radius:50%;background:radial-gradient(circle,#ff5b2e40,transparent 62%);pointer-events:none}
+.hr{position:relative;background:var(--bg);color:var(--ink);padding:58px 0 0;overflow:hidden}
+.hr::before{content:"";position:absolute;right:-160px;top:-200px;width:760px;height:760px;border-radius:50%;background:radial-gradient(circle,#ff5b2e2e,transparent 62%);pointer-events:none}
+.hr::after{content:"";position:absolute;right:8%;bottom:-120px;width:520px;height:520px;border-radius:50%;background:#ffd84d;opacity:.9;pointer-events:none}
+.hr .w{z-index:1}
+.gkb{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 10px;margin:0 0 14px;font:400 clamp(24px,2.6vw,34px)/1 'Archivo Black','Arial Black',sans-serif;letter-spacing:-.02em;color:#121110}
+.gkb span{font:400 clamp(30px,3.2vw,42px)/1 'Pinyon Script',cursive;letter-spacing:0;color:#ff5b2e}
+.gkb i{font-style:normal;align-self:center;margin-left:4px;padding:5px 11px;border-radius:99px;background:#ffd84d;color:#121110;font:800 10.5px Inter,sans-serif;letter-spacing:.18em}
+
 .hr .w{position:relative;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:24px;align-items:end}
 .hr .tx{padding-bottom:72px}
-.nj{display:inline-block;padding:6px 12px;border-radius:99px;background:var(--ac2);color:var(--ink);font:800 11px var(--fn);letter-spacing:.18em}
+.nj{display:none;padding:6px 12px;border-radius:99px;background:var(--ac2);color:var(--ink);font:800 11px var(--fn);letter-spacing:.18em}
 .ki{display:block;margin-top:18px;font:800 11.5px var(--fn);letter-spacing:.24em;text-transform:uppercase;color:var(--ac)}
 .ki i{display:none}
 .hr h1{margin:12px 0 0;font:400 clamp(40px,var(--hv,5.3vw),var(--hs,74px))/.92 var(--fd);letter-spacing:-.035em;text-transform:uppercase;white-space:nowrap}
 .hr h1 .o{color:var(--ac)}
-.hr h1 .s{display:inline-block;font:400 .86em/1 var(--fsc);text-transform:none;letter-spacing:0;color:var(--ac2);transform:translateY(-.06em) rotate(-4deg);margin-left:.08em}
-.hr .hi{margin:18px 0 0;font:700 21px/1.35 var(--fh);color:#fff}.hr .hi span{color:var(--ac2)}
-.hr .sub{margin:16px 0 0;max-width:520px;font-size:17.5px;line-height:1.6;color:#cfc9bd}
+.hr h1 .s{display:inline-block;font:400 .86em/1 var(--fsc);text-transform:none;letter-spacing:0;color:var(--ac);transform:translateY(-.06em) rotate(-4deg);margin-left:.08em}
+.hr .hi{margin:18px 0 0;font:700 21px/1.35 var(--fh);color:var(--ink)}.hr .hi span{background:var(--ac2);padding:0 6px;border-radius:6px}
+.hr .sub{margin:16px 0 0;max-width:520px;font-size:17.5px;line-height:1.6;color:#3b3731}
 .hr .ct{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
-.hr .b.s{color:#fff;box-shadow:inset 0 0 0 1.5px #ffffff80}
+.hr .b.s{color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--ink)}
 .hr .ch{display:flex;flex-wrap:wrap;gap:8px;margin-top:26px}
-.hr .ch span{padding:6px 13px;border-radius:99px;border:1px solid #ffffff38;font:600 13px var(--fn);color:#e9e4d8}
-.hr .tr{display:flex;flex-wrap:wrap;gap:8px 20px;margin-top:18px;font:600 13.5px var(--fn);color:#a9a296}
-.hr .tr span::before{content:"✓";color:var(--ac2);font-weight:800;margin-right:7px}
+.hr .ch span{padding:6px 13px;border-radius:99px;border:1px solid #12111033;background:#fffdf8;font:600 13px var(--fn);color:var(--ink)}
+.hr .tr{display:flex;flex-wrap:wrap;gap:8px 20px;margin-top:18px;font:600 13.5px var(--fn);color:var(--mu)}
+.hr .tr span::before{content:"✓";color:var(--ac);font-weight:800;margin-right:7px}
 /* the fan of phones, cut off by the bottom of the band */
 .ar{position:relative;height:620px;align-self:end}
 .ph{position:absolute;bottom:-70px;border-radius:44px;background:#0b0a09;padding:9px;box-shadow:0 40px 70px -30px #000,inset 0 0 0 1.5px #ffffff1f}

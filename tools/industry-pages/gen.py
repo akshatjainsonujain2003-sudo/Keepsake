@@ -89,16 +89,16 @@ def page(slug):
 <link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Pinyon+Script&family=Inter:wght@400;500;600;700;800&family=Mukta:wght@600;700&display=swap">
-<link rel="stylesheet" href="/assets/ind.v3.css"><link rel="stylesheet" href="/assets/gk.v1.css">
+<link rel="stylesheet" href="/assets/ind.v4.css"><link rel="stylesheet" href="/assets/gk.v1.css">
 <script>document.documentElement.classList.add("gkm")</script>
 <script type="application/ld+json">{json.dumps(ld, ensure_ascii=False).replace("</", "<\\/")}</script>
 </head>
 <body>
 {nav()}
 <main>
-<section class="hr gk-grain"><div class="w">
+<section class="hr"><div class="w">
   <div class="tx">
-    <span data-gk-in class="nj">NOW IN JAIPUR</span>
+    <div class="gkb" data-gk-in>GetKeepsake<span>for business</span><i>NOW IN JAIPUR</i></div>
     <span data-gk-in class="ki">{esc(d["kicker"])}</span>
     <h1 data-gk-h1 style="{H1S(d)}">{H1(d)}</h1>
     <p data-gk-in class="hi" lang="hi">{HI(d["hi"])}</p>
@@ -114,7 +114,6 @@ def page(slug):
     {fl_a}{fl_c}
   </div>
 </div></section>
-<div class="gk-perf" aria-hidden="true"></div>
 
 <section class="se" id="features"><div class="w">
   <div class="sh"><h2 data-gk-h2>Everything customers need <em>in one scan</em></h2><p>One page with your own link and QR. You change it from your phone whenever you like.</p></div>
