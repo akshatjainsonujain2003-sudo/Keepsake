@@ -114,8 +114,13 @@
     marigold: { ink: "#2A1405", pill: "rgba(255,255,255,.34)", stroke: "rgba(42,20,5,.4)", dot: "#B3121F", tab: "#2A1405", tabInk: "#FFE9B0", edge: "#B4440C", bg: grad("rgba(255,236,150,.85)", "#F59E0B", "#C2410C") },
     green: { ...LIGHT, edge: "#0B4A35", tabInk: "#0B4A35", bg: grad("rgba(155,232,196,.45)", "#108A60", "#0B2E24") },
     jamun: { ...LIGHT, edge: "#3E1A63", tabInk: "#3E1A63", bg: grad("rgba(215,168,255,.5)", "#6D2E9E", "#1E0F33") },
-    whitegold: { ink: "#2A1F14", hi: "#9A6B1F", pill: "rgba(184,134,43,.14)", stroke: "rgba(184,134,43,.5)", dot: "#B8862B", tab: "linear-gradient(160deg,#D9B160 0%,#A9781F 100%)", tabInk: "#FFFDF8", edge: "linear-gradient(160deg,#E2BF6E 0%,#B8862B 50%,#8C6118 100%)", bg: "radial-gradient(ellipse 80% 55% at 50% 25%,#FFF3D6 0%,transparent 70%),#FFFDF8" }
+    whitegold: { ink: "#2A1F14", hi: "#9A6B1F", pill: "#F5ECDB", stroke: "#DCC292", dot: "#B8862B", tab: "linear-gradient(160deg,#D9B160 0%,#A9781F 100%)", tabInk: "#FFFDF8", edge: "linear-gradient(160deg,#E2BF6E 0%,#B8862B 50%,#8C6118 100%)", bg: "linear-gradient(180deg,#FFF1D2 0%,#FFFAEE 38%,#FFFDF8 70%)", solid: true }
   };
+  // stamp-edge holes as plain circles on the cut line (no masks or patterns, so every PDF viewer and print RIP draws them the same)
+  const HOLES = (() => { const r = 5.3, c = (x, y) => `M${x - r} ${y}a${r} ${r} 0 1 0 ${2 * r} 0a${r} ${r} 0 1 0 ${-2 * r} 0Z`, d = [];
+    for (let x = 0; x <= W; x += 16) d.push(c(x, 0), c(x, H));
+    for (let y = 16; y < H; y += 16) d.push(c(0, y), c(W, y));
+    return d.join(""); })();
   const TONE_LIST = ["red", "blue", "marigold", "green", "jamun"]; // "mix" rotates these; whitegold is picked on its own
   const qrH = u => { const x = qrcode(0, "H"); x.addData(u); x.make(); return x.createSvgTag({ cellSize: 3, margin: 0, scalable: true }).replace(/fill="#000000"/g, 'fill="#1A1210"').replace(/fill="#ffffff"/g, 'fill="transparent"'); };
   const STAMP_CSS = `
@@ -155,12 +160,12 @@
   const stamp = (c, base, tn) => {
     const t = TONES[tn] || TONES.red;
     return `<div class="st" style="color:${t.ink}">
-  <div class="pf" style="background:radial-gradient(circle,#fff 5px,transparent 5.6px) -8px -8px/16px 16px,${t.edge}"></div>
+  ${t.solid ? `<div class="pf" style="background:${t.edge}"><svg width="${W}" height="${H}" style="position:absolute;inset:0;display:block" aria-hidden="true"><path fill="#fff" d="${HOLES}"/></svg></div>` : `<div class="pf" style="background:radial-gradient(circle,#fff 5px,transparent 5.6px) -8px -8px/16px 16px,${t.edge}"></div>`}
   <div class="sp" style="background:${t.bg}">
     <div class="scan" style="-webkit-text-stroke-color:${t.stroke}" aria-hidden="true">SCAN</div>
     <div class="top"><div class="br"><b>GetKeepsake<span style="color:${t.dot}">.</span></b><small>for business</small></div><div class="in2"><span>भारत</span><span>INDIA</span></div></div>
     <div class="hi"><b${t.hi ? ` style="color:${t.hi}"` : ""}>नमस्ते</b><span>Point your camera here for the menu</span></div>
-    <div class="qw"><div class="tab" style="background:${t.tab};color:${t.tabInk}">SCAN ME</div>${qrH(base + "/k/" + c.code)}<div class="bdg" style="background:${t.edge}">GK</div></div>
+    <div class="qw"${t.solid ? ' style="box-shadow:none;border:1.5px solid #E3CC98"' : ""}><div class="tab" style="background:${t.tab};color:${t.tabInk}">SCAN ME</div>${qrH(base + "/k/" + c.code)}<div class="bdg" style="background:${t.edge}">GK</div></div>
     <div class="chips">${[["menu", "Menu"], ["offer", "Offers"], ["pay", "Pay"], ["star", "Review"]].map(([k, l]) => `<span style="background:${t.pill}">${ci(k)}${l}</span>`).join("")}</div>
     <div class="ft"><span>No app needed · just open your camera</span><span>${esc(c.code)}</span></div>
   </div>
