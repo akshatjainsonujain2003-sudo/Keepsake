@@ -30,7 +30,7 @@
 .bd .b .e{font-size:3.2mm;letter-spacing:1.4mm}.bd .b .h{font-size:10mm}.bd .b .q{width:58mm;height:58mm;padding:3mm;border-radius:4mm}.bd .b .l{font-size:3.6mm}.bd .b .t{font-size:2.5mm}
 @media print{body{background:#fff}.bar{display:none}.sheet{margin:0;padding:6mm 7.5mm}@page{size:A4;margin:0}}
 </style></head><body>
-<div class="bar"><span id="title">Loading…</span><span style="flex:1"></span><small>Print on A4 at 100%. Cut on the dashed border, then cut along the gold line: the QR half goes on the outside of the pack, the PIN half goes inside.</small><button id="csv" class="l">Download codes (CSV)</button><button onclick="print()">Print</button></div>
+<div class="bar"><span id="title">Loading…</span><span style="flex:1"></span><small>Print on A4 at 100%. Cut on the dashed border, then cut along the gold line: the QR half goes on the outside of the pack, the PIN half goes inside.</small><button id="csv" class="l">Download codes (CSV)</button><button onclick="(document.fonts?document.fonts.ready:Promise.resolve()).then(()=>print())">Print</button></div>
 <div id="out"></div>
 <script>
 (async()=>{
