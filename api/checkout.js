@@ -60,7 +60,9 @@ module.exports = async (req, res) => {
       if (!/^[a-z0-9]{8,16}$/i.test(id)) return db.reply(res, 400, { error: "Save your card first." });
       const memory = await db.getj("customer-memory:" + id);
       if (!memory || memory.owner !== user.id) return db.reply(res, 404, { error: "Card not found in your account." });
-      const amt = pay.amountFor(memory, plan);
+      // Page + loyalty card can also include the printed QR (b.qr).
+      const withQr = plan === "loyalty" && b.qr === true && pay.kindOf(memory) === "biz";
+      const amt = pay.amountFor(memory, plan, { qr: withQr });
       if (amt.error) return db.reply(res, 400, { error: amt.error });
       // A creator's code takes a discount off the keepsake (never a frame) and records their commission.
       let code = null, off = 0, commission = 0;
@@ -69,7 +71,7 @@ module.exports = async (req, res) => {
         // A coupon that can't be used is an error (the buyer saw a lower price); an old creator link is just ignored.
         if (x.coupon) return db.reply(res, 400, { error: x.error + " Remove it to pay the regular price." });
         code = x.rec || null;
-        if (code) { const fr = plan === "bizQr" ? amt.ship || 0 : pay.isFrame(plan) ? (pay.catalog().delivery[plan] || {}).price || 0 : 0; const x = ref.apply(code, amt.rupees, fr); off = x.discount; commission = x.commission; amt.rupees = x.rupees; }
+        if (code) { const fr = plan === "bizQr" || withQr ? amt.ship || 0 : pay.isFrame(plan) ? (pay.catalog().delivery[plan] || {}).price || 0 : 0; const x = ref.apply(code, amt.rupees, fr); off = x.discount; commission = x.commission; amt.rupees = x.rupees; }
       }
       // A blank business QR card being set up: remember it so paying links the card to this page.
       let claim = null;
@@ -88,7 +90,7 @@ module.exports = async (req, res) => {
       }
       let address = null, frame = null;
       let qrTone = null;
-      if (plan === "bizQr") { const a = readAddress(b.address); if (a.error) return db.reply(res, 400, { error: a.error }); address = a.addr; qrTone = QR_TONES.includes(b.qrTone) ? b.qrTone : "red"; }
+      if (plan === "bizQr" || withQr) { const a = readAddress(b.address); if (a.error) return db.reply(res, 400, { error: a.error }); address = a.addr; qrTone = QR_TONES.includes(b.qrTone) ? b.qrTone : "red"; }
       if (pay.isFrame(plan)) {
         const a = readAddress(b.address); if (a.error) return db.reply(res, 400, { error: a.error }); address = a.addr;
         if (b.print === "photo") {
@@ -108,12 +110,12 @@ module.exports = async (req, res) => {
       const order = await pay.createOrder({ rupees: amt.rupees, receipt: "ks_" + id, notes: { memory: id, plan, customer: user.id } });
       await db.setj("order:" + order.id, {
         memory: id, title: memory.title || "", owner: user.id, name: user.name, email: user.email, phone: user.phone || "",
-        kind: pay.kindOf(memory), plan, frame, ...(qrTone ? { qrTone } : {}), upgrade: amt.upgrade, amount: amt.rupees, ...(code ? { ref: code.code, refDiscount: off, commission } : {}), address, ...(claim ? { claim } : {}), ...(sp ? { sp } : {}), status: "created", created: Date.now()
+        kind: pay.kindOf(memory), plan, frame, ...(withQr ? { withQr: true } : {}), ...(qrTone ? { qrTone } : {}), upgrade: amt.upgrade, amount: amt.rupees, ...(code ? { ref: code.code, refDiscount: off, commission } : {}), address, ...(claim ? { claim } : {}), ...(sp ? { sp } : {}), status: "created", created: Date.now()
       }, "EX", 60 * 60 * 24 * 30);
       return db.reply(res, 200, {
         keyId: pay.keyId(), orderId: order.id, amount: order.amount, currency: order.currency,
         prefill: { name: user.name, email: user.email, contact: user.phone || (address && address.phone) || "" },
-        description: pay.describe(memory, plan, amt.upgrade) + (code ? " (code " + code.code + ")" : ""), amountRupees: amt.rupees, ref: code ? code.code : null
+        description: pay.describe(memory, plan, amt.upgrade, withQr) + (code ? " (code " + code.code + ")" : ""), amountRupees: amt.rupees, ref: code ? code.code : null
       });
     }
 
@@ -124,7 +126,7 @@ module.exports = async (req, res) => {
       if (!order || order.owner !== user.id) return db.reply(res, 404, { error: "Order not found." });
       if (!pay.verifyPayment(orderId, paymentId, b.razorpay_signature)) return db.reply(res, 400, { error: "Payment could not be verified. If money was taken, contact us with your payment ID." });
       const done = await pay.markPaid(orderId, paymentId);
-      return db.reply(res, 200, { ok: true, id: done.memory, url: (done.kind === "site" ? "/s/" : done.kind === "biz" ? "/b/" : "/m/") + done.memory, plan: done.plan, amount: done.amount });
+      return db.reply(res, 200, { ok: true, id: done.memory, url: (done.kind === "site" ? "/s/" : done.kind === "biz" ? "/b/" : "/m/") + done.memory, plan: done.plan, withQr: !!done.withQr, amount: done.amount });
     }
 
     return db.reply(res, 400, { error: "Unknown action." });

@@ -803,9 +803,9 @@ $("#saveBtn").onclick = $("#saveBtn2").onclick = saveBiz;
 function setEdit(id) { EDIT_ID = id; if (D) setTimeout(loy, 0); const u = new URL(location.href); u.searchParams.set("edit", id); u.searchParams.delete("resume"); history.replaceState(null, "", u.pathname + u.search + u.hash); }
 function checkout(plan) {
   $("#pubT").textContent = "Activate your page"; $("#pubP").textContent = CLAIM ? "Pay once and your QR card #" + CLAIM.code + " will open this page for good." : "Pay once and your page goes live with its own link and QR code.";
-  if (!CHECKOUT) CHECKOUT = KSCheckout.mount($("#payPanel"), { kind: "biz", getId: () => EDIT_ID, claim: () => CLAIM && CLAIM.code, sp: () => SP, customer: () => USER,
+  if (!CHECKOUT) CHECKOUT = KSCheckout.mount($("#payPanel"), { kind: "biz", getId: () => EDIT_ID, claim: () => CLAIM && CLAIM.code, sp: () => SP, customer: () => USER, wantLoyalty: () => !!(D && D.loy && D.loy.on),
     onPaid: async v => { if (v.plan === "loyalty") { LOYAL = true; loy.done = 0; if (!D.loy || !D.loy.on) { D.loy = D.loy || {}; D.loy.on = true; changed(); } loy(); if (dirty) await saveBiz(); }
-      const had = CLAIM; ACTIVE = true; CLAIM = null; try { localStorage.removeItem(CKEY); } catch (e) {} $("#banner").innerHTML = ""; live(v.url, had); status(v.plan === "loyalty" ? "Paid. Your page is live with its loyalty card. Set a staff PIN in section 6." : v.plan === "bizQr" ? "Paid. Your page is live, and we'll print your QR and courier it to you in 5–7 days." : had ? "Paid. Your page is live and your QR card now opens it." : "Paid. Your page is live.", "ok"); } });
+      const had = CLAIM; ACTIVE = true; CLAIM = null; try { localStorage.removeItem(CKEY); } catch (e) {} $("#banner").innerHTML = ""; live(v.url, had); status(v.plan === "loyalty" ? "Paid. Your page is live with its loyalty card. Set a staff PIN in section 6." + (v.withQr ? " We'll print your QR and courier it to you in 5–7 days." : "") : v.plan === "bizQr" ? "Paid. Your page is live, and we'll print your QR and courier it to you in 5–7 days." : had ? "Paid. Your page is live and your QR card now opens it." : "Paid. Your page is live.", "ok"); } });
   $("#payPanel").hidden = false; $("#livePanel").hidden = true;
   CHECKOUT.open("activate", plan).then(() => $("#publish").scrollIntoView({ behavior: "smooth", block: "start" }));
 }

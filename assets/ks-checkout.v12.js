@@ -37,6 +37,18 @@
 .ksco .ks-tones input:checked~span{color:inherit;font-weight:700}
 .ksco .ks-tones input:focus-visible+i{outline:3px solid #ff5b2e;outline-offset:3px}
 @media (max-width:420px){.ksco .ks-tones{grid-template-columns:repeat(3,minmax(0,1fr));row-gap:12px}}
+.ksco .ks-base{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:14px 16px;border:1px solid var(--gold);border-radius:16px;background:#ffffff08}
+.ksco .ks-base b{display:block;font-size:15px}.ksco .ks-base small{display:block;color:var(--muted);font-size:12.5px;line-height:1.4;margin-top:3px}
+.ksco .ks-base .ks-pp,.ksco .ks-add .ks-pp{font:500 22px/1.1 Georgia,serif;color:var(--gold);white-space:nowrap}
+.ksco .ks-adds{display:grid;gap:10px}
+.ksco .ks-add{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;border:1px solid var(--line);border-radius:16px;cursor:pointer;background:#ffffff08}
+.ksco .ks-add:has(input:checked){border-color:var(--gold);box-shadow:0 0 0 1px var(--gold)}
+.ksco .ks-add input{appearance:none;-webkit-appearance:none;flex:none;width:22px;height:22px;margin:2px 0 0;border:1.5px solid var(--muted);border-radius:7px;display:grid;place-items:center;cursor:pointer}
+.ksco .ks-add input:checked{background:var(--gold);border-color:var(--gold)}
+.ksco .ks-add input:checked::after{content:"";width:6px;height:11px;border:solid #1a0d08;border-width:0 2.5px 2.5px 0;transform:translateY(-1px) rotate(45deg)}
+.ksco .ks-add input:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.ksco .ks-add span{flex:1;min-width:0}.ksco .ks-add b{display:block;font-size:15px}.ksco .ks-add small{display:block;color:var(--muted);font-size:12.5px;line-height:1.4;margin-top:3px}
+.ksco .ks-add .ks-ah{display:flex;justify-content:space-between;align-items:baseline;gap:10px}.ksco .ks-add .ks-pp{font-size:19px;flex:none}
 .ksco .ks-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .ksco label.ks-f{display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--muted)}
 .ksco input.ks-in{font:inherit;font-size:16px;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--field);color:var(--ink);width:100%;box-sizing:border-box}
@@ -174,13 +186,14 @@
 
   // opts: { kind: "card"|"site", getId(): string, customer(): {name, phone}|null, onPaid(result) }
   // Printed QR colours (same names as the print page and the /shops showcase)
-  const QR_TONES = [["red", "Sindoor Red", "#8E1424", "linear-gradient(170deg,#C8102E,#4A0E14)"], ["blue", "Peacock Blue", "#0D3F57", "linear-gradient(170deg,#0E6A8C,#0A2238)"], ["marigold", "Marigold", "#B4440C", "linear-gradient(170deg,#F59E0B,#C2410C)"], ["green", "Mehendi Green", "#0B4A35", "linear-gradient(170deg,#108A60,#0B2E24)"], ["jamun", "Jamun Purple", "#3E1A63", "linear-gradient(170deg,#6D2E9E,#1E0F33)"], ["whitegold", "White & Gold", "linear-gradient(160deg,#E2BF6E,#8C6118)", "linear-gradient(180deg,#FFF1D2,#FFFDF8)"]];
+  const QR_TONES = [["red", "Red", "#8E1424", "linear-gradient(170deg,#C8102E,#4A0E14)"], ["blue", "Blue", "#0D3F57", "linear-gradient(170deg,#0E6A8C,#0A2238)"], ["marigold", "Orange", "#B4440C", "linear-gradient(170deg,#F59E0B,#C2410C)"], ["green", "Green", "#0B4A35", "linear-gradient(170deg,#108A60,#0B2E24)"], ["jamun", "Purple", "#3E1A63", "linear-gradient(170deg,#6D2E9E,#1E0F33)"], ["whitegold", "White & Gold", "linear-gradient(160deg,#E2BF6E,#8C6118)", "linear-gradient(180deg,#FFF1D2,#FFFDF8)"]];
   const firstTone = () => { let t = ""; try { t = new URLSearchParams(location.search).get("qr") || localStorage.getItem("ks-qr-tone") || ""; } catch (e) {} return QR_TONES.some(x => x[0] === t) ? t : "red"; };
   function mount(el, opts) {
     css();
     el.classList.add("ksco");
     el.innerHTML = `<h3 class="ks-title"></h3><p class="ks-note"></p>
 <div class="ks-step ks-dq">How would you like it?</div><div class="ks-opts"></div>
+<div class="ks-bizbox" hidden><div class="ks-base"></div><div class="ks-step">Add to your page</div><div class="ks-adds"></div></div>
 <div class="ks-frame" hidden>
  <div class="ks-pq"><div class="ks-step">What should we print in the frame?</div>
  <div class="ks-pills"><button type="button" class="ks-pill" data-print="photo">My photo</button><button type="button" class="ks-pill" data-print="design">My card design</button></div>
@@ -201,9 +214,14 @@
 <button type="button" class="ks-pay">Pay</button><div class="ks-status" role="status"></div>
 <p class="ks-fine">Secure payment by Razorpay: UPI, cards, net banking and wallets.</p>`;
     const $ = s => el.querySelector(s);
-    const state = { mode: "activate", plan: "digital", print: "", photo: "", cat: null, code: null, tone: firstTone() };
+    const state = { mode: "activate", plan: "digital", print: "", photo: "", cat: null, code: null, tone: firstTone(), addQr: false, addLoy: false };
+    // A new business page: ₹499 + optional printed QR + optional loyalty card, each a tick box.
+    const bizAct = () => opts.kind === "biz" && state.mode === "activate";
+    const syncPlan = () => { if (bizAct()) state.plan = state.addLoy ? "loyalty" : state.addQr ? "bizQr" : "digital"; };
+    const qrOn = () => state.plan === "bizQr" || (bizAct() && state.addQr);
     const status = (t, cls) => { const s = $(".ks-status"); s.textContent = t || ""; s.className = "ks-status" + (cls ? " " + cls : ""); };
-    const full = plan => { const c = state.cat; if (!c || !c.delivery[plan]) return { sum: 0, frame: 0 }; const pr = c.products[opts.kind], up = state.mode !== "activate", base = up ? 0 : pr.price, fr = plan === "bizQr" && up ? c.delivery.bizQr.reorder || 0 : c.delivery[plan].price; return { sum: base + fr, frame: fr, was: (up ? 0 : pr.was || pr.price) + fr }; };
+    const full = plan => { const c = state.cat; if (c && bizAct()) { const pr = c.products.biz, q = state.addQr && c.delivery.bizQr ? c.delivery.bizQr.price : 0, l = state.addLoy && c.delivery.loyalty ? c.delivery.loyalty.price : 0; return { sum: pr.price + q + l, frame: q, was: (pr.was || pr.price) + q + l }; }
+      if (!c || !c.delivery[plan]) return { sum: 0, frame: 0 }; const pr = c.products[opts.kind], up = state.mode !== "activate", base = up ? 0 : pr.price, fr = plan === "bizQr" && up ? c.delivery.bizQr.reorder || 0 : c.delivery[plan].price; return { sum: base + fr, frame: fr, was: (up ? 0 : pr.was || pr.price) + fr }; };
     // A creator's code takes its discount off the keepsake itself, never a frame (same as api/_ref.js).
     const total = plan => { const f = full(plan), cd = state.code; if (!cd) return f.sum; const dig = Math.max(0, f.sum - f.frame); return f.sum - (cd.off ? Math.min(cd.off, Math.max(0, dig - 1)) : Math.round(dig * (cd.discount || 0) / 100)); };
 
@@ -220,12 +238,19 @@
         : opts.kind === "biz" ? "Your page is saved. Pay once to switch it on" + ((typeof opts.claim === "function" ? opts.claim() : opts.claim) ? " and link it to your QR card" : "") + ". It stays live for good, and you can update your menu, offers and photos any time."
         : `Your ${opts.kind === "site" ? "website" : "card"} is saved. Pay once to switch on its link, QR code and NFC link. It stays live for good, and you can keep editing it.` + (c.sale ? ` 🎉 ${c.sale.name}: ${c.sale.percent}% off right now.` : "");
       const plans = state.mode === "loyalty" ? ["loyalty"] : (biz ? (state.mode === "upgrade" ? ["bizQr"] : ["digital", "bizQr", "loyalty"]) : state.mode === "upgrade" ? ["frameQr", "frameNfc"] : ["digital", "frameQr", "frameNfc"]).filter(p => c.delivery[p]);
-      $(".ks-opts").hidden = $(".ks-dq").hidden = plans.length < 2;
+      syncPlan();
+      $(".ks-bizbox").hidden = !bizAct();
+      if (bizAct()) {
+        $(".ks-base").innerHTML = `<span><b>${esc(prod.name)}</b><small>Your page with its own link, plus a QR you can download and print yourself.</small></span><span class="ks-pp">${money(prod.price)}</span>`;
+        const add = (k, on, d, title) => d ? `<label class="ks-add"><input type="checkbox" data-add="${k}"${on ? " checked" : ""}><span><b class="ks-ah"><span>${esc(title)}</span><span class="ks-pp">+ ${money(d.price)}</span></b><small>${esc(d.desc || "")}</small></span></label>` : "";
+        $(".ks-adds").innerHTML = add("qr", state.addQr, c.delivery.bizQr, "Printed QR, delivered") + add("loy", state.addLoy, c.delivery.loyalty, "Loyalty card");
+      }
+      $(".ks-opts").hidden = $(".ks-dq").hidden = plans.length < 2 || bizAct();
       if (!plans.includes(state.plan)) state.plan = plans[0];
       $(".ks-opts").style.gridTemplateColumns = plans.length === 2 ? "1fr 1fr" : "";
       $(".ks-opts").innerHTML = plans.map(p => { const d = c.delivery[p]; return `<button type="button" class="ks-opt${p === state.plan ? " on" : ""}" data-plan="${p}"><b>${esc(p === "digital" ? prod.name + (biz ? " · Online only" : " · Digital") : p === "loyalty" && state.mode === "activate" ? "Page + loyalty card" : d.name)}</b><span class="ks-pp">${full(p).was > total(p) ? `<s class="ks-was">${money(full(p).was)}</s> ` : ""}${money(total(p))}</span><small>${esc(p === "digital" && biz ? "Your page with its own link, plus a QR you can download and print yourself." : d.desc || "")}</small></button>`; }).join("");
-      const frame = state.plan !== "digital" && state.plan !== "loyalty";
-      $(".ks-frame").hidden = !frame; $(".ks-pq").hidden = state.plan === "bizQr"; $(".ks-tq").hidden = state.plan !== "bizQr";
+      const frame = bizAct() ? state.addQr : state.plan !== "digital" && state.plan !== "loyalty";
+      $(".ks-frame").hidden = !frame; $(".ks-pq").hidden = opts.kind === "biz"; $(".ks-tq").hidden = !qrOn();
       el.querySelectorAll('input[name="ks-tone"]').forEach(i => i.checked = i.value === state.tone);
       $(".ks-dq").textContent = biz ? "Add a printed QR or a loyalty card?" : "How would you like it?";
       el.querySelectorAll(".ks-pill").forEach(b => b.classList.toggle("on", b.dataset.print === state.print));
@@ -236,7 +261,7 @@
       $(".ks-code").hidden = state.mode !== "activate"; $(".ks-con").hidden = !cd; $(".ks-cask").hidden = !!cd; if (cd) $(".ks-crow").hidden = true;
       if (cd) $(".ks-con").innerHTML = `<span class="ks-on">✓ Code ${esc(cd.code)} applied: ${cd.off ? money(cd.off) : cd.discount + "%"} off${off ? " (you save " + money(off) + ")" : ""}</span> · <button type="button" class="ks-link ks-cdel">Remove</button>`;
       const was = full(state.plan).was;
-      $(".ks-pay").innerHTML = "Pay " + money(total(state.plan)) + (was > total(state.plan) ? `<span class="ks-was">${money(was)}</span>` : "") + (state.mode === "loyalty" ? " & unlock" : state.mode === "upgrade" ? (biz ? " & order QR" : " & order frame") : state.plan === "bizQr" ? " & go live" : " & activate");
+      $(".ks-pay").innerHTML = "Pay " + money(total(state.plan)) + (was > total(state.plan) ? `<span class="ks-was">${money(was)}</span>` : "") + (state.mode === "loyalty" ? " & unlock" : state.mode === "upgrade" ? (biz ? " & order QR" : " & order frame") : bizAct() ? " & go live" : " & activate");
     }
 
     el.addEventListener("click", e => {
@@ -258,7 +283,8 @@
       status("Uploading your photo…");
       try { state.photo = await uploadPhoto(f, "print"); status("Photo ready to print ♡", "ok"); render(); } catch (x) { status(x.message, "bad"); }
     });
-    el.addEventListener("change", e => { if (e.target.name === "ks-tone") { state.tone = e.target.value; try { localStorage.setItem("ks-qr-tone", state.tone); } catch (x) {} } });
+    el.addEventListener("change", e => { const a = e.target.dataset && e.target.dataset.add; if (a) { if (a === "qr") state.addQr = e.target.checked; else state.addLoy = e.target.checked; status(""); render(); return; }
+      if (e.target.name === "ks-tone") { state.tone = e.target.value; try { localStorage.setItem("ks-qr-tone", state.tone); } catch (x) {} } });
     $(".ks-pay").addEventListener("click", pay);
 
     async function pay() {
@@ -267,7 +293,7 @@
       if (state.code && state.mode === "activate") body.ref = state.code.code;
       const claim = typeof opts.claim === "function" ? opts.claim() : opts.claim; if (claim) body.claim = claim;
       const sp = typeof opts.sp === "function" ? opts.sp() : opts.sp; if (sp) body.sp = sp;
-      if (state.plan === "bizQr") { body.qrTone = state.tone; body.address = {}; el.querySelectorAll("[data-a]").forEach(i => body.address[i.dataset.a] = i.value); }
+      if (qrOn()) { if (state.plan === "loyalty") body.qr = true; body.qrTone = state.tone; body.address = {}; el.querySelectorAll("[data-a]").forEach(i => body.address[i.dataset.a] = i.value); }
       else if (state.plan !== "digital" && state.plan !== "loyalty") {
         if (!state.print) { status("Choose what to print in the frame.", "bad"); return; }
         if (state.print === "photo" && !state.photo) { status("Upload the photo you'd like printed.", "bad"); return; }
@@ -300,6 +326,11 @@
         if (state.mode === "loyalty") state.plan = "loyalty"; else if (state.plan === "loyalty") state.plan = "digital";
         if (state.mode === "upgrade" && state.plan === "digital") state.plan = opts.kind === "biz" ? "bizQr" : "frameQr";
         if (plan) state.plan = plan;
+        if (bizAct()) {
+          if (plan === "loyalty") state.addLoy = true;
+          if (plan === "bizQr") state.addQr = true;
+          if (typeof opts.wantLoyalty === "function" && opts.wantLoyalty()) state.addLoy = true;
+        }
         state.cat = await catalog(); status("");
         if (!state.code && state.mode === "activate") { const saved = savedCode(); if (saved) await applyCode(saved, false); }
         const cu = opts.customer && opts.customer();

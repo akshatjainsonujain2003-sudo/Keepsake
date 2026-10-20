@@ -214,7 +214,7 @@
     out.innerHTML = H.join("");
   }
   // One board on any page (the shops showcase), drawn in a shadow root so the page's own CSS can't reach it.
-  const NAMES = { red: "Sindoor Red", blue: "Peacock Blue", marigold: "Marigold", green: "Mehendi Green", jamun: "Jamun Purple", whitegold: "White & Gold" };
+  const NAMES = { red: "Red", blue: "Blue", marigold: "Orange", green: "Green", jamun: "Purple", whitegold: "White & Gold" };
   function mount(host, o) {
     o = o || {};
     const root = host.shadowRoot || host.attachShadow({ mode: "open" });

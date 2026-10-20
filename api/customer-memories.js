@@ -45,7 +45,7 @@ const clientIp = req => String(req.headers["x-forwarded-for"] || req.socket?.rem
 async function shipStatus(m) {
   for (const oid of [...(m.orders || [])].reverse()) {
     const o = await db.getj("order:" + oid);
-    if (o && (o.plan === "frameQr" || o.plan === "frameNfc" || o.plan === "bizQr") && o.status === "paid") return (o.ship || "to-ship") + (o.tracking ? "|" + String(o.tracking).slice(0, 60) : "");
+    if (o && (o.plan === "frameQr" || o.plan === "frameNfc" || o.plan === "bizQr" || o.withQr) && o.status === "paid") return (o.ship || "to-ship") + (o.tracking ? "|" + String(o.tracking).slice(0, 60) : "");
   }
   return "";
 }
