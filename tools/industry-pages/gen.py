@@ -6,14 +6,6 @@ CHIPS = {"cafe": ["Cafés", "Restaurants", "Bakeries", "Cloud kitchens", "Juice 
  "real-estate": ["Property dealers", "Builders", "Rentals & PG", "Plots & land", "Interiors"], "general-store": ["Kirana", "General stores", "Dairy", "Hardware", "Mobile shops"],
  "boutique": ["Boutiques", "Sarees & ethnic", "Menswear", "Kids wear", "Jewellery"], "pharmacy": ["Pharmacies", "Chemists", "Medical stores", "Surgical", "Ayurveda"], "clinic": ["Clinics", "Dentists", "Physiotherapy", "Diagnostic labs", "Eye clinics"]}
 TAB = {"cafe": "Menu", "salon": "Services", "gym": "Plans", "real-estate": "Properties", "general-store": "Products", "boutique": "Collection", "pharmacy": "Products", "clinic": "Services"}
-THEME = {"latte": ["#fbf8f3", "#b97a5a"], "espresso": ["#1f1611", "#d9a066"], "noir": ["#0e0e0d", "#c9a96a"], "linen": ["#f5efe5", "#b4562f"], "olive": ["#fbf8f1", "#4b5e27"], "sage": ["#eef1e9", "#4d6b4b"], "blush": ["#f8ecea", "#b2475b"], "rose": ["#ffffff", "#d9809a"], "ocean": ["#0d1726", "#7fb3ff"], "mist": ["#f4f5f7", "#1f6f8b"], "cocoa": ["#f6f1e7", "#4a3412"], "maroon": ["#f1ebe6", "#6e1a0e"], "riot": ["#efefdc", "#e3d44a"]}
-LAYN = {"classic": "Classic", "poster": "Poster", "botanical": "Botanical", "bold": "Bold"}
-ORIG = {"cafe": ("poster", "latte"), "salon": ("botanical", "sage"), "gym": ("bold", "noir"), "real-estate": ("classic", "cocoa"), "general-store": ("classic", "linen"), "boutique": ("poster", "maroon"), "pharmacy": ("classic", "sage"), "clinic": ("classic", "mist")}
-EXTRA = [("poster", "noir"), ("botanical", "blush"), ("bold", "riot"), ("classic", "ocean"), ("classic", "espresso")]
-TONE = {"cafe": "red", "salon": "green", "gym": "marigold", "real-estate": "blue", "general-store": "marigold", "boutique": "jamun", "pharmacy": "green", "clinic": "blue"}
-def LOOKS(slug):
-    o = ORIG[slug]; out = [o] + [x for x in EXTRA if x != o and x[0] != o[0]][:3]
-    return "".join(f'<button type="button" data-look="{l}|{t}"{" aria-pressed=\"true\"" if i == 0 else ""}><i style="background:{THEME[t][0]};box-shadow:inset 0 0 0 5px {THEME[t][1]}"></i>{THEME and t.capitalize()} · {LAYN[l]}</button>' for i, (l, t) in enumerate(out))
 COVER = {"cafe": "cafe-interior.webp", "salon": "salon-cover.webp", "gym": "gym-cover.webp", "real-estate": "re-villa.webp", "general-store": "kirana-cover.webp", "boutique": "bq-store1.webp", "pharmacy": "clinic-micro.webp", "clinic": "clinic-cover.webp"}
 esc = lambda s: html.escape(s, quote=True)
 strip = lambda s: re.sub("<[^>]+>", "", s)
@@ -96,9 +88,8 @@ def page(slug):
 <meta name="theme-color" content="#f4f1ea">
 <link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="image" href="/assets/hero/{slug}.jpg">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Pinyon+Script&family=Inter:wght@400;500;600;700;800&family=Mukta:wght@600;700&family=Rozha+One&display=swap">
-<link rel="stylesheet" href="/assets/ind.v5.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Pinyon+Script&family=Inter:wght@400;500;600;700;800&family=Mukta:wght@600;700&display=swap">
+<link rel="stylesheet" href="/assets/ind.v3.css">
 <script type="application/ld+json">{json.dumps(ld, ensure_ascii=False).replace("</", "<\\/")}</script>
 </head>
 <body>
@@ -115,7 +106,12 @@ def page(slug):
     <div class="ch">{"".join(f"<span>{esc(c)}</span>" for c in CHIPS[slug])}</div>
     <div class="tr"><span>No app needed</span><span>Ready in 5 minutes</span><span>No monthly fees</span></div>
   </div>
-  <div class="ar"><video class="hv" autoplay muted loop playsinline preload="auto" poster="/assets/hero/{slug}.jpg" aria-label="How a {esc(d["word"])} page works: a customer scans the QR, the page opens, an order arrives on WhatsApp{", a loyalty stamp is added" if d["ly"] else ""} and a Google review comes in."><source src="/assets/hero/{slug}.webm" type="video/webm"><source src="/assets/hero/{slug}.mp4" type="video/mp4"></video></div>
+  <div class="ar">
+    <div class="ph l"><div class="sc"><iframe data-live="{side(0.32)}" title="" aria-hidden="true" tabindex="-1" loading="lazy"></iframe></div></div>
+    <div class="ph r"><div class="sc"><iframe data-live="{side(0.58)}" title="" aria-hidden="true" tabindex="-1" loading="lazy"></iframe></div></div>
+    <div class="ph c"><div class="sc"><iframe data-live="{live}" title="A live example {esc(d["word"])} page" loading="lazy"></iframe></div></div>
+    {fl_a}{fl_c}
+  </div>
 </div></section>
 
 <section class="se" id="features"><div class="w">
@@ -157,7 +153,7 @@ def page(slug):
 </div></section>
 </main>
 {footer()}
-<script src="/assets/ind.v4.js" defer></script>
+<script src="/assets/ind.v2.js" defer></script>
 <script src="/assets/ks-pixel.v1.js" defer></script>
 </body>
 </html>
