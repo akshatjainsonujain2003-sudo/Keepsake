@@ -12,7 +12,7 @@
     if (nav) { let last = scrollY; addEventListener("scroll", () => { const y = scrollY; nav.classList.toggle("gk-sh", y > 10); if (!reduce) nav.classList.toggle("gk-hide", y > last && y > 160 && !nav.querySelector("details[open]")); last = y; }, { passive: true }); }
     if (reduce || !window.gsap || !window.ScrollTrigger) { show(); return; }
     gsap.registerPlugin(ScrollTrigger); root.classList.add("gk-on");
-    const E = "power4.out";
+    const E = "power3.out";
     // progress bar
     const bar = document.createElement("div"); bar.className = "gk-pg"; document.body.appendChild(bar);
     gsap.to(bar, { scaleX: 1, ease: "none", scrollTrigger: { start: 0, end: "max", scrub: .3 } });
@@ -24,15 +24,17 @@
     const tl = gsap.timeline({ defaults: { ease: E } });
     if (h1) {
       const lines = split(h1); const sc = h1.querySelector(".s"); if (sc) gsap.set(sc, { clipPath: "inset(-20% 100% -40% 0)" });
-      show();
-      tl.from(lines, { yPercent: 110, duration: 1.1, stagger: .12 });
+      tl.from(lines, { yPercent: 115, duration: 1.15, stagger: .14, delay: .1 });
       if (sc) tl.add(wipe(sc), "-=.45");
       const dot = h1.querySelector(".o"); if (dot) tl.from(dot, { scale: 0, transformOrigin: "50% 80%", duration: .5, ease: "back.out(3)" }, "-=.9");
-    } else show();
+    }
     const intro = gsap.utils.toArray("[data-gk-in]");
     if (intro.length) tl.from(intro, { y: 22, opacity: 0, duration: .8, stagger: .07 }, h1 ? "-=1.2" : 0);
     const rise = gsap.utils.toArray("[data-gk-rise]");
-    if (rise.length) tl.from(rise, { y: 140, opacity: 0, duration: 1.2, stagger: { each: .12, from: "center" }, ease: "expo.out" }, h1 ? .15 : 0);
+    if (rise.length) tl.from(rise, { y: 160, opacity: 0, duration: 1.4, stagger: { each: .14, from: "center" }, ease: "power3.out" }, h1 ? .2 : 0);
+    const pop = gsap.utils.toArray("[data-gk-pop]");
+    if (pop.length) tl.from(pop, { scale: .6, y: 20, opacity: 0, duration: .7, stagger: .25, ease: "back.out(2)" }, h1 ? 1.2 : .6);
+    show(); // every hero element now has its starting state set, so it can be revealed without a flash
     // hero phones drift apart a little as you scroll away (desktop)
     ScrollTrigger.matchMedia({ "(min-width: 981px)": () => {
       gsap.utils.toArray("[data-gk-par]").forEach(el => gsap.to(el, { yPercent: +el.dataset.gkPar || -8, ease: "none", scrollTrigger: { trigger: el.closest("section") || el, start: "top top", end: "bottom top", scrub: .6 } }));
@@ -48,8 +50,9 @@
     // groups of cards / rows: gentle staggered rise
     ScrollTrigger.batch("[data-gk-st]", { start: "top 88%", once: true, onEnter: b => { b.forEach(e => e.classList.add("gk-anim")); gsap.from(b, { y: 34, opacity: 0, duration: .8, stagger: .08, ease: E, overwrite: true, clearProps: "transform,opacity", onComplete: () => b.forEach(e => e.classList.remove("gk-anim")) }); } });
     // prices count up
-    gsap.utils.toArray("[data-gk-count]").forEach(el => { const n = parseInt(el.textContent.replace(/\D/g, ""), 10); if (!n) return; const o = { v: 0 };
-      gsap.to(o, { v: n, duration: 1.4, ease: "power3.out", scrollTrigger: { trigger: el, start: "top 85%", once: true }, onUpdate: () => el.textContent = Math.round(o.v).toLocaleString("en-IN") }); });
+    gsap.utils.toArray("[data-gk-count]").forEach(el => ScrollTrigger.create({ trigger: el, start: "top 85%", once: true, onEnter: () => {
+      const n = parseInt(el.textContent.replace(/\D/g, ""), 10); if (!n) return; const o = { v: 0 }; // read the price when it comes into view, after the live price has loaded
+      gsap.to(o, { v: n, duration: 1.4, ease: "power3.out", onUpdate: () => el.textContent = Math.round(o.v).toLocaleString("en-IN") }); } }));
     // stickers slap on
     gsap.utils.toArray("[data-gk-stk]").forEach(el => gsap.from(el, { scale: 0, rotate: -90, duration: .9, ease: "back.out(2.2)", scrollTrigger: { trigger: el, start: "top 85%", once: true } }));
     // loyalty stamps fill one by one

@@ -47,8 +47,8 @@ def page(slug):
     live_link = f"/shops/studio?ex={d['ex']}" if d["ex"] else studio
     fa, fc = d["fa"], d["fc"]
     stamps = "".join(f'<i class="{"" if i >= fa[2] else ""}" style="background:{"var(--haldi)" if i < fa[2] else "none"};{"box-shadow:inset 0 0 0 1.5px #CDBFB2" if i >= fa[2] else ""}"></i>' for i in range(5)) if fa[2] else ""
-    fl_a = f'<div class="fl a"><b>{esc(fa[0])}</b>{esc(fa[1])}{"<div class=st>" + "".join("<i" + ("" if i < round(fa[2] / 2) else " class=o") + "></i>" for i in range(5)) + "</div>" if fa[2] else ""}</div>'
-    fl_c = f'<div class="fl c"><b>{esc(fc[0])}</b>{esc(fc[1])}</div>'
+    fl_a = f'<div class="fl a" data-gk-pop><b>{esc(fa[0])}</b>{esc(fa[1])}{"<div class=st>" + "".join("<i" + ("" if i < round(fa[2] / 2) else " class=o") + "></i>" for i in range(5)) + "</div>" if fa[2] else ""}</div>'
+    fl_c = f'<div class="fl c" data-gk-pop><b>{esc(fc[0])}</b>{esc(fc[1])}</div>'
     feat = "".join(f'<div class="r" data-gk-st><b>{esc(n)}</b><i></i><em class="{"x" if t != "Included" else ""}">{esc(t)}</em><small>{esc(s)}</small></div>' for n, s, t in d["feat"])
     ly = ""
     if d["ly"]:

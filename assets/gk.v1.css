@@ -15,11 +15,11 @@
 /* motion hooks: headline line masks and handwritten script wipes */
 .gk-ln{display:block;overflow:hidden;padding:.14em 0 .08em;margin:-.14em 0 -.08em}
 .gk-li{display:block}
-.gkm [data-gk-h1]{visibility:hidden}
+.gkm [data-gk-h1],.gkm [data-gk-in],.gkm [data-gk-rise],.gkm [data-gk-pop]{visibility:hidden}
 /* magnetic buttons get a soft glow while hovered */
 .gk-anim{transition:none!important}
 .gk-mag{will-change:transform;transition:box-shadow .15s,background .15s!important}
-@media (prefers-reduced-motion:reduce){.gk-pg{display:none}.gkm [data-gk-h1]{visibility:visible}}
+@media (prefers-reduced-motion:reduce){.gk-pg{display:none}.gkm [data-gk-h1],.gkm [data-gk-in],.gkm [data-gk-rise],.gkm [data-gk-pop]{visibility:visible}}
 
 /* GSAP drives the hero entrance, so the CSS one steps aside */
 .hr .tx,.hr .ar .ph,.hero .row>*,.hero .ph{animation:none!important}
