@@ -605,16 +605,17 @@ const shrink = f => new Promise((ok, no) => {
 });
 $("#scanIn").onchange = async e => {
   const files = [...e.target.files].slice(0, 8); e.target.value = ""; if (!files.length) return;
-  if (!(CFG && CFG.scanAI)) return freeScan(files);
-  if (!USER) { save(); $("#scanOut").innerHTML = `<div class="scerr">Log in first to scan. What you've typed is kept. <a href="/account?next=${encodeURIComponent("/shops/studio?resume=1")}">Log in</a></div>`; return; }
+  // AI reader first (needs login); if it isn't switched on in Vercel, use the free reader on this phone.
+  if (!USER) return freeScan(files, "Log in to use the AI reader, which reads designed menus much better.");
   const out = $("#scanOut"), lb = $(".scanb"); lb.classList.add("busy");
   const found = [], errs = [];
   for (let i = 0; i < files.length; i++) {
-    out.innerHTML = `<div class="scp"><i></i>Reading ${files.length > 1 ? "file " + (i + 1) + " of " + files.length : "your file"}… this takes up to a minute.</div>`;
+    out.innerHTML = `<div class="scp"><i></i>AI is reading ${files.length > 1 ? "photo " + (i + 1) + " of " + files.length : "your menu"}… usually 10–40 seconds.</div>`;
     try {
       const data = await shrink(files[i]);
       const r = await fetch("/api/img", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "scan", data, cat: (KSBiz.CATS[D.cat] || {}).name || "" }) });
       const j = await r.json().catch(() => ({ error: "The scanner didn't answer. Try again." }));
+      if (r.status === 501) { lb.classList.remove("busy"); return freeScan(files); }
       if (!r.ok) throw new Error(j.error || "Couldn't read that file.");
       if (j.cut) errs.push(files[i].name + ": very long, some items at the end may be missing. Scan it in parts.");
       j.sections.forEach(s => { const same = found.find(x => x.n.toLowerCase() === s.n.toLowerCase()); if (same) same.items.push(...s.items); else found.push(s); });
@@ -627,8 +628,8 @@ $("#scanIn").onchange = async e => {
   review(errs);
 };
 // Free scanner: Tesseract reads the text right here in the browser, then KSMenuOCR.parse arranges it.
-let CFG = null, LASTFILES = null; fetch("/api/config").then(r => r.json()).then(c => CFG = c).catch(() => {});
-async function freeScan(files) {
+let LASTFILES = null;
+async function freeScan(files, note) {
   const out = $("#scanOut"), lb = $(".scanb"); lb.classList.add("busy");
   const show = (t, f) => out.innerHTML = `<div class="scp"><i></i>${esc(t)}</div><div class="bar"><i style="width:${Math.round((f || 0) * 100)}%"></i></div>`;
   try {
@@ -638,7 +639,7 @@ async function freeScan(files) {
     const PR = !!(KSBiz.CATS[D.cat] || {}).prop, name = D.menuTitle || (PR ? "Properties" : "Menu");
     const found = await KSMenuOCR.read(files, { hindi: $("#scanHi").checked, defaultName: name, onProgress: show });
     SCAN = found.map(s => ({ n: s.n, items: s.items.map(x => ({ ...x, on: true })) }));
-    review();
+    review(note ? [note] : []);
   } catch (x) { console.error("scan", x); out.innerHTML = `<div class="scerr">${esc(String((x && x.message) || x || "") || "Couldn't read that file. Try a clearer photo.")}</div>`; }
   finally { lb.classList.remove("busy"); }
 }

@@ -65,7 +65,9 @@ async function gemini(m, prompt, signal) {
   const r = await fetch("https://generativelanguage.googleapis.com/v1beta/models/" + encodeURIComponent(model) + ":generateContent", {
     method: "POST", signal, headers: { "x-goog-api-key": env.GEMINI_API_KEY, "content-type": "application/json" },
     body: JSON.stringify({ contents: [{ role: "user", parts: [{ inline_data: { mime_type: m[1], data: m[2] } }, { text: prompt + "\nReturn the result as JSON." }] }],
-      generationConfig: { responseMimeType: "application/json", responseSchema: GSCHEMA, temperature: 0, maxOutputTokens: 16000 } })
+      generationConfig: { responseMimeType: "application/json", responseSchema: GSCHEMA, temperature: 0, maxOutputTokens: 16000,
+        // Reading a menu doesn't need "thinking": switching it off on 2.5 Flash makes it several times faster.
+        ...(/^gemini-2\.5-flash/.test(model) ? { thinkingConfig: { thinkingBudget: 0 } } : {}) } })
   });
   const j = await r.json().catch(() => ({}));
   if (!r.ok) {
