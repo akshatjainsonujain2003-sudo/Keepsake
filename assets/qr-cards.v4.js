@@ -1,9 +1,11 @@
 /* GetKeepsake business QR cards: print sheets for blank business QR codes.
    KSQRCards.render(outEl, codes, { size: "stamp"|"card"|"board", label, base, tone, paper })
    stamp = 3.5 × 5 in gradient stamp board (design F2), packed edge to edge with crop marks in the margin.
-           tone: red|blue|marigold|green|jamun|mix (mix rotates).  paper: a4 (2×2) | a3 | 12x18 | 13x19 (3×3)
+           tone: red|blue|marigold|green|jamun|whitegold|mix (mix rotates the first 5).
+           paper: a4 (2×2) | a3 | 12x18 | 13x19 (3×3)
    card  = 55 × 85 mm wallet card, two-sided (front sheet, then back sheet mirrored for duplex), 9 per A4
    board = A6 counter board 105 × 148 mm, one-sided, 4 per A4
+   KSQRCards.mount(hostEl, { tone, url, code }) draws one board in a shadow root (used on /shops).
    Needs qrcode-generator (window.qrcode). */
 (function () {
   const esc = t => String(t == null ? "" : t).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
@@ -211,5 +213,14 @@
     }
     out.innerHTML = H.join("");
   }
-  window.KSQRCards = { render, TONES: TONE_LIST, PAPER };
+  // One board on any page (the shops showcase), drawn in a shadow root so the page's own CSS can't reach it.
+  const NAMES = { red: "Sindoor Red", blue: "Peacock Blue", marigold: "Marigold", green: "Mehendi Green", jamun: "Jamun Purple", whitegold: "White & Gold" };
+  function mount(host, o) {
+    o = o || {};
+    const root = host.shadowRoot || host.attachShadow({ mode: "open" });
+    root.innerHTML = `<style>:host{display:block;width:${W}px;height:${H}px}${STAMP_CSS}</style>` + stamp({ code: o.code || "SAMPLE" }, o.base || "https://getkeepsake.in", TONES[o.tone] ? o.tone : "red");
+    if (o.url) { const x = qrcode(0, "H"); x.addData(o.url); x.make(); root.querySelector(".qw svg").outerHTML = x.createSvgTag({ cellSize: 3, margin: 0, scalable: true }).replace(/fill="#000000"/g, 'fill="#1A1210"').replace(/fill="#ffffff"/g, 'fill="transparent"'); }
+    return root;
+  }
+  window.KSQRCards = { render, mount, TONES: TONE_LIST, ALL: Object.keys(NAMES), NAMES, PAPER };
 })();

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>GetKeepsake for Business · A beautiful page for your shop, behind one QR</title>
-<meta name="description" content="A premium mobile page for cafés, salons, gyms, boutiques, clinics and every local business: menu, offers, Google reviews, Instagram, UPI and WhatsApp orders, behind one QR on your counter. ₹499 one-time.">
+<meta name="description" content="A premium mobile page for cafés, salons, gyms, boutiques, clinics and every kind of business: menu, offers, Google reviews, Instagram, UPI and WhatsApp orders, behind one QR on your counter. ₹499 one-time.">
 <link rel="canonical" href="https://getkeepsake.in/shops">
 <meta property="og:type" content="website"><meta property="og:site_name" content="GetKeepsake"><meta property="og:url" content="https://getkeepsake.in/shops">
 <meta property="og:title" content="Your shop, one scan away · GetKeepsake for Business">
@@ -12,7 +12,7 @@
 <meta property="og:image" content="https://getkeepsake.in/assets/og-image.jpg">
 <meta name="theme-color" content="#f4f1ea">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Pinyon+Script&family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Pinyon+Script&family=Inter:wght@400;500;600;700;800&family=Mukta:wght@700&family=Rozha+One&display=swap">
 <link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
 <style>
 :root{--bg:#f4f1ea;--pa:#fffdf8;--ink:#121110;--mu:#6c665d;--ln:#e2dccf;--ac:#ff5b2e;--ac2:#ffd84d;--fd:'Archivo Black','Arial Black',sans-serif;--fsc:'Pinyon Script',cursive;--fn:'Inter',system-ui,-apple-system,sans-serif}
@@ -117,6 +117,33 @@ section.s{padding:96px 0 0}
 .qrcard{text-decoration:none;display:flex;gap:16px;align-items:center;padding:16px;border-radius:20px;background:#17110d;color:#f4ebde;margin-top:auto}
 .qrcard .q{width:96px;height:96px;border-radius:12px;background:#fff;padding:8px;flex:none}.qrcard .q svg{width:100%;height:100%;display:block}.qrcard .tp{display:block;margin-top:4px;font:600 12.5px var(--fn);color:#ffd84d}
 .qrcard b{font:italic 400 19px Georgia,serif;display:block}.qrcard small{color:#d9a066;font:700 10px var(--fn);letter-spacing:.2em;text-transform:uppercase}
+/* QR colours */
+.qx{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-areas:"head stage" "pick stage";column-gap:clamp(28px,5vw,72px);row-gap:0;align-items:center;background:var(--pa);border:1px solid var(--ln);border-radius:32px;padding:clamp(28px,5vw,64px)}
+.qx-head{grid-area:head;align-self:end}.qx-pick{grid-area:pick;align-self:start}
+.qx-stage{grid-area:stage;display:grid;place-items:center;padding:10px 0 0}
+.qx-hold{position:relative;width:336px;height:480px;transform:scale(1.08) rotate(-2deg);transform-origin:50% 100%;margin-bottom:34px}
+.qx-hold::after{content:"";position:absolute;left:-28px;right:-28px;bottom:-22px;height:14px;border-radius:3px;background:linear-gradient(180deg,#c9a47c,#9b734f);box-shadow:0 18px 26px -14px #5a3d24}
+.qx-board{position:relative;z-index:1;filter:drop-shadow(0 22px 22px rgba(60,40,20,.28))}
+.qx-board.flip{animation:qxflip .32s cubic-bezier(.3,.7,.2,1)}
+@keyframes qxflip{from{transform:perspective(900px) rotateY(70deg);opacity:.4}to{transform:none;opacity:1}}
+.qx h2{margin:10px 0 0;font:400 clamp(38px,5vw,64px)/.95 var(--fd);letter-spacing:-.025em;text-transform:uppercase}
+.qx h2 em{font:400 1.05em var(--fsc);text-transform:none;letter-spacing:0;color:var(--ac)}
+.qx-head>p{color:var(--mu);margin:16px 0 0;max-width:460px}
+.qx-sw{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px;margin:28px 0 0;padding:0;border:0}
+.qx-sw legend{font:700 14px var(--fn);margin-bottom:12px;padding:0}
+.qx-sw label{display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;font:600 12px/1.25 var(--fn);text-align:center;color:var(--mu)}
+.qx-sw input{position:absolute;opacity:0;pointer-events:none}
+.qx-sw i{display:block;width:48px;height:66px;padding:4px;background:radial-gradient(circle,var(--pa) 2.1px,transparent 2.5px) -3px -3px/7px 7px,var(--e);transition:transform .15s}
+.qx-sw i b{display:block;height:100%;background:var(--g)}
+.qx-sw label:hover i{transform:translateY(-3px)}
+.qx-sw input:checked+i{outline:2px solid var(--ink);outline-offset:4px}
+.qx-sw input:checked~span{color:var(--ink)}
+.qx-sw input:focus-visible+i{outline:3px solid var(--ac);outline-offset:4px}
+.qx-tip{display:flex;gap:10px;align-items:flex-start;margin:26px 0 0;padding:14px 16px;border-radius:16px;background:var(--bg);font-size:14.5px;max-width:460px}
+.qx-tip svg{flex:none;margin-top:2px}
+.qx-go{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:26px}
+.qx-go small{color:var(--mu);font-size:13.5px;max-width:300px}
+@media (prefers-reduced-motion:reduce){.qx-board.flip{animation:none}}
 /* faq */
 .faq{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .faq details{background:var(--pa);border:1px solid var(--ln);border-radius:20px;padding:20px 22px}
@@ -149,13 +176,17 @@ footer a{color:#fff}
  .pc ul{grid-template-columns:1fr}
 }
 @media (max-width:420px){.logo span{display:none}}
+@media (max-width:980px){.qx{grid-template-columns:minmax(0,1fr);grid-template-areas:"head" "stage" "pick"}.qx-stage{padding:30px 0 6px}.qx-hold{transform:rotate(-2deg)}}
+@media (max-width:560px){.qx-hold{zoom:.82}}
+@media (max-width:360px){.qx-hold{zoom:.74}}
 @media (max-width:560px){
  .hero{padding-top:36px}.hero p.lead{font-size:17px}
  .nav .wrap{height:58px}.logo b{font-size:17px}.logo span{font-size:19px;white-space:nowrap}.nav .btn{padding:9px 14px;font-size:13px}
  section.s{padding-top:72px}
  .feats{grid-template-columns:1fr}
  .stage .ph{width:276px;height:572px}.stage .ph iframe{transform:scale(.6987);height:752px}
- .pc{padding:28px}.pc .sticker{width:92px;height:92px;font-size:12px;top:20px;right:20px}
+ .pc{padding:28px}.pc .sticker{width:84px;height:84px;font-size:10.5px;top:18px;right:18px;padding:8px}.pc .amt{margin-top:46px}.pc .amt small{display:block;margin:10px 0 0 4px}
+ .qx{padding:28px 18px 32px;border-radius:26px}.qx-sw{grid-template-columns:repeat(3,minmax(0,1fr));row-gap:16px}
  .cta .btn{flex:1}
 }
 </style>
@@ -168,7 +199,7 @@ footer a{color:#fff}
 
 <main>
 <section class="hero"><div class="wrap">
-  <div class="eyebrow">For cafés, salons, gyms, boutiques, clinics &amp; every local business</div>
+  <div class="eyebrow">For cafés, salons, gyms, boutiques, clinics &amp; every kind of business</div>
   <h1>Your shop<span class="o">.</span><br>One scan <span class="s">away</span></h1>
   <div class="row">
     <div>
@@ -225,6 +256,20 @@ footer a{color:#fff}
   </div>
 </div></section>
 
+<section class="s" id="qr"><div class="wrap"><div class="qx rv">
+  <div class="qx-head">
+    <div class="eyebrow">Your counter QR</div>
+    <h2>Your QR, <em>your</em> colour.</h2>
+    <p>Every page gets its own QR. Add the printed QR at checkout and we deliver it on thick card, 3.5 × 5 inches, for ₹99. Pick the colour that suits your counter.</p>
+  </div>
+  <div class="qx-pick">
+    <fieldset class="qx-sw" id="qxSw"><legend>Choose a colour</legend></fieldset>
+    <p class="qx-tip"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg><span>Try it: point your phone camera at the board. It's a real QR and opens this page.</span></p>
+    <div class="qx-go"><a class="btn ac" id="qxGo" href="/shops/studio">Create your page · ₹499</a><small>Your colour is saved for checkout. Printed QR is + ₹99.</small></div>
+  </div>
+  <div class="qx-stage"><div class="qx-hold"><div class="qx-board" id="qxBoard" role="img" aria-label="Sample QR board"></div></div></div>
+</div></div></section>
+
 <section class="s" id="pricing"><div class="wrap">
   <div class="sh rv"><div><div class="eyebrow">Pricing</div><h2>One price. <em>forever</em> yours.</h2></div></div>
   <div class="price">
@@ -249,7 +294,7 @@ footer a{color:#fff}
     <details class="rv"><summary>Where does UPI money go?</summary><p>Straight to your bank through your own UPI ID. GetKeepsake never touches your money.</p></details>
     <details class="rv"><summary>I don't have good photos. Will it still look good?</summary><p>Yes. Every layout is designed to look great without photos, and you can add them any time. A clear photo of your counter or bestseller makes a big difference.</p></details>
     <details class="rv"><summary>How does the loyalty card work?</summary><p>It's a ₹300 one-time add-on to your ₹499 page, so ₹799 for both. You choose the reward, like a free coffee after 10 visits or a free head massage after 5. Customers get the card on your page with their mobile number, no app needed. At the counter your staff type a secret PIN on the customer's phone to add a stamp, one stamp a day per customer. The card always shows how many visits they've made and how many are left. When it's full, the reward is ready. You see every member in your studio and can remind them on WhatsApp.</p></details>
-    <details class="rv"><summary>What if I don't have a QR card?</summary><p>Make your page online and, when you pay, choose "Printed QR, delivered" (₹99 extra). We print your QR on our black &amp; gold counter board and courier it to your shop anywhere in India in 5–7 days. You can also download your QR and print it yourself.</p></details>
+    <details class="rv"><summary>What if I don't have a QR card?</summary><p>Make your page online and, when you pay, choose "Printed QR, delivered" (₹99 extra). We print your QR on a 3.5 × 5 in counter board in the colour you pick (see <a href="#qr">the colours</a>) and courier it to your shop anywhere in India in 5–7 days. You can also download your QR and print it yourself.</p></details>
     <details class="rv"><summary>Can I change my page after the QR is printed?</summary><p>Yes. The printed QR always opens your latest page. Change your menu, prices, photos or offers any time from your phone: scan your QR while logged in and tap "Edit my page", or open My pages.</p></details>
     <details class="rv"><summary>Need help setting it up?</summary><p>WhatsApp us on <a href="https://wa.me/916377547759">+91 63775 47759</a> and we'll help you finish your page.</p></details>
   </div>
@@ -261,7 +306,7 @@ footer a{color:#fff}
 </div></section>
 </main>
 <script src="/assets/biz.v6.js"></script><script src="/assets/biz-demos.v5.js"></script>
-<footer><div class="wrap"><span>GetKeepsake for Business · Help: <a href="https://wa.me/916377547759">+91 63775 47759</a></span><span><a href="/">Love-story websites &amp; cards</a> · <a href="/contact">Contact</a> · <a href="/terms">Terms</a></span></div></footer>
+<footer><div class="wrap"><span>GetKeepsake for Business · Help: <a href="https://wa.me/916377547759">+91 63775 47759</a></span><span><a href="/">Love-story websites &amp; cards</a> · <a href="https://instagram.com/getkeepsake.business" rel="noopener">Instagram @getkeepsake.business</a> · <a href="/contact">Contact</a> · <a href="/terms">Terms</a></span></div></footer>
 
 <script>
 (() => {
@@ -328,6 +373,25 @@ var y=0,dir=1;if(frameElement.dataset.scroll)setInterval(function(){var mx=docum
   fetch("/api/checkout", { cache: "no-store" }).then(r => r.json()).then(c => { const p = c && c.products && c.products.biz; if (p) document.getElementById("price").textContent = p.price; }).catch(() => {});
   } finally { watch(document); }
 })();
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js" defer></script><script src="/assets/qr-cards.v4.js" defer></script>
+<script>
+// QR colour showcase: a live, scannable board; the chosen colour carries over to checkout
+addEventListener("DOMContentLoaded", () => {
+  const sw = document.getElementById("qxSw"), board = document.getElementById("qxBoard"), go = document.getElementById("qxGo");
+  if (!sw || !window.KSQRCards || !window.qrcode) return;
+  const S = { red: ["#8E1424", "linear-gradient(170deg,#C8102E,#4A0E14)"], blue: ["#0D3F57", "linear-gradient(170deg,#0E6A8C,#0A2238)"], marigold: ["#B4440C", "linear-gradient(170deg,#F59E0B,#C2410C)"], green: ["#0B4A35", "linear-gradient(170deg,#108A60,#0B2E24)"], jamun: ["#3E1A63", "linear-gradient(170deg,#6D2E9E,#1E0F33)"], whitegold: ["linear-gradient(160deg,#E2BF6E,#8C6118)", "linear-gradient(180deg,#FFF1D2,#FFFDF8)"] };
+  let cur = "red"; try { const v = localStorage.getItem("ks-qr-tone"); if (S[v]) cur = v; } catch (e) {}
+  sw.insertAdjacentHTML("beforeend", KSQRCards.ALL.map(k => `<label><input type="radio" name="qxt" value="${k}"${k === cur ? " checked" : ""}><i style="--e:${S[k][0]};--g:${S[k][1]}"><b></b></i><span>${KSQRCards.NAMES[k]}</span></label>`).join(""));
+  const draw = (k, anim) => {
+    KSQRCards.mount(board, { tone: k, url: "https://getkeepsake.in/shops", code: "YOUR-SHOP" });
+    board.setAttribute("aria-label", "Sample QR board in " + KSQRCards.NAMES[k] + ". Scanning it opens this page.");
+    go.href = "/shops/studio?qr=" + k;
+    if (anim) { board.classList.remove("flip"); void board.offsetWidth; board.classList.add("flip"); }
+  };
+  sw.onchange = e => { cur = e.target.value; try { localStorage.setItem("ks-qr-tone", cur); } catch (x) {} draw(cur, true); };
+  draw(cur, false);
+});
 </script>
 <script src="/assets/ks-pixel.v1.js" defer></script>
 </body>

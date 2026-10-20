@@ -28,6 +28,16 @@
 .ksco .ks-photo img{width:72px;height:90px;object-fit:cover;border-radius:8px;border:1px solid var(--line)}
 .ksco .ks-up{display:inline-block;padding:10px 16px;border-radius:999px;border:1px dashed var(--gold);color:var(--gold);cursor:pointer}
 .ksco .ks-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 12px}.ksco .ks-grid .ks-wide{grid-column:1/-1}
+.ksco .ks-tones{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;margin:0;padding:0;border:0}
+.ksco .ks-tones label{display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;font-size:11.5px;line-height:1.2;text-align:center;color:var(--muted)}
+.ksco .ks-tones input{position:absolute;opacity:0;pointer-events:none}
+.ksco .ks-tones i{display:block;width:38px;height:52px;padding:3px;background:radial-gradient(circle,#fff 1.7px,transparent 2.1px) -2.5px -2.5px/5.6px 5.6px,var(--e)}
+.ksco .ks-tones i b{display:block;height:100%;background:var(--g)}
+.ksco .ks-tones input:checked+i{outline:2px solid currentColor;outline-offset:3px}
+.ksco .ks-tones input:checked~span{color:inherit;font-weight:700}
+.ksco .ks-tones input:focus-visible+i{outline:3px solid #ff5b2e;outline-offset:3px}
+@media (max-width:420px){.ksco .ks-tones{grid-template-columns:repeat(3,minmax(0,1fr));row-gap:12px}}
+.ksco .ks-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .ksco label.ks-f{display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--muted)}
 .ksco input.ks-in{font:inherit;font-size:16px;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--field);color:var(--ink);width:100%;box-sizing:border-box}
 .ksco .ks-pay{width:100%;margin-top:16px;padding:15px;border:0;border-radius:999px;background:linear-gradient(135deg,#e8cf8e,#b88a3e);color:#2a0409;font:700 16px/1 inherit;font-family:inherit;cursor:pointer}
@@ -163,6 +173,9 @@
   }
 
   // opts: { kind: "card"|"site", getId(): string, customer(): {name, phone}|null, onPaid(result) }
+  // Printed QR colours (same names as the print page and the /shops showcase)
+  const QR_TONES = [["red", "Sindoor Red", "#8E1424", "linear-gradient(170deg,#C8102E,#4A0E14)"], ["blue", "Peacock Blue", "#0D3F57", "linear-gradient(170deg,#0E6A8C,#0A2238)"], ["marigold", "Marigold", "#B4440C", "linear-gradient(170deg,#F59E0B,#C2410C)"], ["green", "Mehendi Green", "#0B4A35", "linear-gradient(170deg,#108A60,#0B2E24)"], ["jamun", "Jamun Purple", "#3E1A63", "linear-gradient(170deg,#6D2E9E,#1E0F33)"], ["whitegold", "White & Gold", "linear-gradient(160deg,#E2BF6E,#8C6118)", "linear-gradient(180deg,#FFF1D2,#FFFDF8)"]];
+  const firstTone = () => { let t = ""; try { t = new URLSearchParams(location.search).get("qr") || localStorage.getItem("ks-qr-tone") || ""; } catch (e) {} return QR_TONES.some(x => x[0] === t) ? t : "red"; };
   function mount(el, opts) {
     css();
     el.classList.add("ksco");
@@ -172,6 +185,7 @@
  <div class="ks-pq"><div class="ks-step">What should we print in the frame?</div>
  <div class="ks-pills"><button type="button" class="ks-pill" data-print="photo">My photo</button><button type="button" class="ks-pill" data-print="design">My card design</button></div>
  <div class="ks-photo" hidden><img alt="" hidden><label class="ks-up">Upload photo to print<input type="file" accept="image/*" hidden></label></div></div>
+ <div class="ks-tq" hidden><div class="ks-step">Colour of your QR</div><fieldset class="ks-tones"><legend class="ks-sr">Colour of your printed QR</legend>${QR_TONES.map(([k, n, e, g]) => `<label><input type="radio" name="ks-tone" value="${k}"><i style="--e:${e};--g:${g}"><b></b></i><span>${n}</span></label>`).join("")}</fieldset></div>
  <div class="ks-step ks-dto">Deliver to</div>
  <div class="ks-grid">
   <label class="ks-f">Name<input class="ks-in" data-a="name" autocomplete="name" maxlength="80"></label>
@@ -187,7 +201,7 @@
 <button type="button" class="ks-pay">Pay</button><div class="ks-status" role="status"></div>
 <p class="ks-fine">Secure payment by Razorpay: UPI, cards, net banking and wallets.</p>`;
     const $ = s => el.querySelector(s);
-    const state = { mode: "activate", plan: "digital", print: "", photo: "", cat: null, code: null };
+    const state = { mode: "activate", plan: "digital", print: "", photo: "", cat: null, code: null, tone: firstTone() };
     const status = (t, cls) => { const s = $(".ks-status"); s.textContent = t || ""; s.className = "ks-status" + (cls ? " " + cls : ""); };
     const full = plan => { const c = state.cat; if (!c || !c.delivery[plan]) return { sum: 0, frame: 0 }; const pr = c.products[opts.kind], up = state.mode !== "activate", base = up ? 0 : pr.price, fr = plan === "bizQr" && up ? c.delivery.bizQr.reorder || 0 : c.delivery[plan].price; return { sum: base + fr, frame: fr, was: (up ? 0 : pr.was || pr.price) + fr }; };
     // A creator's code takes its discount off the keepsake itself, never a frame (same as api/_ref.js).
@@ -200,7 +214,7 @@
       $(".ks-note").textContent = state.mode === "loyalty"
         ? "A digital stamp card on your page. Customers collect a stamp every visit and get your reward. You get the staff PIN, a member list and WhatsApp reminders. Pay once; it stays on for good."
         : state.mode === "upgrade" && biz
-        ? "We'll print your page's QR on our black & gold counter board and courier it to your shop. Stick it up or stand it on the counter: customers scan it to open your page."
+        ? "We'll print your page's QR on a 3.5 × 5 in counter board in the colour you pick and courier it to your shop. Stick it up or stand it on the counter: customers scan it to open your page."
         : state.mode === "upgrade"
         ? "We'll print a photo frame for this keepsake and deliver it to you. Your link stays the same."
         : opts.kind === "biz" ? "Your page is saved. Pay once to switch it on" + ((typeof opts.claim === "function" ? opts.claim() : opts.claim) ? " and link it to your QR card" : "") + ". It stays live for good, and you can update your menu, offers and photos any time."
@@ -211,7 +225,8 @@
       $(".ks-opts").style.gridTemplateColumns = plans.length === 2 ? "1fr 1fr" : "";
       $(".ks-opts").innerHTML = plans.map(p => { const d = c.delivery[p]; return `<button type="button" class="ks-opt${p === state.plan ? " on" : ""}" data-plan="${p}"><b>${esc(p === "digital" ? prod.name + (biz ? " · Online only" : " · Digital") : p === "loyalty" && state.mode === "activate" ? "Page + loyalty card" : d.name)}</b><span class="ks-pp">${full(p).was > total(p) ? `<s class="ks-was">${money(full(p).was)}</s> ` : ""}${money(total(p))}</span><small>${esc(p === "digital" && biz ? "Your page with its own link, plus a QR you can download and print yourself." : d.desc || "")}</small></button>`; }).join("");
       const frame = state.plan !== "digital" && state.plan !== "loyalty";
-      $(".ks-frame").hidden = !frame; $(".ks-pq").hidden = state.plan === "bizQr";
+      $(".ks-frame").hidden = !frame; $(".ks-pq").hidden = state.plan === "bizQr"; $(".ks-tq").hidden = state.plan !== "bizQr";
+      el.querySelectorAll('input[name="ks-tone"]').forEach(i => i.checked = i.value === state.tone);
       $(".ks-dq").textContent = biz ? "Add a printed QR or a loyalty card?" : "How would you like it?";
       el.querySelectorAll(".ks-pill").forEach(b => b.classList.toggle("on", b.dataset.print === state.print));
       $(".ks-photo").hidden = state.print !== "photo";
@@ -243,6 +258,7 @@
       status("Uploading your photo…");
       try { state.photo = await uploadPhoto(f, "print"); status("Photo ready to print ♡", "ok"); render(); } catch (x) { status(x.message, "bad"); }
     });
+    el.addEventListener("change", e => { if (e.target.name === "ks-tone") { state.tone = e.target.value; try { localStorage.setItem("ks-qr-tone", state.tone); } catch (x) {} } });
     $(".ks-pay").addEventListener("click", pay);
 
     async function pay() {
@@ -251,7 +267,7 @@
       if (state.code && state.mode === "activate") body.ref = state.code.code;
       const claim = typeof opts.claim === "function" ? opts.claim() : opts.claim; if (claim) body.claim = claim;
       const sp = typeof opts.sp === "function" ? opts.sp() : opts.sp; if (sp) body.sp = sp;
-      if (state.plan === "bizQr") { body.address = {}; el.querySelectorAll("[data-a]").forEach(i => body.address[i.dataset.a] = i.value); }
+      if (state.plan === "bizQr") { body.qrTone = state.tone; body.address = {}; el.querySelectorAll("[data-a]").forEach(i => body.address[i.dataset.a] = i.value); }
       else if (state.plan !== "digital" && state.plan !== "loyalty") {
         if (!state.print) { status("Choose what to print in the frame.", "bad"); return; }
         if (state.print === "photo" && !state.photo) { status("Upload the photo you'd like printed.", "bad"); return; }

@@ -43,7 +43,7 @@ function catalog() {
   // Printed QR sticker for a business page, couriered to the shop (all India).
   // PRICE_BIZ_QR is added to the ₹499 page (default ₹99). PRICE_BIZ_QR_REORDER is for a page that's already live.
   c.delivery.bizQr = { name: "Printed QR, delivered", price: rupees0(env.PRICE_BIZ_QR, 99), reorder: rupees(env.PRICE_BIZ_QR_REORDER, 149),
-    desc: "Your QR printed on our black & gold counter board, couriered to your shop anywhere in India." };
+    desc: "Your QR printed on a 3.5 × 5 in counter board in the colour you pick, couriered to your shop anywhere in India." };
   // Loyalty stamp card add-on for a business page, one-time: ₹499 page + ₹300 = ₹799 together, or ₹300 later. PRICE_LOYALTY changes it.
   c.delivery.loyalty = { name: "Loyalty card", price: rupees(env.PRICE_LOYALTY, 300),
     desc: "A stamp card for repeat customers, e.g. 10 visits = a free coffee. Staff PIN and member list." };

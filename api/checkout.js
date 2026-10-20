@@ -5,6 +5,7 @@
 //   print "photo" (with an uploaded photo) or "design" (we print the card design)
 // POST {action:"verify", razorpay_order_id, razorpay_payment_id, razorpay_signature} -> activates it
 const db = require("./_db");
+const QR_TONES = ["red", "blue", "marigold", "green", "jamun", "whitegold"]; // printed QR colours a shop can pick
 const pay = require("./_pay");
 const auth = require("./customer-auth");
 const ref = require("./_ref");
@@ -86,7 +87,8 @@ module.exports = async (req, res) => {
         else if (claim) { const pc = await require("./_prepaid").get(claim), bt = pc && await db.getj("pbatch:" + pc.batch); if (bt && bt.sp) sp = bt.sp; }
       }
       let address = null, frame = null;
-      if (plan === "bizQr") { const a = readAddress(b.address); if (a.error) return db.reply(res, 400, { error: a.error }); address = a.addr; }
+      let qrTone = null;
+      if (plan === "bizQr") { const a = readAddress(b.address); if (a.error) return db.reply(res, 400, { error: a.error }); address = a.addr; qrTone = QR_TONES.includes(b.qrTone) ? b.qrTone : "red"; }
       if (pay.isFrame(plan)) {
         const a = readAddress(b.address); if (a.error) return db.reply(res, 400, { error: a.error }); address = a.addr;
         if (b.print === "photo") {
@@ -106,7 +108,7 @@ module.exports = async (req, res) => {
       const order = await pay.createOrder({ rupees: amt.rupees, receipt: "ks_" + id, notes: { memory: id, plan, customer: user.id } });
       await db.setj("order:" + order.id, {
         memory: id, title: memory.title || "", owner: user.id, name: user.name, email: user.email, phone: user.phone || "",
-        kind: pay.kindOf(memory), plan, frame, upgrade: amt.upgrade, amount: amt.rupees, ...(code ? { ref: code.code, refDiscount: off, commission } : {}), address, ...(claim ? { claim } : {}), ...(sp ? { sp } : {}), status: "created", created: Date.now()
+        kind: pay.kindOf(memory), plan, frame, ...(qrTone ? { qrTone } : {}), upgrade: amt.upgrade, amount: amt.rupees, ...(code ? { ref: code.code, refDiscount: off, commission } : {}), address, ...(claim ? { claim } : {}), ...(sp ? { sp } : {}), status: "created", created: Date.now()
       }, "EX", 60 * 60 * 24 * 30);
       return db.reply(res, 200, {
         keyId: pay.keyId(), orderId: order.id, amount: order.amount, currency: order.currency,
