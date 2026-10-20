@@ -19,7 +19,7 @@ html,body{margin:0;background:#1f1611;min-height:100%}
 .ownr{position:fixed;left:14px;bottom:calc(14px + env(safe-area-inset-bottom));z-index:60;padding:11px 16px;border-radius:999px;background:#121110;color:#fff;font:600 14px Inter,system-ui,sans-serif;text-decoration:none;box-shadow:0 8px 24px #0005}
 .ownl{display:block;text-align:center;padding:18px 16px 28px;font:500 12px Inter,system-ui,sans-serif;color:inherit;opacity:.55}
 </style>
-<script src="/assets/biz.v5.js"></script>
+<script src="/assets/biz.v6.js"></script>
 </head>
 <body>
 <main id="biz" aria-live="polite"></main>
@@ -33,7 +33,9 @@ html,body{margin:0;background:#1f1611;min-height:100%}
   try { const r = await fetch("/api/customer-memories?id=" + m[1], { cache: "no-store" }); j = await r.json(); if (!r.ok) j.error = j.error || "x"; } catch (e) { j = { error: "x" }; }
   if (j.error) return j.inactive ? say("This page isn’t live yet.", "If it’s your business, log in and activate it.") : say("This page could not be found.");
   if (j.kind !== "biz") { location.replace((j.kind === "site" ? "/s/" : "/m/") + m[1]); return; }
-  KSBiz.render(root, j.data, { url: location.origin + "/b/" + m[1], id: j.owner ? "" : m[1] });
+  const loy = j.active !== false && j.data.loy && j.data.loy.on;
+  KSBiz.render(root, j.data, { url: location.origin + "/b/" + m[1], id: j.owner ? "" : m[1], loyLive: !!loy });
+  if (loy) { const s = document.createElement("script"); s.src = "/assets/loyal.v1.js"; s.onload = () => KSLoyal.mount(root, m[1]); document.head.appendChild(s); }
   document.title = (j.data.t || "Our shop") + (j.data.area ? " · " + j.data.area : "");
   const set = (p, v) => { let e = document.querySelector(`meta[property="${p}"]`); if (!e) { e = document.createElement("meta"); e.setAttribute("property", p); document.head.appendChild(e); } e.content = v; };
   set("og:title", document.title); if (j.data.tag) set("og:description", j.data.tag);

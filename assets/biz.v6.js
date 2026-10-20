@@ -127,7 +127,9 @@
     plus: '<path d="M12 5v14M5 12h14"/>',
     minus: '<path d="M5 12h14"/>',
     arrow: '<path d="M5 12h14M13 6l6 6-6 6"/>',
-    down: '<path d="m6 9 6 6 6-6"/>'
+    down: '<path d="m6 9 6 6 6-6"/>',
+    gift: '<rect x="3.5" y="8" width="17" height="4" rx="1"/><path d="M5 12v8h14v-8M12 8v12M12 8S10.5 3.5 8 4.5 9 8 12 8Zm0 0s1.5-4.5 4-3.5S15 8 12 8Z"/>',
+    check: '<path d="m5 12.5 4.5 4.5L19 7"/>'
   };
   const ic = (n, s = 22) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${I[n]}</svg>`;
   // "*word*" in a headline becomes a highlighted word
@@ -164,6 +166,25 @@
 .bz .offer p{margin:0;font:400 14.5px/1.45 var(--fn);opacity:.92}
 .bz .offer .till{display:inline-block;margin-top:12px;padding:6px 12px;border-radius:999px;background:#0002;font:600 12px var(--fn)}
 /* review */
+.bz .loy{position:relative;padding:22px 20px 20px;border-radius:24px;background:var(--sf);color:var(--tx);border:1.5px dashed color-mix(in srgb,var(--ac) 55%,transparent);overflow:hidden}
+.bz .loy:after{content:"";position:absolute;right:-40px;top:-40px;width:140px;height:140px;border-radius:50%;background:color-mix(in srgb,var(--ac) 12%,transparent);pointer-events:none}
+.bz .loy .lh{display:flex;justify-content:space-between;align-items:center;gap:10px;position:relative;z-index:1}
+.bz .loy .lb{display:inline-flex;align-items:center;gap:6px;font:700 11px var(--fn);letter-spacing:.14em;text-transform:uppercase;color:var(--ink)}
+.bz .loy .lb svg{fill:currentColor}
+.bz .loy .lc{padding:5px 10px;border-radius:999px;background:var(--sf2);font:700 12px var(--fn);color:var(--tx)}
+.bz .loy .lr{display:block;margin:12px 0 4px;font:500 26px/1.15 var(--fh);position:relative;z-index:1}
+.bz .loy .lp{margin:0;font:400 14px/1.45 var(--fn);color:var(--mu);position:relative;z-index:1}
+.bz .loy .lst{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:18px 0 18px}
+.bz .loy .lst.sm{grid-template-columns:repeat(6,1fr);gap:8px}
+.bz .loy .lst i{aspect-ratio:1;border-radius:50%;display:grid;place-items:center;border:1.5px dashed color-mix(in srgb,var(--tx) 28%,transparent);color:var(--mu);font-style:normal;transition:transform .35s cubic-bezier(.3,1.6,.5,1),background .25s}
+.bz .loy .lst i u{text-decoration:none;font:600 12px var(--fn);opacity:.7}
+.bz .loy .lst i.gf{border-style:solid;border-color:var(--ac);color:var(--ink)}
+.bz .loy .lst i.on{background:var(--ac);color:var(--on);border:0;transform:rotate(-8deg)}
+.bz .loy .lst i.pop{animation:bzpop .6s cubic-bezier(.3,1.6,.5,1)}
+@keyframes bzpop{0%{transform:scale(.3) rotate(-30deg)}100%{transform:scale(1) rotate(-8deg)}}
+.bz .loy .la{display:grid;gap:10px}.bz .loy .la .btn{width:100%}
+.bz .loy .la .lk{background:none;border:0;padding:4px;color:var(--mu);font:500 12.5px var(--fn);text-decoration:underline;cursor:pointer}
+.bz .loy.rdy{border-style:solid;border-color:var(--ac);background:linear-gradient(160deg,color-mix(in srgb,var(--ac) 16%,var(--sf)),var(--sf))}
 .bz .rev{padding:22px;display:flex;align-items:center;gap:16px}
 .bz .rev .st{display:flex;gap:3px;margin-bottom:6px}.bz .rev .st svg{fill:#f5b301;stroke:#f5b301}
 .bz .rev b{display:block;font:500 20px/1.2 var(--fh)}
@@ -522,6 +543,8 @@
     return { open, until, rows, nextOpen: !open && !day[2] && o != null && mins < o ? fmt(day[0]) : "" };
   }
 
+  // Loyalty stamp card: d.loy = { on, n: stamps needed (2-30), r: reward, t: note }
+  const loyOf = (d, prop) => { const l = d.loy || {}, n = Math.round(+l.n); return !prop && l.on && n >= 2 && n <= 30 ? { n, r: clip(l.r, 40) || "A free treat", t: clip(l.t, 120) } : null; };
   // Everything the layouts need, cleaned and validated once.
   function model(d, opts) {
     const th = THEMES[d.th] || THEMES.espresso, lay = LAYOUTS[d.lay] ? d.lay : "classic";
@@ -542,7 +565,7 @@
       hi: hoursInfo(d.hours), menu, menuTitle: clip(d.menuTitle || "Menu", 24), gal: (Array.isArray(d.gal) ? d.gal : []).map(safeImg).filter(Boolean).slice(0, 10),
       galTitle: clip(d.galTitle || "Inside", 24), offer: d.offer && d.offer.on && d.offer.title ? d.offer : null, feat: f,
       stats: (Array.isArray(d.stats) ? d.stats : []).filter(x => x && x.v).slice(0, 4).map(x => ({ v: clip(x.v, 8), l: clip(x.l, 28) })),
-      order: !prop && !!d.ord && !!wa, prop, pageUrl: opts.url || location.href, preview: !!opts.preview
+      order: !prop && !!d.ord && !!wa, prop, loy: loyOf(d, prop), pageUrl: opts.url || location.href, preview: !!opts.preview
     };
   }
 
@@ -564,6 +587,15 @@
     },
     qty: (m, it) => m.order && it.price != null ? `<span class="q" data-q="${it.key}"><button type="button" class="m" data-sub="${it.key}" aria-label="Remove one" hidden>${ic("minus", 16)}</button><b data-n="${it.key}" hidden>0</b><button type="button" data-add="${it.key}" aria-label="Add ${esc(it.n)}">${ic("plus", 16)}</button></span>` : "",
     offer: m => m.offer ? `<div class="sec rv"><div class="offer"><small>${esc(clip(m.offer.label || "Today's offer", 24))}</small><b>${esc(clip(m.offer.title, 60))}</b>${m.offer.text ? `<p>${esc(clip(m.offer.text, 160))}</p>` : ""}${m.offer.till ? `<span class="till">Valid till ${esc(clip(m.offer.till, 30))}</span>` : ""}</div></div>` : "",
+    // Loyalty card: the live page fills it in (assets/loyal.v1.js); the studio preview shows a sample with a few stamps.
+    loy(m) {
+      const l = m.loy; if (!l) return "";
+      const demo = m.preview ? Math.min(3, l.n - 1) : 0;
+      const dots = Array.from({ length: l.n }, (_, i) => `<i class="${i < demo ? "on" : ""}${i === l.n - 1 ? " gf" : ""}">${i === l.n - 1 ? ic("gift", 18) : i < demo ? ic("check", 16) : `<u>${i + 1}</u>`}</i>`).join("");
+      return `<div class="sec rv" id="bz-loy"><div class="loy" data-loy data-n="${l.n}"><div class="lh"><span class="lb">${ic("star", 13)} Loyalty card</span><span class="lc" data-lc>${demo ? demo + " / " + l.n : "Free to join"}</span></div>
+        <b class="lr">${esc(l.r)}</b><p class="lp" data-lp>${l.t ? esc(l.t) : `Collect ${l.n} stamps, one every visit, and the ${esc(l.r.toLowerCase())} is on us.`}</p>
+        <div class="lst${l.n > 10 ? " sm" : ""}" data-lst>${dots}</div><div class="la" data-la><button type="button" class="btn" data-ljoin>${ic("gift", 17)} Get my free card</button></div></div></div>`;
+    },
     review: m => m.review ? `<div class="sec rv"><div class="card rev"><div style="flex:1"><div class="st">${Array(5).fill(ic("star", 18)).join("")}</div><b>Loved your visit?</b><p>A quick Google review helps us a lot.</p></div><a class="btn" href="${esc(m.review)}" target="_blank" rel="noopener">Review us</a></div></div>` : "",
     // Property listings (real estate): big photo cards with status, price and an Enquire button.
     props(m) {
@@ -635,7 +667,7 @@
       const foot = `<div class="cfoot"><div class="fn">${esc(m.name)}</div>${m.tag ? `<p>${esc(m.tag)}</p>` : ""}<div class="so">${m.ig ? `<a href="https://instagram.com/${esc(m.ig)}" target="_blank" rel="noopener" aria-label="Instagram">${ic("ig", 19)}</a>` : ""}${m.wa ? `<a href="https://wa.me/${m.wa}" target="_blank" rel="noopener" aria-label="WhatsApp">${ic("wa", 19)}</a>` : ""}${m.ph ? `<a href="tel:+${m.ph}" aria-label="Call">${ic("call", 19)}</a>` : ""}<a href="#" data-vcf aria-label="Save contact">${ic("save", 19)}</a></div>
         <div class="mk">Page by <a href="https://getkeepsake.in/shops" target="_blank" rel="noopener">GetKeepsake</a> · get one for your business</div><div class="big">${esc((m.name.replace(/[^\w\s]/g, "").split(/\s+/).find(w => w.length > 3 && !/^(the|shri|shree)$/i.test(w)) || m.name).slice(0, 8))}</div></div>`;
       const nav = `<div class="cnav"><span class="cb"><span class="mi"${m.logo ? ` style="background-image:url('${esc(m.logo)}')"` : ""}>${m.logo ? "" : esc(m.name.charAt(0).toUpperCase())}</span>${esc(m.name)}</span><span class="r">${P.bag(m)}${P.share()}${m.wa ? `<a class="pb sm" href="https://wa.me/${m.wa}" target="_blank" rel="noopener">Book<i>${ic("arrow", 14)}</i></a>` : ""}</span></div>`;
-      return `<div style="position:relative">${nav}${hero}</div>${spin}<div class="wrap">${two}${stats}${bento}${P.offer(m)}${P.feat(m)}${P.list(m, true)}${gal}${P.hours(m)}${P.visit(m)}${P.upi(m)}</div>${foot}`;
+      return `<div style="position:relative">${nav}${hero}</div>${spin}<div class="wrap">${two}${stats}${bento}${P.offer(m)}${P.loy(m)}${P.feat(m)}${P.list(m, true)}${gal}${P.hours(m)}${P.visit(m)}${P.upi(m)}</div>${foot}`;
     },
     poster(m) {
       const words = plain(m.hl || m.name).trim().split(/\s+/), w1 = words.shift() || "", w2 = words.join(" ");
@@ -652,7 +684,7 @@
         <div class="big w1" style="${fs(w1)}">${esc(w1)}</div>${w2 ? `<div class="big w2" style="${fs(w2)}">${esc(w2)}</div>` : ""}${m.sc ? `<div class="scr">${esc(m.sc)}</div>` : ""}
         <div class="foot1">${P.status(m)}${m.menu.length ? `<a class="btn" href="#bz-menu">${esc(m.menuTitle)} ${ic("arrow", 16)}</a>` : ""}</div></div>
         <div class="wrap"><div class="id">${P.logo(m)}<div><h1>${esc(m.name)}</h1>${m.cat || m.area ? `<div class="cat" style="margin-top:6px">${esc([m.cat, m.area].filter(Boolean).join(" · "))}</div>` : ""}</div></div>${m.tag ? `<p class="tag">${esc(m.tag)}</p>` : ""}
-        ${P.acts(m)}${P.offer(m)}${gridSec}</div>${featSec}<div class="wrap">${P.review(m)}${P.gallery(m)}${P.tail(m)}</div>`;
+        ${P.acts(m)}${P.offer(m)}${P.loy(m)}${gridSec}</div>${featSec}<div class="wrap">${P.review(m)}${P.gallery(m)}${P.tail(m)}</div>`;
     },
     botanical(m) {
       const all = m.menu.flatMap(s => s.items), pics = all.filter(x => x.img);
@@ -667,7 +699,7 @@
         <div class="hero">${m.cover ? `<img class="cv kb" src="${esc(m.cover)}" alt="">` : `<div class="ph">${esc(m.name)}</div>`}${P.status(m)}
         <div class="hcard"><h1>${esc(plain(m.hl) || m.name)}</h1>${m.tag ? `<p>${esc(m.tag)}</p>` : ""}${m.menu.length ? `<a class="btn" href="#bz-menu">View ${esc(m.menuTitle.toLowerCase())}</a>` : ""}</div></div>${wave}
         <div class="wrap"><div class="id">${P.logo(m)}<h2>${esc(m.name)}</h2>${m.cat || m.area ? `<div class="cat">${esc([m.cat, m.area].filter(Boolean).join(" · "))}</div>` : ""}</div>
-        ${P.acts(m)}${arch}${P.feat(m)}${P.list(m)}${P.offer(m)}${P.review(m)}${P.gallery(m)}${P.tail(m)}</div>`;
+        ${P.acts(m)}${arch}${P.feat(m)}${P.list(m)}${P.offer(m)}${P.loy(m)}${P.review(m)}${P.gallery(m)}${P.tail(m)}</div>`;
     },
     bold(m) {
       const ph = [m.cover, ...m.gal].filter(Boolean).slice(0, 3);
@@ -684,7 +716,7 @@
         ${ph.length ? `<div class="strip${ph.length === 1 ? " one" : ""}">${ph.map(u => `<div><img src="${esc(u)}" alt=""></div>`).join("")}</div>` : ""}
         <div class="wrap"><div class="hx">${m.cat ? `<small>${esc(m.cat)}${m.area ? " · " + esc(m.area) : ""}</small>` : ""}<h1>${mark(m.hl || m.name)}</h1>${m.tag ? `<p class="nm">${esc(m.tag)}</p>` : ""}${cta}</div>
         <div style="text-align:center;margin-top:16px">${P.status(m).replace('class="pill', 'style="background:color-mix(in srgb,var(--tx) 80%,transparent)" class="pill')}</div>
-        ${P.acts(m)}${P.offer(m)}</div>
+        ${P.acts(m)}${P.offer(m)}${P.loy(m)}</div>
         ${m.prop ? `<div class="wrap">${P.props(m)}</div>` : m.menu.length ? `<div class="svc" id="bz-menu" style="--gs:min(${(88 / (Math.max(4, m.menuTitle.length) * 0.5)).toFixed(1)}vw,${Math.round(500 / (Math.max(4, m.menuTitle.length) * 0.5))}px)"><div class="gw">${esc(m.menuTitle)}</div><div class="cards wrap">${cards}</div></div>` : ""}
         <div class="wrap">${P.feat(m)}${P.review(m)}${P.gallery(m)}${P.tail(m)}</div>`;
     }
@@ -725,6 +757,7 @@
       const sb = t.closest("[data-sub]"); if (sb) { const k = sb.dataset.sub; cart[k] = Math.max(0, (cart[k] || 0) - 1); if (!cart[k]) delete cart[k]; sync(); return; }
       const acc = t.closest("[data-acc]"); if (acc) { acc.parentNode.classList.toggle("op"); return; }
       if (t.closest("[data-bag]")) { if (!Object.keys(cart).length) { toast("Tap + on any item to add it"); const mn = root.querySelector("#bz-menu"); if (mn) mn.scrollIntoView({ behavior: "smooth" }); } else root.querySelector("[data-send]").click(); return; }
+      if (!opts.loyLive && t.closest("[data-ljoin]")) { toast("Customers tap here to get their card"); return; }
       if (t.closest("[data-send]")) { e.preventDefault(); if (m.preview) { toast("Opens WhatsApp with the order"); return; } track("order"); window.open("https://wa.me/" + m.wa + "?text=" + encodeURIComponent(orderText()), "_blank", "noopener"); return; }
       const cp = t.closest("[data-copy]"); if (cp) { try { await navigator.clipboard.writeText(cp.dataset.copy); toast("UPI ID copied"); } catch (x) {} return; }
       if (t.closest("[data-share]")) { try { if (navigator.share) await navigator.share({ title: m.name, url: m.pageUrl }); else { await navigator.clipboard.writeText(m.pageUrl); toast("Link copied"); } } catch (x) {} return; }

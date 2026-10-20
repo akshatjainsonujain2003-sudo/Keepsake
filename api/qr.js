@@ -39,6 +39,7 @@ module.exports = async (req, res) => {
     if (req.method !== "POST") { res.setHeader("Allow", "GET, POST"); return db.reply(res, 405, { error: "Method not allowed." }); }
     if (/^sp-push-/.test(String((req.body || {}).action || ""))) { const b = req.body, r = await require("./_sales").push(b.code, b.tok, b); return r.error ? db.reply(res, r.status, { error: r.error }) : db.reply(res, 200, r); }
     if ((req.body || {}).action === "sp-visit") { const r = await require("./_sales").logVisit(req.body.code, req.body.tok, req.body.visit); return r.error ? db.reply(res, r.status, { error: r.error }) : db.reply(res, 200, r); }
+    if (/^loy-/.test(String((req.body || {}).action || ""))) { const r = await require("./_loyal").handle(req.body, { ip: ip(req), user: () => auth.currentUser(req) }); return r.error ? db.reply(res, r.status || 400, { error: r.error, ...(r.card ? { card: r.card } : {}), ...(r.gone ? { gone: true } : {}) }) : db.reply(res, 200, r); }
     if ((req.body || {}).action === "sp-login") { const r = await require("./_sales").login(req.body.code, req.body.pin, ip(req)); return r.error ? db.reply(res, r.status, { error: r.error }) : db.reply(res, 200, r); }
     const user = await auth.currentUser(req);
     if (!user) return db.reply(res, 401, { error: "Please log in to activate your code." });

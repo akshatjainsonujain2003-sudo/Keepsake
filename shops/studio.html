@@ -45,6 +45,16 @@ button,input,select,textarea{font:inherit;color:inherit}
 label.f{display:grid;gap:6px;font-size:13px;font-weight:600;color:#4a3d31}
 label.f em{font-style:normal;font-weight:400;color:var(--mu)}
 #ordRow[hidden]{display:none!important}
+.sec[hidden]{display:none!important}
+.loyb{display:grid;gap:8px;padding:14px;border-radius:14px;background:var(--bg)}.loyb>b{font-size:14px}
+.loyr{display:flex;gap:8px}.loyr .in{flex:1;min-width:0}.btn.sm{padding:11px 16px;font-size:13.5px;box-shadow:none;flex:none}
+.loys{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.loys div{padding:9px 6px;border-radius:12px;background:var(--pa);text-align:center}.loys b{display:block;font-size:17px}.loys small{font-size:11px;color:var(--mu)}
+.loyl{display:grid;gap:6px;max-height:340px;overflow:auto}
+.loyi{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;background:var(--pa);font-size:13.5px}
+.loyi .w{flex:1;min-width:0}.loyi .w b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.loyi .w small{color:var(--mu);font-size:12px}
+.loyi .st{font-weight:700;white-space:nowrap}.loyi .st.r{color:#1f7a3a}
+.loyi button,.loyi a{flex:none;padding:7px 10px;border-radius:99px;border:1px solid var(--ln);background:none;color:var(--tx);font:600 12px inherit;cursor:pointer;text-decoration:none}
+.loyi button.go{background:var(--ink);color:#fff;border-color:transparent}
 .item .ft{flex-wrap:wrap;row-gap:8px}
 .in{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--ln);background:#fff;outline:none;transition:border .15s,box-shadow .15s;font-size:15px;font-weight:400}
 .in:focus{border-color:var(--ac2);box-shadow:0 0 0 4px color-mix(in srgb,var(--ac2) 18%,transparent)}
@@ -166,8 +176,8 @@ textarea.in{resize:vertical;min-height:74px}
  .live{grid-template-columns:1fr}.live .ordq{margin:12px 0 0;font-size:13px;opacity:.92}.live .ordq .lnk{color:#e6c27a}
 .live .qr{max-width:180px}.savebar{border-radius:20px}}
 .bst{margin:0;padding:16px;border-radius:16px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1)}.bst .bh{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}.bst .bh b{font-size:34px;line-height:1}.bst .bh span{opacity:.8}.bst em{font-style:normal;font-weight:700;margin-left:4px}.bst em.up{color:#7fd6a0}.bst em.dn{color:#ff9aa8}.bst .bars{display:flex;gap:6px;align-items:flex-end;height:70px;margin:14px 0 4px}.bst .bars i{flex:1;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:4px;font-style:normal}.bst .bars u{display:block;width:100%;border-radius:6px 6px 3px 3px;background:linear-gradient(#e8cf8e,#b88a3e)}.bst .bars small{font-size:10px;opacity:.6}.bst .bt{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 0}.bst .bt span{padding:5px 10px;border-radius:999px;background:rgba(255,255,255,.08);font-size:13px}.live .bst .bh b{display:inline;font:500 34px/1 var(--fs);margin:0}.live .bst .bt b{display:inline;font:700 13px var(--fn);margin:0}.live .bst .bt span{display:inline-block}</style>
-<script src="/assets/biz.v5.js"></script>
-<script src="/assets/biz-demos.v4.js"></script>
+<script src="/assets/biz.v6.js"></script>
+<script src="/assets/biz-demos.v5.js"></script>
 <script src="/assets/ks-checkout.v10.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js" defer></script>
 </head>
@@ -253,7 +263,33 @@ textarea.in{resize:vertical;min-height:74px}
     </div>
   </details>
 
-  <details class="sec" data-s="feat"><summary><span class="n">6</span><span class="ti"><b>Featured item</b><small>Spotlight a new arrival, special or package</small></span><svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></summary>
+  <details class="sec" data-s="loy"><summary><span class="n">6</span><span class="ti"><b>Loyalty card</b><small>Visit 10 times, get a free coffee</small></span><svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></summary>
+    <div class="body">
+      <div class="sw"><div><b>Run a loyalty card</b><div class="hint">Customers get a free stamp card on your page. One stamp per visit; when it's full they get the reward.</div></div><label class="switch"><input type="checkbox" id="loyOn" aria-label="Run a loyalty card"><i></i></label></div>
+      <div id="loyF" class="body" style="padding:0">
+        <div class="g2" style="grid-template-columns:130px 1fr">
+          <label class="f">Visits needed<select class="in" data-k="loy.n" id="loyN"></select></label>
+          <label class="f">Reward<input class="in" data-k="loy.r" maxlength="40" placeholder="Free coffee"></label>
+        </div>
+        <label class="f"><span>Rules <em>(optional)</em></span><input class="in" data-k="loy.t" maxlength="120" placeholder="One stamp per visit on bills above ₹150."></label>
+        <div class="loyb" id="loyPinBox">
+          <b>Staff PIN</b>
+          <div class="hint">At the counter, your staff type this 4-digit PIN on the customer's phone to add a stamp or give the reward. Keep it secret from customers.</div>
+          <div class="loyr"><input class="in" id="loyPin" inputmode="numeric" maxlength="4" pattern="\d{4}" placeholder="e.g. 4821" autocomplete="off" aria-label="Staff PIN"><button type="button" class="btn sm" id="loyPinSave">Save PIN</button></div>
+          <div class="hint" id="loyPinS"></div>
+        </div>
+        <div class="loyb" id="loyMem">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><b>Members</b><button type="button" class="lnk" id="loyLoad">Refresh</button></div>
+          <div class="loys" id="loySum"></div>
+          <div class="loyr"><input class="in" id="loyPh" inputmode="tel" maxlength="14" placeholder="Customer's mobile number" aria-label="Customer's mobile number"><button type="button" class="btn sm" id="loyAdd">+1 stamp</button></div>
+          <div class="hint">No phone with them? Add the stamp from here with their number.</div>
+          <div id="loyList" class="loyl"></div>
+        </div>
+      </div>
+    </div>
+  </details>
+
+  <details class="sec" data-s="feat"><summary><span class="n">7</span><span class="ti"><b>Featured item</b><small>Spotlight a new arrival, special or package</small></span><svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></summary>
     <div class="body">
       <div class="sw"><b>Show a featured item</b><label class="switch"><input type="checkbox" id="ftOn" aria-label="Show a featured item"><i></i></label></div>
       <div id="ftF" class="body" style="padding:0">
@@ -273,7 +309,7 @@ textarea.in{resize:vertical;min-height:74px}
     </div>
   </details>
 
-  <details class="sec" data-s="menu"><summary><span class="n">7</span><span class="ti"><b>Menu or price list</b><small id="menuSub">Sections, items and prices</small></span><svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></summary>
+  <details class="sec" data-s="menu"><summary><span class="n">8</span><span class="ti"><b>Menu or price list</b><small id="menuSub">Sections, items and prices</small></span><svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></summary>
     <div class="body">
       <div class="sw" id="ordRow"><div><b>Orders on WhatsApp</b><div class="hint">Customers tap + on items and send you the order on WhatsApp, with the total worked out.</div></div><label class="switch"><input type="checkbox" id="ordOn" aria-label="Orders on WhatsApp"><i></i></label></div>
       <label class="f">Heading<input class="in" data-k="menuTitle" maxlength="24" placeholder="Menu, Services, Price list…"></label>
@@ -282,14 +318,14 @@ textarea.in{resize:vertical;min-height:74px}
     </div>
   </details>
 
-  <details class="sec" data-s="gal"><summary><span class="n">8</span><span class="ti"><b>Photo gallery</b><small>Up to 10 photos people can swipe</small></span><svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></summary>
+  <details class="sec" data-s="gal"><summary><span class="n">9</span><span class="ti"><b>Photo gallery</b><small>Up to 10 photos people can swipe</small></span><svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></summary>
     <div class="body">
       <label class="f">Heading<input class="in" data-k="galTitle" maxlength="24" placeholder="Inside, Our work, Fresh today…"></label>
       <div class="gal" id="gal"></div>
     </div>
   </details>
 
-  <details class="sec" data-s="upi"><summary><span class="n">9</span><span class="ti"><b>UPI payments</b><small>A Pay button that opens any UPI app</small></span><svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></summary>
+  <details class="sec" data-s="upi"><summary><span class="n">10</span><span class="ti"><b>UPI payments</b><small>A Pay button that opens any UPI app</small></span><svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></summary>
     <div class="body">
       <label class="f">UPI ID<input class="in" data-k="upi.id" data-v="upi" maxlength="80" placeholder="yourshop@okaxis" autocapitalize="off" autocomplete="off"></label>
       <label class="f"><span>Name shown when paying <em>(optional)</em></span><input class="in" data-k="upi.name" maxlength="40" placeholder="Brew &amp; Bloom"></label>
@@ -338,7 +374,7 @@ function changed() { dirty = true; save(); preview(); $("#saveS").textContent = 
 // ---------- live preview (an iframe, so the page sizes itself like a real phone) ----------
 const FRAME_DOC = `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&family=Inter:wght@400;500;600;700&display=swap">
-<style>html,body{margin:0;min-height:100%;scrollbar-width:none}.ph body{padding-top:40px}body::-webkit-scrollbar{display:none}<\/style><script src="/assets/biz.v5.js"><\/script></head><body><main id="b"></main>
+<style>html,body{margin:0;min-height:100%;scrollbar-width:none}.ph body{padding-top:40px}body::-webkit-scrollbar{display:none}<\/style><script src="/assets/biz.v6.js"><\/script></head><body><main id="b"></main>
 <script>try{if(frameElement.id==="pvFrame")document.documentElement.className="ph"}catch(e){}addEventListener("message",e=>{if(e.source!==parent)return;const d=e.data&&e.data.ksbiz;if(!d)return;const b=document.getElementById("b"),y=scrollY;KSBiz.render(b,d,{preview:true});document.body.style.background=getComputedStyle(b).getPropertyValue("--bg");scrollTo(0,y)});parent.postMessage({ksbizReady:1},"*")<\/script></body></html>`;
 const frames = [$("#pvFrame"), $("#ovFrame")];
 frames.forEach(f => f.srcdoc = FRAME_DOC);
@@ -366,7 +402,7 @@ function applyDefaults(from, to) {
   const a = KSBiz.defaults(from), b = KSBiz.defaults(to);
   ["lay", "th", "hl", "sc", "menuTitle", "galTitle"].forEach(k => { if (!D[k] || D[k] === a[k]) D[k] = b[k]; });
   if (D.ord === a.ord) D.ord = b.ord;
-  if (D.th !== a.th && D.th === b.th) D.ac = ""; D.cat = to; fields(); look(); menu(); $("#ordOn").checked = !!D.ord; changed();
+  if (D.th !== a.th && D.th === b.th) D.ac = ""; D.cat = to; fields(); look(); menu(); loy(); $("#ordOn").checked = !!D.ord; changed();
 }
 function fields() {
   $("#cat").innerHTML = KSBiz.GROUPS.map(g => `<optgroup label="${esc(g.name)}">${g.cats.map(k => `<option value="${k}">${esc(KSBiz.CATS[k].name)}</option>`).join("")}</optgroup>`).join("");
@@ -453,6 +489,59 @@ $("#hrs").oninput = $("#hrs").onchange = e => { const r = e.target.closest(".hr"
 $("#hrsOn").onchange = e => { D.hours = e.target.checked ? { d: KSBiz.blank().hours.d } : null; hours(); changed(); };
 $("#hrsCopy").onclick = () => { const m = D.hours.d[0]; D.hours.d = D.hours.d.map(() => m.slice()); hours(); changed(); };
 
+// ---------- loyalty card ----------
+// Suggested reward per category when the owner first turns it on.
+const LOYS = { cafe: [10, "Free coffee"], tea: [10, "Free chai"], restaurant: [8, "Free dessert"], cloud: [8, "Free meal"], bakery: [8, "Free pastry"], sweets: [10, "250 g mithai free"], juice: [8, "Free juice"], icecream: [8, "Free scoop"], fastfood: [8, "Free plate"],
+  boutique: [5, "₹200 off"], ethnic: [5, "₹300 off"], jewellery: [5, "Free jewellery cleaning"], footwear: [5, "₹200 off"], gifts: [5, "Free gift wrapping"],
+  salon: [5, "Free head massage"], spa: [5, "Free foot massage"], skincare: [5, "Free sample kit"], florist: [6, "Free bouquet"], yoga: [10, "Free class"], pets: [6, "Free grooming"], hotel: [5, "Free breakfast"],
+  gym: [12, "Free protein shake"], dance: [8, "Free class"], tattoo: [3, "₹500 off"], barber: [5, "Free haircut"], photo: [3, "Free photo print"], coaching: [5, "Free mock test"], repair: [5, "Free screen guard"],
+  clinic: [5, "Free check-up"], dentist: [5, "Free cleaning"], pharmacy: [10, "₹50 off"], optician: [3, "Free eye test"], lab: [5, "Free sugar test"], grocery: [10, "₹50 off"], store: [10, "₹50 off"], hardware: [10, "₹100 off"], pro: [5, "Free consultation"] };
+const loyApi = async body => { try { const r = await fetch("/api/qr", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id: EDIT_ID, ...body }) }); const j = await r.json(); return r.ok ? j : { error: j.error || "Something went wrong." }; } catch (e) { return { error: "No internet. Please try again." }; } };
+function loy() {
+  const prop = !!(KSBiz.CATS[D.cat] || {}).prop; $('[data-s="loy"]').hidden = prop;
+  D.loy = D.loy || { on: false, n: "", r: "", t: "" };
+  $("#loyN").innerHTML = [3, 4, 5, 6, 7, 8, 9, 10, 12, 15, 20].map(k => `<option value="${k}">${k} visits</option>`).join("");
+  $("#loyN").value = String(D.loy.n || 10);
+  $("#loyOn").checked = !!D.loy.on; $("#loyF").hidden = !D.loy.on;
+  const saved = !!EDIT_ID; $("#loyPinBox").hidden = $("#loyMem").hidden = !saved;
+  if (D.loy.on && saved && !loy.done) { loy.done = 1; loyList(); }
+}
+$("#loyOn").onchange = e => {
+  D.loy = D.loy || {}; D.loy.on = e.target.checked;
+  if (D.loy.on && !D.loy.r) { const s = LOYS[D.cat] || [10, "A free treat"]; D.loy.n = String(s[0]); D.loy.r = s[1]; fields(); }
+  if (!D.loy.n) D.loy.n = "10";
+  loy(); changed();
+};
+$("#loyPinSave").onclick = async () => {
+  const v = $("#loyPin").value.trim(), st = $("#loyPinS");
+  if (!/^\d{4}$/.test(v)) { st.textContent = "Type 4 numbers."; return; }
+  st.textContent = "Saving…"; const j = await loyApi({ action: "loy-own-pin", pin: v });
+  st.textContent = j.error || "Saved. Tell your staff the new PIN."; if (!j.error) { $("#loyPin").value = ""; loyList(); }
+};
+const ago = t => { const d = Math.floor((Date.now() - t) / 864e5); return d <= 0 ? "today" : d === 1 ? "yesterday" : d + " days ago"; };
+async function loyList() {
+  if (!EDIT_ID) return;
+  const j = await loyApi({ action: "loy-own-list" }); if (j.error) { $("#loyList").innerHTML = `<div class="hint">${esc(j.error)}</div>`; return; }
+  $("#loyPinS").textContent = j.pin ? "A PIN is set. Save a new one any time to change it." : "No PIN yet. Until you set one, add stamps from here.";
+  const s = j.sum, n = j.cfg ? j.cfg.n : +D.loy.n || 10;
+  $("#loySum").innerHTML = [[s.members, "members"], [s.week, "stamps this week"], [s.ready, "rewards ready"], [s.rewards, "rewards given"]].map(([v, l]) => `<div><b>${v}</b><small>${l}</small></div>`).join("");
+  $("#loyList").innerHTML = j.members.length ? j.members.map(c => `<div class="loyi" data-ph="${esc(c.phone)}"><div class="w"><b>${esc(c.name)}</b><small>${esc(c.phone.replace(/(\d{5})(\d{5})/, "$1 $2"))} · ${ago(c.last)}${c.r ? " · " + c.r + " reward" + (c.r > 1 ? "s" : "") : ""}</small></div>
+    <span class="st${c.s >= n ? " r" : ""}">${c.s >= n ? "🎁 Ready" : c.s + "/" + n}</span>${c.s >= n ? `<button type="button" class="go" data-lred>Give reward</button>` : `<button type="button" data-lst>+1</button>`}<a href="https://wa.me/91${esc(c.phone)}?text=${encodeURIComponent("Hi " + c.name.split(" ")[0] + "! " + (c.s >= n ? "Your " + (j.cfg ? j.cfg.r : "reward") + " is ready at " + (D.t || "our shop") + ". See you soon!" : "You have " + c.s + " of " + n + " stamps at " + (D.t || "our shop") + ". Only " + (n - c.s) + " more to your " + (j.cfg ? j.cfg.r.toLowerCase() : "reward") + "!"))}" target="_blank" rel="noopener" aria-label="WhatsApp">WA</a></div>`).join("")
+    : `<div class="hint">No members yet. Customers join from the loyalty card on your page.</div>`;
+}
+$("#loyLoad").onclick = loyList;
+$("#loyAdd").onclick = async () => {
+  const ph = $("#loyPh").value; if (!ph.trim()) { $("#loyPh").focus(); return; }
+  const j = await loyApi({ action: "loy-own-stamp", phone: ph }); if (j.error) { alert(j.error); return; }
+  $("#loyPh").value = ""; loyList();
+};
+$("#loyList").onclick = async e => {
+  const r = e.target.closest("[data-ph]"); if (!r) return;
+  const act = e.target.closest("[data-lst]") ? "loy-own-stamp" : e.target.closest("[data-lred]") ? "loy-own-redeem" : ""; if (!act) return;
+  if (act === "loy-own-redeem" && !confirm("Give the reward and start a new card?")) return;
+  e.target.disabled = true; const j = await loyApi({ action: act, phone: r.dataset.ph }); if (j.error) alert(j.error); loyList();
+};
+
 // ---------- offer ----------
 function offer() { D.offer = D.offer || KSBiz.blank().offer; $("#offOn").checked = !!D.offer.on; $("#offF").hidden = !D.offer.on; }
 $("#offOn").onchange = e => { D.offer.on = e.target.checked; offer(); changed(); if (e.target.checked) $('[data-k="offer.title"]').focus(); };
@@ -509,7 +598,7 @@ $("#examples").onclick = e => {
   status("Example loaded: change the name, photos and menu to make it yours.", "ok");
   if (innerWidth < 1060) $("#fab").click();
 };
-function all() { fields(); look(); feat(); $("#ordOn").checked = !!D.ord; photo($("#logoDrop"), "logo"); photo($("#coverDrop"), "cover"); gallery(); hours(); offer(); menu(); preview(); }
+function all() { fields(); look(); feat(); $("#ordOn").checked = !!D.ord; photo($("#logoDrop"), "logo"); photo($("#coverDrop"), "cover"); gallery(); hours(); offer(); loy(); menu(); preview(); }
 
 // ---------- QR card (scanned from a blank Keepsake business QR) ----------
 function banner(html, bad) { $("#banner").innerHTML = `<div class="ban${bad ? " bad" : ""}" role="status"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><path d="M14 14h3v3h-3zM20 14v.01M14 20h.01M17 20h3v-3"/></svg><div>${html}</div></div>`; }
@@ -562,7 +651,7 @@ async function saveBiz() {
   } catch (e) { status(e.message, "bad"); } finally { bs.forEach(b => b.disabled = false); }
 }
 $("#saveBtn").onclick = $("#saveBtn2").onclick = saveBiz;
-function setEdit(id) { EDIT_ID = id; const u = new URL(location.href); u.searchParams.set("edit", id); u.searchParams.delete("resume"); history.replaceState(null, "", u.pathname + u.search + u.hash); }
+function setEdit(id) { EDIT_ID = id; if (D) setTimeout(loy, 0); const u = new URL(location.href); u.searchParams.set("edit", id); u.searchParams.delete("resume"); history.replaceState(null, "", u.pathname + u.search + u.hash); }
 function checkout() {
   $("#pubT").textContent = "Activate your page"; $("#pubP").textContent = CLAIM ? "Pay once and your QR card #" + CLAIM.code + " will open this page for good." : "Pay once and your page goes live with its own link and QR code.";
   if (!CHECKOUT) CHECKOUT = KSCheckout.mount($("#payPanel"), { kind: "biz", getId: () => EDIT_ID, claim: () => CLAIM && CLAIM.code, sp: () => SP, customer: () => USER,
