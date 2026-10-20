@@ -4,12 +4,12 @@
     {
       "source": "/business",
       "destination": "/shops",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/business-studio",
       "destination": "/shops/studio",
-      "permanent": false
+      "permanent": true
     }
   ],
   "rewrites": [
