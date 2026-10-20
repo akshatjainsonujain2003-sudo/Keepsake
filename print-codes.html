@@ -1,13 +1,13 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Prepaid code sheet · GetKeepsake</title>
 <link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
-<script src="/assets/qr-cards.v1.js"></script>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Pinyon+Script&family=Anton&family=Inter+Tight:wght@300;600&family=Playfair+Display:ital,wght@0,600;1,600&family=Inter:wght@400;500;600;700;800&display=swap">
+<script src="/assets/qr-cards.v2.js"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Pinyon+Script&family=Anton&family=Inter+Tight:wght@300;600&family=Playfair+Display:ital,wght@0,600;1,600&family=Inter:wght@400;500;600;700;800&family=Rozha+One&family=Mukta:wght@600;700&display=swap">
 <style>
 *{box-sizing:border-box}body{margin:0;background:#eee;font-family:system-ui,-apple-system,sans-serif;color:#2a0409}
 .bar{position:sticky;top:0;z-index:2;display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:12px 16px;background:#2a0409;color:#f8f0df}
 .bar b{color:#e4c680}.bar button{padding:9px 16px;border-radius:999px;border:0;background:#d6b06a;color:#2a0409;font-weight:700;cursor:pointer}.bar button.l{background:none;border:1px solid #e4c68088;color:#f8f0df}
-.bar small{opacity:.8}
+.bar small{opacity:.8}.bar select{padding:7px 10px;border-radius:999px;border:1px solid #e4c68088;background:#2a0409;color:#f8f0df;font-weight:600}
 .sheet{width:210mm;margin:12px auto;background:#fff;padding:8mm 7.5mm;display:grid;grid-template-columns:repeat(3,63mm);gap:3mm;justify-content:center}
 .c{width:63mm;height:88mm;border:0.3mm dashed #b9a;display:grid;grid-template-rows:1fr 1fr;page-break-inside:avoid;break-inside:avoid;position:relative}
 .f{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2.5mm;text-align:center;background:#fffaf2}
@@ -38,9 +38,17 @@
  if(!key)key=prompt("Admin key")||"";
  const r=await fetch("/api/admin",{method:"POST",headers:{"Content-Type":"application/json","x-admin-key":key},body:JSON.stringify({action:"prepaid-batch",id})});
  const j=await r.json().catch(()=>({}));if(!r.ok){document.getElementById("title").textContent=j.error||"Could not load the batch.";return}
- const b=j.batch,esc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])),site=b.tier==="site",biz=b.tier==="biz",board=biz&&q.get("size")==="board";
- document.getElementById("title").innerHTML=`<b>${esc(b.shop)}</b> · ${biz?"Business page QR":site?"VIP website":"Template card"} · ${b.codes.length} codes`+(biz?` · <a style="color:#e4c680" href="?batch=${encodeURIComponent(id)}${board?"":"&size=board"}">${board?"Switch to wallet cards":"Switch to counter boards (A6)"}</a>`:"");
- if(biz)document.querySelector(".bar small").textContent=board?"Print on A4 at 100% (thick card or photo paper): 4 counter boards per sheet. Cut on the dashed line and put in an A6 acrylic stand.":"Print double-sided on A4 at 100% on 300gsm card, flip on the long edge: odd pages are fronts, even pages are backs. Cut on the dashed lines (55 × 85 mm).";
+ const b=j.batch,esc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])),site=b.tier==="site",biz=b.tier==="biz",size=biz?(["board","card"].includes(q.get("size"))?q.get("size"):"stamp"):"",board=size==="board",stampB=size==="stamp";
+ document.getElementById("title").innerHTML=`<b>${esc(b.shop)}</b> · ${biz?"Business page QR":site?"VIP website":"Template card"} · ${b.codes.length} codes`+(biz?` · ${[["stamp","QR boards 3.5×5"],["board","Old counter boards (A6)"],["card","Wallet cards"]].filter(([k])=>k!==size).map(([k,l])=>`<a style="color:#e4c680" href="?batch=${encodeURIComponent(id)}&size=${k}">${l}</a>`).join(" · ")}`:"");
+ // 3.5 × 5 in QR boards: colour and sheet size
+ if(stampB){const tone=q.get("tone")||"red",paper=q.get("paper")||"a4",go=(k,v)=>{const u=new URL(location.href);u.searchParams.set(k,v);location.href=u.toString()};
+  const sel=(k,cur,opts)=>{const e=document.createElement("select");e.setAttribute("aria-label",k);e.innerHTML=opts.map(([v,l])=>`<option value="${v}"${v===cur?" selected":""}>${l}</option>`).join("");e.onchange=()=>go(k,e.value);return e};
+  const bar=document.querySelector(".bar"),sp=bar.querySelector("span[style]");
+  bar.insertBefore(sel("tone",tone,[["red","Sindoor Red"],["blue","Peacock Blue"],["marigold","Marigold"],["green","Mehendi Green"],["jamun","Jamun Purple"],["mix","Mix all 5 colours"]]),sp.nextSibling);
+  bar.insertBefore(sel("paper",paper,[["a4","A4 · 4 per sheet"],["a3","A3 · 9 per sheet"],["12x18","12×18 in · 9 per sheet"],["13x19","13×19 in · 9 per sheet"]]),sp.nextSibling.nextSibling);
+  document.querySelector(".bar small").textContent="Print at 100% (Actual size), Background graphics ON, on 300gsm card. Boards touch each other: cut straight along the crop marks, each board is 3.5 × 5 in.";
+  KSQRCards.render(document.getElementById("out"),b.codes,{size:"stamp",label:b.shop,base:"https://getkeepsake.in",tone,paper});setCsv();return}
+ if(biz&&!stampB)document.querySelector(".bar small").textContent=board?"Print on A4 at 100% (thick card or photo paper): 4 counter boards per sheet. Cut on the dashed line and put in an A6 acrylic stand.":"Print double-sided on A4 at 100% on 300gsm card, flip on the long edge: odd pages are fronts, even pages are backs. Cut on the dashed lines (55 × 85 mm).";
  const base="https://getkeepsake.in";
  const qr=u=>{const x=qrcode(0,"M");x.addData(u);x.make();return x.createSvgTag({cellSize:3,margin:1,scalable:true}).replace(/fill="#000000"/g,'fill="#42070f"')};
  const cards=biz?b.codes.map(c=>`<div class="b"><div><div class="e">Scan me</div><div class="h">Menu, offers &amp; more</div></div><div class="q">${qr(base+"/k/"+c.code).replace(/fill="#42070f"/g,'fill="#17110d"')}</div><div><div class="l">Menu<i>·</i>Reviews<i>·</i>Instagram<i>·</i>Pay</div><div class="t" style="margin-top:1.4mm">${c.code} · Page by GetKeepsake</div></div>${c.status==="claimed"?'<div style="position:absolute;top:3.4mm;right:3.4mm;padding:.5mm 1.6mm;border-radius:2mm;background:#4ade80;color:#0b2a15;font:800 1.8mm system-ui,sans-serif;letter-spacing:.2mm">LIVE</div>':""}</div>`):b.codes.map(c=>`<div class="c"><div class="f"><div class="k">Keepsake</div><div class="q">${qr(base+"/k/"+c.code)}</div><div class="s">Scan to make your ${site?"love-story website":"memory card"}</div><div class="t">${esc(b.shop)} · ${c.code}</div></div><div class="in"><div class="h">Your activation PIN · keep inside the pack</div><div class="p">${c.pin}</div><ol><li>Scan the QR on the front</li><li>Add your photos, song &amp; words</li><li>Tap Save, enter this PIN</li></ol><div style="margin-top:1mm;opacity:.7">For code ${c.code} · Prepaid, no online payment<br>Help: WhatsApp +91 63775 47759</div></div>${c.status==="claimed"?'<div class="used">USED</div>':c.locked?'<div class="used">LOCKED</div>':""}</div>`);
