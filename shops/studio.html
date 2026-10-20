@@ -603,8 +603,9 @@ const shrink = f => new Promise((ok, no) => {
     const x = c.getContext("2d"); x.fillStyle = "#fff"; x.fillRect(0, 0, c.width, c.height); x.drawImage(im, 0, 0, c.width, c.height); URL.revokeObjectURL(u); ok(c.toDataURL("image/jpeg", 0.85)); };
   im.onerror = () => { URL.revokeObjectURL(u); no(new Error("Couldn't open " + f.name + ". Try a JPG or PNG photo.")); }; im.src = u;
 });
-$("#scanIn").onchange = async e => {
-  const files = [...e.target.files].slice(0, 8); e.target.value = ""; if (!files.length) return;
+$("#scanIn").onchange = e => { const files = [...e.target.files].slice(0, 8); e.target.value = ""; if (files.length) aiScan(files); };
+async function aiScan(files) {
+  LASTFILES = files;                                   // kept, so a failed scan can be retried without choosing the photos again
   // AI reader first (needs login); if it isn't switched on in Vercel, use the free reader on this phone.
   if (!USER) return freeScan(files, "Log in to use the AI reader, which reads designed menus much better.");
   const out = $("#scanOut"), lb = $(".scanb"); lb.classList.add("busy");
@@ -613,20 +614,27 @@ $("#scanIn").onchange = async e => {
     out.innerHTML = `<div class="scp"><i></i>AI is reading ${files.length > 1 ? "photo " + (i + 1) + " of " + files.length : "your menu"}… usually 10–40 seconds.</div>`;
     try {
       const data = await shrink(files[i]);
-      const r = await fetch("/api/img", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "scan", data, cat: (KSBiz.CATS[D.cat] || {}).name || "" }) });
-      const j = await r.json().catch(() => ({ error: "The scanner didn't answer. Try again." }));
+      // Gemini's free models are sometimes "busy": wait and try again by itself (up to 3 tries) before giving up.
+      let r, j;
+      for (let tryN = 1; ; tryN++) {
+        r = await fetch("/api/img", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "scan", data, cat: (KSBiz.CATS[D.cat] || {}).name || "" }) });
+        j = await r.json().catch(() => ({ error: "The scanner didn't answer. Try again." }));
+        if (!(j.busy && tryN < 3)) break;
+        for (let w = 20; w > 0; w--) { out.innerHTML = `<div class="scp"><i></i>Gemini is busy. Trying again in ${w}s… (try ${tryN + 1} of 3)</div>`; await new Promise(z => setTimeout(z, 1000)); }
+        out.innerHTML = `<div class="scp"><i></i>AI is reading ${files.length > 1 ? "photo " + (i + 1) + " of " + files.length : "your menu"}… try ${tryN + 1} of 3</div>`;
+      }
       if (r.status === 501) { lb.classList.remove("busy"); return freeScan(files); }
-      if (!r.ok) throw new Error(j.error || "Couldn't read that file.");
+      if (!r.ok) throw new Error((j.busy ? "Gemini is still busy after 3 tries. Wait a few minutes and tap Upload again, or read it on this phone." : j.error || "Couldn't read that file.") + (j.detail ? "\n\nGoogle said: " + j.detail : ""));
       if (j.cut) errs.push(files[i].name + ": very long, some items at the end may be missing. Scan it in parts.");
       j.sections.forEach(s => { const same = found.find(x => x.n.toLowerCase() === s.n.toLowerCase()); if (same) same.items.push(...s.items); else found.push(s); });
     } catch (x) { errs.push((files.length > 1 ? files[i].name + ": " : "") + x.message); }
   }
   lb.classList.remove("busy");
   // AI couldn't read anything (no quota left, offline…): offer the free reader that runs on this phone.
-  if (!found.length && errs.length) { LASTFILES = files; $("#scanOut").innerHTML = errs.map(t => `<div class="scerr">${esc(t)}</div>`).join("") + `<button type="button" class="btn sm" id="scFree" style="margin-top:8px">Read it on this phone instead</button>`; return; }
+  if (!found.length && errs.length) { LASTFILES = files; $("#scanOut").innerHTML = errs.map(t => { const [a, b] = t.split("\n\nGoogle said: "); return `<div class="scerr">${esc(a)}</div>${b ? `<div class="hint" style="font-size:11.5px;word-break:break-word">Google said: ${esc(b)}</div>` : ""}`; }).join("") + `<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px"><button type="button" class="btn sm" id="scAgain">Try again</button><button type="button" class="btn sm" id="scFree" style="background:#fff;color:var(--tx);border:1px solid var(--ln)">Read it on this phone instead</button></div>`; return; }
   SCAN = found.map(s => ({ n: s.n, items: s.items.map(x => ({ ...x, on: true })) }));
   review(errs);
-};
+}
 // Free scanner: Tesseract reads the text right here in the browser, then KSMenuOCR.parse arranges it.
 let LASTFILES = null;
 async function freeScan(files, note) {
@@ -651,7 +659,7 @@ function review(errs) {
   out.innerHTML = `${err}<div class="scr"><b>Found ${total} item${total > 1 ? "s" : ""} in ${SCAN.length} section${SCAN.length > 1 ? "s" : ""}</b><label><input type="checkbox" id="scAll"${on === total ? " checked" : ""}> All</label></div>
     <div class="hint">Untick anything you don't want and fix any name or price by tapping it.${SCAN.some(s => s.items.some(x => x.chk)) ? " Rows marked <b>check</b> were hard to read." : ""}</div>
     <div class="scl">${SCAN.map((s, ci) => `<div class="scs"><div class="scsh"><input type="checkbox" data-scs="${ci}"${s.items.every(x => x.on) ? " checked" : ""} aria-label="Whole section"><input type="text" data-scn="${ci}" value="${esc(s.n)}" maxlength="24" aria-label="Section name"><small>${s.items.length}</small></div>
-      ${s.items.map((x, ii) => `<div class="sci${x.on ? "" : " off"}${x.chk ? " chk" : ""}"><input type="checkbox" data-sci="${ci}.${ii}"${x.on ? " checked" : ""} aria-label="Include"><span class="w"><input class="nm" data-se="${ci}.${ii}.n" value="${esc(x.n)}" maxlength="50" aria-label="Name">${x.d ? `<small>${esc(x.d)}</small>` : ""}</span>${x.chk ? '<span class="ck">check</span>' : ""}<input class="pr" data-se="${ci}.${ii}.p" value="${esc(x.p)}" maxlength="12" inputmode="decimal" placeholder="₹" aria-label="Price"></div>`).join("")}</div>`).join("")}</div>
+      ${s.items.map((x, ii) => `<div class="sci${x.on ? "" : " off"}${x.chk ? " chk" : ""}"><input type="checkbox" data-sci="${ci}.${ii}"${x.on ? " checked" : ""} aria-label="Include"><span class="w"><input class="nm" data-se="${ci}.${ii}.n" value="${esc(x.n)}" maxlength="50" aria-label="Name">${x.d ? `<small>${esc(x.d)}</small>` : ""}${x.why ? `<small style="color:#8a6100">⚠ ${esc(x.why)}</small>` : ""}</span>${x.chk ? '<span class="ck">check</span>' : ""}<input class="pr" data-se="${ci}.${ii}.p" value="${esc(x.p)}" maxlength="12" inputmode="decimal" placeholder="₹" aria-label="Price"></div>`).join("")}</div>`).join("")}</div>
     ${has ? `<div class="sco"><label><input type="radio" name="scm" value="add" checked> Add to my menu</label><label><input type="radio" name="scm" value="rep"> Replace my menu</label></div>` : ""}
     <div class="scbt"><button type="button" class="btn sm" id="scAdd"${on ? "" : " disabled"}>Add ${on} item${on === 1 ? "" : "s"} to my page</button><button type="button" class="lnk" id="scX">Cancel</button></div>`;
 }
@@ -671,6 +679,7 @@ $("#scanOut").oninput = e => {
 $("#scanOut").onclick = e => {
   if (e.target.id === "scX") { SCAN = null; $("#scanOut").innerHTML = ""; return; }
   if (e.target.id === "scFree" && LASTFILES) { freeScan(LASTFILES); return; }
+  if (e.target.id === "scAgain" && LASTFILES) { aiScan(LASTFILES); return; }
   if (e.target.id !== "scAdd") return;
   const PR = !!(KSBiz.CATS[D.cat] || {}).prop, mode = (document.querySelector('input[name="scm"]:checked') || {}).value || "add";
   const picked = SCAN.map(s => ({ n: (s.n || "Menu").trim() || "Menu", items: s.items.filter(x => x.on).map(x => ({ n: x.n, p: x.p, d: x.d, b: !!x.b, i: "", ...(PR ? { s: "sale" } : {}) })) })).filter(s => s.items.length);
