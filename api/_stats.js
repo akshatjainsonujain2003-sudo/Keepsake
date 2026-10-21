@@ -21,6 +21,6 @@ async function week(id) {
   const v = (await db.cmd("MGET", ...keys)).map(x => +x || 0);
   const opens = v.slice(0, 14), taps = {};
   TAPS.forEach((t, i) => taps[t] = v.slice(14 + i * 7, 14 + i * 7 + 7).reduce((a, b) => a + b, 0));
-  return { days: days.slice(7).map((d, i) => ({ d, v: opens[7 + i] })), week: opens.slice(7).reduce((a, b) => a + b, 0), prevWeek: opens.slice(0, 7).reduce((a, b) => a + b, 0), taps };
+  return { days: days.slice(7).map((d, i) => ({ d, v: opens[7 + i] })), week: opens.slice(7).reduce((a, b) => a + b, 0), prevWeek: opens.slice(0, 7).reduce((a, b) => a + b, 0), today: opens[13], lastSame: opens[6], taps };
 }
 module.exports = { view, tap, week, TAPS, day };

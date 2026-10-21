@@ -1,0 +1,706 @@
+<!doctype html>
+<html lang="en-IN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Shop dashboard · GetKeepsake for business</title>
+<meta name="description" content="Run your shop from one place: orders, menu, customers, offers and stats.">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#121110">
+<link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Pinyon+Script&family=Inter:wght@400;500;600;700;800&display=swap">
+<style>
+:root{--bg:#f3f0e9;--card:#fbfaf6;--line:#e5dfd3;--ink:#121110;--mu:#6d675e;--or:#ff5b2e;--ye:#ffd84d;--gr:#1f9d55;--grl:#c9efd6;--sand:#e4ddd0;--side:#121110;--r:22px}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:500 15px/1.45 Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+button{font:inherit;color:inherit;cursor:pointer}
+input,textarea,select{font:inherit;color:inherit}
+.H{font-family:'Archivo Black','Arial Black',sans-serif;font-weight:400;text-transform:uppercase;letter-spacing:.01em}
+[hidden]{display:none!important}
+/* ---------- shell ---------- */
+.app{display:grid;grid-template-columns:260px minmax(0,1fr);min-height:100vh}
+.side{position:sticky;top:0;height:100vh;overflow:auto;background:var(--side);color:#fff;padding:26px 16px 18px;display:flex;flex-direction:column}
+.lg{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap;text-decoration:none;color:#fff;padding:0 10px 0 12px;font:400 19px/1 'Archivo Black',sans-serif;letter-spacing:-.01em}
+.lg span{font:400 25px/1 'Pinyon Script',cursive;color:var(--ye);letter-spacing:0}
+.nav{margin-top:26px;flex:1}
+.nav small{display:block;margin:20px 0 6px 14px;font:800 10.5px Inter;letter-spacing:.2em;color:#ffffff80;text-transform:uppercase}
+.nav small:first-child{margin-top:0}
+.nav a{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:14px;text-decoration:none;color:#ffffffde;font-weight:500}
+.nav a svg{width:19px;height:19px;flex:none;opacity:.8}
+.nav a:hover{background:#ffffff12}
+.nav a.on{background:var(--or);color:#fff}.nav a.on svg{opacity:1}
+.nav a em{margin-left:auto;min-width:22px;height:22px;padding:0 7px;border-radius:99px;background:var(--ye);color:var(--ink);font:800 12px/22px Inter;font-style:normal;text-align:center}
+.shopc{display:flex;gap:11px;align-items:center;margin-top:18px;padding:13px;border-radius:16px;background:#ffffff12;text-decoration:none;color:#fff}
+.shopc i{width:38px;height:38px;flex:none;border-radius:11px;background:#7a1622 center/cover;display:grid;place-items:center;font:800 16px Inter;font-style:normal;color:var(--ye)}
+.shopc b{display:block;font-size:14.5px;line-height:1.2}.shopc small{display:block;color:#ffffff99;font-size:12px;word-break:break-all;margin-top:2px}
+.shopc select{margin-top:8px;width:100%;background:#ffffff1a;border:0;border-radius:9px;padding:6px 8px;color:#fff;font-size:12.5px}
+.shopc select option{color:#111}
+main{min-width:0;padding:30px 34px 60px}
+.top{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:24px}
+.top h1{margin:0;font-size:clamp(28px,2.7vw,40px);line-height:1.02}
+.top p{margin:8px 0 0;color:var(--mu)}
+.tg{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.sw{display:inline-flex;align-items:center;gap:10px;padding:8px 14px 8px 9px;border-radius:99px;border:1.5px solid var(--line);background:var(--card);font-weight:500;white-space:nowrap;user-select:none}
+.sw input{position:absolute;opacity:0;pointer-events:none}
+.sw i{position:relative;width:42px;height:24px;border-radius:99px;background:#cfc8bb;transition:.2s;flex:none}
+.sw i::after{content:"";position:absolute;left:3px;top:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:.2s;box-shadow:0 1px 3px #0003}
+.sw input:checked+i{background:var(--gr)}.sw input:checked+i::after{left:21px}
+.sw input:focus-visible+i{outline:2px solid var(--or);outline-offset:2px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 20px;border-radius:99px;border:0;background:var(--or);color:#fff;font-weight:600;text-decoration:none;white-space:nowrap}
+.btn:hover{filter:brightness(1.05)}
+.btn.k{background:var(--ink)}.btn.g{background:none;border:1.5px solid var(--ink);color:var(--ink);padding:10px 16px}.btn.w{background:#25d366;color:#053019}
+.btn.s{padding:8px 13px;font-size:13.5px}.btn.g.s{padding:7px 12px}
+.btn:disabled{opacity:.5;cursor:default}
+.btn svg{width:17px;height:17px}
+/* ---------- cards ---------- */
+.g4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+.g2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px;margin-top:18px}
+.g3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:18px}
+.kpi{padding:22px 24px;border-radius:var(--r);background:var(--card);border:1.5px solid var(--line);min-width:0}
+.kpi span{display:block;font-weight:600;font-size:14px}
+.kpi b{display:block;margin:6px 0 6px;font:400 clamp(30px,3.1vw,42px)/1 'Archivo Black',sans-serif;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kpi small{display:block;font-weight:700;font-size:13.5px}
+.kpi.o{background:var(--or);border-color:var(--or);color:#fff}
+.kpi.y{background:var(--ye);border-color:var(--ye)}
+.kpi.k{background:var(--ink);border-color:var(--ink);color:#fff}.kpi.k small{color:var(--ye)}
+.kpi .up{color:inherit}.kpi:not(.o) .gd{color:var(--gr)}
+.cd{padding:22px 24px;border-radius:var(--r);background:var(--card);border:1.5px solid var(--line);min-width:0}
+.ch{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.ch h2{margin:0;font-size:17px}
+.ch small{color:var(--mu);font-size:13.5px}
+.mu{color:var(--mu)}
+.empty{padding:26px 18px;border-radius:16px;background:#f0ebe1;color:var(--mu);text-align:center;font-size:14px}
+.empty b{display:block;color:var(--ink);font-size:15px;margin-bottom:4px}
+.empty .btn{margin-top:12px}
+/* bars */
+.bars{display:flex;gap:12px;align-items:flex-end;height:230px}
+.bars>div{flex:1;min-width:0;height:100%;display:flex;flex-direction:column;justify-content:flex-end;gap:7px}
+.bars u{display:block;border-radius:10px;background:var(--sand);min-height:8px;transition:height .6s cubic-bezier(.2,.8,.2,1)}
+.bars .hi u{background:var(--or)}
+.bars b,.bars small{display:block;padding:2px 8px;border-radius:7px;background:var(--sand);font-size:12px;font-weight:600;color:#4a453e;white-space:nowrap;overflow:hidden}
+.bars small{font-weight:500}
+.bars .hi b,.bars .hi small{background:var(--or);color:#fff}
+.bars.sm{height:150px;gap:5px}.bars.sm u{border-radius:6px}.bars.sm b{display:none}.bars.sm small{padding:2px 0;background:none;text-align:center;overflow:visible}.bars.sm .hi small{background:none;color:var(--or);font-weight:700}
+/* orders list */
+.ol{list-style:none;margin:0;padding:0}
+.ol li{display:flex;align-items:center;gap:14px;padding:14px 0;border-top:1.5px solid var(--line)}
+.av{width:42px;height:42px;flex:none;border-radius:50%;background:var(--ye);display:grid;place-items:center;font:800 14px Inter}
+.ol .nm{flex:1;min-width:0}.ol .nm b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.ol .nm small{color:var(--mu)}
+.ol .am{text-align:right;flex:none}.ol .am b{display:block;font-weight:700}
+.pl{display:inline-block;margin-top:4px;padding:3px 10px;border-radius:99px;font:700 12px Inter;background:var(--sand);color:var(--ink);white-space:nowrap}
+.pl.new{background:var(--or);color:#fff}.pl.prep{background:var(--ye)}.pl.ready{background:var(--grl);color:#0d5a2f}.pl.done{background:#e6e1d7;color:#5d574e}.pl.cancel{background:#f6d9d3;color:#9b2c16}
+/* rows (top items, checklist) */
+.rows>div{display:flex;align-items:center;gap:12px;padding:14px 0;border-top:1.5px solid var(--line)}
+.rows>div>span{flex:1;min-width:0}.rows>div>span.av{flex:none}.rows b{display:block}.rows small{color:var(--mu)}
+.ck{width:26px;height:26px;flex:none;border-radius:50%;background:var(--sand);display:grid;place-items:center;color:#fff}
+.ck.on{background:var(--gr)}.ck svg{width:15px;height:15px}
+.rows a.go{font-size:13px;font-weight:700;color:var(--or);text-decoration:none;white-space:nowrap}
+/* offer */
+.ofr{padding:18px 18px 20px;border-radius:18px;background:var(--or);color:#fff}
+.ofr small{display:block;font-size:12.5px;opacity:.9}
+.ofr b{display:block;margin-top:6px;font:400 22px/1.1 'Archivo Black',sans-serif;text-transform:uppercase}
+.ofr p{margin:8px 0 0;font-weight:600}
+.ofr.off{background:#e9e3d8;color:var(--mu)}
+.wide{width:100%;margin-top:12px;justify-content:flex-start}
+/* forms */
+.f{display:block;margin:0 0 14px;font-weight:600;font-size:13.5px}
+.f em{font-style:normal;font-weight:500;color:var(--mu)}
+.in{display:block;width:100%;margin-top:6px;padding:12px 14px;border-radius:12px;border:1.5px solid var(--line);background:#fff;font-weight:500;font-size:15px}
+.in:focus{outline:0;border-color:var(--or)}
+textarea.in{resize:vertical;min-height:70px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.note{padding:12px 14px;border-radius:12px;background:#fff6d6;border:1.5px solid #f3df92;font-size:13.5px}
+.bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:14px 18px;border-radius:16px;background:var(--ink);color:#fff;margin-bottom:18px}
+.bar span{flex:1;min-width:200px}
+/* tabs */
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.tabs button{padding:9px 15px;border-radius:99px;border:1.5px solid var(--line);background:var(--card);font-weight:600;font-size:14px}
+.tabs button.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.tabs button em{font-style:normal;margin-left:6px;padding:0 7px;border-radius:99px;background:var(--or);color:#fff;font-size:12px}
+/* order cards */
+.oc{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.oc>article{display:flex;flex-direction:column;padding:18px;border-radius:20px;background:var(--card);border:1.5px solid var(--line)}
+.oc>article.new{border-color:var(--or);box-shadow:0 0 0 3px #ff5b2e22}
+.oc header{display:flex;gap:12px;align-items:center}
+.oc header div{flex:1;min-width:0}.oc header b{display:block}.oc header small{color:var(--mu)}
+.oc ul{list-style:none;margin:14px 0 0;padding:12px 0 0;border-top:1.5px dashed var(--line)}
+.oc ul li{display:flex;justify-content:space-between;gap:10px;padding:3px 0}
+.oc .tot{display:flex;justify-content:space-between;margin-top:8px;padding-top:10px;border-top:1.5px solid var(--line);font-weight:800}
+.oc .meta{margin-top:10px;font-size:13.5px;color:#3d3832;display:grid;gap:3px}
+.oc .acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;padding-top:2px}
+.oc .acts .btn{flex:1}
+.lnk{background:none;border:0;padding:0;color:var(--mu);text-decoration:underline;font-size:13px}
+/* tables */
+.tw{overflow:auto;border-radius:16px;border:1.5px solid var(--line);background:var(--card)}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font:700 12px Inter;letter-spacing:.06em;text-transform:uppercase;color:var(--mu);padding:12px 14px;border-bottom:1.5px solid var(--line);white-space:nowrap}
+td{padding:12px 14px;border-bottom:1.5px solid var(--line);vertical-align:middle}
+tr:last-child td{border-bottom:0}
+td .btn{white-space:nowrap}
+.tag{display:inline-block;padding:2px 9px;border-radius:99px;background:var(--ye);font:700 11.5px Inter;margin:2px 4px 2px 0;white-space:nowrap}
+.tag.g{background:var(--grl);color:#0d5a2f}.tag.s{background:var(--sand)}
+.srch{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}.srch .in{margin:0;flex:1;min-width:200px}
+/* menu editor */
+.ms{margin-bottom:18px}
+.ms h3{margin:0 0 10px;font-size:15px}
+.mi{display:grid;grid-template-columns:52px minmax(0,1fr) 120px auto;gap:12px;align-items:center;padding:10px 0;border-top:1.5px solid var(--line)}
+.mi .ph{width:52px;height:52px;border-radius:12px;background:var(--sand) center/cover;display:grid;place-items:center;color:var(--mu);font-size:11px}
+.mi b{display:block;overflow:hidden;text-overflow:ellipsis}.mi small{color:var(--mu)}
+.mi .in{margin:0;padding:9px 11px;font-size:14.5px}
+.mi .tw2{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.chip{padding:7px 11px;border-radius:99px;border:1.5px solid var(--line);background:#fff;font-weight:600;font-size:12.5px;white-space:nowrap}
+.chip.on{background:var(--ink);border-color:var(--ink);color:#fff}.chip.so.on{background:#9b2c16;border-color:#9b2c16}
+.mi.isso b{text-decoration:line-through;color:var(--mu)}
+.dock{position:sticky;bottom:16px;z-index:5;display:flex;align-items:center;gap:12px;margin-top:16px;padding:12px 12px 12px 20px;border-radius:99px;background:var(--ink);color:#fff;box-shadow:0 16px 36px -14px #000a}
+.dock span{flex:1}
+/* misc */
+.funnel{display:grid;gap:10px}
+.funnel div{display:grid;grid-template-columns:150px 1fr 60px;gap:12px;align-items:center;font-size:14px}
+.funnel i{display:block;height:28px;border-radius:8px;background:var(--or);min-width:4px}
+.funnel div:nth-child(2) i{background:#ff8a5c}.funnel div:nth-child(3) i{background:var(--ye)}
+.funnel b{text-align:right}
+.qrb{display:flex;gap:22px;flex-wrap:wrap;align-items:flex-start}
+.qrb .qbox{width:200px;height:200px;padding:12px;border-radius:18px;background:#fff;border:1.5px solid var(--line)}
+.qrb .qbox svg{width:100%;height:100%}
+.tones{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 14px}
+.tones button{width:34px;height:34px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 1.5px var(--line)}
+.tones button.on{box-shadow:0 0 0 2.5px var(--ink)}
+.stamp{transform-origin:top left}
+.frame{width:300px;height:600px;border-radius:40px;background:#111;padding:10px;flex:none;box-shadow:0 30px 60px -30px #0008}
+.frame iframe{width:100%;height:100%;border:0;border-radius:31px;background:#fff}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:8px 18px;font-size:14.5px}.kv dt{color:var(--mu)}.kv dd{margin:0;font-weight:600;word-break:break-word}
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,30px);opacity:0;padding:12px 18px;border-radius:99px;background:var(--ink);color:#fff;font-weight:600;font-size:14px;transition:.25s;z-index:99;pointer-events:none;max-width:calc(100% - 32px);text-align:center}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.load{display:grid;place-items:center;min-height:60vh;color:var(--mu)}
+.sk{border-radius:var(--r);background:linear-gradient(90deg,#ebe6dc,#f4f0e8,#ebe6dc);background-size:200% 100%;animation:sk 1.2s infinite}
+@keyframes sk{to{background-position:-200% 0}}
+.hint{font-size:13px;color:var(--mu);margin:10px 0 0}
+.tabbar{display:none}
+.more{position:fixed;inset:0;z-index:40;background:#0007;display:flex;align-items:flex-end}
+.more>div{width:100%;max-height:85vh;overflow:auto;background:var(--side);border-radius:24px 24px 0 0;padding:18px 14px calc(18px + env(safe-area-inset-bottom))}
+@media (max-width:1180px){.g4{grid-template-columns:repeat(2,minmax(0,1fr))}.g3{grid-template-columns:1fr 1fr}.g3>:last-child{grid-column:1/-1}}
+@media (max-width:900px){
+  .app{display:block}.side{display:none}
+  main{padding:18px 16px calc(96px + env(safe-area-inset-bottom))}
+  .g2,.g3{grid-template-columns:1fr}.g3>:last-child{grid-column:auto}
+  .g4{gap:12px}.kpi{padding:16px}.kpi b{font-size:28px}.kpi small{font-size:12.5px}
+  .top h1{font-size:28px}.top .tg{width:100%}.top .tg .btn{flex:1}
+  .bars{height:180px;gap:7px}.bars b,.bars small{padding:2px 4px;font-size:11px;text-align:center}
+  .cd{padding:18px}
+  .mi{grid-template-columns:44px minmax(0,1fr) 92px}.mi .ph{width:44px;height:44px}.mi .tw2{grid-column:2/-1;justify-content:flex-start}
+  .tabbar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--side);padding:8px 6px calc(8px + env(safe-area-inset-bottom))}
+  .tabbar a,.tabbar button{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 2px;border:0;background:none;color:#ffffffb0;text-decoration:none;font-size:11px;font-weight:600;position:relative}
+  .tabbar svg{width:22px;height:22px}
+  .tabbar .on{color:var(--or)}
+  .tabbar em{position:absolute;top:0;left:calc(50% + 6px);min-width:18px;height:18px;border-radius:99px;background:var(--ye);color:var(--ink);font:800 11px/18px Inter;font-style:normal;padding:0 5px}
+  .funnel div{grid-template-columns:110px 1fr 46px}
+  .tw{border:0;background:none;overflow:visible}.tw table,.tw tbody,.tw tr,.tw td{display:block}.tw thead{display:none}
+  .tw tr{position:relative;margin-bottom:10px;padding:14px 16px;border-radius:16px;background:var(--card);border:1.5px solid var(--line)}
+  .tw td{padding:2px 0;border:0;font-size:14px}.tw td[data-l]::before{content:attr(data-l) ": ";color:var(--mu)}
+  .tw td:last-child{position:absolute;right:14px;top:14px;display:flex;gap:6px;align-items:center}
+  .frame{width:260px;height:520px}
+  .row2{grid-template-columns:1fr}
+}
+@media (max-width:420px){.g4{grid-template-columns:1fr 1fr}.kpi b{font-size:24px}.sw{padding:7px 12px 7px 8px;font-size:14px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js" defer></script>
+<script src="/assets/qr-cards.v5.js" defer></script>
+</head>
+<body>
+<div class="app">
+  <aside class="side" aria-label="Dashboard menu">
+    <a class="lg" href="/shops">GetKeepsake<span>for business</span></a>
+    <nav class="nav" id="nav"></nav>
+    <div class="shopc" id="shopc"></div>
+  </aside>
+  <main id="main"><div class="load">Loading your shop…</div></main>
+</div>
+<nav class="tabbar" id="tabbar" aria-label="Dashboard"></nav>
+<div class="more" id="more" hidden><div id="moreIn"></div></div>
+<div class="toast" id="toast" role="status"></div>
+<script>
+(() => {
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const inr = n => "₹" + Math.round(+n || 0).toLocaleString("en-IN");
+const num = p => { const x = /(\d[\d,]*(?:\.\d+)?)/.exec(String(p || "").replace(/\s/g, "")); return x ? +x[1].replace(/,/g, "") : null; };
+const dayKey = t => { const d = new Date(t); return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate(); };
+const ago = t => { const s = Math.max(0, (Date.now() - t) / 1000); if (s < 60) return "just now"; if (s < 3600) return Math.floor(s / 60) + " min ago"; if (s < 86400) return Math.floor(s / 3600) + " h ago"; const d = new Date(t); return d.toLocaleDateString("en-IN", { day: "numeric", month: "short" }) + ", " + d.toLocaleTimeString("en-IN", { hour: "numeric", minute: "2-digit" }); };
+const ini = n => (String(n || "?").trim().split(/\s+/).slice(0, 2).map(w => w[0]).join("") || "?").toUpperCase();
+const toast = t => { const e = $("#toast"); e.textContent = t; e.classList.add("on"); clearTimeout(e._h); e._h = setTimeout(() => e.classList.remove("on"), 2400); };
+const store = { get: (k, d) => { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } }, set: (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} } };
+const DOW = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"], DOWL = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+const STL = { new: "New", prep: "Preparing", ready: "Ready", done: "Done", cancel: "Cancelled" };
+const MODEL = { pickup: "Pickup", delivery: "Delivery", table: "At a table" };
+const I = p => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`;
+const IC = {
+  home: I('<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>'),
+  orders: I('<path d="M6 2h12l2 4v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6z"/><path d="M4 6h16M9 10a3 3 0 0 0 6 0"/>'),
+  menu: I('<path d="M5 3h14v18H5z"/><path d="M9 8h6M9 12h6M9 16h3"/>'),
+  people: I('<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14a6 6 0 0 1 3.5 6"/>'),
+  star: I('<path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8L3.5 9.7l5.9-.9z"/>'),
+  tag: I('<path d="M3 12V4a1 1 0 0 1 1-1h8l9 9-9 9z"/><circle cx="8" cy="8" r="1.5"/>'),
+  chart: I('<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>'),
+  page: I('<rect x="6" y="2" width="12" height="20" rx="3"/><path d="M11 18h2"/>'),
+  qr: I('<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3M21 14v7h-4M14 18v3"/>'),
+  pay: I('<rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="M2.5 10h19M6 15h4"/>'),
+  gear: I('<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>'),
+  dots: I('<circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/>'),
+  check: I('<path d="M5 12l4.5 4.5L19 7"/>'),
+  wa: I('<path d="M3.5 20.5l1.3-4.3A8.5 8.5 0 1 1 8 19.3z"/>'),
+  call: I('<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/>'),
+  ext: I('<path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/>'),
+  dl: I('<path d="M12 4v11M7 10l5 5 5-5M5 20h14"/>')
+};
+const NAV = [
+  ["Run the shop", [["overview", "Overview", "home"], ["orders", "Orders", "orders"], ["menu", "Menu & prices", "menu"], ["customers", "Customers", "people"]]],
+  ["Grow", [["reviews", "Reviews", "star"], ["offers", "Offers & marketing", "tag"], ["analytics", "Analytics", "chart"]]],
+  ["Set up", [["page", "My page", "page"], ["qr", "QR & cards", "qr"], ["payments", "Payments", "pay"], ["settings", "Team & settings", "gear"]]]
+];
+const TITLES = Object.fromEntries(NAV.flatMap(g => g[1]).map(x => [x[0], x[1]]));
+
+// ---------- state ----------
+const S = { user: null, pages: [], id: "", page: null, d: null, stats: null, loyalty: false, active: true, orders: [], ordersAt: 0, seen: null, customers: null, loy: null, view: "overview", otab: "new", csq: "", cf: "all", menuDraft: null, tone: store.get("gk-dash-tone", "red") };
+
+async function api(url, opt) {
+  const r = await fetch(url, Object.assign({ cache: "no-store" }, opt || {}));
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(j.error || "Something went wrong. Please try again.");
+  return j;
+}
+const post = (body) => api("/api/qr", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+
+// Save a change to the page: fetch the latest copy first so edits made in the studio aren't lost.
+async function patch(fn, okMsg) {
+  try {
+    const j = await api("/api/customer-memories?id=" + S.id);
+    const d = j.data; fn(d);
+    await api("/api/customer-memories", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id: S.id, data: d }) });
+    S.d = d; if (okMsg) toast(okMsg); return true;
+  } catch (e) { toast(e.message); return false; }
+}
+
+// ---------- derived numbers ----------
+const today0 = () => { const d = new Date(); d.setHours(0, 0, 0, 0); return +d; };
+const live = o => o.st !== "cancel";
+function ordersOn(t0, t1) { return S.orders.filter(o => o.at >= t0 && o.at < t1 && live(o)); }
+function sum(os) { return os.reduce((t, o) => t + o.tot, 0); }
+function topItems(os, n) {
+  const m = {}; os.forEach(o => o.items.forEach(x => { const k = x.n; m[k] = m[k] || { n: x.n, q: 0, v: 0 }; m[k].q += x.q; m[k].v += x.q * x.p; }));
+  return Object.values(m).sort((a, b) => b.q - a.q || b.v - a.v).slice(0, n);
+}
+const waiting = () => S.orders.filter(o => o.st === "new" || o.st === "prep").length;
+const newCount = () => S.orders.filter(o => o.st === "new").length;
+function menuItems() { const out = []; (S.d.menu || []).forEach((s, si) => (s.items || []).forEach((x, ii) => { if (x && x.n) out.push({ ...x, si, ii, sec: s.n }); })); return out; }
+const pageUrl = () => location.origin + "/b/" + S.id;
+const shopName = () => (S.d && S.d.t) || "Your shop";
+const waNum = p => "91" + String(p || "").replace(/\D/g, "").slice(-10);
+
+// ---------- shell ----------
+function navHtml(mobile) {
+  const n = newCount();
+  return NAV.map(([g, items]) => `<small>${g}</small>` + items.map(([k, l, ic]) => `<a href="#${k}" data-v="${k}" class="${S.view === k ? "on" : ""}">${IC[ic]}<span>${l}</span>${k === "orders" && n ? `<em>${n}</em>` : ""}</a>`).join("")).join("");
+}
+function shell() {
+  $("#nav").innerHTML = navHtml();
+  const d = S.d || {}, logo = /^\/api\/img\?id=|^https:\/\//.test(d.logo || "") ? d.logo : "";
+  const others = S.pages.filter(p => p.kind === "biz");
+  $("#shopc").innerHTML = `<i style="${logo ? `background-image:url('${esc(logo)}')` : ""}">${logo ? "" : esc(ini(shopName()).charAt(0))}</i><div style="min-width:0;flex:1"><b>${esc(shopName())}</b><small>${esc(location.host + "/b/" + S.id)}</small>${others.length > 1 ? `<select id="pick" aria-label="Switch shop">${others.map(p => `<option value="${p.id}"${p.id === S.id ? " selected" : ""}>${esc(p.title)}</option>`).join("")}</select>` : ""}</div>`;
+  const pk = $("#pick"); if (pk) pk.onchange = () => { location.href = "/shops/dashboard?id=" + pk.value; };
+  const n = newCount();
+  $("#tabbar").innerHTML = [["overview", "Home", "home"], ["orders", "Orders", "orders"], ["menu", "Menu", "menu"], ["customers", "Customers", "people"]].map(([k, l, ic]) => `<a href="#${k}" class="${S.view === k ? "on" : ""}">${IC[ic]}${l}${k === "orders" && n ? `<em>${n}</em>` : ""}</a>`).join("") + `<button type="button" id="moreB" class="${["overview", "orders", "menu", "customers"].includes(S.view) ? "" : "on"}">${IC.dots}More</button>`;
+  $("#moreB").onclick = () => { $("#moreIn").innerHTML = `<nav class="nav" style="margin:0">${navHtml(true)}</nav>`; $("#more").hidden = false; };
+  document.title = (n ? "(" + n + ") " : "") + (TITLES[S.view] || "Dashboard") + " · " + shopName();
+}
+$("#more").onclick = e => { if (e.target.id === "more" || e.target.closest("a")) $("#more").hidden = true; };
+
+function go() {
+  const v = (location.hash || "#overview").slice(1);
+  S.view = TITLES[v] ? v : "overview";
+  shell();
+  const m = $("#main");
+  try { m.innerHTML = V[S.view](); } catch (e) { console.error(e); m.innerHTML = `<div class="empty"><b>This section couldn't load.</b>${esc(e.message)}</div>`; }
+  (A[S.view] || (() => {}))();
+  bindCommon();
+}
+addEventListener("hashchange", () => { go(); scrollTo(0, 0); });
+
+// ---------- shared pieces ----------
+const greet = () => { const h = new Date().getHours(); return h < 12 ? "Good morning" : h < 17 ? "Good afternoon" : "Good evening"; };
+function switches() {
+  const d = S.d;
+  return `<div class="tg"><label class="sw"><input type="checkbox" data-sw="open"${d.shut ? "" : " checked"}><i></i>Shop open</label>${d.ord ? `<label class="sw"><input type="checkbox" data-sw="take"${d.pause || d.shut ? "" : " checked"}${d.shut ? " disabled" : ""}><i></i>Taking orders</label>` : ""}<a class="btn" href="/b/${S.id}" target="_blank" rel="noopener">View my page</a></div>`;
+}
+function head(title, sub, right) { return `<div class="top"><div><h1 class="H">${title}</h1>${sub ? `<p>${sub}</p>` : ""}</div>${right == null ? switches() : right}</div>`; }
+function inactive() { return S.active ? "" : `<div class="bar"><span><b>Your page isn't live yet.</b> Customers can't open it until it's activated.</span><a class="btn" href="/shops/studio?edit=${S.id}#publish">Activate my page</a></div>`; }
+function bars(days, cls) {
+  const mx = Math.max(1, ...days.map(x => x.v)), best = days.reduce((b, x, i) => x.v > days[b].v ? i : b, 0);
+  return `<div class="bars ${cls || ""}">${days.map((x, i) => `<div class="${x.v && i === best ? "hi" : ""}" title="${esc(x.t)}: ${esc(x.lab || x.v)}"><u style="height:${Math.max(4, Math.round(x.v * 100 / mx))}%"></u><b>${esc(x.lab != null ? x.lab : x.v)}</b><small>${esc(x.l)}</small></div>`).join("")}</div>`;
+}
+function scanDays() { return (S.stats && S.stats.days || []).map(x => { const d = new Date(x.d + "T12:00:00"); return { v: x.v, l: DOW[d.getDay()], t: DOWL[d.getDay()] }; }); }
+function orderRow(o) {
+  const n = o.items.reduce((a, x) => a + x.q, 0);
+  return `<li><span class="av">${esc(ini(o.name))}</span><span class="nm"><b>${esc(o.name || "Customer")}</b><small>${n} item${n === 1 ? "" : "s"} · ${ago(o.at)}</small></span><span class="am"><b>${inr(o.tot)}</b><span class="pl ${o.st}">${STL[o.st]}</span></span></li>`;
+}
+function checklist() {
+  const d = S.d, items = menuItems(), noPhoto = items.filter(x => !x.i).length;
+  const scanned = S.stats && (S.stats.week || S.stats.prevWeek);
+  const L = [
+    [!!d.logo && items.length >= 3, "Add your logo and menu", d.logo ? "Add at least 3 items" : "Your logo builds trust", "/shops/studio?edit=" + S.id],
+    [!!scanned || store.get("gk-qr-placed:" + S.id, false), "Print and place your QR", "Put it where people wait", "#qr"],
+    [!!d.review, "Connect Google reviews", "Add your review link", "/shops/studio?edit=" + S.id],
+    [items.length > 0 && noPhoto === 0, noPhoto ? `Add photos to ${noPhoto} item${noPhoto === 1 ? "" : "s"}` : "Add photos to your items", "Photos sell more", "/shops/studio?edit=" + S.id],
+    [!!(d.offer && d.offer.on && d.offer.title), "Set an offer of the day", "Offers get more taps than a plain menu", "#offers"]
+  ];
+  if (!d.ord && !(S.d.cat && /real|estate/.test(S.d.cat))) L.push([false, "Turn on WhatsApp ordering", "Customers order in two taps", "#page"]);
+  if (S.loyalty) L.push([!!(d.loy && d.loy.on), "Start your loyalty card", "Bring regulars back", "/shops/studio?edit=" + S.id]);
+  return L;
+}
+
+// ---------- views ----------
+const V = {};
+const A = {}; // after-render hooks
+
+V.overview = () => {
+  const d = S.d, st = S.stats || {}, t0 = today0(), tod = ordersOn(t0, t0 + 864e5), sales = sum(tod);
+  const ch = st.lastSame ? Math.round((st.today - st.lastSame) * 100 / st.lastSame) : null;
+  const wk = DOW[new Date().getDay()];
+  const days = scanDays(), best = days.length && Math.max(...days.map(x => x.v)) ? days.reduce((b, x) => x.v > b.v ? x : b) : null;
+  const liveO = S.orders.filter(o => o.st === "new" || o.st === "prep" || o.st === "ready").slice(0, 4);
+  const recent = liveO.length ? liveO : S.orders.slice(0, 4);
+  const top = topItems(tod, 4), topW = top.length ? top : topItems(ordersOn(t0 - 6 * 864e5, t0 + 864e5), 4);
+  const cl = checklist(), done = cl.filter(x => x[0]).length;
+  const rv = (st.taps || {}).review || 0, of = d.offer || {};
+  const now = new Date();
+  return inactive() + head(`${greet()}, ${esc(shopName().split(/\s+/)[0])}`, `${now.toLocaleDateString("en-IN", { weekday: "long", day: "numeric", month: "short" })} · here is how your shop is doing today.`) +
+  `<section class="g4" aria-label="Today">
+    <div class="kpi o"><span>QR scans today</span><b data-count="${st.today || 0}">${st.today || 0}</b><small>${ch === null ? (st.week ? st.week + " this week" : "Opens of your page") : (ch >= 0 ? "+" : "") + ch + "% vs last " + wk}</small></div>
+    <div class="kpi"><span>Orders today</span><b>${tod.length}</b><small class="gd">${waiting() ? waiting() + " waiting for you" : d.ord ? "All caught up" : "Ordering is off"}</small></div>
+    <div class="kpi y"><span>Sales today</span><b>${inr(sales)}</b><small>${tod.length ? "Avg order " + inr(sales / tod.length) : "From page orders"}</small></div>
+    <div class="kpi k"><span>${d.review ? "Google review taps" : "Customers"}</span><b>${d.review ? rv + " ★" : (S.customersCount || 0)}</b><small>${d.review ? "this week · ask for more →" : "who ordered from your page"}</small></div>
+  </section>
+  <section class="g2">
+    <div class="cd"><div class="ch"><h2 class="H">QR scans · last 7 days</h2><small>${best ? "Best day: " + best.t : "Opens of your page"}</small></div>${days.length ? bars(days) : `<div class="empty">No scans yet. Print your QR and place it at the counter.</div>`}</div>
+    <div class="cd"><div class="ch"><h2 class="H">${liveO.length ? "Live orders" : "Recent orders"}</h2><a class="btn g s" href="#orders">See all</a></div>
+      ${recent.length ? `<ul class="ol">${recent.map(orderRow).join("")}</ul>` : d.ord ? `<div class="empty"><b>No orders yet</b>When customers order from your page, they show up here with a sound.</div>` : `<div class="empty"><b>WhatsApp ordering is off</b>Let customers add items and send the order to your WhatsApp.<br><button class="btn" data-act="ordOn">Turn on ordering</button></div>`}
+    </div>
+  </section>
+  <section class="g3">
+    <div class="cd"><div class="ch"><h2 class="H">Offer of the day</h2></div>
+      ${of.title ? `<div class="ofr${of.on ? "" : " off"}"><small>${of.on ? "Live on your page" : "Hidden from your page"}</small><b>${esc(of.title)}</b>${of.text ? `<p>${esc(of.text)}</p>` : ""}</div>
+      <label class="sw wide"><input type="checkbox" data-act="offerOn"${of.on ? " checked" : ""}><i></i>Offer is live</label>` : `<div class="empty"><b>No offer yet</b>A simple deal at the top of your page gets people ordering.<br><a class="btn" href="#offers">Create an offer</a></div>`}
+      <p class="hint">Offers get more taps than a plain menu. <a href="#offers">Edit offer</a></p></div>
+    <div class="cd"><div class="ch"><h2 class="H">Top items ${top.length ? "today" : "this week"}</h2></div>
+      ${topW.length ? `<div class="rows">${topW.map(x => `<div><span><b>${esc(x.n)}</b><small>${x.q} sold</small></span><b>${inr(x.v)}</b></div>`).join("")}</div>` : `<div class="empty">Your best sellers will show here once orders come in.</div>`}</div>
+    <div class="cd"><div class="ch"><h2 class="H">Grow faster</h2><small>${done} of ${cl.length} done</small></div>
+      <div class="rows">${cl.map(([ok, t, s, href]) => `<div><i class="ck${ok ? " on" : ""}">${ok ? IC.check : ""}</i><span><b>${esc(t)}</b>${ok ? "" : `<small>${esc(s)}</small>`}</span>${ok ? "" : `<a class="go" href="${href}">Do it →</a>`}</div>`).join("")}</div></div>
+  </section>`;
+};
+
+V.orders = () => {
+  const t0 = today0(), counts = {}; S.orders.forEach(o => counts[o.st] = (counts[o.st] || 0) + 1);
+  const tabs = [["new", "New"], ["prep", "Preparing"], ["ready", "Ready"], ["done", "Done"], ["cancel", "Cancelled"], ["all", "All"]];
+  const list = S.orders.filter(o => S.otab === "all" || o.st === S.otab);
+  const tod = ordersOn(t0, t0 + 864e5);
+  return inactive() + head("Orders", `${tod.length} today · ${inr(sum(tod))} in sales · ${waiting()} waiting`) +
+  (S.d.ord ? "" : `<div class="bar"><span><b>WhatsApp ordering is off.</b> Customers can only see your menu.</span><button class="btn" data-act="ordOn">Turn on ordering</button></div>`) +
+  `<div class="tabs" role="tablist">${tabs.map(([k, l]) => `<button type="button" data-otab="${k}" class="${S.otab === k ? "on" : ""}">${l}${(k === "new" || k === "prep" || k === "ready") && counts[k] ? `<em>${counts[k]}</em>` : ""}</button>`).join("")}</div>
+  ${list.length ? `<div class="oc">${list.slice(0, 120).map(orderCard).join("")}</div>` : `<div class="empty"><b>${S.otab === "new" ? "No new orders" : "Nothing here"}</b>${S.otab === "new" ? "New orders appear here on their own. Keep this page open and you'll hear a ding." : ""}</div>`}
+  <p class="hint">Every order sent from your page appears here, even if the customer didn't press send in WhatsApp. If one never reached you, mark it Cancelled.</p>`;
+};
+function orderCard(o) {
+  const next = { new: ["prep", "Accept & prepare"], prep: ["ready", "Mark ready"], ready: ["done", "Mark done"] }[o.st];
+  const msg = { new: `Hi${o.name ? " " + o.name : ""}! We got your order #${o.ref} from ${shopName()}. We're on it.`, prep: `Hi${o.name ? " " + o.name : ""}! Your order #${o.ref} from ${shopName()} is being prepared.`, ready: `Hi${o.name ? " " + o.name : ""}! Your order #${o.ref} from ${shopName()} is ready${o.mode === "delivery" ? " and on its way" : " for pickup"}.`, done: `Thank you for ordering from ${shopName()}! See you again soon.`, cancel: `Hi${o.name ? " " + o.name : ""}, about your order #${o.ref} from ${shopName()}:` }[o.st];
+  return `<article class="${o.st === "new" ? "new" : ""}" data-ref="${o.ref}"><header><span class="av">${esc(ini(o.name))}</span><div><b>${esc(o.name || "Customer")}</b><small>#${o.ref} · ${ago(o.at)}</small></div><span class="pl ${o.st}">${STL[o.st]}</span></header>
+    <ul>${o.items.map(x => `<li><span>${x.q} × ${esc(x.n)}</span><span>${inr(x.q * x.p)}</span></li>`).join("")}</ul>
+    <div class="tot"><span>Total</span><span>${inr(o.tot)}</span></div>
+    <div class="meta"><span><b>${MODEL[o.mode] || "Pickup"}</b>${o.addr ? (o.mode === "table" ? " · table " : " · ") + esc(o.addr) : ""}</span>${o.note ? `<span>Note: ${esc(o.note)}</span>` : ""}${o.phone ? `<span>${esc(o.phone)}</span>` : ""}</div>
+    <div class="acts">${next ? `<button class="btn s" data-st="${next[0]}" data-ref="${o.ref}">${next[1]}</button>` : ""}${o.phone ? `<a class="btn w s" href="https://wa.me/${waNum(o.phone)}?text=${encodeURIComponent(msg)}" target="_blank" rel="noopener">${IC.wa}WhatsApp</a><a class="btn g s" href="tel:+${waNum(o.phone)}" aria-label="Call">${IC.call}</a>` : ""}</div>
+    ${o.st !== "cancel" && o.st !== "done" ? `<div style="margin-top:10px"><button class="lnk" data-st="cancel" data-ref="${o.ref}">Cancel order</button></div>` : o.st === "cancel" ? `<div style="margin-top:10px"><button class="lnk" data-st="new" data-ref="${o.ref}">Restore order</button></div>` : ""}
+  </article>`;
+}
+
+V.menu = () => {
+  const d = S.menuDraft || (S.menuDraft = JSON.parse(JSON.stringify(S.d.menu || [])));
+  const wk = ordersOn(today0() - 6 * 864e5, today0() + 864e5), sold = {}; wk.forEach(o => o.items.forEach(x => sold[x.n] = (sold[x.n] || 0) + x.q));
+  const prop = /real/.test(S.d.cat || "");
+  const secs = d.map((s, si) => ({ s, si, items: (s.items || []).map((x, ii) => ({ x, ii })).filter(r => r.x && r.x.n) })).filter(r => r.items.length);
+  return head("Menu & prices", "Change a price or mark something sold out in one tap. It updates your page straight away.", `<div class="tg"><a class="btn g" href="/shops/studio?edit=${S.id}">Full editor</a></div>`) +
+  (secs.length ? `<div class="cd">${secs.map(({ s, si, items }) => `<div class="ms"><h3>${esc(s.n)} <span class="mu" style="font-weight:500">· ${items.length}</span></h3>${items.map(({ x, ii }) => `<div class="mi${x.so ? " isso" : ""}" data-k="${si}.${ii}"><span class="ph" style="${x.i ? `background-image:url('${esc(x.i)}')` : ""}">${x.i ? "" : "No photo"}</span><span style="min-width:0"><b>${esc(x.n)}</b><small>${sold[x.n] ? sold[x.n] + " sold this week" : x.d ? esc(String(x.d).slice(0, 60)) : "&nbsp;"}</small></span><input class="in" data-mp="${si}.${ii}" value="${esc(x.p || "")}" inputmode="decimal" aria-label="Price of ${esc(x.n)}" placeholder="Price"><span class="tw2">${prop ? "" : `<button type="button" class="chip so${x.so ? " on" : ""}" data-mso="${si}.${ii}">${x.so ? "Sold out" : "In stock"}</button>`}<button type="button" class="chip${x.b ? " on" : ""}" data-mb="${si}.${ii}">★ Bestseller</button></span></div>`).join("")}</div>`).join("")}</div>
+  <div class="dock" id="mdock" hidden><span>You have unsaved changes</span><button class="btn g s" style="border-color:#fff;color:#fff" data-act="mReset">Undo</button><button class="btn s" data-act="mSave">Save changes</button></div>` : `<div class="empty"><b>Your menu is empty</b>Add your items with prices, or snap a photo of your menu card and we'll read it for you.<br><a class="btn" href="/shops/studio?edit=${S.id}">Add my menu</a></div>`);
+};
+
+function custRows() {
+  const map = {};
+  (S.customers || []).forEach(c => map[c.phone] = { name: c.name, phone: c.phone, n: c.n, spend: c.spend, last: c.last, first: c.first });
+  ((S.loy && S.loy.members) || []).forEach(m => { const c = map[m.phone] || (map[m.phone] = { name: m.name, phone: m.phone, n: 0, spend: 0, last: 0, first: m.at }); c.loy = m; c.last = Math.max(c.last || 0, m.last || 0); if (!c.name || c.name === "Customer") c.name = m.name; });
+  return Object.values(map).sort((a, b) => b.last - a.last);
+}
+V.customers = () => {
+  if (!S.customers) return head("Customers", "Loading…", "") + `<div class="sk" style="height:300px"></div>`;
+  const all = custRows(), wk = Date.now() - 7 * 864e5, q = S.csq.toLowerCase();
+  const loyOn = S.loy && S.loy.cfg;
+  const list = all.filter(c => (S.cf === "all" || (S.cf === "loy" && c.loy) || (S.cf === "reg" && c.n >= 2) || (S.cf === "new" && c.first >= wk)) && (!q || (c.name || "").toLowerCase().includes(q) || c.phone.includes(q)));
+  return head("Customers", `${all.length} customer${all.length === 1 ? "" : "s"} · ${all.filter(c => c.n >= 2).length} came back · ${all.filter(c => c.first >= wk).length} new this week`, `<div class="tg"><button class="btn g" data-act="csv"${all.length ? "" : " disabled"}>${IC.dl}Download list</button></div>`) +
+  `<div class="srch"><input class="in" id="csq" placeholder="Search name or number" value="${esc(S.csq)}" aria-label="Search customers"><div class="tabs" style="margin:0">${[["all", "All"], ["reg", "Regulars"], ["new", "New"], ...(loyOn || (S.loy && S.loy.members.length) ? [["loy", "Loyalty"]] : [])].map(([k, l]) => `<button type="button" data-cf="${k}" class="${S.cf === k ? "on" : ""}">${l}</button>`).join("")}</div></div>
+  ${list.length ? `<div class="tw"><table><thead><tr><th>Customer</th><th>Orders</th><th>Spent</th>${loyOn ? "<th>Loyalty card</th>" : ""}<th>Last seen</th><th></th></tr></thead><tbody>${list.slice(0, 500).map(c => `<tr><td><b>${esc(c.name || "Customer")}</b><br><small class="mu">${esc(c.phone)}</small>${c.n >= 3 ? ' <span class="tag">Regular</span>' : c.first >= wk ? ' <span class="tag g">New</span>' : ""}</td><td data-l="Orders">${c.n || "–"}</td><td data-l="Spent">${c.spend ? inr(c.spend) : "–"}</td>${loyOn ? `<td data-l="Card">${c.loy ? `<b>${Math.min(c.loy.s, S.loy.cfg.n)}/${S.loy.cfg.n}</b> <small class="mu">stamps</small>${c.loy.s >= S.loy.cfg.n ? ' <span class="tag g">Reward ready</span>' : ""}` : '<small class="mu">Not joined</small>'}</td>` : ""}<td data-l="Last seen"><small>${c.last ? ago(c.last) : "–"}</small></td><td style="text-align:right;white-space:nowrap">${loyOn ? `<button class="btn g s" data-stamp="${esc(c.phone)}" data-nm="${esc(c.name || "")}">+ Stamp</button> ` : ""}<a class="btn w s" href="https://wa.me/${waNum(c.phone)}?text=${encodeURIComponent("Hi" + (c.name ? " " + c.name : "") + "! ")}" target="_blank" rel="noopener">${IC.wa}</a></td></tr>`).join("")}</tbody></table></div>`
+  : `<div class="empty"><b>${all.length ? "No one matches" : "No customers yet"}</b>${all.length ? "" : "Everyone who orders with their number" + (S.loyalty ? " or joins your loyalty card" : "") + " is saved here, so you can message them about offers."}</div>`}
+  <p class="hint">Numbers are only those customers shared with you when ordering or joining your card. Message them about things they'd want, not every day.</p>`;
+};
+
+V.reviews = () => {
+  const d = S.d, st = S.stats || {}, rv = (st.taps || {}).review || 0;
+  const recent = custRows().filter(c => c.phone && c.n && c.last >= Date.now() - 14 * 864e5).slice(0, 30);
+  const ask = n => `Hi${n ? " " + n : ""}! Thank you for visiting ${shopName()}. If you enjoyed it, a quick Google review would mean a lot to us: ${d.review}`;
+  return head("Reviews", "More good reviews bring more people through the door. Ask the customers who liked you.", "") +
+  (!d.review ? `<div class="cd"><div class="empty"><b>Connect your Google reviews</b>Paste your Google review link in the editor. A "Review us" button then shows on your page and on your QR card.<br><a class="btn" href="/shops/studio?edit=${S.id}">Add review link</a></div><p class="hint">Find it on Google Maps: open your business, tap Share or "Ask for reviews", and copy the link.</p></div>` :
+  `<section class="g4" style="grid-template-columns:repeat(3,minmax(0,1fr))"><div class="kpi k"><span>Review taps this week</span><b>${rv} ★</b><small>People who opened your Google review</small></div><div class="kpi"><span>Page opens this week</span><b>${st.week || 0}</b><small class="gd">${st.week ? Math.round(rv * 100 / st.week) + "% tapped Review" : "–"}</small></div><div class="kpi y"><span>Recent customers to ask</span><b>${recent.length}</b><small>ordered in the last 14 days</small></div></section>
+  <section class="g2"><div class="cd"><div class="ch"><h2 class="H">Ask for a review</h2></div>
+    ${recent.length ? `<div class="rows">${recent.map(c => `<div><span class="av">${esc(ini(c.name))}</span><span><b>${esc(c.name || "Customer")}</b><small>${c.n} order${c.n === 1 ? "" : "s"} · ${ago(c.last)}</small></span><a class="btn w s" href="https://wa.me/${waNum(c.phone)}?text=${encodeURIComponent(ask(c.name))}" target="_blank" rel="noopener">${IC.wa}Ask</a></div>`).join("")}</div>` : `<div class="empty">Customers who order with their number show up here so you can ask them.</div>`}</div>
+    <div class="cd"><div class="ch"><h2 class="H">Your review link</h2></div><p class="mu" style="margin-top:0">Send this after a good visit, or put it in your WhatsApp status.</p><textarea class="in" id="rvmsg" rows="4">${esc(ask(""))}</textarea><div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px"><button class="btn k" data-copy="#rvmsg">Copy message</button><a class="btn w" href="https://wa.me/?text=${encodeURIComponent(ask(""))}" target="_blank" rel="noopener">${IC.wa}Share on WhatsApp</a><a class="btn g" href="${esc(d.review)}" target="_blank" rel="noopener">Open on Google ${IC.ext}</a></div>
+    <p class="hint">Tip: reply to every Google review, good or bad, within a day. It shows new customers you care.</p></div></section>`);
+};
+
+V.offers = () => {
+  const d = S.d, of = Object.assign({ on: false, label: "Today's offer", title: "", text: "", till: "" }, d.offer || {});
+  const cs = custRows().filter(c => c.phone);
+  const msg = store.get("gk-bc:" + S.id, "") || `Hi! ${of.title ? of.title + " at " + shopName() + ". " : "Something new at " + shopName() + ". "}See the menu and order here: ${pageUrl()}`;
+  return head("Offers & marketing", "Give people a reason to come today, then tell your regulars about it.", "") +
+  `<section class="g2" style="margin-top:0"><div class="cd"><div class="ch"><h2 class="H">Offer of the day</h2><label class="sw"><input type="checkbox" id="ofOn"${of.on ? " checked" : ""}><i></i>Show on my page</label></div>
+    <div class="row2"><label class="f">Label<input class="in" id="ofL" maxlength="24" value="${esc(of.label)}" placeholder="Today's offer"></label><label class="f">Valid till <em>(optional)</em><input class="in" id="ofT" maxlength="30" value="${esc(of.till)}" placeholder="Sunday"></label></div>
+    <label class="f">Offer<input class="in" id="ofH" maxlength="60" value="${esc(of.title)}" placeholder="Cappuccino + Brownie for ₹249"></label>
+    <label class="f">Details <em>(optional)</em><textarea class="in" id="ofX" maxlength="160" rows="2" placeholder="Every day 3 to 6 pm. Show this page at the counter.">${esc(of.text)}</textarea></label>
+    <div class="ofr${of.on ? "" : " off"}" id="ofP" style="margin-bottom:14px"><small>${esc(of.label || "Today's offer")}</small><b>${esc(of.title || "Your offer here")}</b>${of.text ? `<p>${esc(of.text)}</p>` : ""}</div>
+    <button class="btn" data-act="ofSave">Save offer</button>
+    <p class="hint">Ideas: a combo at a round price, a happy hour for your slow time, or a free add-on above ₹500.</p></div>
+  <div class="cd"><div class="ch"><h2 class="H">Message your customers</h2><small>${cs.length} with a number</small></div>
+    <textarea class="in" id="bc" rows="4" maxlength="600">${esc(msg)}</textarea>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin:12px 0"><button class="btn k" data-copy="#bc">Copy message</button><a class="btn w" id="bcst" href="#" target="_blank" rel="noopener">${IC.wa}Post as WhatsApp status</a></div>
+    ${cs.length ? `<div class="rows" style="max-height:360px;overflow:auto">${cs.slice(0, 200).map(c => `<div><span class="av">${esc(ini(c.name))}</span><span><b>${esc(c.name || "Customer")}</b><small>${c.n ? c.n + " order" + (c.n === 1 ? "" : "s") : "Loyalty member"} · ${ago(c.last)}</small></span><a class="btn w s" data-bcto="${waNum(c.phone)}" href="#" target="_blank" rel="noopener">${IC.wa}Send</a></div>`).join("")}</div>` : `<div class="empty">Customers who order or join your loyalty card show up here.</div>`}
+    <p class="hint">Each Send opens WhatsApp with your message ready. Only message people who have ordered from you, and not too often.</p></div></section>
+  <section class="cd" style="margin-top:18px"><div class="ch"><h2 class="H">Share your page</h2></div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn k" data-copytext="${esc(pageUrl())}">Copy page link</button><a class="btn w" href="https://wa.me/?text=${encodeURIComponent("See our menu and order here: " + pageUrl())}" target="_blank" rel="noopener">${IC.wa}Share on WhatsApp</a><a class="btn g" href="#qr">Get your QR</a></div>
+    <p class="hint">Put your page link in your Instagram bio, Google Business profile and WhatsApp Business catalogue. All your taps and orders then show up here.</p></section>`;
+};
+
+V.analytics = () => {
+  const st = S.stats || { days: [], taps: {} }, T = st.taps || {}, t0 = today0();
+  const days7 = Array.from({ length: 7 }, (_, i) => t0 - (6 - i) * 864e5);
+  const od = days7.map(t => { const os = ordersOn(t, t + 864e5), d = new Date(t); return { v: sum(os), lab: os.length ? inr(sum(os)) : "0", l: DOW[d.getDay()], t: DOWL[d.getDay()] + ": " + os.length + " orders" }; });
+  const wkO = ordersOn(t0 - 6 * 864e5, t0 + 864e5), hours = Array(24).fill(0); wkO.forEach(o => hours[new Date(o.at).getHours()]++);
+  const hrs = hours.map((v, h) => ({ v, h })).filter(x => x.h >= 7 && x.h <= 23), busy = hours.indexOf(Math.max(...hours));
+  const fh = h => (h % 12 || 12) + (h < 12 ? "am" : "pm");
+  const ch = st.prevWeek ? Math.round((st.week - st.prevWeek) * 100 / st.prevWeek) : null;
+  const tl = [["order", "Order taps"], ["wa", "WhatsApp chats"], ["call", "Calls"], ["dir", "Directions"], ["review", "Review taps"], ["pay", "UPI pay taps"], ["ig", "Instagram visits"]];
+  const mx = Math.max(1, ...tl.map(([k]) => T[k] || 0));
+  const acts = (T.order || 0) + (T.wa || 0) + (T.call || 0) + (T.dir || 0);
+  const cs = custRows(), ret = cs.filter(c => c.n >= 2).length;
+  return head("Analytics", "The last 7 days on your page.", "") +
+  `<section class="g4" style="margin-top:0"><div class="kpi o"><span>Page opens</span><b>${st.week || 0}</b><small>${ch === null ? "this week" : (ch >= 0 ? "+" : "") + ch + "% vs last week"}</small></div><div class="kpi"><span>Orders</span><b>${wkO.length}</b><small class="gd">${st.week ? Math.round(wkO.length * 100 / st.week) + "% of opens ordered" : "this week"}</small></div><div class="kpi y"><span>Sales</span><b>${inr(sum(wkO))}</b><small>${wkO.length ? "Avg " + inr(sum(wkO) / wkO.length) : "this week"}</small></div><div class="kpi k"><span>Returning customers</span><b>${ret}</b><small>of ${cs.length} customers</small></div></section>
+  <section class="g2"><div class="cd"><div class="ch"><h2 class="H">Page opens</h2><small>Scans and link opens</small></div>${bars(scanDays())}</div>
+  <div class="cd"><div class="ch"><h2 class="H">Sales by day</h2><small>Orders from your page</small></div>${bars(od)}</div></section>
+  <section class="g2"><div class="cd"><div class="ch"><h2 class="H">What people did</h2><small>One per person per day</small></div>
+    <div class="funnel"><div><span>Opened your page</span><i style="width:100%"></i><b>${st.week || 0}</b></div><div><span>Took an action</span><i style="width:${st.week ? Math.min(100, Math.round(acts * 100 / st.week)) : 0}%"></i><b>${acts}</b></div><div><span>Placed an order</span><i style="width:${st.week ? Math.min(100, Math.round(wkO.length * 100 / st.week)) : 0}%"></i><b>${wkO.length}</b></div></div>
+    <div class="rows" style="margin-top:16px">${tl.map(([k, l]) => `<div><span><b>${l}</b><i style="display:block;height:6px;margin-top:6px;border-radius:9px;background:var(--or);width:${Math.round((T[k] || 0) * 100 / mx)}%;min-width:3px"></i></span><b>${T[k] || 0}</b></div>`).join("")}</div></div>
+  <div class="cd"><div class="ch"><h2 class="H">Busiest hours</h2><small>${wkO.length ? "Peak around " + fh(busy) : "From this week's orders"}</small></div>${wkO.length ? bars(hrs.map(x => ({ v: x.v, lab: x.v || "", l: x.h % 3 === 1 ? fh(x.h) : "", t: fh(x.h) + ": " + x.v + " orders" })), "sm") : `<div class="empty">Once orders come in you'll see when to keep extra staff.</div>`}
+    <div class="ch" style="margin:22px 0 6px"><h2 class="H">Top items · 7 days</h2></div>${topItems(wkO, 6).length ? `<div class="rows">${topItems(wkO, 6).map(x => `<div><span><b>${esc(x.n)}</b><small>${x.q} sold</small></span><b>${inr(x.v)}</b></div>`).join("")}</div>` : `<div class="empty">No orders this week yet.</div>`}</div></section>`;
+};
+
+V.page = () => {
+  const d = S.d;
+  return inactive() + head("My page", `<a href="/b/${S.id}" target="_blank" rel="noopener">${esc(location.host)}/b/${S.id}</a>`) +
+  `<section class="g2" style="margin-top:0;grid-template-columns:auto minmax(0,1fr)"><div class="frame"><iframe src="/b/${S.id}" title="Your page" loading="lazy"></iframe></div>
+  <div style="display:grid;gap:18px;align-content:start"><div class="cd"><div class="ch"><h2 class="H">Right now</h2></div>
+    <div class="rows">
+      <div><span><b>Shop open</b><small>Off shows "Closed today" on your page and pauses orders.</small></span><label class="sw"><input type="checkbox" data-sw="open"${d.shut ? "" : " checked"}><i></i>${d.shut ? "Closed" : "Open"}</label></div>
+      <div><span><b>WhatsApp ordering</b><small>Customers add items and send the order to your WhatsApp.</small></span><label class="sw"><input type="checkbox" data-act="ordSw"${d.ord ? " checked" : ""}><i></i>${d.ord ? "On" : "Off"}</label></div>
+      ${d.ord ? `<div><span><b>Taking orders</b><small>Pause when you're too busy. Your menu still shows.</small></span><label class="sw"><input type="checkbox" data-sw="take"${d.pause || d.shut ? "" : " checked"}${d.shut ? " disabled" : ""}><i></i>${d.pause || d.shut ? "Paused" : "Taking"}</label></div>` : ""}
+    </div></div>
+    <div class="cd"><div class="ch"><h2 class="H">Edit your page</h2></div><p class="mu" style="margin-top:0">Change your photos, menu, timings, colours and layout.</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn" href="/shops/studio?edit=${S.id}">Open the editor</a><button class="btn g" data-copytext="${esc(pageUrl())}">Copy link</button><a class="btn w" href="https://wa.me/?text=${encodeURIComponent(pageUrl())}" target="_blank" rel="noopener">${IC.wa}Share</a></div></div>
+  </div></section>`;
+};
+
+V.qr = () => {
+  const tones = (window.KSQRCards && KSQRCards.TONES) || ["red", "blue", "marigold", "green", "jamun", "whitegold"];
+  const names = (window.KSQRCards && KSQRCards.NAMES) || {};
+  return head("QR & cards", "Your QR opens your page. Put it on the counter, the door, tables and bills.", "") +
+  `<section class="g2" style="margin-top:0"><div class="cd"><div class="ch"><h2 class="H">Your QR code</h2></div>
+    <div class="qrb"><div class="qbox" id="qbox"></div><div style="flex:1;min-width:200px"><p class="mu" style="margin-top:0">Plain black and white. Works on anything: stickers, menus, bills, posters.</p>
+      <div style="display:grid;gap:10px;justify-items:start"><button class="btn k" data-act="qrPng">${IC.dl}Download QR (PNG)</button><button class="btn g" data-copytext="${esc(pageUrl())}">Copy page link</button></div>
+      <label class="sw" style="margin-top:16px"><input type="checkbox" data-act="placed"${store.get("gk-qr-placed:" + S.id, false) ? " checked" : ""}><i></i>My QR is up in the shop</label></div></div></div>
+  <div class="cd"><div class="ch"><h2 class="H">Printed counter board</h2><small>3.5 × 5 inch</small></div>
+    <div class="tones" id="tones">${tones.map(t => `<button type="button" data-tone="${t}" class="${S.tone === t ? "on" : ""}" title="${esc(names[t] || t)}" aria-label="${esc(names[t] || t)}" style="background:${{ red: "#c8102e", blue: "#1d4ed8", marigold: "#f59e0b", green: "#15803d", jamun: "#6b21a8", whitegold: "#e9dcc0" }[t] || "#999"}"></button>`).join("")}</div>
+    <div style="display:flex;gap:18px;flex-wrap:wrap;align-items:flex-start"><div id="stampWrap" style="width:220px;overflow:hidden;border-radius:10px"><div id="stamp" class="stamp"></div></div>
+    <div style="flex:1;min-width:200px"><p style="margin-top:0"><b>Get it printed and delivered for ₹99</b></p><p class="mu">Thick board in your colour, couriered to your shop anywhere in India in 5–7 days.</p><a class="btn" href="/shops/studio?edit=${S.id}#publish">Order printed QR</a>${S.ship ? `<p class="note" style="margin-top:14px">${esc(S.ship)}</p>` : ""}</div></div></div></section>
+  <section class="cd" style="margin-top:18px"><div class="ch"><h2 class="H">Where to put it</h2></div><div class="rows">
+    <div><i class="ck on">${IC.check}</i><span><b>At the billing counter</b><small>People scan while they wait to pay. Best for reviews and the loyalty card.</small></span></div>
+    <div><i class="ck on">${IC.check}</i><span><b>On every table</b><small>Guests see the menu and order without waiting for staff.</small></span></div>
+    <div><i class="ck on">${IC.check}</i><span><b>On the door or window</b><small>Passers-by see your offer and timings even when you're closed.</small></span></div>
+    <div><i class="ck on">${IC.check}</i><span><b>On bills and parcels</b><small>Brings people back for the next order.</small></span></div></div></section>`;
+};
+A.qr = () => {
+  const draw = () => {
+    if (!window.qrcode) return setTimeout(draw, 300);
+    const q = qrcode(0, "M"); q.addData(pageUrl()); q.make(); $("#qbox").innerHTML = q.createSvgTag({ cellSize: 6, margin: 1, scalable: true }); S._q = q;
+    stamp();
+  };
+  draw();
+};
+function stamp() {
+  const el = $("#stamp"); if (!el || !window.KSQRCards) return setTimeout(() => $("#stamp") && stamp(), 300);
+  try { KSQRCards.mount(el, { tone: S.tone, url: pageUrl(), code: shopName().slice(0, 18) }); const w = el.offsetWidth || 336; const sc = 220 / w; el.style.transform = "scale(" + sc + ")"; $("#stampWrap").style.height = Math.round((el.offsetHeight || 480) * sc) + "px"; } catch (e) {}
+}
+
+V.payments = () => {
+  const d = S.d, upi = d.upi && d.upi.id;
+  const pg = S.pages.find(p => p.id === S.id) || {};
+  return head("Payments", "Customers pay you directly. GetKeepsake never takes a commission.", "") +
+  `<section class="g2" style="margin-top:0"><div class="cd"><div class="ch"><h2 class="H">UPI on your page</h2></div>
+    ${upi ? `<dl class="kv"><dt>UPI ID</dt><dd>${esc(d.upi.id)}</dd><dt>Name shown</dt><dd>${esc(d.upi.name || shopName())}</dd><dt>Pay taps this week</dt><dd>${(S.stats && S.stats.taps && S.stats.taps.pay) || 0}</dd></dl><p class="hint">Customers tap Pay on your page and their UPI app opens with your ID filled in. Money goes straight to your bank.</p><a class="btn g" href="/shops/studio?edit=${S.id}">Change UPI ID</a>`
+      : `<div class="empty"><b>Add your UPI ID</b>Show a Pay button on your page so customers can pay from any UPI app.<br><a class="btn" href="/shops/studio?edit=${S.id}">Add UPI ID</a></div>`}</div>
+  <div class="cd"><div class="ch"><h2 class="H">Your plan</h2></div>
+    <dl class="kv"><dt>Business page</dt><dd>${S.active ? "Active · paid once, no monthly fee" : "Not active yet"}</dd><dt>Loyalty card</dt><dd>${S.loyalty ? "Unlocked" : "Not added · ₹300 once"}</dd><dt>Printed QR</dt><dd>${esc(S.ship || "Not ordered · ₹99")}</dd><dt>Created</dt><dd>${pg.created ? new Date(pg.created).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" }) : "–"}</dd></dl>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">${S.active ? "" : `<a class="btn" href="/shops/studio?edit=${S.id}#publish">Activate · ₹499</a>`}${S.loyalty ? "" : `<a class="btn k" href="/shops/studio?edit=${S.id}#publish">Add loyalty card</a>`}<a class="btn g" href="https://wa.me/916377547759?text=${encodeURIComponent("Hi, I need help with my GetKeepsake page " + pageUrl())}" target="_blank" rel="noopener">Billing help</a></div></div></section>`;
+};
+
+V.settings = () => {
+  const u = S.user || {}, l = S.loy || {};
+  const snd = store.get("gk-dash-sound", true);
+  return head("Team & settings", "Your account, your staff PIN and order alerts.", "") +
+  `<section class="g2" style="margin-top:0"><div class="cd"><div class="ch"><h2 class="H">Staff PIN</h2><small>For the loyalty card</small></div>
+    ${S.loyalty ? `<p class="mu" style="margin-top:0">Your staff type this 4-digit PIN on the customer's phone to add a stamp. Share it only with your team. ${l.pin ? "<b>A PIN is set.</b>" : "<b>No PIN set yet.</b>"}</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap"><input class="in" id="pin" inputmode="numeric" maxlength="4" pattern="[0-9]{4}" placeholder="New 4-digit PIN" style="max-width:200px;margin:0" autocomplete="off"><button class="btn" data-act="pin">${l.pin ? "Change PIN" : "Set PIN"}</button></div>`
+    : `<div class="empty"><b>Loyalty card not added</b>Give regulars a stamp card on their phone. Staff add stamps with a PIN.<br><a class="btn" href="/shops/studio?edit=${S.id}#publish">Add for ₹300</a></div>`}</div>
+  <div class="cd"><div class="ch"><h2 class="H">Order alerts</h2></div>
+    <div class="rows"><div><span><b>Ding on new orders</b><small>While this dashboard is open.</small></span><label class="sw"><input type="checkbox" data-act="sound"${snd ? " checked" : ""}><i></i>${snd ? "On" : "Off"}</label></div>
+    <div><span><b>Phone notifications</b><small>${"Notification" in window ? (Notification.permission === "granted" ? "Allowed on this device." : "Get a pop-up when an order comes in.") : "Not supported on this browser."}</small></span>${"Notification" in window && Notification.permission !== "granted" ? `<button class="btn g s" data-act="notif">Allow</button>` : ""}</div>
+    <div><span><b>Add to home screen</b><small>Open this page in Chrome, tap ⋮ and "Add to Home screen" to open it like an app.</small></span></div></div></div></section>
+  <section class="g2"><div class="cd"><div class="ch"><h2 class="H">Account</h2></div><dl class="kv"><dt>Name</dt><dd>${esc(u.name || "")}</dd><dt>Email</dt><dd>${esc(u.email || "")}</dd><dt>Mobile</dt><dd>${esc(u.phone || "–")}</dd></dl>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px"><a class="btn g" href="/dashboard">All my pages</a><button class="btn k" data-act="logout">Log out</button></div></div>
+  <div class="cd"><div class="ch"><h2 class="H">Help</h2></div><p class="mu" style="margin-top:0">Stuck, or want us to set it up for you? We reply on WhatsApp.</p><a class="btn w" href="https://wa.me/916377547759?text=${encodeURIComponent("Hi, I need help with my shop dashboard " + pageUrl())}" target="_blank" rel="noopener">${IC.wa}WhatsApp +91 63775 47759</a></div></section>`;
+};
+
+// ---------- actions ----------
+async function setSwitch(k, on) {
+  if (k === "open") return patch(d => { d.shut = !on; }, on ? "Your page shows Open again" : "Your page now shows Closed today");
+  if (k === "take") return patch(d => { d.pause = !on; }, on ? "Taking orders again" : "Orders paused. Your menu still shows.");
+}
+function bindCommon() {
+  const m = $("#main");
+  m.querySelectorAll("[data-sw]").forEach(i => i.onchange = async () => { i.disabled = true; await setSwitch(i.dataset.sw, i.checked); go(); });
+  m.querySelectorAll("[data-copy]").forEach(b => b.onclick = async () => { const t = $(b.dataset.copy).value; try { await navigator.clipboard.writeText(t); toast("Copied"); } catch (e) { prompt("Copy this:", t); } });
+  m.querySelectorAll("[data-copytext]").forEach(b => b.onclick = async () => { try { await navigator.clipboard.writeText(b.dataset.copytext); toast("Link copied"); } catch (e) { prompt("Copy this link:", b.dataset.copytext); } });
+}
+$("#main").addEventListener("click", async e => {
+  const t = e.target;
+  const ot = t.closest("[data-otab]"); if (ot) { S.otab = ot.dataset.otab; go(); return; }
+  const cf = t.closest("[data-cf]"); if (cf) { S.cf = cf.dataset.cf; go(); return; }
+  const sb = t.closest("button[data-st]"); if (sb) {
+    if (sb.dataset.st === "cancel" && !confirm("Cancel this order?")) return;
+    sb.disabled = true;
+    try { const r = await post({ action: "bz-own-order", id: S.id, ref: sb.dataset.ref, st: sb.dataset.st }); const i = S.orders.findIndex(o => o.ref === r.order.ref); if (i >= 0) S.orders[i] = r.order; toast(STL[r.order.st] === "Preparing" ? "Accepted. Message the customer if you like." : "Marked " + STL[r.order.st].toLowerCase()); go(); } catch (x) { toast(x.message); sb.disabled = false; }
+    return;
+  }
+  const stp = t.closest("[data-stamp]"); if (stp) {
+    stp.disabled = true;
+    try { const r = await post({ action: "loy-own-stamp", id: S.id, phone: stp.dataset.stamp, name: stp.dataset.nm }); const ms = S.loy.members, i = ms.findIndex(x => x.phone === r.card.phone); if (i >= 0) ms[i] = r.card; else ms.unshift(r.card); toast("Stamp added: " + Math.min(r.card.s, S.loy.cfg.n) + "/" + S.loy.cfg.n); go(); } catch (x) { toast(x.message); stp.disabled = false; }
+    return;
+  }
+  const mso = t.closest("[data-mso]"), mb = t.closest("[data-mb]");
+  if (mso || mb) { const [si, ii] = (mso || mb).dataset[mso ? "mso" : "mb"].split(".").map(Number), x = S.menuDraft[si].items[ii]; if (mso) x.so = !x.so; else x.b = !x.b; const y = window.scrollY; go(); scrollTo(0, y); menuDirty(); return; }
+  const bc = t.closest("[data-bcto]"); if (bc) { bc.href = "https://wa.me/" + bc.dataset.bcto + "?text=" + encodeURIComponent($("#bc").value); return; }
+  if (t.closest("#bcst")) { t.closest("#bcst").href = "https://wa.me/?text=" + encodeURIComponent($("#bc").value); return; }
+  const a = t.closest("[data-act]"); if (!a || a.tagName === "INPUT") return;
+  const act = a.dataset.act;
+  if (act === "ordOn") { a.disabled = true; if (await patch(d => { d.ord = true; d.pause = false; }, "Ordering is on. Customers can now order on WhatsApp.")) go(); return; }
+  if (act === "mReset") { S.menuDraft = null; go(); return; }
+  if (act === "mSave") { a.disabled = true; const draft = S.menuDraft; if (await patch(d => { (d.menu || []).forEach((s, si) => (s.items || []).forEach((x, ii) => { const y = draft[si] && draft[si].items && draft[si].items[ii]; if (y && x && y.n === x.n) { x.p = y.p; x.b = !!y.b; if (y.so) x.so = true; else delete x.so; } })); }, "Menu saved. Your page is updated.")) { S.menuDraft = null; go(); } else a.disabled = false; return; }
+  if (act === "ofSave") {
+    const of = { on: $("#ofOn").checked, label: $("#ofL").value.trim() || "Today's offer", title: $("#ofH").value.trim(), text: $("#ofX").value.trim(), till: $("#ofT").value.trim() };
+    if (of.on && !of.title) { toast("Write your offer first"); $("#ofH").focus(); return; }
+    a.disabled = true; if (await patch(d => { d.offer = of; }, of.on ? "Offer is live on your page" : "Offer saved (hidden)")) go(); else a.disabled = false; return;
+  }
+  if (act === "csv") {
+    const rows = [["Name", "Mobile", "Orders", "Spent", "Loyalty stamps", "Last seen"]].concat(custRows().map(c => [c.name || "", c.phone, c.n || 0, Math.round(c.spend || 0), c.loy ? c.loy.s : "", c.last ? new Date(c.last).toLocaleDateString("en-IN") : ""]));
+    const csv = rows.map(r => r.map(v => /[",\n]/.test(String(v)) ? '"' + String(v).replace(/"/g, '""') + '"' : v).join(",")).join("\n");
+    const l = document.createElement("a"); l.href = URL.createObjectURL(new Blob(["﻿" + csv], { type: "text/csv" })); l.download = shopName().replace(/[^\w ]+/g, "").trim().replace(/\s+/g, "-") + "-customers.csv"; l.click(); return;
+  }
+  if (act === "qrPng" && S._q) { const q = S._q, c = document.createElement("canvas"), n = q.getModuleCount(), s = 16, mg = 4; c.width = c.height = (n + mg * 2) * s; const x = c.getContext("2d"); x.fillStyle = "#fff"; x.fillRect(0, 0, c.width, c.height); x.fillStyle = "#000"; for (let r = 0; r < n; r++) for (let k = 0; k < n; k++) if (q.isDark(r, k)) x.fillRect((k + mg) * s, (r + mg) * s, s, s); const l = document.createElement("a"); l.href = c.toDataURL("image/png"); l.download = shopName().replace(/[^\w ]+/g, "").trim().replace(/\s+/g, "-") + "-QR.png"; l.click(); return; }
+  if (act === "pin") { const p = $("#pin").value.trim(); if (!/^\d{4}$/.test(p)) { toast("The PIN must be 4 numbers"); return; } a.disabled = true; try { await post({ action: "loy-own-pin", id: S.id, pin: p }); S.loy = Object.assign(S.loy || {}, { pin: true }); toast("Staff PIN saved"); go(); } catch (x) { toast(x.message); a.disabled = false; } return; }
+  if (act === "notif") { try { await Notification.requestPermission(); } catch (x) {} go(); return; }
+  if (act === "logout") { try { await api("/api/customer-auth", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "logout" }) }); } catch (x) {} location.href = "/shops"; return; }
+});
+$("#main").addEventListener("change", async e => {
+  const t = e.target, act = t.dataset && t.dataset.act;
+  if (act === "offerOn") { t.disabled = true; await patch(d => { d.offer = Object.assign({}, d.offer, { on: t.checked }); }, t.checked ? "Offer is live on your page" : "Offer hidden"); go(); return; }
+  if (act === "ordSw") { t.disabled = true; await patch(d => { d.ord = t.checked; }, t.checked ? "Ordering is on" : "Ordering is off. Your menu still shows."); go(); return; }
+  if (act === "placed") { store.set("gk-qr-placed:" + S.id, t.checked); toast(t.checked ? "Nice. Ticked off your list." : "Unticked"); return; }
+  if (act === "sound") { store.set("gk-dash-sound", t.checked); go(); return; }
+});
+$("#main").addEventListener("input", e => {
+  const t = e.target;
+  if (t.id === "csq") { S.csq = t.value; const pos = t.selectionStart; go(); const n = $("#csq"); n.focus(); n.setSelectionRange(pos, pos); return; }
+  if (t.dataset.mp) { const [si, ii] = t.dataset.mp.split(".").map(Number); S.menuDraft[si].items[ii].p = t.value; menuDirty(); return; }
+  if (t.id === "bc") { store.set("gk-bc:" + S.id, t.value); return; }
+  if (["ofH", "ofX", "ofL", "ofOn"].includes(t.id)) { const p = $("#ofP"); p.className = "ofr" + ($("#ofOn").checked ? "" : " off"); p.innerHTML = `<small>${esc($("#ofL").value || "Today's offer")}</small><b>${esc($("#ofH").value || "Your offer here")}</b>${$("#ofX").value ? `<p>${esc($("#ofX").value)}</p>` : ""}`; }
+});
+$("#main").addEventListener("change", e => { if (e.target.id === "ofOn") e.target.dispatchEvent(new Event("input", { bubbles: true })); });
+document.addEventListener("click", e => { const b = e.target.closest("[data-tone]"); if (!b) return; S.tone = b.dataset.tone; store.set("gk-dash-tone", S.tone); $$("[data-tone]").forEach(x => x.classList.toggle("on", x === b)); stamp(); });
+function menuDirty() {
+  const orig = JSON.stringify((S.d.menu || []).map(s => (s.items || []).map(x => [x.p || "", !!x.b, !!x.so])));
+  const now = JSON.stringify((S.menuDraft || []).map(s => (s.items || []).map(x => [x.p || "", !!x.b, !!x.so])));
+  const dk = $("#mdock"); if (dk) dk.hidden = orig === now;
+}
+addEventListener("beforeunload", e => { if (S.menuDraft && $("#mdock") && !$("#mdock").hidden) { e.preventDefault(); e.returnValue = ""; } });
+
+// ---------- live orders ----------
+let actx;
+function ding() {
+  if (!store.get("gk-dash-sound", true)) return;
+  try { actx = actx || new (window.AudioContext || window.webkitAudioContext)(); const t = actx.currentTime; [880, 1320].forEach((f, i) => { const o = actx.createOscillator(), g = actx.createGain(); o.frequency.value = f; o.type = "sine"; g.gain.setValueAtTime(0.0001, t + i * .18); g.gain.exponentialRampToValueAtTime(.3, t + i * .18 + .02); g.gain.exponentialRampToValueAtTime(.0001, t + i * .18 + .5); o.connect(g).connect(actx.destination); o.start(t + i * .18); o.stop(t + i * .18 + .55); }); } catch (e) {}
+}
+document.addEventListener("pointerdown", () => { try { actx = actx || new (window.AudioContext || window.webkitAudioContext)(); if (actx.state === "suspended") actx.resume(); } catch (e) {} }, { once: true });
+async function loadOrders(quiet) {
+  try {
+    const j = await post({ action: "bz-own-orders", id: S.id });
+    const fresh = j.orders.filter(o => o.st === "new" && S.seen && !S.seen.has(o.ref));
+    S.orders = j.orders; S.seen = new Set(j.orders.map(o => o.ref)); S.ordersAt = Date.now();
+    if (fresh.length) {
+      ding(); toast(fresh.length === 1 ? `New order from ${fresh[0].name || "a customer"} · ${inr(fresh[0].tot)}` : fresh.length + " new orders");
+      try { if ("Notification" in window && Notification.permission === "granted" && document.hidden) new Notification("New order · " + inr(fresh[0].tot), { body: (fresh[0].name || "Customer") + ": " + fresh[0].items.map(x => x.q + "× " + x.n).join(", "), icon: "/assets/icon-192.png" }); } catch (e) {}
+    }
+    if (!quiet || fresh.length || ["overview", "orders"].includes(S.view)) { const y = scrollY; const typing = document.activeElement && /INPUT|TEXTAREA/.test(document.activeElement.tagName); if (!typing) { go(); scrollTo(0, y); } else shell(); }
+  } catch (e) { /* offline for a moment: try again next round */ }
+}
+function poll() { setTimeout(async () => { if (!document.hidden) await loadOrders(true); poll(); }, 20000); }
+document.addEventListener("visibilitychange", () => { if (!document.hidden && Date.now() - S.ordersAt > 15000) loadOrders(true); });
+
+// ---------- start ----------
+(async () => {
+  try {
+    const a = await api("/api/customer-auth"); S.user = a.user;
+    if (!S.user) { location.replace("/account?next=" + encodeURIComponent(location.pathname + location.search + location.hash)); return; }
+    const L = await api("/api/customer-memories"); S.pages = L.memories || [];
+    const biz = S.pages.filter(p => p.kind === "biz");
+    if (!biz.length) { $("#main").innerHTML = `<div class="load"><div class="empty" style="max-width:460px"><b>You don't have a shop page yet</b>Make one in 5 minutes. Your dashboard fills up as soon as customers start scanning.<br><a class="btn" href="/shops/studio">Create my shop page</a></div></div>`; $("#nav").innerHTML = ""; return; }
+    const want = new URLSearchParams(location.search).get("id") || store.get("gk-dash-id", "");
+    const pg = biz.find(p => p.id === want) || biz[0]; S.id = pg.id; store.set("gk-dash-id", S.id);
+    const sh = String(pg.ship || "").split("|"); S.ship = sh[0] === "shipped" ? "Printed QR shipped" + (sh[1] ? " · tracking " + sh[1] : "") : sh[0] ? "Printed QR is being prepared" : "";
+    const j = await api("/api/customer-memories?id=" + S.id);
+    S.d = j.data; S.stats = j.stats || pg.stats || null; S.loyalty = !!j.loyalty; S.active = j.active !== false;
+    await loadOrders(true);
+    go(); poll();
+    // Customers and loyalty members load in the background (used by several sections).
+    const [c, l] = await Promise.all([post({ action: "bz-own-customers", id: S.id }).catch(() => ({ customers: [] })), S.loyalty ? post({ action: "loy-own-list", id: S.id }).catch(() => null) : null]);
+    S.customers = c.customers || []; S.loy = l; S.customersCount = custRows().length;
+    if (["customers", "reviews", "offers", "analytics", "settings", "overview"].includes(S.view)) { const y = scrollY; go(); scrollTo(0, y); }
+  } catch (e) { $("#main").innerHTML = `<div class="load"><div class="empty"><b>Couldn't load your dashboard</b>${esc(e.message)}<br><button class="btn" onclick="location.reload()">Try again</button></div></div>`; }
+})();
+})();
+</script>
+</body>
+</html>
