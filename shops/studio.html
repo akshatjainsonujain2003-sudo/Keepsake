@@ -134,8 +134,9 @@ textarea.in{resize:vertical;min-height:74px}
 .item .ft .acts{display:flex;gap:6px}.item .ft .ib{width:30px;height:30px;font-size:14px}
 .add{display:flex;align-items:center;justify-content:center;gap:8px;padding:11px;border-radius:12px;border:1.5px dashed #d4c6b0;background:none;color:var(--tx);font-weight:600;font-size:13.5px;cursor:pointer;width:100%}
 .add:hover{border-color:var(--ac2);background:#fffaf1}
-.lays{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
-.ly .o{background:#f6efe3}.ly .o u{left:14%;right:14%;top:22px;height:50px;border-radius:62% 38% 46% 54%/46% 52% 48% 54%;background:#e9a07a}.ly .o s{left:8px;right:8px;top:6px;height:12px;border-radius:6px;background:#ff6a3d}.ly .o em{left:30%;right:30%;bottom:6px;height:10px;border-radius:99px;background:#ffcf33}
+.lays{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.ly .o{background:#fdf6fa}.ly .o s{left:8px;right:8px;top:8px;height:18px;border-radius:5px;background:#4b1d8f;box-shadow:2px 2px 0 #ffa3dc}.ly .o u{left:10%;width:38%;top:36px;height:44px;border-radius:99px 99px 6px 6px;background:#ff6a2b;transform:rotate(-5deg)}.ly .o em{right:10%;width:36%;top:30px;height:44px;border-radius:99px 99px 6px 6px;background:#d6ef8c;transform:rotate(4deg)}
+.ly .l{background:#ecebe6}.ly .l u{left:6px;right:6px;top:6px;height:62px;border-radius:10px;background:linear-gradient(#6b6a63,#2a2a28)}.ly .l s{left:4px;right:4px;top:46px;font:800 25px/1 Arial,sans-serif;letter-spacing:-2px;color:#ffc21a;text-align:center}.ly .l s:after{content:"label"}.ly .l em{right:6px;top:6px;width:16px;height:16px;border-radius:0 10px 0 8px;background:#ecebe6}
 .ly{border:1.5px solid var(--ln);border-radius:16px;padding:8px 8px 10px;background:#fff;cursor:pointer;text-align:left;transition:.15s}
 .ly.on{border-color:var(--tx);box-shadow:0 0 0 3px color-mix(in srgb,var(--tx) 12%,transparent)}
 .ly i{display:block;height:84px;border-radius:10px;background:#f1ebe1;position:relative;overflow:hidden}
@@ -219,7 +220,7 @@ textarea.in{resize:vertical;min-height:74px}
  .intro h1{font-size:30px}.intro p{font-size:15px}.exs{margin:0 -16px;padding:0 16px 2px}.grp h2{font-size:22px}.golive{padding:20px 16px}.golive h2{font-size:26px}
  .sec .ti b{font-size:18px}.sec>summary{align-items:flex-start;gap:12px}.sec .n{margin-top:2px}.sec .mk{margin-top:4px}.sec .chev{margin-top:6px}}
 .bst{margin:0;padding:16px;border-radius:16px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1)}.bst .bh{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}.bst .bh b{font-size:34px;line-height:1}.bst .bh span{opacity:.8}.bst em{font-style:normal;font-weight:700;margin-left:4px}.bst em.up{color:#7fd6a0}.bst em.dn{color:#ff9aa8}.bst .bars{display:flex;gap:6px;align-items:flex-end;height:70px;margin:14px 0 4px}.bst .bars i{flex:1;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:4px;font-style:normal}.bst .bars u{display:block;width:100%;border-radius:6px 6px 3px 3px;background:linear-gradient(#e8cf8e,#b88a3e)}.bst .bars small{font-size:10px;opacity:.6}.bst .bt{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 0}.bst .bt span{padding:5px 10px;border-radius:999px;background:rgba(255,255,255,.08);font-size:13px}.live .bst .bh b{display:inline;font:500 34px/1 var(--fs);margin:0}.live .bst .bt b{display:inline;font:700 13px var(--fn);margin:0}.live .bst .bt span{display:inline-block}</style>
-<script src="/assets/biz.v8.js"></script>
+<script src="/assets/biz.v9.js"></script>
 <script src="/assets/biz-demos.v5.js"></script>
 <script src="/assets/ks-checkout.v13.js"></script>
 <script src="/assets/menu-ocr.v2.js" defer></script>
@@ -465,7 +466,7 @@ $("#saveBtn2").onclick = () => {
 // ---------- live preview (an iframe, so the page sizes itself like a real phone) ----------
 const FRAME_DOC = `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&family=Inter:wght@400;500;600;700&display=swap">
-<style>html,body{margin:0;min-height:100%;scrollbar-width:none}.ph body{padding-top:40px}body::-webkit-scrollbar{display:none}<\/style><script src="/assets/biz.v8.js"><\/script></head><body><main id="b"></main>
+<style>html,body{margin:0;min-height:100%;scrollbar-width:none}.ph body{padding-top:40px}body::-webkit-scrollbar{display:none}<\/style><script src="/assets/biz.v9.js"><\/script></head><body><main id="b"></main>
 <script>try{if(frameElement.id==="pvFrame")document.documentElement.className="ph"}catch(e){}addEventListener("message",e=>{if(e.source!==parent)return;const d=e.data&&e.data.ksbiz;if(!d)return;const b=document.getElementById("b"),y=scrollY;KSBiz.render(b,d,{preview:true});document.body.style.background=getComputedStyle(b).getPropertyValue("--bg");scrollTo(0,y)});parent.postMessage({ksbizReady:1},"*")<\/script></body></html>`;
 const frames = [$("#pvFrame"), $("#ovFrame")];
 frames.forEach(f => f.srcdoc = FRAME_DOC);
