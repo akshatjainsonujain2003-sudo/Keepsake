@@ -373,14 +373,14 @@ V.overview = () => {
   const recent = liveO.length ? liveO : S.orders.slice(0, 4);
   const top = topItems(tod, 4), topW = top.length ? top : topItems(ordersOn(t0 - 6 * 864e5, t0 + 864e5), 4);
   const cl = checklist(), done = cl.filter(x => x[0]).length;
-  const rv = (st.taps || {}).review || 0, of = d.offer || {};
+  const of = d.offer || {};
   const now = new Date();
   return inactive() + head(`${greet()}, ${esc(shopName().split(/\s+/)[0])}`, `${now.toLocaleDateString("en-IN", { weekday: "long", day: "numeric", month: "short" })} · here is how your shop is doing today.`) +
   `<section class="g4" aria-label="Today">
     <div class="kpi o"><span>QR scans today</span><b data-count="${st.today || 0}">${st.today || 0}</b><small>${ch === null ? (st.week ? st.week + " this week" : "Opens of your page") : (ch >= 0 ? "+" : "") + ch + "% vs last " + wk}</small></div>
     <div class="kpi"><span>Orders today</span><b>${tod.length}</b><small class="gd">${waiting() ? waiting() + " waiting for you" : d.ord ? "All caught up" : "Ordering is off"}</small></div>
     <div class="kpi y"><span>Sales today</span><b>${inr(sales)}</b><small>${tod.length ? "Avg order " + inr(sales / tod.length) : "From page orders"}</small></div>
-    <div class="kpi k"><span>${d.review ? "Google review taps" : "Customers"}</span><b>${d.review ? rv + " ★" : (S.customersCount || 0)}</b><small>${d.review ? "this week · ask for more →" : "who ordered from your page"}</small></div>
+    <div class="kpi k"><span>Customers</span><b>${S.customersCount || 0}</b><small>${S.newCust ? S.newCust + " new this week" : "who ordered or joined your card"}</small></div>
   </section>
   <section class="g2">
     <div class="cd"><div class="ch"><h2 class="H">QR scans · last 7 days</h2><small>${best ? "Best day: " + best.t : "Opens of your page"}</small></div>${days.length ? bars(days) : `<div class="empty">No scans yet. Print your QR and place it at the counter.</div>`}</div>
@@ -696,7 +696,7 @@ document.addEventListener("visibilitychange", () => { if (!document.hidden && Da
     go(); poll();
     // Customers and loyalty members load in the background (used by several sections).
     const [c, l] = await Promise.all([post({ action: "bz-own-customers", id: S.id }).catch(() => ({ customers: [] })), S.loyalty ? post({ action: "loy-own-list", id: S.id }).catch(() => null) : null]);
-    S.customers = c.customers || []; S.loy = l; S.customersCount = custRows().length;
+    S.customers = c.customers || []; S.loy = l; { const cr = custRows(); S.customersCount = cr.length; S.newCust = cr.filter(x => x.first >= Date.now() - 7 * 864e5).length; }
     if (["customers", "reviews", "offers", "analytics", "settings", "overview"].includes(S.view)) { const y = scrollY; go(); scrollTo(0, y); }
   } catch (e) { $("#main").innerHTML = `<div class="load"><div class="empty"><b>Couldn't load your dashboard</b>${esc(e.message)}<br><button class="btn" onclick="location.reload()">Try again</button></div></div>`; }
 })();
