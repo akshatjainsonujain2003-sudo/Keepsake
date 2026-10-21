@@ -1,4 +1,4 @@
-/* Sample business pages for the /shops landing page and the studio's "See an example". Needs biz.v6.js first.
+/* Sample business pages for the /shops landing page and the studio's "See an example". Needs biz.v7.js first.
    One demo per business group: food (cafe), fashion (boutique), beauty (salon), services (gym), health (clinic), stores (kirana), real estate (realestate). */
 window.KSBizDemos = (function () {
   const B = KSBiz.blank, z = "/assets/demo/biz/";
