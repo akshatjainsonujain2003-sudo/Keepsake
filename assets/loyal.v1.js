@@ -1,4 +1,4 @@
-/* Loyalty stamp card on a live business page (/b/:id). The renderer (biz.v6.js) draws the empty card; this makes it work:
+/* Loyalty stamp card on a live business page (/b/:id). The renderer (biz.v7.js) draws the empty card; this makes it work:
    join with a phone number, then at the counter staff type their 4-digit PIN on the customer's phone to add a stamp
    or hand over the reward. The card is remembered on this phone (and can be reopened anywhere with the same number). */
 (function () {
