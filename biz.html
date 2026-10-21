@@ -19,7 +19,7 @@ html,body{margin:0;background:#1f1611;min-height:100%}
 .ownr{position:fixed;left:14px;bottom:calc(14px + env(safe-area-inset-bottom));z-index:60;padding:11px 16px;border-radius:999px;background:#121110;color:#fff;font:600 14px Inter,system-ui,sans-serif;text-decoration:none;box-shadow:0 8px 24px #0005}
 .ownl{display:block;text-align:center;padding:18px 16px 28px;font:500 12px Inter,system-ui,sans-serif;color:inherit;opacity:.55}
 </style>
-<script src="/assets/biz.v7.js"></script>
+<script src="/assets/biz.v8.js"></script>
 </head>
 <body>
 <main id="biz" aria-live="polite"></main>
@@ -42,7 +42,7 @@ html,body{margin:0;background:#1f1611;min-height:100%}
   const bg = getComputedStyle(root).getPropertyValue("--bg").trim(); if (bg) { document.querySelector('meta[name=theme-color]').content = bg; document.body.style.background = bg; }
   // The owner (logged in on this phone) gets an Edit button; everyone else a quiet link at the very bottom.
   { const e = document.createElement("a"); e.href = "/shops/studio?edit=" + encodeURIComponent(m[1]);
-    if (j.owner && j.active !== false) { e.className = "ownr"; e.textContent = "✎ Edit my page"; document.body.appendChild(e); }
+    if (j.owner && j.active !== false) { e.className = "ownr"; e.href = "/shops/dashboard?id=" + encodeURIComponent(m[1]); e.textContent = "Dashboard"; document.body.appendChild(e); }
     else if (!j.owner) { e.className = "ownl"; e.textContent = "Business owner? Edit this page"; document.body.appendChild(e); } }
   if (j.active === false) {
     const b = document.createElement("div"); b.className = "pbar";
