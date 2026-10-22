@@ -246,8 +246,15 @@
     const node = host.firstElementChild; if (o.edge === "plain") node.classList.add("pl");
     document.body.appendChild(host);
     let fc = ""; try { fc = await fontCss(); } catch (e) {}
-    try { return await htmlToImage.toCanvas(node, { pixelRatio: o.dpi / 96, width: W, height: H, cacheBust: false, skipAutoScale: true, fontEmbedCSS: fc || undefined }); }
+    let cv;
+    try { cv = await htmlToImage.toCanvas(node, { pixelRatio: o.dpi / 96, width: W, height: H, cacheBust: false, skipAutoScale: true, fontEmbedCSS: fc || undefined }); }
     finally { host.remove(); }
+    // rounded corners (plain edge): outside the corners is white in a JPG, transparent in a PNG
+    const r = o.edge === "plain" ? mmPx(o.radius || 0, o.dpi) : 0;
+    if (!r) return cv;
+    const c2 = document.createElement("canvas"); c2.width = cv.width; c2.height = cv.height; const x = c2.getContext("2d");
+    if (o.format !== "png") { x.fillStyle = "#fff"; x.fillRect(0, 0, c2.width, c2.height); }
+    x.beginPath(); x.roundRect(0, 0, c2.width, c2.height, r); x.clip(); x.drawImage(cv, 0, 0); return c2;
   }
   // Print software reads the size from the file: write the DPI into the JPEG (JFIF) or PNG (pHYs) header.
   const CRC = (() => { const t = []; for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; } return b => { let c = 0xffffffff; for (const x of b) c = t[(c ^ x) & 255] ^ (c >>> 8); return (c ^ 0xffffffff) >>> 0; }; })();
@@ -270,9 +277,9 @@
     x.drawImage(cv, m, m); return c;
   }
   async function exportImages(codes, o) {
-    o = Object.assign({ dpi: 300, format: "jpg", edge: "stamp", margin: 0, gap: 10, tone: "red" }, o || {});
+    o = Object.assign({ dpi: 300, format: "jpg", edge: "stamp", margin: 0, gap: 10, radius: 0, tone: "red" }, o || {});
     const ext = o.format === "png" ? "png" : "jpg", zip = new JSZip(), toneOf = i => o.tone === "mix" ? TONE_LIST[i % TONE_LIST.length] : (TONES[o.tone] ? o.tone : "red");
-    const note = `GetKeepsake QR boards\nSize of each board: 3.5 x 5 in (88.9 x 127 mm) at ${o.dpi} DPI${o.margin ? `, plus ${o.margin} mm empty space on every side` : ""}.\nPrint at 100% / actual size. Do not scale.\n`;
+    const note = `GetKeepsake QR boards\nSize of each board: 3.5 x 5 in (88.9 x 127 mm) at ${o.dpi} DPI${o.edge === "plain" && o.radius ? `, rounded corners ${o.radius} mm` : ""}${o.margin ? `, plus ${o.margin} mm empty space on every side` : ""}.\nPrint at 100% / actual size. Do not scale.\n`;
     if (!o.sheet) {
       for (let i = 0; i < codes.length; i++) {
         const cv = padded(await boardCanvas(codes[i], o, toneOf(i)), o);
