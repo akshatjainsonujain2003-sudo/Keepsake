@@ -89,8 +89,8 @@ def page(slug):
 <link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Pinyon+Script&family=Inter:wght@400;500;600;700;800&family=Mukta:wght@600;700&display=swap">
-<link rel="stylesheet" href="/assets/ind.v4.css"><link rel="stylesheet" href="/assets/gk.v1.css">
-<script>document.documentElement.classList.add("gkm")</script>
+<link rel="stylesheet" href="/assets/ind.v4.css"><link rel="stylesheet" href="/assets/gk.v2.css">
+<script>document.documentElement.classList.add("gkm");setTimeout(function(){{document.documentElement.classList.remove("gkm")}},1500)</script>
 <script type="application/ld+json">{json.dumps(ld, ensure_ascii=False).replace("</", "<\\/")}</script>
 </head>
 <body>
@@ -155,8 +155,8 @@ def page(slug):
 </div></section>
 </main>
 {footer()}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script><script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
-<script src="/assets/ind.v2.js" defer></script><script src="/assets/gk.v1.js" defer></script>
+
+<script src="/assets/ind.v2.js" defer></script><script src="/assets/gk.v2.js" defer></script>
 <script src="/assets/ks-pixel.v1.js" defer></script>
 </body>
 </html>
