@@ -36,6 +36,8 @@ html,body{margin:0;background:#1f1611;min-height:100%}
   const loy = j.active !== false && j.loyalty && j.data.loy && j.data.loy.on;
   KSBiz.render(root, j.data, { url: location.origin + "/b/" + m[1], id: j.owner ? "" : m[1], loyLive: !!loy });
   if (loy) { const s = document.createElement("script"); s.src = "/assets/loyal.v1.js"; s.onload = () => KSLoyal.mount(root, m[1]); document.head.appendChild(s); }
+  // links like /b/ID#bz-loy (loyalty card) or #bz-menu jump to that part once the page is drawn
+  if (/^#bz-[\w-]+$/.test(location.hash)) setTimeout(() => { const t = document.querySelector(location.hash); if (t) t.scrollIntoView({ block: "start" }); }, 350);
   document.title = (j.data.t || "Our shop") + (j.data.area ? " · " + j.data.area : "");
   const set = (p, v) => { let e = document.querySelector(`meta[property="${p}"]`); if (!e) { e = document.createElement("meta"); e.setAttribute("property", p); document.head.appendChild(e); } e.content = v; };
   set("og:title", document.title); if (j.data.tag) set("og:description", j.data.tag);
