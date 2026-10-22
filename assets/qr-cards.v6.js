@@ -249,6 +249,17 @@
     let cv;
     try { cv = await htmlToImage.toCanvas(node, { pixelRatio: o.dpi / 96, width: W, height: H, cacheBust: false, skipAutoScale: true, fontEmbedCSS: fc || undefined }); }
     finally { host.remove(); }
+    // bleed (plain edge): the board's own colours continue past the cut line, so a slightly-off cut never shows white
+    const bl = o.edge === "plain" ? mmPx(o.bleed || 0, o.dpi) : 0;
+    if (bl) {
+      const w = cv.width, h = cv.height, c3 = document.createElement("canvas"); c3.width = w + 2 * bl; c3.height = h + 2 * bl; const y = c3.getContext("2d");
+      y.imageSmoothingEnabled = false;
+      y.drawImage(cv, 0, 0, w, 1, bl, 0, w, bl); y.drawImage(cv, 0, h - 1, w, 1, bl, h + bl, w, bl);
+      y.drawImage(cv, 0, 0, 1, h, 0, bl, bl, h); y.drawImage(cv, w - 1, 0, 1, h, w + bl, bl, bl, h);
+      y.drawImage(cv, 0, 0, 1, 1, 0, 0, bl, bl); y.drawImage(cv, w - 1, 0, 1, 1, w + bl, 0, bl, bl);
+      y.drawImage(cv, 0, h - 1, 1, 1, 0, h + bl, bl, bl); y.drawImage(cv, w - 1, h - 1, 1, 1, w + bl, h + bl, bl, bl);
+      y.drawImage(cv, bl, bl); return c3; // square file: the rounded corners are cut by the printer
+    }
     // rounded corners (plain edge): outside the corners is white in a JPG, transparent in a PNG
     const r = o.edge === "plain" ? mmPx(o.radius || 0, o.dpi) : 0;
     if (!r) return cv;
@@ -277,9 +288,13 @@
     x.drawImage(cv, m, m); return c;
   }
   async function exportImages(codes, o) {
-    o = Object.assign({ dpi: 300, format: "jpg", edge: "stamp", margin: 0, gap: 10, radius: 0, tone: "red" }, o || {});
+    o = Object.assign({ dpi: 300, format: "jpg", edge: "stamp", margin: 0, gap: 10, radius: 0, bleed: 0, tone: "red" }, o || {});
     const ext = o.format === "png" ? "png" : "jpg", zip = new JSZip(), toneOf = i => o.tone === "mix" ? TONE_LIST[i % TONE_LIST.length] : (TONES[o.tone] ? o.tone : "red");
-    const note = `GetKeepsake QR boards\nSize of each board: 3.5 x 5 in (88.9 x 127 mm) at ${o.dpi} DPI${o.edge === "plain" && o.radius ? `, rounded corners ${o.radius} mm` : ""}${o.margin ? `, plus ${o.margin} mm empty space on every side` : ""}.\nPrint at 100% / actual size. Do not scale.\n`;
+    const bleed = o.edge === "plain" ? +o.bleed || 0 : 0;
+    const note = `GetKeepsake QR boards\nFinished size of each board (cut line): 3.5 x 5 in (88.9 x 127 mm) at ${o.dpi} DPI.\n` +
+      (bleed ? `Bleed: ${bleed} mm of the same colour on every side, so each file is ${(88.9 + 2 * bleed).toFixed(1)} x ${(127 + 2 * bleed).toFixed(1)} mm. Cut ${bleed} mm in from every edge.\n` : "") +
+      (o.edge === "plain" && o.radius ? `Corners: cut with a ${o.radius} mm radius${bleed ? " (the file itself is square because of the bleed)" : ""}.\n` : "") +
+      (o.margin ? `Plus ${o.margin} mm of empty space around each board.\n` : "") + `Print at 100% / actual size. Do not scale.\n`;
     if (!o.sheet) {
       for (let i = 0; i < codes.length; i++) {
         const cv = padded(await boardCanvas(codes[i], o, toneOf(i)), o);
@@ -289,7 +304,7 @@
     } else {
       // spaced sheets: boards with a clear gap and corner cut marks, never touching
       const P = PAPER[o.sheet] || PAPER.a4, dpi = o.dpi, pw = Math.round(P.w * dpi), ph = Math.round(P.h * dpi), bw = Math.round(3.5 * dpi), bh = Math.round(5 * dpi);
-      const gap = mmPx(o.gap, dpi), edge = mmPx(8, dpi), cols = Math.max(1, Math.floor((pw - 2 * edge + gap) / (bw + gap))), rows = Math.max(1, Math.floor((ph - 2 * edge + gap) / (bh + gap))), per = cols * rows;
+      const bpx = mmPx(bleed, dpi), gap = Math.max(mmPx(o.gap, dpi), bpx ? 2 * bpx + mmPx(8, dpi) : 0), edge = mmPx(8, dpi), cols = Math.max(1, Math.floor((pw - 2 * edge + gap) / (bw + gap))), rows = Math.max(1, Math.floor((ph - 2 * edge + gap) / (bh + gap))), per = cols * rows;
       const gx = Math.round((pw - (cols * bw + (cols - 1) * gap)) / 2), gy = Math.round((ph - (rows * bh + (rows - 1) * gap)) / 2), L = mmPx(3, dpi), lw = Math.max(1, Math.round(dpi / 300));
       for (let s = 0, n = 0; s < codes.length; s += per) {
         const c = document.createElement("canvas"); c.width = pw; c.height = ph; const x = c.getContext("2d");
@@ -297,8 +312,8 @@
         const page = codes.slice(s, s + per);
         for (let k = 0; k < page.length; k++, n++) {
           const col = k % cols, row = Math.floor(k / cols), px = gx + col * (bw + gap), py = gy + row * (bh + gap);
-          x.drawImage(await boardCanvas(page[k], o, toneOf(n)), px, py, bw, bh);
-          x.fillStyle = "#9a9a9a"; const off = Math.min(Math.round(gap / 3), mmPx(2, dpi));
+          const bc = await boardCanvas(page[k], o, toneOf(n)); x.drawImage(bc, px - bpx, py - bpx, bw + 2 * bpx, bh + 2 * bpx);
+          x.fillStyle = "#9a9a9a"; const off = bpx ? bpx + mmPx(1, dpi) : Math.min(Math.round(gap / 3), mmPx(2, dpi));
           [[px, py, -1, -1], [px + bw, py, 1, -1], [px, py + bh, -1, 1], [px + bw, py + bh, 1, 1]].forEach(([cx, cy, sx, sy]) => { x.fillRect(sx < 0 ? cx - off - L : cx + off, cy - lw / 2, L, lw); x.fillRect(cx - lw / 2, sy < 0 ? cy - off - L : cy + off, lw, L); });
           o.onProgress && o.onProgress(n + 1, codes.length);
         }
