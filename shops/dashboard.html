@@ -153,6 +153,9 @@ td .btn{white-space:nowrap}
 .chip{padding:7px 11px;border-radius:99px;border:1.5px solid var(--line);background:#fff;font-weight:600;font-size:12.5px;white-space:nowrap}
 .chip.on{background:var(--ink);border-color:var(--ink);color:#fff}.chip.so.on{background:#9b2c16;border-color:#9b2c16}
 .mi.isso b{text-decoration:line-through;color:var(--mu)}
+.bub{position:relative;max-width:420px;padding:12px 14px 14px;border-radius:4px 16px 16px 16px;background:#dcf8c6;color:#111;white-space:pre-wrap;font-size:14.5px;line-height:1.45;box-shadow:0 1px 1px #0002;word-break:break-word}
+.nx{display:flex;align-items:center;gap:12px;padding:14px;margin-bottom:6px;border-radius:16px;background:#e9f9ef;border:1.5px solid #bfe8cd}
+.rows>div.dn{opacity:.6}
 .dock{position:sticky;bottom:16px;z-index:5;display:flex;align-items:center;gap:12px;margin-top:16px;padding:12px 12px 12px 20px;border-radius:99px;background:var(--ink);color:#fff;box-shadow:0 16px 36px -14px #000a}
 .dock span{flex:1}
 /* misc */
@@ -257,7 +260,7 @@ const IC = {
 };
 const NAV = [
   ["Run the shop", [["overview", "Overview", "home"], ["orders", "Orders", "orders"], ["menu", "Menu & prices", "menu"], ["customers", "Customers", "people"]]],
-  ["Grow", [["reviews", "Reviews", "star"], ["offers", "Offers & marketing", "tag"], ["analytics", "Analytics", "chart"]]],
+  ["Grow", [["messages", "Messages", "wa"], ["reviews", "Reviews", "star"], ["offers", "Offers & marketing", "tag"], ["analytics", "Analytics", "chart"]]],
   ["Set up", [["page", "My page", "page"], ["qr", "QR & cards", "qr"], ["payments", "Payments", "pay"], ["settings", "Team & settings", "gear"]]]
 ];
 const TITLES = Object.fromEntries(NAV.flatMap(g => g[1]).map(x => [x[0], x[1]]));
@@ -446,7 +449,7 @@ V.customers = () => {
   const list = all.filter(c => (S.cf === "all" || (S.cf === "loy" && c.loy) || (S.cf === "reg" && c.n >= 2) || (S.cf === "new" && c.first >= wk)) && (!q || (c.name || "").toLowerCase().includes(q) || c.phone.includes(q)));
   return head("Customers", `${all.length} customer${all.length === 1 ? "" : "s"} · ${all.filter(c => c.n >= 2).length} came back · ${all.filter(c => c.first >= wk).length} new this week`, `<div class="tg"><button class="btn g" data-act="csv"${all.length ? "" : " disabled"}>${IC.dl}Download list</button></div>`) +
   `<div class="srch"><input class="in" id="csq" placeholder="Search name or number" value="${esc(S.csq)}" aria-label="Search customers"><div class="tabs" style="margin:0">${[["all", "All"], ["reg", "Regulars"], ["new", "New"], ...(loyOn || (S.loy && S.loy.members.length) ? [["loy", "Loyalty"]] : [])].map(([k, l]) => `<button type="button" data-cf="${k}" class="${S.cf === k ? "on" : ""}">${l}</button>`).join("")}</div></div>
-  ${list.length ? `<div class="tw"><table><thead><tr><th>Customer</th><th>Orders</th><th>Spent</th>${loyOn ? "<th>Loyalty card</th>" : ""}<th>Last seen</th><th></th></tr></thead><tbody>${list.slice(0, 500).map(c => `<tr><td><b>${esc(c.name || "Customer")}</b><br><small class="mu">${esc(c.phone)}</small>${c.n >= 3 ? ' <span class="tag">Regular</span>' : c.first >= wk ? ' <span class="tag g">New</span>' : ""}</td><td data-l="Orders">${c.n || "–"}</td><td data-l="Spent">${c.spend ? inr(c.spend) : "–"}</td>${loyOn ? `<td data-l="Card">${c.loy ? `<b>${Math.min(c.loy.s, S.loy.cfg.n)}/${S.loy.cfg.n}</b> <small class="mu">stamps</small>${c.loy.s >= S.loy.cfg.n ? ' <span class="tag g">Reward ready</span>' : ""}` : '<small class="mu">Not joined</small>'}</td>` : ""}<td data-l="Last seen"><small>${c.last ? ago(c.last) : "–"}</small></td><td style="text-align:right;white-space:nowrap">${loyOn ? `<button class="btn g s" data-stamp="${esc(c.phone)}" data-nm="${esc(c.name || "")}">+ Stamp</button> ` : ""}<a class="btn w s" href="https://wa.me/${waNum(c.phone)}?text=${encodeURIComponent("Hi" + (c.name ? " " + c.name : "") + "! ")}" target="_blank" rel="noopener">${IC.wa}</a></td></tr>`).join("")}</tbody></table></div>`
+  ${list.length ? `<div class="tw"><table><thead><tr><th>Customer</th><th>Orders</th><th>Spent</th>${loyOn ? "<th>Loyalty card</th>" : ""}<th>Last seen</th><th></th></tr></thead><tbody>${list.slice(0, 500).map(c => `<tr><td><b>${esc(c.name || "Customer")}</b><br><small class="mu">${esc(c.phone)}</small>${c.n >= 3 ? ' <span class="tag">Regular</span>' : c.first >= wk ? ' <span class="tag g">New</span>' : ""}</td><td data-l="Orders">${c.n || "–"}</td><td data-l="Spent">${c.spend ? inr(c.spend) : "–"}</td>${loyOn ? `<td data-l="Card">${c.loy ? `<b>${Math.min(c.loy.s, S.loy.cfg.n)}/${S.loy.cfg.n}</b> <small class="mu">stamps</small>${c.loy.s >= S.loy.cfg.n ? ' <span class="tag g">Reward ready</span>' : ""}` : '<small class="mu">Not joined</small>'}</td>` : ""}<td data-l="Last seen"><small>${c.last ? ago(c.last) : "–"}</small></td><td style="text-align:right;white-space:nowrap">${loyOn ? `<button class="btn g s" data-stamp="${esc(c.phone)}" data-nm="${esc(c.name || "")}">+ Stamp</button> ` : ""}<a class="btn w s" href="https://wa.me/${waNum(c.phone)}?text=${encodeURIComponent(c.loy && loyOn ? fill(TPL.loy.t(), c) : "Hi" + (c.name ? " " + c.name : "") + "! ")}" target="_blank" rel="noopener" title="${c.loy && loyOn ? "Send their stamp update" : "WhatsApp"}">${IC.wa}${c.loy && loyOn ? "Stamps" : ""}</a></td></tr>`).join("")}</tbody></table></div>`
   : `<div class="empty"><b>${all.length ? "No one matches" : "No customers yet"}</b>${all.length ? "" : "Everyone who orders with their number" + (S.loyalty ? " or joins your loyalty card" : "") + " is saved here, so you can message them about offers."}</div>`}
   <p class="hint">Numbers are only those customers shared with you when ordering or joining your card. Message them about things they'd want, not every day.</p>`;
 };
@@ -464,6 +467,66 @@ V.reviews = () => {
     <p class="hint">Tip: reply to every Google review, good or bad, within a day. It shows new customers you care.</p></div></section>`);
 };
 
+// ---------- Messages: WhatsApp messages to customers, one tap each ----------
+const LOYN = () => S.loy && S.loy.cfg ? S.loy.cfg.n : 0;
+const leftOf = c => c.loy && LOYN() ? Math.max(0, LOYN() - c.loy.s) : null;
+const TPL = {
+  offer: { n: "Today's offer", t: () => `Hi {name}! ${S.d.offer && S.d.offer.title ? S.d.offer.title + " at {shop} today." : "Something special at {shop} today."} See the menu and order here: {link}` },
+  loy: { n: "Loyalty card update", loy: 1, t: () => `Hi {name}! Your {shop} loyalty card:\n{card}  {stamps} of {total} stamps\n{progress}\nSee your card: {link}` },
+  newi: { n: "New on the menu", t: () => `Hi {name}! New at {shop}: ______. Come try it, or order here: {link}` },
+  miss: { n: "We miss you", t: () => `Hi {name}! It's been a while. Come back to {shop} this week, we'd love to see you. {link}` },
+  thanks: { n: "Thank you", t: () => `Hi {name}! Thank you for visiting {shop}. See you again soon! {link}` },
+  closed: { n: "Closed today", t: () => `Hi {name}! {shop} is closed today. We'll be back tomorrow. See you soon!` },
+  free: { n: "Write your own", t: () => `Hi {name}! ` }
+};
+function audiences() {
+  const wk = Date.now() - 7 * 864e5, mo = Date.now() - 30 * 864e5, L = [["all", "Everyone", () => true]];
+  if (LOYN()) L.push(["loy", "Loyalty members", c => !!c.loy], ["near", "1–2 stamps from a reward", c => { const l = leftOf(c); return l !== null && l > 0 && l <= 2; }], ["ready", "Reward ready", c => leftOf(c) === 0]);
+  L.push(["reg", "Regulars (2+ orders)", c => c.n >= 2], ["new", "New this week", c => c.first >= wk], ["away", "Not seen in 30 days", c => c.last && c.last < mo]);
+  return L;
+}
+function fill(text, c) {
+  const n = LOYN(), s = c.loy ? Math.min(c.loy.s, n) : 0, l = leftOf(c), rw = S.loy && S.loy.cfg ? S.loy.cfg.r : "reward";
+  const prog = l === null ? "" : l === 0 ? `Your ${rw} is ready! Show this message at the counter to claim it.` : `Just ${l} more visit${l === 1 ? "" : "s"} to get your ${rw}.`;
+  const card = n ? "●".repeat(s) + "○".repeat(Math.max(0, n - s)) : "";
+  const first = String(c.name || "").trim().split(/\s+/)[0];
+  return text.replace(/\{name\}/g, first && first !== "Customer" ? first : "there").replace(/\{shop\}/g, shopName()).replace(/\{link\}/g, pageUrl() + (/\{stamps\}|\{progress\}/.test(text) ? "#bz-loy" : ""))
+    .replace(/\{stamps\}/g, s).replace(/\{total\}/g, n).replace(/\{left\}/g, l === null ? "" : l).replace(/\{reward\}/g, rw).replace(/\{progress\}/g, prog).replace(/\{card\}/g, card).replace(/\n{3,}/g, "\n\n").trim();
+}
+const msgText = () => S.mtext != null ? S.mtext : TPL[S.mt || "offer"].t();
+function recipients() {
+  const a = audiences().find(x => x[0] === S.ma) || audiences()[0], loyT = TPL[S.mt || "offer"].loy || /\{stamps\}|\{progress\}|\{card\}/.test(msgText());
+  return custRows().filter(c => c.phone && a[2](c) && (!loyT || c.loy));
+}
+const sentKey = () => "gk-sent:" + S.id + ":" + new Date().toDateString() + ":" + (S.mt || "offer") + ":" + (S.ma || "all");
+const sentSet = () => new Set(store.get(sentKey(), []));
+const waLink = (c, text) => "https://wa.me/" + waNum(c.phone) + "?text=" + encodeURIComponent(fill(text, c));
+V.messages = () => {
+  if (!S.customers) return head("Messages", "Loading…", "") + `<div class="sk" style="height:300px"></div>`;
+  S.mt = S.mt || (LOYN() ? "loy" : "offer"); S.ma = S.ma || (TPL[S.mt].loy ? "loy" : "all");
+  const text = msgText(), rs = recipients(), sent = sentSet(), done = rs.filter(c => sent.has(c.phone)).length, next = rs.find(c => !sent.has(c.phone));
+  const all = custRows().filter(c => c.phone);
+  const aud = audiences().filter(a => !(TPL[S.mt].loy && ["reg", "new", "away"].includes(a[0]))).map(([k, l, f]) => [k, l, all.filter(c => f(c) && (!TPL[S.mt].loy || c.loy)).length]);
+  const ex = rs[0] || { name: "Riya", phone: "", loy: LOYN() ? { s: Math.max(1, LOYN() - 2) } : null };
+  return head("Messages", "Send WhatsApp messages to your customers. Each one opens WhatsApp ready to send.", "") +
+  (!all.length ? `<div class="cd"><div class="empty"><b>No customers to message yet</b>Customers who order with their number${S.loyalty ? " or join your loyalty card" : ""} appear here.</div></div>` :
+  `<section class="g2" style="margin-top:0"><div class="cd"><div class="ch"><h2 class="H">1 · Pick a message</h2></div>
+    <div class="tabs">${Object.entries(TPL).filter(([k, x]) => !x.loy || LOYN()).map(([k, x]) => `<button type="button" data-mt="${k}" class="${S.mt === k ? "on" : ""}">${x.n}</button>`).join("")}</div>
+    <div class="ch" style="margin:18px 0 10px"><h2 class="H">2 · Who gets it</h2></div>
+    <div class="tabs">${aud.map(([k, l, n]) => `<button type="button" data-ma="${k}" class="${S.ma === k ? "on" : ""}"${n ? "" : " disabled style=\"opacity:.45\""}>${l} <em style="background:var(--ink)">${n}</em></button>`).join("")}</div>
+    <div class="ch" style="margin:18px 0 10px"><h2 class="H">3 · Your message</h2><small>Words in { } fill in for each customer</small></div>
+    <textarea class="in" id="mt" rows="6" maxlength="900">${esc(text)}</textarea>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">${["name", "shop", "link", ...(LOYN() ? ["stamps", "total", "left", "reward", "card", "progress"] : [])].map(k => `<button type="button" class="chip" data-ins="{${k}}">{${k}}</button>`).join("")}</div>
+    <div class="ch" style="margin:18px 0 8px"><small>How ${esc(String(ex.name || "Riya").split(/\s+/)[0])} sees it</small></div>
+    <div class="bub" id="mprev">${esc(fill(text, ex))}</div></div>
+  <div class="cd"><div class="ch"><h2 class="H">4 · Send</h2><small id="mcount">${done} of ${rs.length} sent today</small></div>
+    ${rs.length ? `<div class="nx">${next ? `<span class="av">${esc(ini(next.name))}</span><span style="flex:1;min-width:0"><small class="mu">Next</small><b style="display:block">${esc(next.name || "Customer")}</b><small class="mu">${esc(next.phone)}${next.loy && LOYN() ? " · " + Math.min(next.loy.s, LOYN()) + "/" + LOYN() + " stamps" : ""}</small></span><a class="btn w" data-msgto="${esc(next.phone)}" href="${esc(waLink(next, text))}" target="_blank" rel="noopener">${IC.wa}Send</a>` : `<span style="flex:1"><b>All sent 🎉</b><small class="mu" style="display:block">Everyone in this list has been sent today's message.</small></span><button class="btn g s" data-act="mreset">Start again</button>`}</div>
+    <div class="rows" style="max-height:440px;overflow:auto">${rs.slice(0, 300).map(c => { const ok = sent.has(c.phone); return `<div class="${ok ? "dn" : ""}"><span class="av">${esc(ini(c.name))}</span><span><b>${esc(c.name || "Customer")}</b><small>${c.loy && LOYN() ? Math.min(c.loy.s, LOYN()) + "/" + LOYN() + " stamps · " : ""}${c.n ? c.n + " order" + (c.n === 1 ? "" : "s") + " · " : ""}${c.last ? ago(c.last) : ""}</small></span>${ok ? `<span class="tag g">Sent ✓</span>` : ""}<a class="btn ${ok ? "g" : "w"} s" data-msgto="${esc(c.phone)}" href="${esc(waLink(c, text))}" target="_blank" rel="noopener">${IC.wa}${ok ? "Again" : "Send"}</a></div>`; }).join("")}</div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px"><button class="btn k s" data-act="mnums">Copy all ${rs.length} numbers</button></div>` : `<div class="empty">No one in this group yet.</div>`}
+    <p class="hint">Tap Send, press send in WhatsApp, then come back here: the next customer is ready. Only message people who bought from you, and not every day.</p>
+    <p class="hint"><b>Many customers?</b> In the WhatsApp Business app you can make a broadcast list with the copied numbers. It reaches only people who saved your number.</p></div></section>`);
+};
+
 V.offers = () => {
   const d = S.d, of = Object.assign({ on: false, label: "Today's offer", title: "", text: "", till: "" }, d.offer || {});
   const cs = custRows().filter(c => c.phone);
@@ -476,11 +539,9 @@ V.offers = () => {
     <div class="ofr${of.on ? "" : " off"}" id="ofP" style="margin-bottom:14px"><small>${esc(of.label || "Today's offer")}</small><b>${esc(of.title || "Your offer here")}</b>${of.text ? `<p>${esc(of.text)}</p>` : ""}</div>
     <button class="btn" data-act="ofSave">Save offer</button>
     <p class="hint">Ideas: a combo at a round price, a happy hour for your slow time, or a free add-on above ₹500.</p></div>
-  <div class="cd"><div class="ch"><h2 class="H">Message your customers</h2><small>${cs.length} with a number</small></div>
-    <textarea class="in" id="bc" rows="4" maxlength="600">${esc(msg)}</textarea>
-    <div style="display:flex;gap:10px;flex-wrap:wrap;margin:12px 0"><button class="btn k" data-copy="#bc">Copy message</button><a class="btn w" id="bcst" href="#" target="_blank" rel="noopener">${IC.wa}Post as WhatsApp status</a></div>
-    ${cs.length ? `<div class="rows" style="max-height:360px;overflow:auto">${cs.slice(0, 200).map(c => `<div><span class="av">${esc(ini(c.name))}</span><span><b>${esc(c.name || "Customer")}</b><small>${c.n ? c.n + " order" + (c.n === 1 ? "" : "s") : "Loyalty member"} · ${ago(c.last)}</small></span><a class="btn w s" data-bcto="${waNum(c.phone)}" href="#" target="_blank" rel="noopener">${IC.wa}Send</a></div>`).join("")}</div>` : `<div class="empty">Customers who order or join your loyalty card show up here.</div>`}
-    <p class="hint">Each Send opens WhatsApp with your message ready. Only message people who have ordered from you, and not too often.</p></div></section>
+  <div class="cd"><div class="ch"><h2 class="H">Tell your customers</h2><small>${cs.length} with a number</small></div>
+    <p class="mu" style="margin-top:0">Send today's offer on WhatsApp to everyone who ordered or joined your loyalty card. Each message has their name in it.</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn w" href="#messages" data-goto-offer>${IC.wa}Message customers</a><a class="btn g" href="https://wa.me/?text=${encodeURIComponent((of.title ? of.title + " at " + shopName() + ". " : "") + "See the menu and order here: " + pageUrl())}" target="_blank" rel="noopener">Post as WhatsApp status</a></div></div></section>
   <section class="cd" style="margin-top:18px"><div class="ch"><h2 class="H">Share your page</h2></div>
     <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn k" data-copytext="${esc(pageUrl())}">Copy page link</button><a class="btn w" href="https://wa.me/?text=${encodeURIComponent("See our menu and order here: " + pageUrl())}" target="_blank" rel="noopener">${IC.wa}Share on WhatsApp</a><a class="btn g" href="#qr">Get your QR</a></div>
     <p class="hint">Put your page link in your Instagram bio, Google Business profile and WhatsApp Business catalogue. All your taps and orders then show up here.</p></section>`;
@@ -607,11 +668,20 @@ $("#main").addEventListener("click", async e => {
   }
   const stp = t.closest("[data-stamp]"); if (stp) {
     stp.disabled = true;
-    try { const r = await post({ action: "loy-own-stamp", id: S.id, phone: stp.dataset.stamp, name: stp.dataset.nm }); const ms = S.loy.members, i = ms.findIndex(x => x.phone === r.card.phone); if (i >= 0) ms[i] = r.card; else ms.unshift(r.card); toast("Stamp added: " + Math.min(r.card.s, S.loy.cfg.n) + "/" + S.loy.cfg.n); go(); } catch (x) { toast(x.message); stp.disabled = false; }
+    try { const r = await post({ action: "loy-own-stamp", id: S.id, phone: stp.dataset.stamp, name: stp.dataset.nm }); const ms = S.loy.members, i = ms.findIndex(x => x.phone === r.card.phone); if (i >= 0) ms[i] = r.card; else ms.unshift(r.card); toast("Stamp added: " + Math.min(r.card.s, S.loy.cfg.n) + "/" + S.loy.cfg.n + ". Tap Stamps to tell them on WhatsApp."); go(); } catch (x) { toast(x.message); stp.disabled = false; }
     return;
   }
   const mso = t.closest("[data-mso]"), mb = t.closest("[data-mb]");
   if (mso || mb) { const [si, ii] = (mso || mb).dataset[mso ? "mso" : "mb"].split(".").map(Number), x = S.menuDraft[si].items[ii]; if (mso) x.so = !x.so; else x.b = !x.b; const y = window.scrollY; go(); scrollTo(0, y); menuDirty(); return; }
+  if (t.closest("[data-goto-offer]")) { S.mt = "offer"; S.mtext = null; S.ma = "all"; }
+  const mtb = t.closest("[data-mt]"); if (mtb) { S.mt = mtb.dataset.mt; S.mtext = null; if (TPL[S.mt].loy && !["loy", "near", "ready"].includes(S.ma)) S.ma = "loy"; go(); return; }
+  const mab = t.closest("[data-ma]"); if (mab) { S.ma = mab.dataset.ma; go(); return; }
+  const ins = t.closest("[data-ins]"); if (ins) { const ta = $("#mt"), p = ta.selectionStart ?? ta.value.length; ta.value = ta.value.slice(0, p) + ins.dataset.ins + ta.value.slice(ta.selectionEnd ?? p); ta.focus(); ta.selectionStart = ta.selectionEnd = p + ins.dataset.ins.length; ta.dispatchEvent(new Event("input", { bubbles: true })); return; }
+  const mto = t.closest("[data-msgto]"); if (mto) {
+    const c = recipients().find(x => x.phone === mto.dataset.msgto) || custRows().find(x => x.phone === mto.dataset.msgto); if (c) mto.href = waLink(c, msgText());
+    const k = sentKey(), arr = store.get(k, []); if (!arr.includes(mto.dataset.msgto)) { arr.push(mto.dataset.msgto); store.set(k, arr); }
+    setTimeout(() => { const y = scrollY; go(); scrollTo(0, y); }, 400); return;
+  }
   const bc = t.closest("[data-bcto]"); if (bc) { bc.href = "https://wa.me/" + bc.dataset.bcto + "?text=" + encodeURIComponent($("#bc").value); return; }
   if (t.closest("#bcst")) { t.closest("#bcst").href = "https://wa.me/?text=" + encodeURIComponent($("#bc").value); return; }
   const a = t.closest("[data-act]"); if (!a || a.tagName === "INPUT") return;
@@ -631,6 +701,8 @@ $("#main").addEventListener("click", async e => {
   }
   if (act === "qrPng" && S._q) { const q = S._q, c = document.createElement("canvas"), n = q.getModuleCount(), s = 16, mg = 4; c.width = c.height = (n + mg * 2) * s; const x = c.getContext("2d"); x.fillStyle = "#fff"; x.fillRect(0, 0, c.width, c.height); x.fillStyle = "#000"; for (let r = 0; r < n; r++) for (let k = 0; k < n; k++) if (q.isDark(r, k)) x.fillRect((k + mg) * s, (r + mg) * s, s, s); const l = document.createElement("a"); l.href = c.toDataURL("image/png"); l.download = shopName().replace(/[^\w ]+/g, "").trim().replace(/\s+/g, "-") + "-QR.png"; l.click(); return; }
   if (act === "pin") { const p = $("#pin").value.trim(); if (!/^\d{4}$/.test(p)) { toast("The PIN must be 4 numbers"); return; } a.disabled = true; try { await post({ action: "loy-own-pin", id: S.id, pin: p }); S.loy = Object.assign(S.loy || {}, { pin: true }); toast("Staff PIN saved"); go(); } catch (x) { toast(x.message); a.disabled = false; } return; }
+  if (act === "mreset") { store.set(sentKey(), []); go(); return; }
+  if (act === "mnums") { const nums = recipients().map(c => "+" + waNum(c.phone)).join("\n"); try { await navigator.clipboard.writeText(nums); toast("Numbers copied"); } catch (x) { prompt("Copy these numbers:", nums); } return; }
   if (act === "notif") { try { await Notification.requestPermission(); } catch (x) {} go(); return; }
   if (act === "logout") { try { await api("/api/customer-auth", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "logout" }) }); } catch (x) {} location.href = "/shops"; return; }
 });
@@ -646,6 +718,7 @@ $("#main").addEventListener("input", e => {
   if (t.id === "csq") { S.csq = t.value; const pos = t.selectionStart; go(); const n = $("#csq"); n.focus(); n.setSelectionRange(pos, pos); return; }
   if (t.dataset.mp) { const [si, ii] = t.dataset.mp.split(".").map(Number); S.menuDraft[si].items[ii].p = t.value; menuDirty(); return; }
   if (t.id === "bc") { store.set("gk-bc:" + S.id, t.value); return; }
+  if (t.id === "mt") { S.mtext = t.value; const rs = recipients(), ex = rs[0] || { name: "Riya", phone: "", loy: LOYN() ? { s: Math.max(1, LOYN() - 2) } : null }; $("#mprev").textContent = fill(t.value, ex); document.querySelectorAll("[data-msgto]").forEach(a => { const c = rs.find(x => x.phone === a.dataset.msgto); if (c) a.href = waLink(c, t.value); }); return; }
   if (["ofH", "ofX", "ofL", "ofOn"].includes(t.id)) { const p = $("#ofP"); p.className = "ofr" + ($("#ofOn").checked ? "" : " off"); p.innerHTML = `<small>${esc($("#ofL").value || "Today's offer")}</small><b>${esc($("#ofH").value || "Your offer here")}</b>${$("#ofX").value ? `<p>${esc($("#ofX").value)}</p>` : ""}`; }
 });
 $("#main").addEventListener("change", e => { if (e.target.id === "ofOn") e.target.dispatchEvent(new Event("input", { bubbles: true })); });
@@ -697,7 +770,7 @@ document.addEventListener("visibilitychange", () => { if (!document.hidden && Da
     // Customers and loyalty members load in the background (used by several sections).
     const [c, l] = await Promise.all([post({ action: "bz-own-customers", id: S.id }).catch(() => ({ customers: [] })), S.loyalty ? post({ action: "loy-own-list", id: S.id }).catch(() => null) : null]);
     S.customers = c.customers || []; S.loy = l; { const cr = custRows(); S.customersCount = cr.length; S.newCust = cr.filter(x => x.first >= Date.now() - 7 * 864e5).length; }
-    if (["customers", "reviews", "offers", "analytics", "settings", "overview"].includes(S.view)) { const y = scrollY; go(); scrollTo(0, y); }
+    if (["customers", "messages", "reviews", "offers", "analytics", "settings", "overview"].includes(S.view)) { const y = scrollY; go(); scrollTo(0, y); }
   } catch (e) { $("#main").innerHTML = `<div class="load"><div class="empty"><b>Couldn't load your dashboard</b>${esc(e.message)}<br><button class="btn" onclick="location.reload()">Try again</button></div></div>`; }
 })();
 })();
