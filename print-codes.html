@@ -1,7 +1,8 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Prepaid code sheet · GetKeepsake</title>
 <link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
-<script src="/assets/qr-cards.v5.js"></script>
+<script src="/assets/qr-cards.v6.js"></script>
+<script src="/assets/vendor/html-to-image.1.11.11.js" defer></script><script src="/assets/vendor/jszip.3.10.1.min.js" defer></script>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Pinyon+Script&family=Anton&family=Inter+Tight:wght@300;600&family=Playfair+Display:ital,wght@0,600;1,600&family=Inter:wght@400;500;600;700;800&family=Rozha+One&family=Mukta:wght@600;700&display=swap">
 <style>
 *{box-sizing:border-box}body{margin:0;background:#eee;font-family:system-ui,-apple-system,sans-serif;color:#2a0409}
@@ -28,7 +29,8 @@
 .sheet.bd{grid-template-columns:repeat(2,97mm);gap:4mm}
 .bd .b{width:97mm;height:137mm;padding:11mm 8mm 8mm}.bd .b::before{inset:3.5mm;border-radius:4mm}
 .bd .b .e{font-size:3.2mm;letter-spacing:1.4mm}.bd .b .h{font-size:10mm}.bd .b .q{width:58mm;height:58mm;padding:3mm;border-radius:4mm}.bd .b .l{font-size:3.6mm}.bd .b .t{font-size:2.5mm}
-@media print{body{background:#fff}.bar{display:none}.sheet{margin:0;padding:6mm 7.5mm}@page{size:A4;margin:0}}
+.ac{position:fixed;right:16px;top:64px;z-index:5;width:min(360px,calc(100% - 32px));padding:18px;border-radius:16px;background:#fff;color:#2a0409;box-shadow:0 20px 50px -20px #0008;font-size:14px}.ac h3{margin:0 0 4px;font-size:17px}.ac p{margin:0 0 12px;color:#6b5a55;font-size:13px}.ac label{display:block;margin:0 0 10px;font-weight:600;font-size:13px}.ac select{display:block;width:100%;margin-top:4px;padding:9px 10px;border-radius:10px;border:1px solid #d8c9c0;background:#fff;color:#2a0409;font:inherit}.ac .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.ac .go{width:100%;margin-top:6px;padding:12px;border-radius:999px;border:0;background:#2a0409;color:#f8f0df;font-weight:700;cursor:pointer}.ac .go:disabled{opacity:.6}.ac .x{position:absolute;right:10px;top:8px;border:0;background:none;font-size:22px;cursor:pointer;color:#6b5a55}.ac .st{margin-top:10px;font-size:13px;color:#2a0409;font-weight:600}.ac [hidden]{display:none}
+@media print{body{background:#fff}.bar{display:none}.ac{display:none}.sheet{margin:0;padding:6mm 7.5mm}@page{size:A4;margin:0}}
 </style></head><body>
 <div class="bar"><span id="title">Loading…</span><span style="flex:1"></span><small>Print on A4 at 100%. Cut on the dashed border, then cut along the gold line: the QR half goes on the outside of the pack, the PIN half goes inside.</small><button id="csv" class="l">Download codes (CSV)</button><button onclick="(document.fonts?document.fonts.ready:Promise.resolve()).then(()=>print())">Print</button></div>
 <div id="out"></div>
@@ -47,7 +49,24 @@
   bar.insertBefore(sel("tone",tone,[["red","Red"],["blue","Blue"],["marigold","Orange"],["green","Green"],["jamun","Purple"],["whitegold","White & Gold"],["mix","Mix all 5 colours"]]),sp.nextSibling);
   bar.insertBefore(sel("paper",paper,[["a4","A4 · 4 per sheet"],["a3","A3 · 9 per sheet"],["12x18","12×18 in · 9 per sheet"],["13x19","13×19 in · 9 per sheet"]]),sp.nextSibling.nextSibling);
   document.querySelector(".bar small").textContent="Print at 100% (Actual size), Background graphics ON, on 300gsm card. Boards touch each other: cut straight along the crop marks, each board is 3.5 × 5 in.";
-  KSQRCards.render(document.getElementById("out"),b.codes,{size:"stamp",label:b.shop,base:"https://getkeepsake.in",tone,paper});setCsv();return}
+  KSQRCards.render(document.getElementById("out"),b.codes,{size:"stamp",label:b.shop,base:"https://getkeepsake.in",tone,paper});setCsv();
+  // Image files for acrylic / print shops that can't open the PDF
+  const ib=document.createElement("button");ib.textContent="Image files (JPG/PNG)";bar.appendChild(ib);
+  const pn=document.createElement("div");pn.className="ac";pn.hidden=true;pn.innerHTML=`<button class="x" aria-label="Close">×</button><h3>Image files for acrylic printing</h3><p>High-resolution JPG or PNG files, packed in one ZIP. Each board is exactly 3.5 × 5 in with the size written into the file.</p>
+   <label>What to make<select id="aw"><option value="one">One file per QR (separate)</option><option value="sheet">Sheets with space between QRs</option></select></label>
+   <div class="row"><label>Format<select id="af"><option value="jpg">JPG</option><option value="png">PNG</option></select></label><label>Resolution<select id="ad"><option value="300">300 DPI · 1050 × 1500 px</option><option value="600">600 DPI · 2100 × 3000 px</option></select></label></div>
+   <div class="row"><label>Edge<select id="ae"><option value="plain">Plain colour edge (acrylic)</option><option value="stamp">Stamp edge with holes</option></select></label><label id="arL">Rounded corners<select id="ar"><option value="0">Square</option><option value="4">Slight · 4 mm</option><option value="8" selected>Round · 8 mm</option><option value="12">Extra round · 12 mm</option></select></label></div>
+   <label id="amL">Empty space around each QR<select id="am"><option value="0">None (trim to the board)</option><option value="3" selected>3 mm</option><option value="5">5 mm</option><option value="10">10 mm</option></select></label>
+   <div class="row" id="asR" hidden><label>Sheet size<select id="ap">${Object.entries(KSQRCards.PAPER).map(([k,v])=>`<option value="${k}"${k===paper?" selected":""}>${v.name}</option>`).join("")}</select></label><label>Gap between QRs<select id="ag"><option value="5">5 mm</option><option value="10" selected>10 mm</option><option value="15">15 mm</option><option value="20">20 mm</option></select></label></div>
+   <button class="go" id="ago">Download ZIP</button><div class="st" id="ast" role="status"></div>`;document.body.appendChild(pn);
+  ib.onclick=()=>{pn.hidden=!pn.hidden};pn.querySelector(".x").onclick=()=>{pn.hidden=true};
+  const $a=s=>pn.querySelector(s);$a("#ae").onchange=()=>{$a("#arL").hidden=$a("#ae").value!=="plain"};$a("#aw").onchange=()=>{const sh=$a("#aw").value==="sheet";$a("#asR").hidden=!sh;$a("#amL").hidden=sh;if(sh&&$a("#ad").value==="600")$a("#ad").value="300";};
+  $a("#ago").onclick=async()=>{const btn=$a("#ago"),st=$a("#ast"),sh=$a("#aw").value==="sheet";if(!window.htmlToImage||!window.JSZip){st.textContent="Still loading, try again in a moment.";return}
+   btn.disabled=true;st.textContent="Preparing fonts…";try{if(document.fonts)await document.fonts.ready;
+    const z=await KSQRCards.exportImages(b.codes,{tone,base:"https://getkeepsake.in",label:b.shop,dpi:+$a("#ad").value,format:$a("#af").value,edge:$a("#ae").value,radius:+$a("#ar").value,margin:sh?0:+$a("#am").value,sheet:sh?$a("#ap").value:false,gap:+$a("#ag").value,onProgress:(d,t)=>{st.textContent=`Making ${d} of ${t}…`}});
+    const a=document.createElement("a");a.href=URL.createObjectURL(z);a.download=`${String(b.shop||"qr").replace(/[^\w]+/g,"-")}-${tone}-${sh?"sheets":"boards"}-${$a("#ad").value}dpi.zip`;a.click();st.textContent=`Done: ${b.codes.length} QR${b.codes.length>1?"s":""} in the ZIP.`}
+   catch(x){console.error(x);st.textContent="Could not make the files: "+(x&&x.message||x)}finally{btn.disabled=false}};
+  return}
  if(biz&&!stampB)document.querySelector(".bar small").textContent=board?"Print on A4 at 100% (thick card or photo paper): 4 counter boards per sheet. Cut on the dashed line and put in an A6 acrylic stand.":"Print double-sided on A4 at 100% on 300gsm card, flip on the long edge: odd pages are fronts, even pages are backs. Cut on the dashed lines (55 × 85 mm).";
  const base="https://getkeepsake.in";
  const qr=u=>{const x=qrcode(0,"M");x.addData(u);x.make();return x.createSvgTag({cellSize:3,margin:1,scalable:true}).replace(/fill="#000000"/g,'fill="#42070f"')};
