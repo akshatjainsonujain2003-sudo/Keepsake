@@ -14,6 +14,10 @@
   ],
   "rewrites": [
     {
+      "source": "/api/geofence/:action",
+      "destination": "/api/qr?gf=:action"
+    },
+    {
       "source": "/k/:code",
       "destination": "/api/qr?code=:code"
     },

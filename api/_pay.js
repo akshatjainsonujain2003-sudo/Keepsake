@@ -47,6 +47,13 @@ function catalog() {
   // Loyalty stamp card add-on for a business page, one-time: ₹499 page + ₹300 = ₹799 together, or ₹300 later. PRICE_LOYALTY changes it.
   c.delivery.loyalty = { name: "Loyalty card", price: rupees(env.PRICE_LOYALTY, 300),
     desc: "A stamp card for repeat customers, e.g. 10 visits = a free coffee. Staff PIN and member list." };
+  // SMS credit packs for the geofence walk-in reward and nearby SMS blasts (business pages).
+  // PRICE_SMS_PACK / SMS_PACK_SIZE (₹299 for 500) and PRICE_SMS_PACK_BIG / SMS_PACK_BIG_SIZE (₹499 for 1000).
+  c.sms = { packs: {
+    sms: { price: rupees(env.PRICE_SMS_PACK, 299), size: Math.max(1, Math.round(+env.SMS_PACK_SIZE || 500)) },
+    sms1k: { price: rupees(env.PRICE_SMS_PACK_BIG, 499), size: Math.max(1, Math.round(+env.SMS_PACK_BIG_SIZE || 1000)) } } };
+  // Geofence Pro: the walk-in reward + nearby SMS for a shop. PRICE_GEOPRO is the add-on (₹500); with a new page it's ₹499 + ₹500 = ₹999.
+  c.geopro = { name: "Geofence Pro", price: rupees(env.PRICE_GEOPRO, 500), desc: "Walk-in reward for people near your shop, nearby SMS offers and 50 SMS to start." };
   if (!c.frames) { delete c.delivery.frameQr; delete c.delivery.frameNfc; }
   return c;
 }
@@ -62,6 +69,17 @@ const kindOf = memory => (memory.kind === "site" || memory.kind === "biz" ? memo
 function amountFor(memory, plan, extra) {
   extra = extra || {};
   const c = catalog();
+  if (plan === "sms" || plan === "sms1k") {
+    if (kindOf(memory) !== "biz") return { error: "SMS credits are for business pages." };
+    if (memory.paid === false) return { error: "Activate your page first." };
+    return { rupees: c.sms.packs[plan].price, upgrade: true };
+  }
+  if (plan === "geopro") {
+    if (kindOf(memory) !== "biz") return { error: "Geofence Pro is for business pages." };
+    if (memory.geopro) return { error: "Geofence Pro is already unlocked on this page." };
+    // A live page pays the add-on; a new page pays page + add-on and goes live with it.
+    return memory.paid !== false ? { rupees: c.geopro.price, upgrade: true } : { rupees: c.products.biz.price + c.geopro.price, upgrade: false };
+  }
   if (!c.delivery[plan]) return { error: "Choose how you'd like it delivered." };
   if (kindOf(memory) === "biz" && isFrame(plan)) return { error: "Business pages are digital only." };
   if (plan === "bizQr" && kindOf(memory) !== "biz") return { error: "Printed QRs are for business pages." };
@@ -82,6 +100,8 @@ function amountFor(memory, plan, extra) {
 }
 function describe(memory, plan, upgrade, withQr) {
   const c = catalog(), product = c.products[kindOf(memory)].name;
+  if (plan === "sms" || plan === "sms1k") return c.sms.packs[plan].size + " SMS credits";
+  if (plan === "geopro") return upgrade ? "Geofence Pro" : `${product} + Geofence Pro`;
   if (plan === "loyalty" && withQr) return upgrade ? "Loyalty card + printed QR delivered" : `${product} + loyalty card + printed QR delivered`;
   if (upgrade) return c.delivery[plan].name;
   if (plan === "bizQr") return `${product} + printed QR delivered`;
@@ -145,6 +165,7 @@ async function markPaid(orderId, paymentId) {
       memory.paid = true; memory.activatedAt = memory.activatedAt || order.paidAt;
       memory.plan = isFrame(order.plan) ? order.plan : (memory.plan || "digital");
       if (order.plan === "loyalty") { memory.loyalty = true; memory.loyaltyAt = order.paidAt; }
+      if (order.plan === "geopro") { memory.geopro = true; memory.geoproAt = order.paidAt; }
       if (hasQr(order)) memory.qrOrders = [...(memory.qrOrders || []), orderId].slice(-10);
       memory.orders = [...(memory.orders || []), orderId].slice(-20);
       await db.setj(mk, memory);
@@ -162,6 +183,7 @@ async function markPaid(orderId, paymentId) {
         order.qrCode = code; order.qrBatch = r.batch.id; await db.setj(key, order);
       } catch (e) {}
     }
+    if (order.plan === "sms" || order.plan === "sms1k") { try { await require("./_geo").give(order.memory, catalog().sms.packs[order.plan].size); } catch (e) { console.error("SMS credits not added for", orderId, e.message); } }
     if (order.ref) { await db.cmd("ZADD", "ref-orders:" + order.ref, order.paidAt, orderId); await db.cmd("SADD", "coupon-users:" + order.ref, order.owner); }
     return order;
   } finally {
