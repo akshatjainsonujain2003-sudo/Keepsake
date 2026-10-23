@@ -101,6 +101,9 @@ module.exports = async (req, res) => {
         else return db.reply(res, 400, { error: "Choose what to print in the frame." });
       }
       // Razorpay won't take less than ₹1 (100 paise), even after a creator's discount.
+      // The 14-day flat price is for one campaign of this page.
+      let cid = "";
+      if (plan === "camp14") { const c = await require("./_camp").camp(b.cid); if (!c || c.page !== id) return db.reply(res, 400, { error: "Pick the campaign to run for 14 days." }); cid = c.cid; }
       if (!(amt.rupees >= 1)) return db.reply(res, 400, { error: "This order total is too low to pay online. Please contact us." });
       // At most a few open orders per minute per account.
       const rl = "checkout-rate:" + user.id, n = await db.cmd("INCR", rl);
@@ -110,7 +113,7 @@ module.exports = async (req, res) => {
       const order = await pay.createOrder({ rupees: amt.rupees, receipt: "ks_" + id, notes: { memory: id, plan, customer: user.id } });
       await db.setj("order:" + order.id, {
         memory: id, title: memory.title || "", owner: user.id, name: user.name, email: user.email, phone: user.phone || "",
-        kind: pay.kindOf(memory), plan, frame, ...(withQr ? { withQr: true } : {}), ...(qrTone ? { qrTone } : {}), upgrade: amt.upgrade, amount: amt.rupees, ...(code ? { ref: code.code, refDiscount: off, commission } : {}), address, ...(claim ? { claim } : {}), ...(sp ? { sp } : {}), status: "created", created: Date.now()
+        kind: pay.kindOf(memory), plan, frame, ...(withQr ? { withQr: true } : {}), ...(qrTone ? { qrTone } : {}), upgrade: amt.upgrade, amount: amt.rupees, ...(code ? { ref: code.code, refDiscount: off, commission } : {}), address, ...(claim ? { claim } : {}), ...(sp ? { sp } : {}), ...(cid ? { cid } : {}), status: "created", created: Date.now()
       }, "EX", 60 * 60 * 24 * 30);
       return db.reply(res, 200, {
         keyId: pay.keyId(), orderId: order.id, amount: order.amount, currency: order.currency,
