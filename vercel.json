@@ -18,6 +18,18 @@
       "destination": "/api/qr?gf=:action"
     },
     {
+      "source": "/api/campaign/:action",
+      "destination": "/api/qr?cp=:action"
+    },
+    {
+      "source": "/o/:cid",
+      "destination": "/offer"
+    },
+    {
+      "source": "/r/:id",
+      "destination": "/offer"
+    },
+    {
       "source": "/k/:code",
       "destination": "/api/qr?code=:code"
     },

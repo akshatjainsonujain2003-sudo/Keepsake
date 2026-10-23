@@ -261,7 +261,7 @@ const IC = {
 };
 const NAV = [
   ["Run the shop", [["overview", "Overview", "home"], ["orders", "Orders", "orders"], ["menu", "Menu & prices", "menu"], ["customers", "Customers", "people"]]],
-  ["Grow", [["messages", "Messages", "wa"], ["nearby", "Walk-in offers", "pin"], ["reviews", "Reviews", "star"], ["offers", "Offers & marketing", "tag"], ["analytics", "Analytics", "chart"]]],
+  ["Grow", [["messages", "Messages", "wa"], ["campaigns", "Offer QRs", "qr"], ["nearby", "Walk-in offers", "pin"], ["reviews", "Reviews", "star"], ["offers", "Offers & marketing", "tag"], ["analytics", "Analytics", "chart"]]],
   ["Set up", [["page", "My page", "page"], ["qr", "QR & cards", "qr"], ["payments", "Payments", "pay"], ["settings", "Team & settings", "gear"]]]
 ];
 const TITLES = Object.fromEntries(NAV.flatMap(g => g[1]).map(x => [x[0], x[1]]));
@@ -330,7 +330,7 @@ function go() {
   (A[S.view] || (() => {}))();
   bindCommon();
 }
-addEventListener("hashchange", () => { if (location.hash === "#nearby") S.geo = null; go(); scrollTo(0, 0); });
+addEventListener("hashchange", () => { if (location.hash === "#nearby") S.geo = null; if (location.hash === "#campaigns") S.cp = null; go(); scrollTo(0, 0); });
 
 // ---------- shared pieces ----------
 const greet = () => { const h = new Date().getHours(); return h < 12 ? "Good morning" : h < 17 ? "Good afternoon" : "Good evening"; };
@@ -612,6 +612,115 @@ async function geoRecharge(btn, plan) {
       modal: { ondismiss: () => { btn.disabled = false; } } }).open();
   } catch (x) { toast(x.message); btn.disabled = false; }
 }
+
+// ---------- Offer QR campaigns: QRs on pamphlets, stickers and ads; customers claim, then redeem at the counter ----------
+const cpApi = (action, body) => api("/api/campaign/" + action, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(Object.assign({ id: S.id }, body || {})) });
+async function cpLoad() { try { S.cp = await cpApi("list"); } catch (e) { S.cp = { error: e.message }; } if (S.view === "campaigns") { const y = scrollY; go(); scrollTo(0, y); } }
+const cpUrl = (cid, p) => location.origin + "/o/" + cid + (p ? "?p=" + p : "");
+const counterUrl = () => location.origin + "/r/" + S.id;
+const istDay = (d = 0) => new Date(Date.now() + 5.5 * 36e5 + d * 864e5).toISOString().slice(0, 10);
+const dmy = d => d ? new Date(d + "T12:00:00+05:30").toLocaleDateString("en-IN", { day: "numeric", month: "short" }) : "";
+const cpTot = c => c.stats.reduce((a, x) => ({ scan: a.scan + x.scan, claim: a.claim + x.claim, red: a.red + x.red }), { scan: 0, claim: 0, red: 0 });
+function cpState(c) {
+  if (c.why && /ended/.test(c.why)) return ["done", "Ended"];
+  if (!c.on) return ["cancel", "Paused"];
+  if (c.why && /starts/.test(c.why)) return ["prep", "Starts " + dmy(c.start)];
+  if (c.why && /claimed/.test(c.why)) return ["done", "All claimed"];
+  if (!c.flat && S.cp.credits <= 0) return ["cancel", "No claims left"];
+  return ["ready", c.flat ? "Live · unlimited till " + new Date(c.flatUntil).toLocaleDateString("en-IN", { day: "numeric", month: "short" }) : "Live"];
+}
+V.campaigns = () => {
+  const P = S.cp;
+  if (!P) { cpLoad(); return head("Offer QRs", "Loading…", "") + `<div class="sk" style="height:320px"></div>`; }
+  if (P.error) return head("Offer QRs", "", "") + `<div class="empty"><b>Couldn't load this section</b>${esc(P.error)}<br><button class="btn" data-cp="reload">Try again</button></div>`;
+  const all = P.campaigns.reduce((a, c) => { const t = cpTot(c); return { scan: a.scan + t.scan, claim: a.claim + t.claim, red: a.red + t.red }; }, { scan: 0, claim: 0, red: 0 });
+  const low = P.credits < 10, ed = S.cpEdit, e = ed && ed !== "new" ? P.campaigns.find(c => c.cid === ed) : null;
+  const wa = "https://wa.me/916377547759?text=" + encodeURIComponent(`Hi GetKeepsake! I want printed pamphlets / stickers with my offer QR for ${shopName()} (${pageUrl()}).`);
+  const form = () => { const f = e || { title: "", details: "", start: istDay(), end: istDay(14), max: 0, places: ["Pamphlets", "Shop sticker", "Instagram ad"] }; return `
+    <div class="cd" id="cpForm" style="margin-top:18px"><div class="ch"><h2 class="H">${e ? "Edit campaign" : "New campaign"}</h2><button class="lnk" data-cp="cancel">Cancel</button></div>
+      <label class="f">Offer <em>(what they get, up to 40 letters)</em><input class="in" id="cpT" maxlength="40" value="${esc(f.title)}" placeholder="Free brownie with any waffle"></label>
+      <label class="f">Details <em>(optional)</em><input class="in" id="cpD" maxlength="160" value="${esc(f.details)}" placeholder="On bills above ₹199. One per customer."></label>
+      <div class="row2"><label class="f">First day<input class="in" type="date" id="cpS" value="${esc(f.start)}"></label><label class="f">Last day<input class="in" type="date" id="cpE" value="${esc(f.end)}"></label></div>
+      <div class="row2"><label class="f">Stop after <em>(claims, optional)</em><input class="in" type="number" min="0" id="cpM" value="${f.max || ""}" placeholder="No limit"></label>
+      <label class="f">Where the QRs go <em>(one per line, each gets its own QR)</em><textarea class="in" id="cpP" rows="3">${esc(f.places.join("\n"))}</textarea></label></div>
+      ${e ? `<p class="hint" style="margin-top:0">Places already printed keep their QR. You can add new ones at the end.</p>` : ""}
+      <button class="btn" data-cp="save">${e ? "Save changes" : "Create campaign"}</button></div>`; };
+  return head("Offer QRs", "Put an offer QR on pamphlets, stickers and ads. Customers claim it with their number and redeem it at your counter. You pay only for claims.", `<button class="btn" data-cp="new">+ New campaign</button>`) +
+  `<section class="g4" style="margin-top:0">
+    <div class="kpi ${low ? "o" : "y"}"><span>Claims left</span><b>${P.credits}</b><small>${low ? "Running low" : "1 claim = 1 customer"}</small></div>
+    <div class="kpi"><span>Scans</span><b>${all.scan}</b><small class="gd">people who saw an offer</small></div>
+    <div class="kpi"><span>Claimed</span><b>${all.claim}</b><small class="gd">gave their number</small></div>
+    <div class="kpi k"><span>Came in</span><b>${all.red}</b><small>${all.claim ? Math.round(all.red / all.claim * 100) + "% redeemed" : "redeemed at your counter"}</small></div>
+  </section>
+  ${ed ? form() : ""}
+  ${P.campaigns.length ? P.campaigns.map(c => { const [cl, lb] = cpState(c), t = cpTot(c); return `
+    <section class="cd" style="margin-top:18px"><div class="ch"><div><h2 class="H" style="margin:0">${esc(c.title)}</h2><small class="mu">${esc(dmy(c.start))} – ${esc(dmy(c.end))}${c.max ? " · up to " + c.max + " claims" : ""}${c.details ? " · " + esc(c.details) : ""}</small></div><span class="pl ${cl}">${esc(lb)}</span></div>
+      <div class="tw"><table><thead><tr><th>Where</th><th>Scans</th><th>Claimed</th><th>Came in</th><th></th></tr></thead><tbody>
+      ${c.stats.map((s, p) => `<tr><td><b>${esc(s.name)}</b></td><td data-l="Scans">${s.scan}</td><td data-l="Claimed">${s.claim}</td><td data-l="Came in">${s.red}</td><td style="text-align:right;white-space:nowrap"><button class="btn k s" data-cp="png" data-cid="${c.cid}" data-p="${p}">${IC.dl}QR</button> <button class="btn g s" data-copytext="${esc(cpUrl(c.cid, p))}">Link</button></td></tr>`).join("")}
+      <tr><td><b>Total</b></td><td data-l="Scans">${t.scan}</td><td data-l="Claimed">${t.claim}</td><td data-l="Came in">${t.red}</td><td></td></tr></tbody></table></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px"><button class="btn g s" data-cp="edit" data-cid="${c.cid}">Edit</button><button class="btn g s" data-cp="${c.on ? "pause" : "resume"}" data-cid="${c.cid}">${c.on ? "Pause" : "Resume"}</button><button class="btn g s" data-cp="claims" data-cid="${c.cid}">${S.cpOpen === c.cid ? "Hide claims" : "See claims"}</button>${c.flat ? "" : `<button class="btn k s" data-cp="flat" data-cid="${c.cid}">Unlimited claims for ${P.flatDays} days · ₹${P.flatPrice}</button>`}</div>
+      ${S.cpOpen === c.cid ? (S.cpClaims ? (S.cpClaims.length ? `<div class="rows" style="margin-top:12px">${S.cpClaims.slice(0, 200).map(x => `<div><span><b>${esc(x.code)}</b><small>+91 ${esc(x.phone)} · ${esc(x.place)} · ${ago(x.at)}${x.visit === "yes" && !x.red ? " · says they visited" : ""}</small></span>${x.red ? `<span class="pl ready" style="flex:none">Came in · ${ago(x.red)}</span>` : `<a class="btn w s" href="https://wa.me/91${esc(x.phone)}?text=${encodeURIComponent(`Hi! Your offer "${c.title}" at ${shopName()} is waiting (code ${x.code}). Valid till ${dmy(c.end)}.`)}" target="_blank" rel="noopener">${IC.wa}Remind</a>`}</div>`).join("")}</div>` : `<p class="hint">No claims yet.</p>`) : `<div class="sk" style="height:90px;margin-top:12px"></div>`) : ""}
+    </section>`; }).join("") : ed ? "" : `<div class="empty" style="margin-top:18px"><b>Make your first offer QR</b>For example "Free brownie with any waffle". Print the QR on pamphlets or stickers, and see exactly how many people came in from each one.<br><button class="btn" data-cp="new">+ New campaign</button></div>`}
+  <section class="g2">
+    <div class="cd"><div class="ch"><h2 class="H">Counter QR · Redeem here</h2></div>
+      <p class="mu" style="margin-top:0">Print this once and keep it at your billing counter. Customers scan it with the phone that has their offer, and a green <b>VALID</b> ticket with a live clock appears. Check the clock is ticking, then give the offer.</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn k" data-cp="counter">${IC.dl}Download counter QR</button><button class="btn g" data-copytext="${esc(counterUrl())}">Copy link</button></div>
+      <div class="ch" style="margin:22px 0 10px"><h2 class="H">Redeem a code</h2></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap"><input class="in" id="cpCode" maxlength="12" placeholder="e.g. FRE-7K2Q" style="flex:1;min-width:160px;margin:0;text-transform:uppercase"><button class="btn" data-cp="redeem">Redeem</button></div>
+      <p class="hint" id="cpRed" role="status">For customers who only have the code (or whose phone is off).</p></div>
+    <div class="cd"><div class="ch"><h2 class="H">Claims</h2><small>${P.credits} left</small></div>
+      <p class="mu" style="margin-top:0">You pay only when someone claims an offer, never for scans. Your first 20 are free. Or pick one campaign and let it take unlimited claims for ${P.flatDays} days.</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">${P.packs.map((p, i) => `<button class="btn${i ? " k" : ""}" data-cp="buy" data-plan="${p.plan}">${p.size} claims · ₹${p.price.toLocaleString("en-IN")}</button>`).join("")}</div>
+      <div class="ch" style="margin:22px 0 10px"><h2 class="H">Printed pamphlets & stickers</h2></div>
+      <p class="mu" style="margin-top:0">We design and print them with your offer QR, and deliver to your shop.</p>
+      <a class="btn w" href="${wa}" target="_blank" rel="noopener">${IC.wa}Order prints on WhatsApp</a></div>
+  </section>`;
+};
+// A print-ready PNG: a title, the QR, and a line under it.
+function cpPng(url, top, title, foot, file) {
+  if (!window.qrcode) { toast("QR is still loading. Try again in a second."); return; }
+  const q = qrcode(0, "M"); q.addData(url); q.make();
+  const n = q.getModuleCount(), W = 1200, s = Math.floor(860 / (n + 8)), qs = s * (n + 8), H = 1560, c = document.createElement("canvas"); c.width = W; c.height = H;
+  const x = c.getContext("2d"); x.fillStyle = "#fff"; x.fillRect(0, 0, W, H); x.textAlign = "center"; x.fillStyle = "#121110";
+  x.font = "64px 'Archivo Black', 'Arial Black', sans-serif"; x.fillText(top, W / 2, 150);
+  x.font = "700 52px Inter, Arial, sans-serif"; const words = String(title).split(" "), lines = [""]; words.forEach(w => { const t = (lines[lines.length - 1] + " " + w).trim(); if (x.measureText(t).width > W - 160 && lines[lines.length - 1]) lines.push(w); else lines[lines.length - 1] = t; }); lines.slice(0, 2).forEach((l, i) => x.fillText(l, W / 2, 240 + i * 64));
+  const ox = (W - qs) / 2, oy = 360; for (let r = 0; r < n; r++) for (let k = 0; k < n; k++) if (q.isDark(r, k)) x.fillRect(ox + (k + 4) * s, oy + (r + 4) * s, s, s);
+  x.font = "600 40px Inter, Arial, sans-serif"; x.fillText(foot, W / 2, oy + qs + 80); x.fillStyle = "#8a8279"; x.font = "500 30px Inter, Arial, sans-serif"; x.fillText(url.replace(/^https?:\/\//, ""), W / 2, oy + qs + 135);
+  const l = document.createElement("a"); l.href = c.toDataURL("image/png"); l.download = file.replace(/[^\w ]+/g, "").trim().replace(/\s+/g, "-") + ".png"; l.click();
+}
+function cpPay(btn, plan, cid) {
+  btn.disabled = true;
+  (async () => {
+    try {
+      const o = await api("/api/checkout", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "create", id: S.id, plan, ...(cid ? { cid } : {}) }) });
+      await loadRzp();
+      new Razorpay({ key: o.keyId, amount: o.amount, currency: o.currency, order_id: o.orderId, name: "GetKeepsake", description: o.description, prefill: o.prefill, theme: { color: "#ff5b2e" },
+        handler: async p => { try { await api("/api/checkout", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "verify", ...p }) }); toast(plan === "camp14" ? "Unlimited claims switched on" : "Claims added"); } catch (x) { toast(x.message); } await cpLoad(); },
+        modal: { ondismiss: () => { btn.disabled = false; } } }).open();
+    } catch (x) { toast(x.message); btn.disabled = false; }
+  })();
+}
+$("#main").addEventListener("click", async ev => {
+  const b = ev.target.closest("[data-cp]"); if (!b) return;
+  const a = b.dataset.cp, cid = b.dataset.cid, c = cid && S.cp && S.cp.campaigns.find(x => x.cid === cid);
+  const redraw = () => { const y = scrollY; go(); scrollTo(0, y); };
+  if (a === "reload") { S.cp = null; go(); return; }
+  if (a === "new" || a === "edit") { S.cpEdit = a === "new" ? "new" : cid; go(); const f = $("#cpForm"); if (f) { f.scrollIntoView({ behavior: "smooth", block: "start" }); $("#cpT").focus({ preventScroll: true }); } return; }
+  if (a === "cancel") { S.cpEdit = null; redraw(); return; }
+  if (a === "save") {
+    const body = { title: $("#cpT").value, details: $("#cpD").value, start: $("#cpS").value, end: $("#cpE").value, max: +$("#cpM").value || 0, places: $("#cpP").value.split("\n").map(s => s.trim()).filter(Boolean) };
+    if (S.cpEdit !== "new") { body.cid = S.cpEdit; }
+    b.disabled = true; try { S.cp = await cpApi("save", body); toast(S.cpEdit === "new" ? "Campaign created. Download its QRs below." : "Saved"); S.cpEdit = null; } catch (x) { toast(x.message); b.disabled = false; return; }
+    redraw(); return;
+  }
+  if (a === "pause" || a === "resume") { b.disabled = true; try { S.cp = await cpApi("save", { cid, title: c.title, details: c.details, start: c.start, end: c.end, max: c.max, places: c.places, on: a === "resume" }); toast(a === "pause" ? "Paused. New claims are stopped." : "Live again"); } catch (x) { toast(x.message); } redraw(); return; }
+  if (a === "claims") { if (S.cpOpen === cid) { S.cpOpen = null; redraw(); return; } S.cpOpen = cid; S.cpClaims = null; redraw(); try { S.cpClaims = (await cpApi("claims", { cid })).claims; } catch (x) { toast(x.message); S.cpOpen = null; } redraw(); return; }
+  if (a === "png") { const p = +b.dataset.p; cpPng(cpUrl(cid, p), "SCAN FOR OFFER", c.title, shopName() + " · till " + dmy(c.end), shopName() + " " + c.places[p] + " QR"); return; }
+  if (a === "counter") { cpPng(counterUrl(), "REDEEM HERE", "Scan with the phone that has your offer", shopName(), shopName() + " counter QR"); return; }
+  if (a === "redeem") { const code = $("#cpCode").value.toUpperCase().replace(/[^A-Z0-9]/g, ""), out = $("#cpRed"); if (code.length < 7) { out.textContent = "Enter the code, like FRE-7K2Q."; return; } b.disabled = true; try { const r = await cpApi("own-redeem", { code: code.slice(0, 3) + "-" + code.slice(3) }); out.innerHTML = r.already ? `<b style="color:#9b2c16">Already used</b> on ${esc(ago(r.claim.red))}. Don't give it again.` : `<b style="color:#0d5a2f">✓ Valid: ${esc(r.claim.title)}</b>. Give the offer now.`; if (!r.already) { $("#cpCode").value = ""; S.cp = await cpApi("list").catch(() => S.cp); } } catch (x) { out.textContent = x.message; } b.disabled = false; return; }
+  if (a === "buy") { cpPay(b, b.dataset.plan); return; }
+  if (a === "flat") { if (!confirm(`"${c.title}" takes unlimited claims for ${S.cp.flatDays} days (₹${S.cp.flatPrice}). Continue to payment?`)) return; cpPay(b, "camp14", cid); return; }
+});
 
 V.offers = () => {
   const d = S.d, of = Object.assign({ on: false, label: "Today's offer", title: "", text: "", till: "" }, d.offer || {});

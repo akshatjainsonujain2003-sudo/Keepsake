@@ -157,7 +157,7 @@ async function load(t, force) {
   try {
     if (t === "home" && (force || !S.sum)) S.sum = await api({ action: "hq-summary" });
     if (t === "orders" && (force || !S.orders)) S.orders = (await api({ action: "hq-orders" })).orders;
-    if (t === "shops" && (force || !S.pages)) S.pages = (await api({ action: "hq-pages" })).pages;
+    if (t === "shops" && (force || !S.pages)) { S.pages = (await api({ action: "hq-pages" })).pages; S.flags = (await api({ action: "hq-flags" }).catch(() => ({ flags: [] }))).flags; }
     if (t === "team" && (force || !S.team)) S.team = (await api({ action: "hq-team" })).team;
     if (t === "people" && (force || !S.people)) S.people = (await api({ action: "hq-people" })).people;
     if (t === "more" && (force || !S.sum)) S.sum = await api({ action: "hq-summary" });
@@ -269,7 +269,9 @@ function shops() {
   const n = k => ps.filter(F[k]).length;
   const list = ps.filter(F[S.pf]).filter(p => !q || [p.title, p.cat, p.area, p.owner.name, p.owner.email, p.owner.phone, p.id].join(" ").toLowerCase().includes(q));
   const hint = S.pf === "draft" ? `<p style="color:var(--mu);font-size:14px;margin:0 2px 12px">Shops that saved a page but haven't paid. Your warmest leads: tap one to WhatsApp them.</p>` : "";
-  return top("Shops & pages", ps.filter(p => p.kind === "biz").length + " business pages") + srch("shops", "Search shop, owner, area…") +
+  // Offer QR campaigns where customers say they visited but the shop didn't redeem (the shop may be skipping the QR to save claims).
+  const fl = (S.flags || []).length ? `<div class="card" style="border:1.5px solid #e2725b;margin-bottom:14px"><b style="display:block;margin-bottom:6px">⚠ Offer QR flags · ${S.flags.length}</b>${S.flags.map(f => `<button class="row" data-p="${esc(f.page)}" style="padding:10px 0"><span class="mid"><b>${esc(f.shop || f.page)} · ${esc(f.title)}</b><small>${esc(f.reasons.join(" · "))} · ${f.claim} claims</small></span></button>`).join("")}<small style="color:var(--mu)">Call the shop: are they giving offers without the counter QR?</small></div>` : "";
+  return top("Shops & pages", ps.filter(p => p.kind === "biz").length + " business pages") + fl + srch("shops", "Search shop, owner, area…") +
   `<div class="chips">${[["live", "Live shops"], ["draft", "Shop drafts"], ["keep", "Live keepsakes"], ["kdraft", "Keepsake drafts"]].map(([k, l]) => `<button data-f="${k}" class="${S.pf === k ? "on" : ""}">${l} · ${n(k)}</button>`).join("")}</div>` + hint +
   (list.map(p => `<button class="row" data-p="${esc(p.id)}"><span class="av">${IC[p.kind]}</span><span class="mid"><b>${esc(p.title || "Untitled")}</b><small>${esc([p.cat, p.area].filter(Boolean).join(" · ") || KIND[p.kind])} · ${esc(p.owner.name)}</small></span><span class="rt">${p.live ? '<span class="tag g">Live</span>' : '<span class="tag y">Draft</span>'}<small style="display:block">${p.live ? p.views + " opens" : ago(p.updated)}</small></span></button>`).join("") || `<div class="empty">Nothing here yet.</div>`);
 }

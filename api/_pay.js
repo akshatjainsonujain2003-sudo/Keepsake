@@ -54,6 +54,12 @@ function catalog() {
     sms1k: { price: rupees(env.PRICE_SMS_PACK_BIG, 499), size: Math.max(1, Math.round(+env.SMS_PACK_BIG_SIZE || 1000)) } } };
   // Geofence Pro: the walk-in reward + nearby SMS for a shop. PRICE_GEOPRO is the add-on (₹500); with a new page it's ₹499 + ₹500 = ₹999.
   c.geopro = { name: "Geofence Pro", price: rupees(env.PRICE_GEOPRO, 500), desc: "Walk-in reward for people near your shop, nearby SMS offers and 50 SMS to start." };
+  // Offer QR campaigns: the shop pays per claimed offer (claim credits), or a flat price for one campaign for 14 days.
+  // PRICE_CLAIMS_100 / CLAIMS_100_SIZE (₹499 for 100), PRICE_CLAIMS_500 / CLAIMS_500_SIZE (₹1,999 for 500), PRICE_CAMP14 (₹999).
+  c.claims = { packs: {
+    claims100: { price: rupees(env.PRICE_CLAIMS_100, 499), size: Math.max(1, Math.round(+env.CLAIMS_100_SIZE || 100)) },
+    claims500: { price: rupees(env.PRICE_CLAIMS_500, 1999), size: Math.max(1, Math.round(+env.CLAIMS_500_SIZE || 500)) } },
+    flat: { price: rupees(env.PRICE_CAMP14, 999), days: 14 } };
   if (!c.frames) { delete c.delivery.frameQr; delete c.delivery.frameNfc; }
   return c;
 }
@@ -73,6 +79,11 @@ function amountFor(memory, plan, extra) {
     if (kindOf(memory) !== "biz") return { error: "SMS credits are for business pages." };
     if (memory.paid === false) return { error: "Activate your page first." };
     return { rupees: c.sms.packs[plan].price, upgrade: true };
+  }
+  if (plan === "claims100" || plan === "claims500" || plan === "camp14") {
+    if (kindOf(memory) !== "biz") return { error: "Offer campaigns are for business pages." };
+    if (memory.paid === false) return { error: "Activate your page first." };
+    return { rupees: plan === "camp14" ? c.claims.flat.price : c.claims.packs[plan].price, upgrade: true };
   }
   if (plan === "geopro") {
     if (kindOf(memory) !== "biz") return { error: "Geofence Pro is for business pages." };
@@ -101,6 +112,8 @@ function amountFor(memory, plan, extra) {
 function describe(memory, plan, upgrade, withQr) {
   const c = catalog(), product = c.products[kindOf(memory)].name;
   if (plan === "sms" || plan === "sms1k") return c.sms.packs[plan].size + " SMS credits";
+  if (plan === "claims100" || plan === "claims500") return c.claims.packs[plan].size + " offer claims";
+  if (plan === "camp14") return "Unlimited claims for 14 days";
   if (plan === "geopro") return upgrade ? "Geofence Pro" : `${product} + Geofence Pro`;
   if (plan === "loyalty" && withQr) return upgrade ? "Loyalty card + printed QR delivered" : `${product} + loyalty card + printed QR delivered`;
   if (upgrade) return c.delivery[plan].name;
@@ -184,6 +197,8 @@ async function markPaid(orderId, paymentId) {
       } catch (e) {}
     }
     if (order.plan === "sms" || order.plan === "sms1k") { try { await require("./_geo").give(order.memory, catalog().sms.packs[order.plan].size); } catch (e) { console.error("SMS credits not added for", orderId, e.message); } }
+    if (order.plan === "claims100" || order.plan === "claims500") { try { await require("./_camp").give(order.memory, catalog().claims.packs[order.plan].size); } catch (e) { console.error("Claim credits not added for", orderId, e.message); } }
+    if (order.plan === "camp14" && order.cid) { try { await require("./_camp").flat(order.cid, order.memory, catalog().claims.flat.days); } catch (e) { console.error("14-day campaign not started for", orderId, e.message); } }
     if (order.ref) { await db.cmd("ZADD", "ref-orders:" + order.ref, order.paidAt, orderId); await db.cmd("SADD", "coupon-users:" + order.ref, order.owner); }
     return order;
   } finally {
