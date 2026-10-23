@@ -3,7 +3,8 @@
 //
 // Storage (Upstash/Vercel KV):
 //   customer-memory:<page>.gf = { on, lat, lng, r, offer, code, at }      the shop's geofence settings (owner only)
-//   gfc:<page>              = SMS credits left (integer; starts at 50, recharged in packs of 500)
+//   gfc:<page>              = SMS credits left (integer; starts at 50, recharged in packs of 500 or 1000)
+//   customer-memory:<page>.geopro = true once "Geofence Pro" is bought (needed to switch the walk-in reward on)
 //   gfs:<page>:<+91phone>   = { phone, lat, lng, dist, optedAt, lastSmsAt }   one verified nearby subscriber
 //   gfz:<page>              = sorted set of subscriber phones by opt-in time
 //   gfcd:<page>:<+91phone>  = 24-hour check-in cooldown (one SMS per customer per shop per day)
@@ -21,7 +22,6 @@ const pay = require("./_pay");
 const env = process.env;
 const ID = /^[a-z0-9]{8,16}$/i;
 const START_CREDITS = 50;
-const PACK = () => Math.max(1, Math.round(+env.SMS_PACK_SIZE || 500));
 const clip = (v, n) => String(v == null ? "" : v).replace(/[<>]/g, "").replace(/\s+/g, " ").trim().slice(0, n);
 const E = (status, error, x) => ({ status, error, ...(x || {}) });
 const ph10 = p => { const d = String(p || "").replace(/\D/g, "").replace(/^(91|0)(?=\d{10}$)/, ""); return /^[6-9]\d{9}$/.test(d) ? d : ""; };
@@ -93,9 +93,11 @@ const shopName = m => clip((m.data && m.data.t) || m.title || "our shop", 30);
 async function limit(k, max, secs) { const n = await db.cmd("INCR", k); if (n === 1) await db.cmd("EXPIRE", k, secs); return n > max; }
 
 // What a customer's phone may know about the geofence (never the coupon code).
+// Geofence Pro is a paid add-on; while Razorpay isn't set up (testing), everyone has it.
+const pro = m => !!m.geopro || !pay.configured();
 function publicInfo(m) {
   const g = m.gf;
-  return g && g.on && okLat(g.lat) && okLng(g.lng) && g.offer && m.paid !== false ? { on: true, lat: g.lat, lng: g.lng, r: g.r, offer: g.offer } : null;
+  return g && g.on && pro(m) && okLat(g.lat) && okLng(g.lng) && g.offer && m.paid !== false ? { on: true, lat: g.lat, lng: g.lng, r: g.r, offer: g.offer } : null;
 }
 
 // ---------- customer: check in from the shop's page ----------
@@ -149,18 +151,28 @@ async function owner(b, ctx) {
   if (!u || u.id !== m.owner) return { err: E(401, "Please log in as the owner of this page.") };
   return { m, u };
 }
+// Every subscriber's record (phone, distance, last seen), newest first.
+async function allSubs(id) {
+  const phones = await db.cmd("ZRANGE", "gfz:" + id, 0, 4999, "REV"), out = [];
+  for (let i = 0; i < phones.length; i += 500) {
+    const vs = await db.cmd("MGET", ...phones.slice(i, i + 500).map(p => "gfs:" + id + ":" + p));
+    vs.forEach((v, j) => { let s = null; try { s = v && JSON.parse(v); } catch (e) {} out.push(s || { phone: phones[i + j], dist: null }); });
+  }
+  return out;
+}
 async function status(id, m) {
-  const phones = await db.cmd("ZRANGE", "gfz:" + id, 0, -1, "REV");
+  const phones = await db.cmd("ZRANGE", "gfz:" + id, 0, -1, "REV"), every = await allSubs(id);
   const recent = phones.slice(0, 30), subs = recent.length ? (await db.cmd("MGET", ...recent.map(p => "gfs:" + id + ":" + p))).map((v, i) => { try { const s = v && JSON.parse(v); return s ? { ...s, i } : null; } catch (e) { return null; } }).filter(Boolean) : [];
   const logs = (await db.cmd("LRANGE", "gfl:" + id, 0, 19)).map(v => { try { return typeof v === "string" ? JSON.parse(v) : v; } catch (e) { return null; } }).filter(Boolean);
   const wk = Date.now() - 7 * 864e5;
   return {
     ok: true, gf: m.gf || { on: false, r: 250, offer: "", code: "" }, credits: await credits(id),
-    subscribers: phones.length, week: subs.filter(s => s.seenAt >= wk).length,
+    subscribers: phones.length, week: every.filter(s => s.seenAt >= wk).length, dists: every.map(s => s.dist == null ? 99999 : s.dist),
     recent: subs.map(s => ({ i: s.i, phone: mask(s.phone), dist: s.dist, at: s.seenAt || s.optedAt })),
     logs, smsReady: smsReady(), promoHours: promoHours(), nextBlast: Math.max(0, +(await db.cmd("TTL", "gfb:" + id)) || 0),
     templates: Object.entries(TPL).filter(([k, t]) => t.promo).map(([k, t]) => ({ key: k, name: t.name, ready: tplReady(k), preview: t.text({ shop: shopName(m), offer: (m.gf && m.gf.offer) || "your offer", code: (m.gf && m.gf.code) || "CODE", pid: id, note: "[your note]" }) })),
-    checkinReady: tplReady("checkin"), pack: { size: PACK(), price: pay.catalog().sms.price }
+    checkinReady: tplReady("checkin"), pro: pro(m), proPrice: m.paid === false ? pay.catalog().products.biz.price + pay.catalog().geopro.price : pay.catalog().geopro.price,
+    packs: Object.entries(pay.catalog().sms.packs).map(([plan, p]) => ({ plan, size: p.size, price: p.price }))
   };
 }
 async function settings(b, m) {
@@ -175,6 +187,7 @@ async function settings(b, m) {
   if (b.offer !== undefined) g.offer = clip(b.offer, 30);
   if (b.code !== undefined) { const c = String(b.code || "").toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 12); if (b.code && c.length < 3) return E(400, "The coupon code needs 3 to 12 letters or numbers."); g.code = c; }
   if (b.on !== undefined) g.on = !!b.on;
+  if (g.on && !pro(m)) return E(402, "Unlock Geofence Pro to switch on the walk-in reward.");
   if (g.on && !(okLat(g.lat) && okLng(g.lng))) return E(400, "Lock your store location first (stand at your counter and tap the button).");
   if (g.on && (!g.offer || !g.code)) return E(400, "Add the walk-in offer and a coupon code first.");
   // Fresh copy so nothing else on the page is overwritten.
@@ -190,8 +203,10 @@ async function blast(b, m) {
   if ((b.tpl === "offer" || b.tpl === "comeback") && !g.offer) return E(400, "Add your walk-in offer first.");
   if (b.tpl === "offer" && !g.code) return E(400, "Add a coupon code first.");
   const note = clip(b.note, 30); if (b.tpl === "newin" && !note) return E(400, "Write what's new (up to 30 letters).");
-  const phones = await db.cmd("ZRANGE", "gfz:" + b.id, 0, 4999);
-  if (!phones.length) return E(409, "No nearby subscribers yet.");
+  // Optional: only people who checked in within maxDist metres of the shop.
+  const maxDist = Math.round(+b.maxDist || 0);
+  const phones = (await allSubs(b.id)).filter(s => !(maxDist > 0) || (s.dist != null && s.dist <= maxDist)).map(s => s.phone);
+  if (!phones.length) return E(409, maxDist > 0 ? `No subscribers checked in within ${maxDist} m yet.` : "No nearby subscribers yet.");
   // One promotional blast per shop per day.
   if ((await db.cmd("SET", "gfb:" + b.id, "1", "NX", "EX", 86400)) !== "OK") return E(429, "You've already sent a blast today. Try again tomorrow.");
   if (!(await take(b.id, phones.length))) { await db.cmd("DEL", "gfb:" + b.id); return E(402, `You need ${phones.length} SMS credits for this. Recharge to send.`, { need: phones.length, credits: await credits(b.id) }); }
@@ -199,7 +214,7 @@ async function blast(b, m) {
   const sent = await msg91(b.tpl, phones.map(phone => ({ phone, vars })));
   if (sent < phones.length) await give(b.id, phones.length - sent); // refund what MSG91 didn't accept
   if (!sent) { await db.cmd("DEL", "gfb:" + b.id); return E(502, "The SMS service didn't accept the messages. No credits were used. Try again in a few minutes."); }
-  const log = { id: crypto.randomBytes(5).toString("hex"), tpl: b.tpl, n: sent, credits: sent, at: Date.now() };
+  const log = { id: crypto.randomBytes(5).toString("hex"), tpl: b.tpl, n: sent, credits: sent, at: Date.now(), ...(maxDist > 0 ? { maxDist } : {}) };
   await db.cmd("LPUSH", "gfl:" + b.id, JSON.stringify(log)); await db.cmd("LTRIM", "gfl:" + b.id, 0, 99);
   return { ok: true, log, credits: await credits(b.id) };
 }

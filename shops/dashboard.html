@@ -539,8 +539,10 @@ V.nearby = () => {
   const g = Object.assign({ on: false, r: 250, offer: "", code: "" }, G.gf), d = S.geoDraft || (S.geoDraft = { r: g.r, offer: g.offer, code: g.code });
   const locked = typeof g.lat === "number", lowCredits = G.credits < Math.max(50, G.subscribers);
   const tpl = S.geoTpl || ((G.templates.find(t => t.ready) || G.templates[0] || {}).key), t = G.templates.find(x => x.key === tpl) || {};
+  const md = S.geoMax || 0, inR = m => G.dists.filter(x => !m || x <= m).length, to = inR(md);
   const ago2 = s => s > 3600 ? Math.ceil(s / 3600) + " h" : Math.ceil(s / 60) + " min";
   return head("Walk-in & SMS", "Reward people who are standing near your shop, and send SMS offers to the ones who opted in.", "") +
+  (G.pro ? "" : `<div class="bar"><span><b>Geofence Pro</b> · reward people standing near your shop, collect their numbers and send them SMS offers. Includes 50 SMS to start.</span><button class="btn" data-act="geoPro">Unlock for ₹${G.proPrice}</button></div>`) +
   (G.smsReady ? "" : `<div class="note" style="margin-bottom:18px"><b>SMS isn't connected yet.</b> Walk-in rewards already work: until SMS is set up, customers see their code on screen. Blasts start once your SMS templates are approved.</div>`) +
   `<section class="g4" style="margin-top:0;grid-template-columns:repeat(3,minmax(0,1fr))">
     <div class="kpi ${lowCredits ? "o" : "y"}"><span>SMS credits</span><b>${G.credits}</b><small>${lowCredits ? "Running low" : "1 credit = 1 SMS"}</small></div>
@@ -558,17 +560,18 @@ V.nearby = () => {
       <label class="f">Coupon code<input class="in" id="geoCode" maxlength="12" value="${esc(d.code)}" placeholder="WALKIN10" style="text-transform:uppercase"></label></div>
       <div class="bub" style="max-width:none;margin-bottom:14px">📍 You're 120 m from ${esc(shopName())}! Unlock <b>${esc(d.offer || "your offer")}</b> right now.</div>
       <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center"><button class="btn" data-act="geoSave">Save</button>
-      <label class="sw"><input type="checkbox" data-act="geoOn"${g.on ? " checked" : ""}${locked ? "" : " disabled"}><i></i>${g.on ? "Reward is live" : "Turn on"}</label></div>
+      <label class="sw"><input type="checkbox" data-act="geoOn"${g.on ? " checked" : ""}${locked && G.pro ? "" : " disabled"}><i></i>${g.on ? "Reward is live" : G.pro ? "Turn on" : "Needs Geofence Pro"}</label></div>
       <p class="hint">Customers on your page within ${fmtM(g.r)} see the reward. They give their number to unlock it, and the code reaches them by SMS (1 credit). Each number gets at most one SMS a day.</p></div>
     <div class="cd"><div class="ch"><h2 class="H">3 · SMS blast</h2><small>${G.subscribers} subscriber${G.subscribers === 1 ? "" : "s"}</small></div>
       <div class="tabs">${G.templates.map(x => `<button type="button" data-geotpl="${x.key}" class="${x.key === tpl ? "on" : ""}">${esc(x.name)}${x.ready ? "" : " ·  awaiting approval"}</button>`).join("")}</div>
       ${tpl === "newin" ? `<label class="f">What's new <em>(up to 30 letters)</em><input class="in" id="geoNote" maxlength="30" value="${esc(S.geoNote || "")}" placeholder="Nutella waffles"></label>` : ""}
+      <div class="tabs" role="group" aria-label="Who gets it">${[[0, "Everyone"], [100, "Within 100 m"], [250, "Within 250 m"], [500, "Within 500 m"]].map(([m, l]) => `<button type="button" data-geomax="${m}" class="${md === m ? "on" : ""}"${inR(m) ? "" : ' disabled style="opacity:.45"'}>${l} <em style="background:var(--ink)">${inR(m)}</em></button>`).join("")}</div>
       <div class="bub" id="geoPrev" style="max-width:none">${esc(String(t.preview || "").replace("[your note]", S.geoNote || "[what's new]"))}</div>
-      <p class="hint">Goes to <b>${G.subscribers}</b> subscriber${G.subscribers === 1 ? "" : "s"} · uses <b>${G.subscribers}</b> credit${G.subscribers === 1 ? "" : "s"} · ${G.credits} left. One blast a day, between 10 am and 9 pm.</p>
-      <button class="btn k" data-act="geoBlast"${!G.subscribers || !t.ready || !G.promoHours || G.nextBlast ? " disabled" : ""}>Send promotional SMS blast</button>
+      <p class="hint">Goes to <b>${to}</b> subscriber${to === 1 ? "" : "s"}${md ? " who checked in within " + md + " m" : ""} · uses <b>${to}</b> credit${to === 1 ? "" : "s"} · ${G.credits} left. One blast a day, between 10 am and 9 pm.</p>
+      <button class="btn k" data-act="geoBlast"${!to || !t.ready || !G.promoHours || G.nextBlast ? " disabled" : ""}>Send promotional SMS blast</button>
       <p class="hint">${!t.ready ? "This message is waiting for its SMS template approval." : !G.promoHours ? "Promotional SMS can only go out between 10 am and 9 pm." : G.nextBlast ? "Next blast possible in " + ago2(G.nextBlast) + "." : !G.subscribers ? "No subscribers yet. They join when they unlock your walk-in reward." : ""}</p>
-      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:16px;padding:14px;border-radius:14px;background:${lowCredits ? "#fff1ec" : "#f0ebe1"}"><span style="flex:1;min-width:180px"><b>${lowCredits ? "Running low on SMS credits" : "Need more SMS?"}</b><small class="mu" style="display:block">${G.pack.size} credits for ₹${G.pack.price}, added right after payment.</small></span><button class="btn" data-act="geoRecharge">Recharge ${G.pack.size} SMS credits for ₹${G.pack.price}</button></div>
-      ${G.logs.length ? `<div class="ch" style="margin:20px 0 6px"><h2 class="H">Sent</h2></div><div class="rows">${G.logs.map(l => `<div><span><b>${esc((G.templates.find(x => x.key === l.tpl) || {}).name || l.tpl)}</b><small>${ago(l.at)}</small></span><b>${l.n} SMS</b></div>`).join("")}</div>` : ""}</div>
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:16px;padding:14px;border-radius:14px;background:${lowCredits ? "#fff1ec" : "#f0ebe1"}"><span style="flex:1;min-width:180px"><b>${lowCredits ? "Running low on SMS credits" : "Need more SMS?"}</b><small class="mu" style="display:block">Added right after payment.</small></span>${G.packs.map((p, i) => `<button class="btn${i ? " k" : ""}" data-act="geoRecharge" data-plan="${p.plan}">Recharge ${p.size} SMS credits for ₹${p.price}</button>`).join("")}</div>
+      ${G.logs.length ? `<div class="ch" style="margin:20px 0 6px"><h2 class="H">Sent</h2></div><div class="rows">${G.logs.map(l => `<div><span><b>${esc((G.templates.find(x => x.key === l.tpl) || {}).name || l.tpl)}</b><small>${ago(l.at)}${l.maxDist ? " · within " + l.maxDist + " m" : ""}</small></span><b>${l.n} SMS</b></div>`).join("")}</div>` : ""}</div>
   </section>
   ${G.recent.length ? `<section class="cd" style="margin-top:18px"><div class="ch"><h2 class="H">Recent walk-ins</h2><small>Numbers are partly hidden</small></div><div class="rows">${G.recent.map(s => `<div><span><b>${esc(s.phone)}</b><small>${fmtM(s.dist)} from your shop · ${ago(s.at)}</small></span><button class="lnk" data-geodel="${s.i}">Remove</button></div>`).join("")}</div></section>` : ""}`;
 };
@@ -587,13 +590,13 @@ function geoLock(btn) {
   }, e => { btn.disabled = false; out.textContent = e.code === 1 ? "Location permission was blocked. Allow location for this site in your browser settings, then try again." : "Couldn't get your location. Turn on GPS and try again."; }, { enableHighAccuracy: true, timeout: 20000, maximumAge: 0 });
 }
 function loadRzp() { return window.Razorpay ? Promise.resolve() : new Promise((ok, no) => { const s = document.createElement("script"); s.src = "https://checkout.razorpay.com/v1/checkout.js"; s.onload = ok; s.onerror = () => no(new Error("Couldn't open the payment window. Check your internet and try again.")); document.head.appendChild(s); }); }
-async function geoRecharge(btn) {
+async function geoRecharge(btn, plan) {
   btn.disabled = true;
   try {
-    const o = await api("/api/checkout", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "create", id: S.id, plan: "sms" }) });
+    const o = await api("/api/checkout", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "create", id: S.id, plan }) });
     await loadRzp();
     new Razorpay({ key: o.keyId, amount: o.amount, currency: o.currency, order_id: o.orderId, name: "GetKeepsake", description: o.description, prefill: o.prefill, theme: { color: "#ff5b2e" },
-      handler: async p => { try { await api("/api/checkout", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "verify", ...p }) }); toast("SMS credits added"); } catch (x) { toast(x.message); } await geoLoad(); },
+      handler: async p => { try { await api("/api/checkout", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "verify", ...p }) }); toast(plan === "geopro" ? "Geofence Pro unlocked" : "SMS credits added"); if (plan === "geopro") S.active = true; } catch (x) { toast(x.message); } await geoLoad(); },
       modal: { ondismiss: () => { btn.disabled = false; } } }).open();
   } catch (x) { toast(x.message); btn.disabled = false; }
 }
@@ -745,6 +748,7 @@ $("#main").addEventListener("click", async e => {
   const mso = t.closest("[data-mso]"), mb = t.closest("[data-mb]");
   if (mso || mb) { const [si, ii] = (mso || mb).dataset[mso ? "mso" : "mb"].split(".").map(Number), x = S.menuDraft[si].items[ii]; if (mso) x.so = !x.so; else x.b = !x.b; const y = window.scrollY; go(); scrollTo(0, y); menuDirty(); return; }
   if (t.closest("[data-goto-offer]")) { S.mt = "offer"; S.mtext = null; S.ma = "all"; }
+  const gm = t.closest("[data-geomax]"); if (gm) { S.geoMax = +gm.dataset.geomax; go(); return; }
   const gt = t.closest("[data-geotpl]"); if (gt) { S.geoTpl = gt.dataset.geotpl; go(); return; }
   const gd = t.closest("[data-geodel]"); if (gd) { if (!confirm("Remove this number from your SMS list?")) return; try { await geoApi("remove", { index: +gd.dataset.geodel }); toast("Removed"); } catch (x) { toast(x.message); } await geoLoad(); return; }
   const mtb = t.closest("[data-mt]"); if (mtb) { S.mt = mtb.dataset.mt; S.mtext = null; if (TPL[S.mt].loy && !["loy", "near", "ready"].includes(S.ma)) S.ma = "loy"; go(); return; }
@@ -777,8 +781,9 @@ $("#main").addEventListener("click", async e => {
   if (act === "geoReload") { S.geo = null; go(); return; }
   if (act === "geoLock") { geoLock(a); return; }
   if (act === "geoSave") { a.disabled = true; geoSave({}, "Walk-in reward saved"); return; }
-  if (act === "geoRecharge") { geoRecharge(a); return; }
-  if (act === "geoBlast") { const G = S.geo, tpl = S.geoTpl || (G.templates.find(t => t.ready) || {}).key; if (!confirm(`Send this SMS to ${G.subscribers} customer${G.subscribers === 1 ? "" : "s"}? It uses ${G.subscribers} credit${G.subscribers === 1 ? "" : "s"}.`)) return; a.disabled = true; try { const r = await geoApi("blast", { tpl, note: S.geoNote || "" }); toast(r.log.n + " SMS sent"); } catch (x) { toast(x.message); } await geoLoad(); return; }
+  if (act === "geoRecharge") { geoRecharge(a, a.dataset.plan || "sms"); return; }
+  if (act === "geoPro") { geoRecharge(a, "geopro"); return; }
+  if (act === "geoBlast") { const G = S.geo, tpl = S.geoTpl || (G.templates.find(t => t.ready) || {}).key, md = S.geoMax || 0, n = G.dists.filter(x => !md || x <= md).length; if (!confirm(`Send this SMS to ${n} customer${n === 1 ? "" : "s"}? It uses ${n} credit${n === 1 ? "" : "s"}.`)) return; a.disabled = true; try { const r = await geoApi("blast", { tpl, note: S.geoNote || "", maxDist: md }); toast(r.log.n + " SMS sent"); } catch (x) { toast(x.message); } await geoLoad(); return; }
   if (act === "mreset") { store.set(sentKey(), []); go(); return; }
   if (act === "mnums") { const nums = recipients().map(c => "+" + waNum(c.phone)).join("\n"); try { await navigator.clipboard.writeText(nums); toast("Numbers copied"); } catch (x) { prompt("Copy these numbers:", nums); } return; }
   if (act === "notif") { try { await Notification.requestPermission(); } catch (x) {} go(); return; }
