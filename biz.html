@@ -36,7 +36,7 @@ html,body{margin:0;background:#1f1611;min-height:100%}
   const loy = j.active !== false && j.loyalty && j.data.loy && j.data.loy.on;
   KSBiz.render(root, j.data, { url: location.origin + "/b/" + m[1], id: j.owner ? "" : m[1], loyLive: !!loy });
   // Walk-in reward: the shop's geofence (customers only, never the owner's own preview)
-  if (j.gf && !j.owner) { const s = document.createElement("script"); s.src = "/assets/geofence.v1.js"; s.onload = () => KSGeo.mount(root, m[1], j.gf, j.data.t || "this shop"); document.head.appendChild(s); }
+  if (j.gf && !j.owner) { const s = document.createElement("script"); s.src = "/assets/geofence.v2.js"; s.onload = () => KSGeo.mount(root, m[1], j.gf, j.data.t || "this shop"); document.head.appendChild(s); }
   if (loy) { const s = document.createElement("script"); s.src = "/assets/loyal.v1.js"; s.onload = () => KSLoyal.mount(root, m[1]); document.head.appendChild(s); }
   // links like /b/ID#bz-loy (loyalty card) or #bz-menu jump to that part once the page is drawn
   if (/^#bz-[\w-]+$/.test(location.hash)) setTimeout(() => { const t = document.querySelector(location.hash); if (t) t.scrollIntoView({ block: "start" }); }, 350);
