@@ -261,7 +261,7 @@ const IC = {
 };
 const NAV = [
   ["Run the shop", [["overview", "Overview", "home"], ["orders", "Orders", "orders"], ["menu", "Menu & prices", "menu"], ["customers", "Customers", "people"]]],
-  ["Grow", [["messages", "Messages", "wa"], ["nearby", "Walk-in & SMS", "pin"], ["reviews", "Reviews", "star"], ["offers", "Offers & marketing", "tag"], ["analytics", "Analytics", "chart"]]],
+  ["Grow", [["messages", "Messages", "wa"], ["nearby", "Walk-in offers", "pin"], ["reviews", "Reviews", "star"], ["offers", "Offers & marketing", "tag"], ["analytics", "Analytics", "chart"]]],
   ["Set up", [["page", "My page", "page"], ["qr", "QR & cards", "qr"], ["payments", "Payments", "pay"], ["settings", "Team & settings", "gear"]]]
 ];
 const TITLES = Object.fromEntries(NAV.flatMap(g => g[1]).map(x => [x[0], x[1]]));
@@ -440,6 +440,7 @@ V.menu = () => {
 function custRows() {
   const map = {};
   (S.customers || []).forEach(c => map[c.phone] = { name: c.name, phone: c.phone, n: c.n, spend: c.spend, last: c.last, first: c.first });
+  ((S.geo && S.geo.phones) || []).forEach(w => { const p = String(w.phone).slice(-10), c = map[p] || (map[p] = { name: "", phone: p, n: 0, spend: 0, last: 0, first: w.first }); c.walk = w; c.last = Math.max(c.last || 0, w.at || 0); c.first = Math.min(c.first || w.first, w.first || c.first); });
   ((S.loy && S.loy.members) || []).forEach(m => { const c = map[m.phone] || (map[m.phone] = { name: m.name, phone: m.phone, n: 0, spend: 0, last: 0, first: m.at }); c.loy = m; c.last = Math.max(c.last || 0, m.last || 0); if (!c.name || c.name === "Customer") c.name = m.name; });
   return Object.values(map).sort((a, b) => b.last - a.last);
 }
@@ -483,6 +484,7 @@ const TPL = {
 function audiences() {
   const wk = Date.now() - 7 * 864e5, mo = Date.now() - 30 * 864e5, L = [["all", "Everyone", () => true]];
   if (LOYN()) L.push(["loy", "Loyalty members", c => !!c.loy], ["near", "1–2 stamps from a reward", c => { const l = leftOf(c); return l !== null && l > 0 && l <= 2; }], ["ready", "Reward ready", c => leftOf(c) === 0]);
+  if (S.geo && S.geo.phones && S.geo.phones.length) L.push(["walk", "Walk-in subscribers", c => !!c.walk]);
   L.push(["reg", "Regulars (2+ orders)", c => c.n >= 2], ["new", "New this week", c => c.first >= wk], ["away", "Not seen in 30 days", c => c.last && c.last < mo]);
   return L;
 }
@@ -534,18 +536,17 @@ async function geoLoad() { try { S.geo = await geoApi("status"); } catch (e) { S
 const fmtM = m => m < 1000 ? m + " m" : (m / 1000).toFixed(1) + " km";
 V.nearby = () => {
   const G = S.geo;
-  if (!G) { geoLoad(); return head("Walk-in & SMS", "Loading…", "") + `<div class="sk" style="height:320px"></div>`; }
-  if (G.error) return head("Walk-in & SMS", "", "") + `<div class="empty"><b>Couldn't load this section</b>${esc(G.error)}<br><button class="btn" data-act="geoReload">Try again</button></div>`;
+  if (!G) { geoLoad(); return head("Walk-in offers", "Loading…", "") + `<div class="sk" style="height:320px"></div>`; }
+  if (G.error) return head("Walk-in offers", "", "") + `<div class="empty"><b>Couldn't load this section</b>${esc(G.error)}<br><button class="btn" data-act="geoReload">Try again</button></div>`;
   const g = Object.assign({ on: false, r: 250, offer: "", code: "" }, G.gf), d = S.geoDraft || (S.geoDraft = { r: g.r, offer: g.offer, code: g.code });
   const locked = typeof g.lat === "number", lowCredits = G.credits < Math.max(50, G.subscribers);
   const tpl = S.geoTpl || ((G.templates.find(t => t.ready) || G.templates[0] || {}).key), t = G.templates.find(x => x.key === tpl) || {};
-  const md = S.geoMax || 0, inR = m => G.dists.filter(x => !m || x <= m).length, to = inR(md);
+  const ch = S.geoCh || "push", md = S.geoMax || 0, inR = m => G.dists.filter(x => !m || x <= m).length, to = inR(md);
   const ago2 = s => s > 3600 ? Math.ceil(s / 3600) + " h" : Math.ceil(s / 60) + " min";
-  return head("Walk-in & SMS", "Reward people who are standing near your shop, and send SMS offers to the ones who opted in.", "") +
+  return head("Walk-in offers", "Reward people standing near your shop, then send them offers by notification, WhatsApp or SMS.", "") +
   (G.pro ? "" : `<div class="bar"><span><b>Geofence Pro</b> · reward people standing near your shop, collect their numbers and send them SMS offers. Includes 50 SMS to start.</span><button class="btn" data-act="geoPro">Unlock for ₹${G.proPrice}</button></div>`) +
-  (G.smsReady ? "" : `<div class="note" style="margin-bottom:18px"><b>SMS isn't connected yet.</b> Walk-in rewards already work: until SMS is set up, customers see their code on screen. Blasts start once your SMS templates are approved.</div>`) +
   `<section class="g4" style="margin-top:0;grid-template-columns:repeat(3,minmax(0,1fr))">
-    <div class="kpi ${lowCredits ? "o" : "y"}"><span>SMS credits</span><b>${G.credits}</b><small>${lowCredits ? "Running low" : "1 credit = 1 SMS"}</small></div>
+    ${G.smsReady ? `<div class="kpi ${lowCredits ? "o" : "y"}"><span>SMS credits</span><b>${G.credits}</b><small>${lowCredits ? "Running low" : "1 credit = 1 SMS"}</small></div>` : `<div class="kpi y"><span>Notifications on</span><b>${G.pushSubs}</b><small>get your offers free</small></div>`}
     <div class="kpi"><span>Nearby subscribers</span><b>${G.subscribers}</b><small class="gd">opted in at your shop</small></div>
     <div class="kpi k"><span>Walk-ins this week</span><b>${G.week}</b><small>unlocked the reward</small></div>
   </section>
@@ -561,8 +562,17 @@ V.nearby = () => {
       <div class="bub" style="max-width:none;margin-bottom:14px">📍 You're 120 m from ${esc(shopName())}! Unlock <b>${esc(d.offer || "your offer")}</b> right now.</div>
       <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center"><button class="btn" data-act="geoSave">Save</button>
       <label class="sw"><input type="checkbox" data-act="geoOn"${g.on ? " checked" : ""}${locked && G.pro ? "" : " disabled"}><i></i>${g.on ? "Reward is live" : G.pro ? "Turn on" : "Needs Geofence Pro"}</label></div>
-      <p class="hint">Customers on your page within ${fmtM(g.r)} see the reward. They give their number to unlock it, and the code reaches them by SMS (1 credit). Each number gets at most one SMS a day.</p></div>
-    <div class="cd"><div class="ch"><h2 class="H">3 · SMS blast</h2><small>${G.subscribers} subscriber${G.subscribers === 1 ? "" : "s"}</small></div>
+      <p class="hint">Customers on your page within ${fmtM(g.r)} see the reward. They give their number to unlock it${G.smsReady ? ", and the code reaches them by SMS (1 credit). Each number gets at most one SMS a day." : ". The code shows on their screen, and they can send it to your WhatsApp in one tap."}</p></div>
+    <div class="cd"><div class="ch"><h2 class="H">3 · Send an offer</h2><small>${G.subscribers} walk-in subscriber${G.subscribers === 1 ? "" : "s"}</small></div>
+      <div class="tabs" role="tablist">${[["push", "Notification · free"], ["wa", "WhatsApp · free"], ["sms", "SMS"]].map(([k, l]) => `<button type="button" data-geoch="${k}" class="${ch === k ? "on" : ""}">${l}</button>`).join("")}</div>
+      ${ch === "push" ? `<p class="mu" style="margin-top:0">Arrives on their phone like an app notification, even when your page is closed. Reaches the <b>${G.pushSubs}</b> customer${G.pushSubs === 1 ? "" : "s"} who turned on notifications from your shop.</p>
+      <label class="f">Message <em>(up to 140 letters)</em><textarea class="in" id="geoPush" maxlength="140" rows="3">${esc(S.geoPush != null ? S.geoPush : (g.offer ? g.offer + " today at " + shopName() + ". Show this at the counter." : ""))}</textarea></label>
+      <button class="btn k" data-act="geoPushSend"${!G.pushSubs || !G.promoHours || G.nextPush ? " disabled" : ""}>Send notification to ${G.pushSubs}</button>
+      <p class="hint">${!G.pushSubs ? "Customers turn this on after they unlock your walk-in reward." : !G.promoHours ? "Offers can only go out between 10 am and 9 pm." : G.nextPush ? "Next notification possible in " + ago2(G.nextPush) + "." : "One notification a day, between 10 am and 9 pm. Works on Android and on iPhones where your page is added to the home screen."}</p>`
+      : ch === "wa" ? `<p class="mu" style="margin-top:0">Send your offer on WhatsApp to each walk-in subscriber, with their name filled in. One tap per customer, free.</p>
+      <a class="btn w" href="#messages" data-geowa>${IC.wa}Open WhatsApp sending · ${G.subscribers} customer${G.subscribers === 1 ? "" : "s"}</a>
+      <p class="hint">Opens Messages with the "Walk-in subscribers" group and today's offer ready. They agreed to offers by SMS or WhatsApp when they unlocked the reward.</p>`
+      : G.smsReady ? `
       <div class="tabs">${G.templates.map(x => `<button type="button" data-geotpl="${x.key}" class="${x.key === tpl ? "on" : ""}">${esc(x.name)}${x.ready ? "" : " ·  awaiting approval"}</button>`).join("")}</div>
       ${tpl === "newin" ? `<label class="f">What's new <em>(up to 30 letters)</em><input class="in" id="geoNote" maxlength="30" value="${esc(S.geoNote || "")}" placeholder="Nutella waffles"></label>` : ""}
       <div class="tabs" role="group" aria-label="Who gets it">${[[0, "Everyone"], [100, "Within 100 m"], [250, "Within 250 m"], [500, "Within 500 m"]].map(([m, l]) => `<button type="button" data-geomax="${m}" class="${md === m ? "on" : ""}"${inR(m) ? "" : ' disabled style="opacity:.45"'}>${l} <em style="background:var(--ink)">${inR(m)}</em></button>`).join("")}</div>
@@ -571,7 +581,9 @@ V.nearby = () => {
       <button class="btn k" data-act="geoBlast"${!to || !t.ready || !G.promoHours || G.nextBlast ? " disabled" : ""}>Send promotional SMS blast</button>
       <p class="hint">${!t.ready ? "This message is waiting for its SMS template approval." : !G.promoHours ? "Promotional SMS can only go out between 10 am and 9 pm." : G.nextBlast ? "Next blast possible in " + ago2(G.nextBlast) + "." : !G.subscribers ? "No subscribers yet. They join when they unlock your walk-in reward." : ""}</p>
       <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:16px;padding:14px;border-radius:14px;background:${lowCredits ? "#fff1ec" : "#f0ebe1"}"><span style="flex:1;min-width:180px"><b>${lowCredits ? "Running low on SMS credits" : "Need more SMS?"}</b><small class="mu" style="display:block">Added right after payment.</small></span>${G.packs.map((p, i) => `<button class="btn${i ? " k" : ""}" data-act="geoRecharge" data-plan="${p.plan}">Recharge ${p.size} SMS credits for ₹${p.price}</button>`).join("")}</div>
-      ${G.logs.length ? `<div class="ch" style="margin:20px 0 6px"><h2 class="H">Sent</h2></div><div class="rows">${G.logs.map(l => `<div><span><b>${esc((G.templates.find(x => x.key === l.tpl) || {}).name || l.tpl)}</b><small>${ago(l.at)}${l.maxDist ? " · within " + l.maxDist + " m" : ""}</small></span><b>${l.n} SMS</b></div>`).join("")}</div>` : ""}</div>
+` : `<div class="note"><b>SMS isn't set up yet.</b> It needs an SMS provider (MSG91) and approved DLT templates. Until then, use notifications and WhatsApp: they're free.</div>`}
+      ${G.logs.length ? `<div class="ch" style="margin:20px 0 6px"><h2 class="H">Sent</h2></div><div class="rows">${G.logs.map(l => `<div><span><b>${esc(l.tpl === "push" ? "Notification" : (G.templates.find(x => x.key === l.tpl) || {}).name || l.tpl)}</b><small>${ago(l.at)}${l.maxDist ? " · within " + l.maxDist + " m" : ""}</small></span><b>${l.n} ${l.tpl === "push" ? "notified" : "SMS"}</b></div>`).join("")}</div>` : ""}
+    </div>
   </section>
   ${G.recent.length ? `<section class="cd" style="margin-top:18px"><div class="ch"><h2 class="H">Recent walk-ins</h2><small>Numbers are partly hidden</small></div><div class="rows">${G.recent.map(s => `<div><span><b>${esc(s.phone)}</b><small>${fmtM(s.dist)} from your shop · ${ago(s.at)}</small></span><button class="lnk" data-geodel="${s.i}">Remove</button></div>`).join("")}</div></section>` : ""}`;
 };
@@ -748,6 +760,8 @@ $("#main").addEventListener("click", async e => {
   const mso = t.closest("[data-mso]"), mb = t.closest("[data-mb]");
   if (mso || mb) { const [si, ii] = (mso || mb).dataset[mso ? "mso" : "mb"].split(".").map(Number), x = S.menuDraft[si].items[ii]; if (mso) x.so = !x.so; else x.b = !x.b; const y = window.scrollY; go(); scrollTo(0, y); menuDirty(); return; }
   if (t.closest("[data-goto-offer]")) { S.mt = "offer"; S.mtext = null; S.ma = "all"; }
+  const gc = t.closest("[data-geoch]"); if (gc) { S.geoCh = gc.dataset.geoch; go(); return; }
+  if (t.closest("[data-geowa]")) { S.mt = "offer"; S.mtext = null; S.ma = "walk"; }
   const gm = t.closest("[data-geomax]"); if (gm) { S.geoMax = +gm.dataset.geomax; go(); return; }
   const gt = t.closest("[data-geotpl]"); if (gt) { S.geoTpl = gt.dataset.geotpl; go(); return; }
   const gd = t.closest("[data-geodel]"); if (gd) { if (!confirm("Remove this number from your SMS list?")) return; try { await geoApi("remove", { index: +gd.dataset.geodel }); toast("Removed"); } catch (x) { toast(x.message); } await geoLoad(); return; }
@@ -783,6 +797,7 @@ $("#main").addEventListener("click", async e => {
   if (act === "geoSave") { a.disabled = true; geoSave({}, "Walk-in reward saved"); return; }
   if (act === "geoRecharge") { geoRecharge(a, a.dataset.plan || "sms"); return; }
   if (act === "geoPro") { geoRecharge(a, "geopro"); return; }
+  if (act === "geoPushSend") { const n = S.geo.pushSubs; if (!confirm(`Send this notification to ${n} customer${n === 1 ? "" : "s"}?`)) return; a.disabled = true; try { const r = await geoApi("push", { text: $("#geoPush").value }); toast(r.log.n + " phone" + (r.log.n === 1 ? "" : "s") + " notified"); } catch (x) { toast(x.message); } await geoLoad(); return; }
   if (act === "geoBlast") { const G = S.geo, tpl = S.geoTpl || (G.templates.find(t => t.ready) || {}).key, md = S.geoMax || 0, n = G.dists.filter(x => !md || x <= md).length; if (!confirm(`Send this SMS to ${n} customer${n === 1 ? "" : "s"}? It uses ${n} credit${n === 1 ? "" : "s"}.`)) return; a.disabled = true; try { const r = await geoApi("blast", { tpl, note: S.geoNote || "", maxDist: md }); toast(r.log.n + " SMS sent"); } catch (x) { toast(x.message); } await geoLoad(); return; }
   if (act === "mreset") { store.set(sentKey(), []); go(); return; }
   if (act === "mnums") { const nums = recipients().map(c => "+" + waNum(c.phone)).join("\n"); try { await navigator.clipboard.writeText(nums); toast("Numbers copied"); } catch (x) { prompt("Copy these numbers:", nums); } return; }
@@ -802,6 +817,7 @@ $("#main").addEventListener("input", e => {
   if (t.id === "csq") { S.csq = t.value; const pos = t.selectionStart; go(); const n = $("#csq"); n.focus(); n.setSelectionRange(pos, pos); return; }
   if (t.dataset.mp) { const [si, ii] = t.dataset.mp.split(".").map(Number); S.menuDraft[si].items[ii].p = t.value; menuDirty(); return; }
   if (t.id === "bc") { store.set("gk-bc:" + S.id, t.value); return; }
+  if (t.id === "geoPush") { S.geoPush = t.value; return; }
   if (t.id === "geoR") { S.geoDraft.r = +t.value; $("#geoRv").textContent = fmtM(+t.value); return; }
   if (t.id === "geoOffer" || t.id === "geoCode") { S.geoDraft[t.id === "geoOffer" ? "offer" : "code"] = t.id === "geoCode" ? t.value.toUpperCase().replace(/[^A-Z0-9]/g, "") : t.value; return; }
   if (t.id === "geoNote") { S.geoNote = t.value; const pv = $("#geoPrev"), tp = (S.geo.templates.find(x => x.key === "newin") || {}).preview || ""; if (pv) pv.textContent = tp.replace("[your note]", t.value || "[what's new]"); return; }
@@ -856,7 +872,8 @@ document.addEventListener("visibilitychange", () => { if (!document.hidden && Da
     go(); poll();
     // Customers and loyalty members load in the background (used by several sections).
     const [c, l] = await Promise.all([post({ action: "bz-own-customers", id: S.id }).catch(() => ({ customers: [] })), S.loyalty ? post({ action: "loy-own-list", id: S.id }).catch(() => null) : null]);
-    S.customers = c.customers || []; S.loy = l; { const cr = custRows(); S.customersCount = cr.length; S.newCust = cr.filter(x => x.first >= Date.now() - 7 * 864e5).length; }
+    S.customers = c.customers || []; S.loy = l;
+    try { S.geo = await geoApi("status"); } catch (e) {} { const cr = custRows(); S.customersCount = cr.length; S.newCust = cr.filter(x => x.first >= Date.now() - 7 * 864e5).length; }
     if (["customers", "messages", "reviews", "offers", "analytics", "settings", "overview"].includes(S.view)) { const y = scrollY; go(); scrollTo(0, y); }
   } catch (e) { $("#main").innerHTML = `<div class="load"><div class="empty"><b>Couldn't load your dashboard</b>${esc(e.message)}<br><button class="btn" onclick="location.reload()">Try again</button></div></div>`; }
 })();

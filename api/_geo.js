@@ -11,7 +11,13 @@
 //   gfl:<page>              = list of blast logs { id, tpl, n, credits, at } (newest first, last 100)
 //   gfb:<page>              = 24-hour cooldown between promotional blasts
 //
-// SMS goes through MSG91's Flow API using TRAI DLT-approved templates. Set in Vercel:
+// Free channels (no SMS provider needed):
+//   - the code is shown on screen, and the customer can send it to the shop's WhatsApp in one tap;
+//   - phone notifications (Web Push, the same VAPID keys as the admin app): customers who allow them are kept in
+//     gfp:<page> (set of push-sub keys), the latest message for each phone in gfin:<push-sub key>;
+//   - WhatsApp offers from the owner's Messages section (one tap per customer).
+//   gfpb:<page> = 24-hour cooldown between notification blasts
+// Optional SMS goes through MSG91's Flow API using TRAI DLT-approved templates. Set in Vercel:
 //   MSG91_AUTH_KEY, MSG91_SENDER (6-letter DLT header), and one template id per message below
 //   (MSG91_TPL_CHECKIN, MSG91_TPL_OFFER, MSG91_TPL_COMEBACK, MSG91_TPL_NEW). The exact texts to register are in
 //   tools/geofence/DLT-TEMPLATES.md. Until MSG91 is set up, check-ins still work and show the code on screen.
@@ -93,11 +99,13 @@ const shopName = m => clip((m.data && m.data.t) || m.title || "our shop", 30);
 async function limit(k, max, secs) { const n = await db.cmd("INCR", k); if (n === 1) await db.cmd("EXPIRE", k, secs); return n > max; }
 
 // What a customer's phone may know about the geofence (never the coupon code).
+// The shop's WhatsApp number (for "send my code to the shop"), as 91XXXXXXXXXX.
+const waOf = m => { const d = ph10((m.data && (m.data.wa || m.data.phone)) || ""); return d ? "91" + d : ""; };
 // Geofence Pro is a paid add-on; while Razorpay isn't set up (testing), everyone has it.
 const pro = m => !!m.geopro || !pay.configured();
 function publicInfo(m) {
   const g = m.gf;
-  return g && g.on && pro(m) && okLat(g.lat) && okLng(g.lng) && g.offer && m.paid !== false ? { on: true, lat: g.lat, lng: g.lng, r: g.r, offer: g.offer } : null;
+  return g && g.on && pro(m) && okLat(g.lat) && okLng(g.lng) && g.offer && m.paid !== false ? { on: true, lat: g.lat, lng: g.lng, r: g.r, offer: g.offer, ...(waOf(m) ? { wa: waOf(m) } : {}) } : null;
 }
 
 // ---------- customer: check in from the shop's page ----------
@@ -167,6 +175,9 @@ async function status(id, m) {
   const wk = Date.now() - 7 * 864e5;
   return {
     ok: true, gf: m.gf || { on: false, r: 250, offer: "", code: "" }, credits: await credits(id),
+    pushSubs: +(await db.cmd("SCARD", "gfp:" + id)) || 0, nextPush: Math.max(0, +(await db.cmd("TTL", "gfpb:" + id)) || 0),
+    // full numbers for the owner's own WhatsApp messages (customers agreed to offers by SMS or WhatsApp)
+    phones: every.map(s => ({ phone: s.phone, dist: s.dist, at: s.seenAt || s.optedAt || 0, first: s.optedAt || 0 })),
     subscribers: phones.length, week: every.filter(s => s.seenAt >= wk).length, dists: every.map(s => s.dist == null ? 99999 : s.dist),
     recent: subs.map(s => ({ i: s.i, phone: mask(s.phone), dist: s.dist, at: s.seenAt || s.optedAt })),
     logs, smsReady: smsReady(), promoHours: promoHours(), nextBlast: Math.max(0, +(await db.cmd("TTL", "gfb:" + id)) || 0),
@@ -224,15 +235,50 @@ async function removeSub(b) {
   return { ok: true };
 }
 
-// action = checkin | optout | status | settings | blast | remove
+// ---------- phone notifications (free) ----------
+const hq = () => require("./_hq");
+const pushKey = ep => crypto.createHash("sha256").update(String(ep || "")).digest("hex").slice(0, 32); // same id as _hq's push-sub:<id>
+async function pushSubscribe(b) {
+  const m = await page(b.id);
+  if (!m || !publicInfo(m)) return E(404, "This shop has no walk-in offer right now.");
+  const r = await hq().subscribe(b.sub, shopName(m), "gfp:" + b.id);
+  return r.error ? E(400, r.error) : { ok: true };
+}
+async function pushUnsubscribe(b) { if (!ID.test(String(b.id || ""))) return E(400, "Invalid shop."); await hq().unsubscribe(b.endpoint, "gfp:" + b.id); return { ok: true }; }
+// The phone's service worker asks what to show (pushes carry no data).
+async function inbox(b) {
+  const ep = String(b.endpoint || ""); if (!/^https:\/\//.test(ep)) return E(400, "Bad subscription.");
+  return { ok: true, msg: (await db.getj("gfin:" + pushKey(ep))) || null };
+}
+async function push(b, m) {
+  if (!promoHours()) return E(409, "Offers can only be sent between 10 am and 9 pm.");
+  const text = clip(b.text, 140); if (text.length < 5) return E(400, "Write the message (5 to 140 letters).");
+  const ks = await db.cmd("SMEMBERS", "gfp:" + b.id);
+  if (!ks.length) return E(409, "Nobody has turned on notifications from your shop yet.");
+  if ((await db.cmd("SET", "gfpb:" + b.id, "1", "NX", "EX", 86400)) !== "OK") return E(429, "You've already sent a notification today. Try again tomorrow.");
+  const msg = { title: shopName(m), body: text, url: "/b/" + b.id, at: Date.now() };
+  for (const k of ks) await db.setj("gfin:" + String(k).replace(/^push-sub:/, ""), msg, "EX", 172800);
+  const r = await hq().notify("gfp:" + b.id);
+  if (!r.sent) { await db.cmd("DEL", "gfpb:" + b.id); return E(502, "No phone could be reached right now. Try again later."); }
+  const log = { id: crypto.randomBytes(5).toString("hex"), tpl: "push", n: r.sent, credits: 0, at: Date.now() };
+  await db.cmd("LPUSH", "gfl:" + b.id, JSON.stringify(log)); await db.cmd("LTRIM", "gfl:" + b.id, 0, 99);
+  return { ok: true, log };
+}
+
+// action = checkin | optout | vapid | subscribe | unsubscribe | inbox | status | settings | blast | push | remove
 async function handle(action, b, ctx) {
   b = b || {};
   if (action === "checkin") return checkin(b, ctx.ip);
   if (action === "optout") return optout(b);
+  if (action === "vapid") return { ok: true, key: (await hq().vapid()).pub };
+  if (action === "subscribe") return pushSubscribe(b);
+  if (action === "unsubscribe") return pushUnsubscribe(b);
+  if (action === "inbox") return inbox(b);
   const o = await owner(b, ctx); if (o.err) return o.err;
   if (action === "status") return status(b.id, o.m);
   if (action === "settings") { const r = await settings(b, o.m); return r.error ? r : status(b.id, await page(b.id)); }
   if (action === "blast") return blast(b, o.m);
+  if (action === "push") return push(b, o.m);
   if (action === "remove") return removeSub(b);
   return E(400, "Unknown action.");
 }
