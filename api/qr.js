@@ -37,6 +37,8 @@ module.exports = async (req, res) => {
       return res.redirect(302, (rec.tier === "site" ? "/builder" : rec.tier === "biz" ? "/shops/studio" : "/studio") + "?claim=" + rec.code);
     }
     if (req.method !== "POST") { res.setHeader("Allow", "GET, POST"); return db.reply(res, 405, { error: "Method not allowed." }); }
+    // Geofence walk-in offer + nearby SMS (/api/geofence/<action> is rewritten here with ?gf=<action>)
+    if (q.gf) { const r = await require("./_geo").handle(String(q.gf), req.body, { ip: ip(req), user: () => auth.currentUser(req) }); return r.error ? db.reply(res, r.status || 400, { error: r.error, ...(r.distance !== undefined ? { distance: r.distance } : {}), ...(r.need ? { need: r.need, credits: r.credits } : {}) }) : db.reply(res, 200, r); }
     if (/^sp-push-/.test(String((req.body || {}).action || ""))) { const b = req.body, r = await require("./_sales").push(b.code, b.tok, b); return r.error ? db.reply(res, r.status, { error: r.error }) : db.reply(res, 200, r); }
     if ((req.body || {}).action === "sp-visit") { const r = await require("./_sales").logVisit(req.body.code, req.body.tok, req.body.visit); return r.error ? db.reply(res, r.status, { error: r.error }) : db.reply(res, 200, r); }
     if (/^loy-/.test(String((req.body || {}).action || ""))) { const r = await require("./_loyal").handle(req.body, { ip: ip(req), user: () => auth.currentUser(req) }); return r.error ? db.reply(res, r.status || 400, { error: r.error, ...(r.card ? { card: r.card } : {}), ...(r.gone ? { gone: true } : {}) }) : db.reply(res, 200, r); }

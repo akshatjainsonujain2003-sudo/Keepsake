@@ -47,6 +47,8 @@ function catalog() {
   // Loyalty stamp card add-on for a business page, one-time: ₹499 page + ₹300 = ₹799 together, or ₹300 later. PRICE_LOYALTY changes it.
   c.delivery.loyalty = { name: "Loyalty card", price: rupees(env.PRICE_LOYALTY, 300),
     desc: "A stamp card for repeat customers, e.g. 10 visits = a free coffee. Staff PIN and member list." };
+  // SMS credits for the geofence walk-in offer and nearby SMS blasts (business pages): PRICE_SMS_PACK for SMS_PACK_SIZE credits.
+  c.sms = { price: rupees(env.PRICE_SMS_PACK, 299), size: Math.max(1, Math.round(+env.SMS_PACK_SIZE || 500)) };
   if (!c.frames) { delete c.delivery.frameQr; delete c.delivery.frameNfc; }
   return c;
 }
@@ -62,6 +64,11 @@ const kindOf = memory => (memory.kind === "site" || memory.kind === "biz" ? memo
 function amountFor(memory, plan, extra) {
   extra = extra || {};
   const c = catalog();
+  if (plan === "sms") {
+    if (kindOf(memory) !== "biz") return { error: "SMS credits are for business pages." };
+    if (memory.paid === false) return { error: "Activate your page first." };
+    return { rupees: c.sms.price, upgrade: true };
+  }
   if (!c.delivery[plan]) return { error: "Choose how you'd like it delivered." };
   if (kindOf(memory) === "biz" && isFrame(plan)) return { error: "Business pages are digital only." };
   if (plan === "bizQr" && kindOf(memory) !== "biz") return { error: "Printed QRs are for business pages." };
@@ -82,6 +89,7 @@ function amountFor(memory, plan, extra) {
 }
 function describe(memory, plan, upgrade, withQr) {
   const c = catalog(), product = c.products[kindOf(memory)].name;
+  if (plan === "sms") return c.sms.size + " SMS credits";
   if (plan === "loyalty" && withQr) return upgrade ? "Loyalty card + printed QR delivered" : `${product} + loyalty card + printed QR delivered`;
   if (upgrade) return c.delivery[plan].name;
   if (plan === "bizQr") return `${product} + printed QR delivered`;
@@ -162,6 +170,7 @@ async function markPaid(orderId, paymentId) {
         order.qrCode = code; order.qrBatch = r.batch.id; await db.setj(key, order);
       } catch (e) {}
     }
+    if (order.plan === "sms") { try { await require("./_geo").give(order.memory, catalog().sms.size); } catch (e) { console.error("SMS credits not added for", orderId, e.message); } }
     if (order.ref) { await db.cmd("ZADD", "ref-orders:" + order.ref, order.paidAt, orderId); await db.cmd("SADD", "coupon-users:" + order.ref, order.owner); }
     return order;
   } finally {
