@@ -246,17 +246,38 @@ footer a{color:#fff}
 .chip{animation:chf 6s ease-in-out infinite}.chip.c2{animation-delay:-2s}.chip.c3{animation-delay:-4s}
 @keyframes chf{50%{transform:translateY(-9px)}}
 .noise{background:var(--ink);color:#fff;padding:110px 0;overflow:hidden;position:relative}
-.noise .wrap{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:56px;align-items:center}
+.noise .wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:64px;align-items:center}
 .noise h2{margin:10px 0 0;font:400 clamp(40px,5.6vw,78px)/.92 var(--fd);letter-spacing:-.025em;text-transform:uppercase}
 .noise h2 em{font:400 1.05em var(--fsc);text-transform:none;letter-spacing:0;color:var(--ac2)}
-.noise p{color:#bdb6aa;font-size:18px;max-width:500px;margin:22px 0 0}.noise p b{color:#fff}
-.crowd{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;transform:rotate(-4deg)}
-.fly{aspect-ratio:3/4;border-radius:8px;background:#2a2826;color:#6f6a63;display:flex;flex-direction:column;justify-content:space-between;padding:10px;font:400 clamp(10px,1.25vw,15px)/1 var(--fd);text-transform:uppercase}
-.fly small{font:600 9px var(--fn);letter-spacing:.06em}
-.fly:nth-child(3n){background:#353230}.fly:nth-child(4n){background:#1f1d1b}
-.fly.me{background:var(--ac2);color:var(--ink);transform:scale(1.2);position:relative;z-index:2;align-items:center;justify-content:center;gap:6px;text-align:center;animation:glow 2.6s ease-in-out infinite}
-@keyframes glow{0%,100%{box-shadow:0 0 0 6px #ffd84d33,0 20px 50px -10px #ffd84d88}50%{box-shadow:0 0 0 16px #ffd84d1a,0 20px 64px -6px #ffd84dbb}}
-.fly.me svg{width:58%;height:auto}.fly.me small{font:800 10px var(--fn);letter-spacing:.12em}
+.noise .sub{color:#bdb6aa;font-size:18px;max-width:480px;margin:20px 0 0}
+.vs{margin-top:34px;border-radius:22px;overflow:hidden;border:1px solid #ffffff1f}
+.vs .r{display:grid;grid-template-columns:1fr 1fr}
+.vs .r>span{padding:14px 18px;font-size:15px;line-height:1.35;display:flex;gap:10px;align-items:flex-start}
+.vs .r>span:first-child{color:#8d867c;border-right:1px solid #ffffff1f}
+.vs .r>span:last-child{color:#fff;font-weight:600;background:#ffffff08}
+.vs .r+.r>span{border-top:1px solid #ffffff1f}
+.vs .r>span:before{flex:none;width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font:800 11px/20px var(--fn);text-align:center}
+.vs .r:not(.h)>span:first-child:before{content:"✕";background:#ffffff14;color:#8d867c}
+.vs .r:not(.h)>span:last-child:before{content:"✓";background:var(--ac2);color:var(--ink)}
+.vs .h>span{font:800 11.5px var(--fn)!important;letter-spacing:.18em;text-transform:uppercase;padding:12px 18px}
+.vs .h>span:last-child{color:var(--ac2)!important;background:#ffd84d14!important}
+/* the pile: pamphlets everyone ignores, your QR on top */
+.pile{position:relative;height:520px}
+.pf{position:absolute;width:210px;height:290px;border-radius:6px;padding:18px 16px;background:#e9e3d8;color:#5e5850;box-shadow:0 20px 40px -20px #000c;filter:grayscale(1) brightness(.62) contrast(.9);transition:transform 1.1s cubic-bezier(.2,.8,.2,1),opacity .8s;display:flex;flex-direction:column;gap:8px;overflow:hidden}
+.pf b{font:400 30px/.9 var(--fd);text-transform:uppercase;color:#3d3833}
+.pf i{display:block;height:7px;border-radius:4px;background:#00000022}.pf i.s{width:60%}
+.pf em{margin-top:auto;font:700 11px var(--fn);letter-spacing:.08em;text-transform:uppercase;font-style:normal}
+.pf.p1{left:2%;top:40px;transform:rotate(-14deg)}.pf.p2{left:24%;top:4px;transform:rotate(7deg);background:#f2c9b8}.pf.p3{right:2%;top:30px;transform:rotate(16deg);background:#cfe0d4}
+.pf.p4{left:6%;bottom:6px;transform:rotate(9deg);background:#f4e3a1}.pf.p5{right:8%;bottom:0;transform:rotate(-10deg);background:#d9d2ec}
+.pf.p2 b{font-size:38px}.pf.p3 b{font-family:Georgia,serif;text-transform:none;font-size:34px}
+.pq{position:absolute;left:50%;top:50%;width:230px;margin:-170px 0 0 -115px;border-radius:22px;background:var(--ac2);color:var(--ink);padding:18px 18px 16px;text-align:center;box-shadow:0 0 0 8px #ffd84d26,0 40px 80px -20px #ffd84d66,0 30px 50px -20px #000;transform:rotate(-3deg);transition:transform .9s .35s cubic-bezier(.3,1.5,.5,1),opacity .5s .35s;z-index:3}
+.pq .t{display:flex;justify-content:space-between;font:800 10.5px var(--fn);letter-spacing:.14em;text-transform:uppercase}
+.pq .q{margin:12px 0 10px;padding:10px;border-radius:14px;background:#fff;aspect-ratio:1}.pq .q svg{display:block;width:100%;height:auto}
+.pq b{display:block;font:400 19px/1 var(--fd);text-transform:uppercase;white-space:nowrap}.pq small{display:block;margin-top:4px;font:600 12px var(--fn);color:#4a4230}
+.pq .pin{position:absolute;top:-12px;left:50%;width:22px;height:22px;margin-left:-11px;border-radius:50%;background:var(--ac);box-shadow:0 4px 8px #0006}
+.pile .tag2{position:absolute;z-index:4;padding:9px 13px;border-radius:999px;background:#fff;color:var(--ink);font:700 12.5px var(--fn);box-shadow:0 14px 30px -12px #000;white-space:nowrap;transition:transform .6s 1s cubic-bezier(.3,1.5,.5,1),opacity .4s 1s}
+.pile .tg1{right:0;top:48%}.pile .tg2{left:0;top:62%}
+.pile.pre .pf{transform:translateY(-40px) rotate(0);opacity:0}.pile.pre .pq{transform:scale(.6) rotate(-14deg);opacity:0}.pile.pre .tag2{transform:scale(.4);opacity:0}
 .outs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
 .out{position:relative;border-radius:28px;background:var(--pa);border:1px solid var(--ln);padding:30px;min-height:320px;display:flex;flex-direction:column;overflow:hidden}
 .out .n{font:400 13px var(--fd);color:var(--ac);letter-spacing:.06em}
@@ -290,14 +311,16 @@ footer a{color:#fff}
 .tape.t1{top:34px;transform:rotate(-3deg)}.tape.t2{bottom:30px;transform:rotate(2.4deg)}.tape.t2 span{animation-direction:reverse}
 .end .wrap{position:relative;z-index:2}
 .dock{display:none}
-@media (prefers-reduced-motion:reduce){.chip,.fly.me,.tape span{animation:none}}
+@media (prefers-reduced-motion:reduce){.chip,.tape span{animation:none}.pile .pf,.pile .pq,.pile .tag2{transition:none}}
 @media (max-width:980px){
  .chip{display:none}
- .noise{padding:80px 0}.noise .wrap{grid-template-columns:minmax(0,1fr)}
+ .noise{padding:80px 0}.noise .wrap{grid-template-columns:minmax(0,1fr);gap:20px}.noise .wrap>div:first-child{display:contents}.noise .vs{order:3;margin-top:0}.pile{order:2;height:440px;max-width:440px;width:100%;margin:10px auto 0}
  .outs{grid-template-columns:minmax(0,1fr)}.out{min-height:0}
 }
 @media (max-width:560px){
- .out{padding:24px}.crowd{gap:6px}
+ .out{padding:24px}
+ .pile{height:380px}.pf{width:150px;height:210px;padding:14px 12px}.pf b{font-size:22px}.pf.p2 b{font-size:28px}.pf.p3 b{font-size:25px}.pq{width:190px;margin:-140px 0 0 -95px;padding:14px}.pq b{font-size:18px}.pq .t{font-size:9.5px;letter-spacing:.1em}.pile .tg1{top:auto;bottom:34px;right:0}.pile .tg2{top:18px;left:0}
+ .vs .r>span{padding:12px 12px;font-size:13.5px;gap:8px}.vs .h>span{padding:10px 12px;font-size:10px!important;letter-spacing:.12em}
  .dock{display:flex;position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:40;transform:translateY(150%);transition:transform .3s}
  .dock.on{transform:none}.dock .btn{flex:1;box-shadow:0 14px 30px -10px #0009}
  .end .acts .btn{flex:1}
@@ -339,10 +362,24 @@ footer a{color:#fff}
   <div>
     <div class="eyebrow" style="color:var(--ac2)">Why GetKeepsake</div>
     <h2 data-gk-h2>Stand out from <em>the noise</em></h2>
-    <p>Every shop on your street prints pamphlets, menu cards and banners. Most get thrown away, and no one knows which one worked.</p>
-    <p>Your GetKeepsake QR is the one people <b>scan, save and come back to</b>. And every scan, order and visit is counted on your dashboard.</p>
+    <p class="sub">Pamphlets get a three-second look, then the bin. Your QR stays on their phone and keeps bringing them back.</p>
+    <div class="vs" role="table" aria-label="Pamphlet compared with a GetKeepsake QR">
+      <div class="r h" role="row"><span role="columnheader">Pamphlet</span><span role="columnheader">GetKeepsake QR</span></div>
+      <div class="r" role="row"><span role="cell">Read once, thrown away</span><span role="cell">Saved and opened again</span></div>
+      <div class="r" role="row"><span role="cell">New price? Print again</span><span role="cell">Change it from your phone</span></div>
+      <div class="r" role="row"><span role="cell">Can't take an order</span><span role="cell">Orders on your WhatsApp</span></div>
+      <div class="r" role="row"><span role="cell">No idea if it worked</span><span role="cell">Every scan and visit counted</span></div>
+    </div>
   </div>
-  <div class="crowd" aria-hidden="true"><div class="fly">50% off<small>Flat sale</small></div><div class="fly">Grand opening<small>Sunday</small></div><div class="fly">New menu<small>Call now</small></div><div class="fly">Buy 1 get 1<small>Today</small></div><div class="fly">Hurry!<small>Limited</small></div><div class="fly">Visit us<small>Main road</small></div><div class="fly">Best in town<small>Since 1998</small></div><div class="fly me"><svg viewBox="0 0 29 29" shape-rendering="crispEdges" aria-hidden="true"><path fill="#121110" fill-rule="evenodd" d="M0 0h7v7H0zM22 0h7v7h-7zM0 22h7v7H0zM1 1v5h5V1zM23 1v5h5V1zM1 23v5h5v-5z"/><path fill="#121110" d="M2 2h3v3H2zM24 2h3v3h-3zM2 24h3v3H2zM9 0h2v2H9zM13 1h3v2h-3zM9 4h4v2H9zM17 3h2v4h-2zM9 9h3v3H9zM14 8h2v2h-2zM19 9h3v2h-3zM24 9h2v3h-2zM0 9h2v2H0zM4 10h3v2H4zM9 14h2v4H9zM13 13h4v2h-4zM20 13h2v3h-2zM25 14h4v2h-4zM1 14h4v2H1zM14 17h3v3h-3zM19 18h3v2h-3zM23 19h2v4h-2zM9 21h3v2H9zM14 22h2v4h-2zM18 23h4v2h-4zM26 24h3v3h-3zM10 25h2v4h-2zM19 27h4v2h-4z"/></svg><small>Scan me</small></div><div class="fly">Sale sale<small>Ends soon</small></div><div class="fly">Free gift<small>T&amp;C</small></div><div class="fly">Diwali offer<small>Book now</small></div><div class="fly">Call us<small>98xxx</small></div><div class="fly">New stock<small>Arrived</small></div><div class="fly">Open daily<small>10–10</small></div><div class="fly">Discount<small>Up to 70%</small></div></div>
+  <div class="pile" id="pile" aria-hidden="true">
+    <div class="pf p1"><b>Grand opening</b><i></i><i class="s"></i><i></i><em>Sunday · Main road</em></div>
+    <div class="pf p2"><b>50% off</b><i></i><i class="s"></i><em>Hurry · limited</em></div>
+    <div class="pf p3"><b>New menu</b><i></i><i></i><i class="s"></i><em>Call 98xxx xxxxx</em></div>
+    <div class="pf p4"><b>Buy 1 get 1</b><i class="s"></i><i></i><em>Today only</em></div>
+    <div class="pf p5"><b>Diwali sale</b><i></i><i class="s"></i><em>T&amp;C apply</em></div>
+    <div class="pq"><span class="pin"></span><div class="t"><span>Brew &amp; Bloom</span><span>Scan me</span></div><div class="q"><span id="pqr"></span></div><b>Menu · Orders</b><small>Opens on any phone camera</small></div>
+    <span class="tag2 tg1">🛵 Order on WhatsApp</span><span class="tag2 tg2">⭐ Stamp 7 of 10</span>
+  </div>
 </div></section>
 
 <section class="s" id="how"><div class="wrap">
@@ -552,8 +589,13 @@ addEventListener("DOMContentLoaded", () => {
 (() => {
   const t = Array(14).fill("SCAN ✦ ORDER ✦ COME BACK ✦ GETKEEPSAKE ✦ ").join(""); document.querySelectorAll(".tape .tp").forEach(e => e.textContent = t);
   const dock = document.getElementById("dock"), hero = document.querySelector(".hero"), end = document.querySelector(".end"); let f = 0;
-  const upd = () => { f = 0; dock.classList.toggle("on", hero.getBoundingClientRect().bottom < 0 && end.getBoundingClientRect().top > innerHeight * .85); };
-  addEventListener("scroll", () => { if (!f) { f = 1; requestAnimationFrame(upd); } }, { passive: true });
+  const pile = document.getElementById("pile");
+  // A real, scannable QR on the card (opens this page).
+  const pqr = () => { const el = document.getElementById("pqr"); if (!el) return; if (!window.qrcode) return setTimeout(pqr, 250); try { const q = qrcode(0, "M"); q.addData("https://getkeepsake.in/shops"); q.make(); el.innerHTML = q.createSvgTag({ cellSize: 4, margin: 0, scalable: true }); } catch (e) {} };
+  pqr();
+  if (pile && !matchMedia("(prefers-reduced-motion: reduce)").matches && pile.getBoundingClientRect().top > innerHeight * .8) pile.classList.add("pre");
+  const upd = () => { f = 0; if (pile && pile.classList.contains("pre") && pile.getBoundingClientRect().top < innerHeight * .8) pile.classList.remove("pre"); dock.classList.toggle("on", hero.getBoundingClientRect().bottom < 0 && end.getBoundingClientRect().top > innerHeight * .85); };
+  addEventListener("scroll", () => { if (!f) { f = 1; requestAnimationFrame(upd); } }, { passive: true }); upd();
 })();
 </script>
 <script src="/assets/ks-pixel.v1.js" defer></script>
