@@ -69,7 +69,7 @@ async function handle(b, ctx) {
   if (a === "bz-status") {
     if (!ID.test(String(b.id || "")) || !REF.test(String(b.ref || ""))) return E(400, "Invalid order.");
     if (await limit("bzs-ip:" + ctx.ip, 240, 3600)) return E(429, "Too many requests.");
-    const o = await db.getj("bzo:" + b.id + ":" + b.ref); return o ? { ok: true, st: o.st, tot: o.tot } : E(404, "Order not found.");
+    const o = await db.getj("bzo:" + b.id + ":" + b.ref); return o ? { ok: true, st: o.st, tot: o.tot, at: o.at, mode: o.mode, items: (o.items || []).map(x => ({ n: x.n, q: x.q })), ...(o.direct ? { direct: true, pay: o.pay } : {}) } : E(404, "Order not found.");
   }
   // ---------- owner only ----------
   const m = await page(b.id);
