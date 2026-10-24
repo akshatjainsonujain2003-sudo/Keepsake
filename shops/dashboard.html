@@ -455,7 +455,11 @@ V.store = () => {
 function stSheet() {
   const E = S.stEdit; if (!E) return "";
   if (E.bulk) return `<div class="pm" data-sxbg><div class="pmb"><div class="ch"><h2 class="H" style="margin:0">Add many products</h2><button class="lnk" data-sx="close">Close</button></div>
-    <p class="mu" style="margin-top:0">One product per line: <b>name, price, MRP, category, description</b>. Only name and price are needed. You can copy the columns from Excel or Google Sheets.</p>
+    <div style="border:2px dashed var(--ln,#d8d1c4);border-radius:14px;padding:14px;margin-bottom:12px"><b>Upload an Excel or CSV file</b>
+      <p class="mu" style="margin:4px 0 10px">Columns: <b>Name, Price, MRP, Category, Description</b>. Only name and price are needed. Photos can be added to each product afterwards.</p>
+      <div class="tg"><label class="btn" style="cursor:pointer">Choose file (.xlsx or .csv)<input type="file" id="stXls" accept=".xlsx,.xls,.csv,.tsv,.txt,text/csv" hidden></label><button type="button" class="btn g" data-sx="tpl">Download template</button></div>
+      <p class="hint" id="stXlsMsg" role="status"></p></div>
+    <p class="mu" style="margin:0 0 6px">Or type or paste one product per line: <b>name, price, MRP, category, description</b>. You can copy the columns from Excel or Google Sheets.</p>
     <textarea class="in" id="stBulk" rows="9" placeholder="Basmati Rice 5kg, 640, 720, Grocery, Long grain&#10;Amul Butter 500g, 275, , Dairy&#10;Parle-G 800g, 90"></textarea>
     <button class="btn" data-sx="bulksave" style="margin-top:12px">Add products</button><p class="hint" id="stBulkMsg"></p></div></div>`;
   const x = E.x, cats = stCats();
@@ -471,6 +475,70 @@ function stSheet() {
 // Photos are shrunk on the phone before upload (product photos only need to look good on a phone).
 function shrink(f) {
   return new Promise((ok, no) => { const r = new FileReader(); r.onerror = () => no(new Error("Couldn't read that photo.")); r.onload = () => { const im = new Image(); im.onerror = () => no(new Error("Please pick a JPG or PNG photo.")); im.onload = () => { const k = Math.min(1, 900 / Math.max(im.width, im.height)), c = document.createElement("canvas"); c.width = Math.round(im.width * k); c.height = Math.round(im.height * k); c.getContext("2d").drawImage(im, 0, 0, c.width, c.height); ok(c.toDataURL("image/jpeg", .8)); }; im.src = r.result; }; r.readAsDataURL(f); });
+}
+// ---------- Excel / CSV upload for products (read on this phone or computer; nothing is sent until "Add products") ----------
+async function stXlsx(buf) {
+  const u8 = new Uint8Array(buf), dv = new DataView(buf), td = new TextDecoder();
+  let e = u8.length - 22; while (e >= 0 && dv.getUint32(e, true) !== 0x06054b50) e--;
+  if (e < 0) throw new Error("bad");
+  const n = dv.getUint16(e + 10, true), ent = {}; let p = dv.getUint32(e + 16, true);
+  for (let i = 0; i < n && dv.getUint32(p, true) === 0x02014b50; i++) {
+    const nl = dv.getUint16(p + 28, true), xl = dv.getUint16(p + 30, true), cl = dv.getUint16(p + 32, true);
+    ent[td.decode(u8.subarray(p + 46, p + 46 + nl))] = { m: dv.getUint16(p + 10, true), z: dv.getUint32(p + 20, true), o: dv.getUint32(p + 42, true) };
+    p += 46 + nl + xl + cl;
+  }
+  const rd = async name => {
+    const x = ent[name]; if (!x) return null;
+    const st = x.o + 30 + dv.getUint16(x.o + 26, true) + dv.getUint16(x.o + 28, true), raw = u8.subarray(st, st + x.z);
+    if (x.m === 0) return td.decode(raw);
+    return td.decode(await new Response(new Blob([raw]).stream().pipeThrough(new DecompressionStream("deflate-raw"))).arrayBuffer());
+  };
+  const xml = s => new DOMParser().parseFromString(s, "application/xml");
+  const sheet = Object.keys(ent).filter(k => /^xl\/worksheets\/sheet\d+\.xml$/.test(k)).sort((a, b) => parseInt(a.replace(/\D/g, "")) - parseInt(b.replace(/\D/g, "")))[0];
+  if (!sheet) throw new Error("bad");
+  const ss = [], sx = await rd("xl/sharedStrings.xml");
+  if (sx) for (const si of xml(sx).getElementsByTagName("si")) ss.push([...si.getElementsByTagName("t")].filter(t => t.parentNode.nodeName !== "rPh").map(t => t.textContent).join(""));
+  const rows = [];
+  for (const r of xml(await rd(sheet)).getElementsByTagName("row")) {
+    const row = [];
+    for (const c of r.getElementsByTagName("c")) {
+      const col = (/^[A-Z]+/.exec(c.getAttribute("r") || "") || [""])[0].split("").reduce((a, ch) => a * 26 + ch.charCodeAt(0) - 64, 0) - 1; if (col < 0 || col > 30) continue;
+      const t = c.getAttribute("t"), v = c.getElementsByTagName("v")[0], is = c.getElementsByTagName("is")[0];
+      row[col] = t === "s" ? (ss[+(v && v.textContent)] || "") : t === "inlineStr" ? (is ? is.textContent : "") : v ? v.textContent : "";
+    }
+    rows.push(row);
+  }
+  return rows;
+}
+function stCsv(txt) {
+  txt = txt.replace(/^﻿/, ""); const first = txt.split("\n")[0] || "", d = [["\t", (first.match(/\t/g) || []).length], [",", (first.match(/,/g) || []).length], [";", (first.match(/;/g) || []).length]].sort((a, b) => b[1] - a[1])[0][0];
+  const rows = []; let row = [], cell = "", q = false;
+  for (let i = 0; i < txt.length; i++) {
+    const ch = txt[i];
+    if (q) { if (ch === '"') { if (txt[i + 1] === '"') { cell += '"'; i++; } else q = false; } else cell += ch; }
+    else if (ch === '"') q = true; else if (ch === d) { row.push(cell); cell = ""; }
+    else if (ch === "\n" || ch === "\r") { if (ch === "\r" && txt[i + 1] === "\n") i++; row.push(cell); rows.push(row); row = []; cell = ""; }
+    else cell += ch;
+  }
+  if (cell || row.length) { row.push(cell); rows.push(row); }
+  return rows;
+}
+// Rows from the sheet -> tab-separated lines (name, price, MRP, category, description). Uses the header row when there is one.
+function stRowsToLines(rows) {
+  rows = rows.map(r => (r || []).map(c => String(c == null ? "" : c).replace(/[\t\r\n]+/g, " ").trim())).filter(r => r.some(Boolean));
+  let map = { n: 0, p: 1, w: 2, c: 3, d: 4 }, start = 0;
+  if (rows.length) { const m = {}; rows[0].forEach((c, i) => { const k = c.toLowerCase().replace(/[^a-z]/g, "");
+    if (/^(name|product|productname|item|itemname|title)$/.test(k)) { if (m.n == null) m.n = i; } else if (/^(price|sellingprice|saleprice|rate|sp|ourprice|amount)$/.test(k)) { if (m.p == null) m.p = i; } else if (/^(mrp|originalprice|oldprice|listprice|wasprice)$/.test(k)) { if (m.w == null) m.w = i; } else if (/^(category|section|type|group|categoryname)$/.test(k)) { if (m.c == null) m.c = i; } else if (/^(description|details|desc|about|note|notes)$/.test(k)) { if (m.d == null) m.d = i; } });
+    if (m.n != null && m.p != null) { map = m; start = 1; } }
+  const out = []; let skipped = 0;
+  for (const r of rows.slice(start)) { const g = k => (map[k] != null ? r[map[k]] || "" : ""); if (!g("n") || !numP(g("p"))) { skipped++; continue; } out.push([g("n"), g("p"), g("w"), g("c"), g("d")].join("\t")); }
+  return { lines: out.slice(0, 1000), found: out.length, skipped, capped: out.length > 1000 };
+}
+async function stReadFile(f) {
+  if (f.size > 5e6) throw new Error("This file is too big. Keep it under 5 MB.");
+  if (/\.xlsx$/i.test(f.name)) { try { return await stXlsx(await f.arrayBuffer()); } catch (x) { throw new Error("Could not read this Excel file. Save it again as .xlsx or .csv and retry."); } }
+  if (/\.xls$/i.test(f.name)) throw new Error("This is an old .xls file. In Excel choose Save As → .xlsx (or CSV) and upload that.");
+  return stCsv(await f.text());
 }
 async function stWrite(fn, msg) { const ok = await patch(fn, msg); if (ok) { S.menuDraft = null; } return ok; }
 function payPlan(btn, plan, done) {
@@ -495,6 +563,10 @@ $("#main").addEventListener("click", async ev => {
   if (a === "ordon") { b.disabled = true; if (await stWrite(d => { d.ord = true; d.pause = false; }, "Orders are on")) go(); return; }
   if (a === "add") { S.stEdit = { k: "", x: { n: "", p: "", w: "", d: "", i: "", b: false, so: false }, sec: S.stc >= 0 ? stCats()[S.stc] : "" }; stRedraw(); setTimeout(() => $("#stN") && $("#stN").focus(), 50); return; }
   if (a === "bulk") { S.stEdit = { bulk: true }; stRedraw(); return; }
+  if (a === "tpl") {
+    const csv = "﻿Name,Price,MRP,Category,Description\r\nBasmati Rice 5kg,640,720,Grocery,Long grain\r\nAmul Butter 500g,275,,Dairy,\r\nParle-G 800g,90,,Biscuits,\r\n";
+    const u = URL.createObjectURL(new Blob([csv], { type: "text/csv" })), l = document.createElement("a"); l.href = u; l.download = "keepsake-products-template.csv"; document.body.appendChild(l); l.click(); l.remove(); setTimeout(() => URL.revokeObjectURL(u), 2000); return;
+  }
   if (a === "close") { S.stEdit = null; stRedraw(); return; }
   if (a === "edit") { const [si, ii] = b.dataset.k.split(".").map(Number), s = S.d.menu[si]; S.stEdit = { k: b.dataset.k, x: { ...s.items[ii] }, x0n: s.items[ii].n, sec: s.n }; stRedraw(); return; }
   if (a === "save" || a === "del") {
@@ -515,16 +587,30 @@ $("#main").addEventListener("click", async ev => {
     if (ok) S.stEdit = null; else b.disabled = false; stRedraw(); return;
   }
   if (a === "bulksave") {
-    const rows = $("#stBulk").value.split("\n").map(l => l.split(/\t|,/).map(c => c.trim())).filter(r => r[0] && numP(r[1]));
+    const rows = $("#stBulk").value.split("\n").map(l => (l.includes("\t") ? l.split("\t") : l.split(",")).map(c => c.trim())).filter(r => r[0] && numP(r[1]));
     if (!rows.length) { $("#stBulkMsg").textContent = "Write at least one line like: Basmati Rice 5kg, 640"; return; }
     b.disabled = true;
-    const ok = await stWrite(d => { d.menu = Array.isArray(d.menu) ? d.menu : []; rows.forEach(([n, p, w, c, ds]) => { const sec = (c || "Products").slice(0, 24); let s = d.menu.find(y => (y.n || "").toLowerCase() === sec.toLowerCase()); if (!s) { s = { n: sec, items: [] }; d.menu.push(s); } s.items.push({ n: n.slice(0, 50), p: String(numP(p)), d: (ds || "").slice(0, 140), i: "", b: false, ...(w && numP(w) > numP(p) ? { w: String(numP(w)) } : {}) }); }); }, rows.length + " products added");
+    const ok = await stWrite(d => { d.menu = Array.isArray(d.menu) ? d.menu : []; rows.forEach(([n, p, w, c, ds]) => { const sec = (c || "Products").slice(0, 24); let s = d.menu.find(y => (y.n || "").toLowerCase() === sec.toLowerCase()); if (!s) { s = { n: sec, items: [] }; d.menu.push(s); }
+      // Same name in the same category: update its price (keeps the photo and stock), so uploading a sheet again never makes duplicates.
+      const old = s.items.find(y => y && (y.n || "").toLowerCase() === n.slice(0, 50).toLowerCase()), mrp = w && numP(w) > numP(p) ? String(numP(w)) : "";
+      if (old) { old.p = String(numP(p)); if (ds) old.d = ds.slice(0, 140); if (mrp) old.w = mrp; else delete old.w; }
+      else s.items.push({ n: n.slice(0, 50), p: String(numP(p)), d: (ds || "").slice(0, 140), i: "", b: false, ...(mrp ? { w: mrp } : {}) }); }); }, rows.length + " products saved (new ones added, same names updated)");
     if (ok) S.stEdit = null; else b.disabled = false; stRedraw(); return;
   }
 });
 $("#main").addEventListener("change", async ev => {
   const t = ev.target;
   if (t.dataset.sxso) { const [si, ii] = t.dataset.sxso.split(".").map(Number), n = ((S.d.menu[si] || {}).items || [])[ii]; t.disabled = true; await stWrite(d => { const y = d.menu[si] && d.menu[si].items[ii]; if (y && n && y.n === n.n) { if (t.checked) delete y.so; else y.so = true; } }, t.checked ? "In stock" : "Marked out of stock"); stRedraw(); return; }
+  if (t.id === "stXls") {
+    const f = t.files[0], msg = $("#stXlsMsg"); if (!f) return; msg.textContent = "Reading " + f.name + "…";
+    try {
+      const r = stRowsToLines(await stReadFile(f));
+      if (!r.found) { msg.textContent = "No products found. Make sure the first row has Name and Price columns, or use the template."; t.value = ""; return; }
+      $("#stBulk").value = r.lines.join("\n");
+      msg.textContent = "✓ " + r.found + " product" + (r.found === 1 ? "" : "s") + " ready" + (r.skipped ? " · " + r.skipped + " row" + (r.skipped === 1 ? "" : "s") + " skipped (no name or price)" : "") + (r.capped ? " · only the first 1,000 are used" : "") + ". Check the list below, then press Add products.";
+    } catch (x) { msg.textContent = x.message; }
+    t.value = ""; return;
+  }
   if (t.id === "stPic") { const f = t.files[0]; if (!f) return; const box = t.closest(".pmp"); box.classList.add("busy"); box.firstChild && (box.firstChild.textContent = "Uploading…");
     try { const r = await api("/api/img", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ data: await shrink(f) }) }); S.stEdit.x.i = r.url; box.style.backgroundImage = `url('${r.url}')`; box.firstChild && (box.firstChild.textContent = ""); }
     catch (x) { toast(x.message); box.firstChild && (box.firstChild.textContent = "+ Photo"); } box.classList.remove("busy"); }
