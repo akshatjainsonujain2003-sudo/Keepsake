@@ -45,7 +45,10 @@ async function placeOrder(b, ip) {
   }
   if (!items.length) return E(400, "Your order is empty.");
   const tot = items.reduce((t, x) => t + x.q * x.p, 0), phone = ph10(b.phone), now = Date.now();
-  const o = { ref, at: now, items, tot, name: clip(b.name, 40), phone, mode: MODES.includes(b.mode) ? b.mode : "pickup", addr: clip(b.addr, 160), note: clip(b.note, 160), st: "new", ts: {} };
+  // Online store: the order is placed on the page itself (no WhatsApp), so a mobile number is needed to reach the customer.
+  const direct = !!m.store && b.direct === true;
+  if (direct && !phone) return E(400, "Please add your 10-digit mobile number.");
+  const o = { ref, at: now, items, tot, name: clip(b.name, 40), phone, mode: MODES.includes(b.mode) ? b.mode : "pickup", addr: clip(b.addr, 160), note: clip(b.note, 160), st: "new", ts: {}, ...(direct ? { direct: true, pay: b.pay === "upi" ? "upi" : "cod" } : {}) };
   if ((await db.cmd("SET", "bzo:" + b.id + ":" + ref, JSON.stringify(o), "NX", "EX", KEEP)) !== "OK") return { ok: true, ref, dup: true };
   await db.cmd("ZADD", "bzoz:" + b.id, now, ref);
   await db.cmd("ZREMRANGEBYRANK", "bzoz:" + b.id, 0, -(MAXO + 1));
@@ -56,12 +59,18 @@ async function placeOrder(b, ip) {
       await db.setj(ck, c); await db.cmd("ZADD", "bzcz:" + b.id, now, phone);
     }
   }
-  return { ok: true, ref };
+  return { ok: true, ref, tot };
 }
 
 async function handle(b, ctx) {
   const a = String(b.action || "");
   if (a === "bz-order") return placeOrder(b, ctx.ip);
+  // The customer's phone checks its order (only the status, nothing personal).
+  if (a === "bz-status") {
+    if (!ID.test(String(b.id || "")) || !REF.test(String(b.ref || ""))) return E(400, "Invalid order.");
+    if (await limit("bzs-ip:" + ctx.ip, 240, 3600)) return E(429, "Too many requests.");
+    const o = await db.getj("bzo:" + b.id + ":" + b.ref); return o ? { ok: true, st: o.st, tot: o.tot } : E(404, "Order not found.");
+  }
   // ---------- owner only ----------
   const m = await page(b.id);
   if (!m) return E(404, "This shop page wasn't found.");

@@ -22,7 +22,8 @@ module.exports = async (req, res) => {
       } else {
         const user = await auth.currentUser(req);
         if (!user) return db.reply(res, 401, { error: "Please log in to upload photos." });
-        owner = { set: "custimgs:" + user.id, max: 150 };
+        // Shops with the online store upload a photo per product.
+        owner = { set: "custimgs:" + user.id, max: (await db.cmd("GET", "store-user:" + user.id)) ? 1500 : 150 };
       }
       const m = /^data:image\/(jpeg|png|webp);base64,([A-Za-z0-9+/=]+)$/.exec(String(b.data || ""));
       if (!m) return db.reply(res, 400, { error: "Please upload a JPG, PNG or WebP photo." });
