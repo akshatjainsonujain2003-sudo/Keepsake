@@ -420,8 +420,9 @@ V.orders = () => {
   <p class="hint">Every order sent from your page appears here, even if the customer didn't press send in WhatsApp. If one never reached you, mark it Cancelled.</p>`;
 };
 function orderCard(o) {
+  const tl = `\n\nTrack your order: ${location.origin}/b/${S.id}?o=${o.ref}`;
   const next = { new: ["prep", "Accept & prepare"], prep: ["ready", "Mark ready"], ready: ["done", "Mark done"] }[o.st];
-  const msg = { new: `Hi${o.name ? " " + o.name : ""}! We got your order #${o.ref} from ${shopName()}. We're on it.`, prep: `Hi${o.name ? " " + o.name : ""}! Your order #${o.ref} from ${shopName()} is being prepared.`, ready: `Hi${o.name ? " " + o.name : ""}! Your order #${o.ref} from ${shopName()} is ready${o.mode === "delivery" ? " and on its way" : " for pickup"}.`, done: `Thank you for ordering from ${shopName()}! See you again soon.`, cancel: `Hi${o.name ? " " + o.name : ""}, about your order #${o.ref} from ${shopName()}:` }[o.st];
+  const msg = { new: `Hi${o.name ? " " + o.name : ""}! We got your order #${o.ref} from ${shopName()}. We're on it.` + tl, prep: `Hi${o.name ? " " + o.name : ""}! Your order #${o.ref} from ${shopName()} is being prepared.` + tl, ready: `Hi${o.name ? " " + o.name : ""}! Your order #${o.ref} from ${shopName()} is ready${o.mode === "delivery" ? " and on its way" : " for pickup"}.` + tl, done: `Thank you for ordering from ${shopName()}! See you again soon.`, cancel: `Hi${o.name ? " " + o.name : ""}, about your order #${o.ref} from ${shopName()}:` }[o.st];
   return `<article class="${o.st === "new" ? "new" : ""}" data-ref="${o.ref}"><header><span class="av">${esc(ini(o.name))}</span><div><b>${esc(o.name || "Customer")}</b><small>#${o.ref} · ${ago(o.at)}</small></div><span class="pl ${o.st}">${STL[o.st]}</span></header>
     <ul>${o.items.map(x => `<li><span>${x.q} × ${esc(x.n)}</span><span>${inr(x.q * x.p)}</span></li>`).join("")}</ul>
     <div class="tot"><span>Total</span><span>${inr(o.tot)}</span></div>
