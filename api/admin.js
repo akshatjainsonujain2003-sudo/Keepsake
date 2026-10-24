@@ -1,6 +1,7 @@
 const db = require("./_db");
 const pp = require("./_prepaid");
 const ref = require("./_ref");
+const pay = require("./_pay");
 module.exports = async (req, res) => {
   if (!db.ok()) return db.reply(res, 501, { error: "Storage not configured. Add Upstash Redis in Vercel → Storage." });
   const ak = process.env.ADMIN_KEY;
@@ -37,6 +38,21 @@ module.exports = async (req, res) => {
       if (b.action === "hq-pages") return db.reply(res, 200, { pages: await H.pages() });
       if (b.action === "hq-people") return db.reply(res, 200, { people: await H.people() });
       if (b.action === "hq-flags") return db.reply(res, 200, await require("./_camp").flags());
+      // Cash payment taken in person: unlock the online store (and the page, if it isn't live yet) without Razorpay.
+      // It is saved as a normal paid order (method: cash) so it shows in HQ sales and orders.
+      if (b.action === "hq-cash") {
+        const id = String(b.id || ""), plan = String(b.plan || "");
+        if (plan !== "store") return db.reply(res, 400, { error: "Only the online store can be unlocked for cash." });
+        if (!/^[a-z0-9]{8,16}$/i.test(id)) return db.reply(res, 400, { error: "Invalid page." });
+        const memory = await db.getj("customer-memory:" + id);
+        if (!memory) return db.reply(res, 404, { error: "Page not found." });
+        const amt = pay.amountFor(memory, plan); if (amt.error) return db.reply(res, 400, { error: amt.error });
+        const rupees = Math.round(+b.amount); if (!(rupees >= 0 && rupees <= 100000)) return db.reply(res, 400, { error: "Enter the amount received." });
+        const orderId = "cash_" + Date.now().toString(36) + require("crypto").randomBytes(3).toString("hex");
+        await db.setj("order:" + orderId, { memory: id, owner: memory.owner, title: memory.title || "", kind: pay.kindOf(memory), plan, upgrade: amt.upgrade, amount: rupees, listPrice: amt.rupees, method: "cash", note: String(b.note || "").slice(0, 120), status: "created", created: Date.now() });
+        await pay.markPaid(orderId, "cash");
+        return db.reply(res, 200, { ok: true, orderId, amount: rupees });
+      }
       if (b.action === "hq-team") return db.reply(res, 200, { team: await require("./_sales").team() });
       if (b.action === "hq-sp") { const x = await require("./_sales").detail(b.code); return x ? db.reply(res, 200, { sp: x }) : db.reply(res, 404, { error: "Salesperson not found." }); }
       if (b.action === "push-key") return db.reply(res, 200, { key: (await H.vapid()).pub });
