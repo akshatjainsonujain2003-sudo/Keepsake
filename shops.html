@@ -346,9 +346,9 @@ footer a{color:#fff}
       <div class="bz" data-gk-in aria-label="Pages for your business"><a href="/shops/cafe">Cafés</a><a href="/shops/salon">Salons</a><a href="/shops/gym">Gyms</a><a href="/shops/real-estate">Real estate</a><a href="/shops/general-store">Shops</a><a href="/shops/boutique">Clothing</a><a href="/shops/pharmacy">Pharmacy</a><a href="/shops/clinic">Clinics</a></div>
     </div>
     <div class="phones" aria-label="Example pages">
-      <div class="ph a" data-gk-rise data-gk-par="-14"><div class="sc"><iframe data-demo="salon" title="Salon example" loading="lazy"></iframe></div><span class="tg">Salon · Pop</span></div>
-      <div class="ph b" data-gk-rise data-gk-par="-8"><div class="sc"><iframe data-demo="cafe" title="Café example"></iframe></div><span class="tg">Café · Label</span></div>
-      <div class="ph c" data-gk-rise data-gk-par="-18"><div class="sc"><iframe data-demo="gym" title="Gym example" loading="lazy"></iframe></div><span class="tg">Gym · Pop</span></div>
+      <div class="ph a" data-gk-rise data-gk-par="-14"><div class="sc"><iframe data-demo="salon" title="Salon example" loading="lazy"></iframe></div><span class="tg">Salon · Botanical</span></div>
+      <div class="ph b" data-gk-rise data-gk-par="-8"><div class="sc"><iframe data-demo="cafe" title="Café example"></iframe></div><span class="tg">Café · Poster</span></div>
+      <div class="ph c" data-gk-rise data-gk-par="-18"><div class="sc"><iframe data-demo="gym" title="Gym example" loading="lazy"></iframe></div><span class="tg">Gym · Bold</span></div>
       <div class="chip c1" aria-hidden="true"><i>🛵</i><span>New order · ₹340<small>2× Cold coffee, 1× Waffle</small></span></div>
       <div class="chip c2" aria-hidden="true"><i>⭐</i><span>Stamp 7 of 10<small>3 more for a free coffee</small></span></div>
       <div class="chip c3" aria-hidden="true"><i>🎟️</i><span>Offer redeemed<small>from your pamphlet</small></span></div>
@@ -483,7 +483,7 @@ footer a{color:#fff}
 </div><div class="tape t2" aria-hidden="true"><span class="tp"></span></div></section>
 <div class="dock" id="dock"><a class="btn ac" href="/shops/studio">Create your page · ₹499</a></div>
 </main>
-<script src="/assets/biz.v10.js"></script><script src="/assets/biz-demos.v6.js"></script>
+<script src="/assets/biz.v7.js"></script><script src="/assets/biz-demos.v5.js"></script>
 <footer><div class="wrap"><span style="flex-basis:100%">For: <a href="/shops/cafe">Cafés &amp; restaurants</a> · <a href="/shops/salon">Salons &amp; spas</a> · <a href="/shops/gym">Gyms &amp; fitness</a> · <a href="/shops/real-estate">Real estate</a> · <a href="/shops/general-store">Kirana &amp; general stores</a> · <a href="/shops/boutique">Boutiques &amp; clothing</a> · <a href="/shops/pharmacy">Pharmacies &amp; chemists</a> · <a href="/shops/clinic">Clinics &amp; doctors</a></span><span>GetKeepsake for Business · Help: <a href="https://wa.me/916377547759">+91 63775 47759</a></span><span><a href="/">Love-story websites &amp; cards</a> · <a href="https://instagram.com/getkeepsake.business" rel="noopener">Instagram @getkeepsake.business</a> · <a href="/contact">Contact</a> · <a href="/terms">Terms</a></span></div></footer>
 
 <script>
@@ -501,7 +501,7 @@ footer a{color:#fff}
   try {
   // Live example pages inside the phone mock-ups: the real renderer with sample data.
   const DOC = `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=375"><style>html,body{margin:0}body{padding-top:30px}<\/style>
-<script src="/assets/biz.v10.js"><\/script><script src="/assets/biz-demos.v6.js"><\/script></head><body><main id="b"></main><script>
+<script src="/assets/biz.v7.js"><\/script><script src="/assets/biz-demos.v5.js"><\/script></head><body><main id="b"></main><script>
 function show(d){const b=document.getElementById("b");KSBiz.render(b,d,{preview:true});document.body.style.background=getComputedStyle(b).getPropertyValue("--bg")}
 if(window.KSBizDemos&&KSBizDemos[frameElement.dataset.demo])show(KSBizDemos[frameElement.dataset.demo]);addEventListener("message",e=>{if(e.source===parent&&e.data&&e.data.ksbiz)show(e.data.ksbiz)});
 var y=0,dir=1,run=0;addEventListener("message",function(e){if(e.source===parent&&e.data&&"ksrun"in e.data)run=e.data.ksrun});if(frameElement.dataset.scroll)setInterval(function(){if(!run)return;var mx=document.body.scrollHeight-innerHeight;y+=dir*1.2;if(y>mx*0.55||y<0){dir*=-1}scrollTo(0,y)},40);<\/script></body></html>`;
@@ -550,7 +550,7 @@ var y=0,dir=1,run=0;addEventListener("message",function(e){if(e.source===parent&
   };
 
   // Six live examples, each scrollable, each opens in the editor
-  const SH = [["cafe", "Café", "Label"], ["salon", "Salon & Spa", "Pop"], ["boutique", "Boutique", "Label"], ["gym", "Gym", "Pop"], ["kirana", "Kirana store", "Pop"], ["clinic", "Clinic", "Classic"], ["realestate", "Real estate", "Classic"]];
+  const SH = [["cafe", "Café", "Poster"], ["boutique", "Boutique", "Poster"], ["salon", "Salon & Spa", "Botanical"], ["gym", "Gym", "Bold"], ["clinic", "Clinic", "Classic"], ["kirana", "Kirana store", "Classic"], ["realestate", "Real estate", "Classic"]];
   const show = document.getElementById("show");
   show.innerHTML = SH.filter(([k]) => KSBizDemos[k]).map(([k, n, l]) => `<div class="it"><div class="ph"><div class="sc"><iframe data-demo="${k}" title="${n} example" loading="lazy"></iframe></div></div><b>${n}</b><span>${l} layout · ${KSBiz.esc(KSBiz.THEMES[KSBizDemos[k].th].name)} colours</span><a href="/shops/studio?ex=${k}">Use this design →</a></div>`).join("");
   lazyAll(show);
