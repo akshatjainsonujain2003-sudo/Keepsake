@@ -182,6 +182,10 @@ td .btn{white-space:nowrap}
 .hint{font-size:13px;color:var(--mu);margin:10px 0 0}
 .tabbar{display:none}
 .more{position:fixed;inset:0;z-index:40;background:#0007;display:flex;align-items:flex-end}
+.pm{position:fixed;inset:0;z-index:45;background:#0008;display:flex;align-items:center;justify-content:center;padding:16px}
+.pmb{width:min(560px,100%);max-height:92vh;overflow:auto;background:var(--card);border-radius:24px;padding:22px}
+.pmp{flex:none;width:96px;height:96px;border-radius:16px;border:2px dashed var(--line);background:#f0ebe1 center/cover;display:grid;place-items:center;font-weight:700;font-size:13px;color:var(--mu);cursor:pointer}.pmp.busy{opacity:.6}
+@media (max-width:600px){.pm{align-items:flex-end;padding:0}.pmb{border-radius:24px 24px 0 0}}
 .more>div{width:100%;max-height:85vh;overflow:auto;background:var(--side);border-radius:24px 24px 0 0;padding:18px 14px calc(18px + env(safe-area-inset-bottom))}
 @media (max-width:1180px){.g4{grid-template-columns:repeat(2,minmax(0,1fr))}.g3{grid-template-columns:1fr 1fr}.g3>:last-child{grid-column:1/-1}}
 @media (max-width:900px){
@@ -260,7 +264,7 @@ const IC = {
   dl: I('<path d="M12 4v11M7 10l5 5 5-5M5 20h14"/>')
 };
 const NAV = [
-  ["Run the shop", [["overview", "Overview", "home"], ["orders", "Orders", "orders"], ["menu", "Menu & prices", "menu"], ["customers", "Customers", "people"]]],
+  ["Run the shop", [["overview", "Overview", "home"], ["orders", "Orders", "orders"], ["menu", "Menu & prices", "menu"], ["store", "Online store", "orders"], ["customers", "Customers", "people"]]],
   ["Grow", [["messages", "Messages", "wa"], ["campaigns", "Offer QRs", "qr"], ["nearby", "Walk-in offers", "pin"], ["reviews", "Reviews", "star"], ["offers", "Offers & marketing", "tag"], ["analytics", "Analytics", "chart"]]],
   ["Set up", [["page", "My page", "page"], ["qr", "QR & cards", "qr"], ["payments", "Payments", "pay"], ["settings", "Team & settings", "gear"]]]
 ];
@@ -421,11 +425,110 @@ function orderCard(o) {
   return `<article class="${o.st === "new" ? "new" : ""}" data-ref="${o.ref}"><header><span class="av">${esc(ini(o.name))}</span><div><b>${esc(o.name || "Customer")}</b><small>#${o.ref} · ${ago(o.at)}</small></div><span class="pl ${o.st}">${STL[o.st]}</span></header>
     <ul>${o.items.map(x => `<li><span>${x.q} × ${esc(x.n)}</span><span>${inr(x.q * x.p)}</span></li>`).join("")}</ul>
     <div class="tot"><span>Total</span><span>${inr(o.tot)}</span></div>
-    <div class="meta"><span><b>${MODEL[o.mode] || "Pickup"}</b>${o.addr ? (o.mode === "table" ? " · table " : " · ") + esc(o.addr) : ""}</span>${o.note ? `<span>Note: ${esc(o.note)}</span>` : ""}${o.phone ? `<span>${esc(o.phone)}</span>` : ""}</div>
+    <div class="meta">${o.direct ? `<span><b>${o.pay === "upi" ? "Paying by UPI · check your UPI app" : "Pay at pickup / delivery"}</b></span>` : ""}<span><b>${MODEL[o.mode] || "Pickup"}</b>${o.addr ? (o.mode === "table" ? " · table " : " · ") + esc(o.addr) : ""}</span>${o.note ? `<span>Note: ${esc(o.note)}</span>` : ""}${o.phone ? `<span>${esc(o.phone)}</span>` : ""}</div>
     <div class="acts">${next ? `<button class="btn s" data-st="${next[0]}" data-ref="${o.ref}">${next[1]}</button>` : ""}${o.phone ? `<a class="btn w s" href="https://wa.me/${waNum(o.phone)}?text=${encodeURIComponent(msg)}" target="_blank" rel="noopener">${IC.wa}WhatsApp</a><a class="btn g s" href="tel:+${waNum(o.phone)}" aria-label="Call">${IC.call}</a>` : ""}</div>
     ${o.st !== "cancel" && o.st !== "done" ? `<div style="margin-top:10px"><button class="lnk" data-st="cancel" data-ref="${o.ref}">Cancel order</button></div>` : o.st === "cancel" ? `<div style="margin-top:10px"><button class="lnk" data-st="new" data-ref="${o.ref}">Restore order</button></div>` : ""}
   </article>`;
 }
+
+// ---------- Online store: list every product; customers order on the page ----------
+const stItems = () => { const out = []; (S.d.menu || []).forEach((s, si) => (s.items || []).forEach((x, ii) => { if (x && x.n) out.push({ ...x, si, ii, sec: s.n || "Products" }); })); return out; };
+const stCats = () => (S.d.menu || []).map(s => s.n || "Products");
+const numP = p => { const x = /(\d[\d,]*(?:\.\d+)?)/.exec(String(p || "")); return x ? +x[1].replace(/,/g, "") : 0; };
+V.store = () => {
+  const price = (S.prices && S.prices.store) || 2000;
+  if (!S.store) return head("Online store", "Put every product you sell online. Customers search, add to cart and order on your page.", "") +
+    `<section class="cd" style="background:var(--ink);color:#fff;border-color:var(--ink)"><div class="ch"><h2 class="H" style="margin:0">Your shop, open 24 hours</h2><span class="pl" style="background:var(--ye)">₹${price.toLocaleString("en-IN")} once</span></div>
+      <div class="g2" style="margin-top:0">${[["Every product listed", "Hundreds of products with photos, prices, MRP and descriptions, in categories."], ["Search and shop", "Customers search, browse categories and see each product's details."], ["Orders on your page", "They place the order right on your page. No WhatsApp needed. You see it in Orders with a sound."], ["Live order status", "Customers see when you accept, prepare and finish their order. They pay by UPI or at pickup."]].map(([b, t]) => `<div><b style="display:block;color:var(--ye)">${b}</b><small style="color:#cfc8bd;font-size:14px">${t}</small></div>`).join("")}</div>
+      <button class="btn" style="margin-top:20px" data-sx="buy">Unlock online store · ₹${price.toLocaleString("en-IN")}</button><p class="hint" style="color:#b9b2a7">One-time payment. Unlocks right after payment.</p></section>`;
+  const all = stItems(), q = (S.stq || "").toLowerCase(), cat = S.stc == null ? -1 : S.stc;
+  const list = all.filter(x => (cat < 0 || x.si === cat) && (!q || (x.n + " " + (x.d || "") + " " + x.sec).toLowerCase().includes(q)));
+  return head("Online store", `${all.length} product${all.length === 1 ? "" : "s"} on your page. Customers tap "Shop all products" to search and order.`, `<div class="tg"><button class="btn" data-sx="add">+ Add product</button><button class="btn g" data-sx="bulk">Add many</button></div>`) +
+  `${S.d.ord ? "" : `<div class="bar"><span><b>Orders are off.</b> Customers can browse but not order.</span><button class="btn" data-sx="ordon">Turn on orders</button></div>`}
+  <div class="srch"><input class="in" id="stq" placeholder="Search products" value="${esc(S.stq || "")}"><a class="btn g" href="/b/${S.id}" target="_blank" rel="noopener">View store</a></div>
+  ${stCats().length > 1 ? `<div class="tabs"><button type="button" data-stc="-1" class="${cat < 0 ? "on" : ""}">All · ${all.length}</button>${stCats().map((c, i) => `<button type="button" data-stc="${i}" class="${cat === i ? "on" : ""}">${esc(c)} · ${all.filter(x => x.si === i).length}</button>`).join("")}</div>` : ""}
+  ${list.length ? `<div class="tw"><table><thead><tr><th>Product</th><th>Price</th><th>MRP</th><th>In stock</th><th></th></tr></thead><tbody>${list.slice(0, 300).map(x => `<tr><td><div style="display:flex;gap:12px;align-items:center"><span class="ph" style="flex:none;width:46px;height:46px;border-radius:12px;background:#ebe6dc center/cover${x.i ? ` url('${esc(x.i)}')` : ""}"></span><span><b>${esc(x.n)}</b><br><small class="mu">${esc(x.sec)}${x.b ? " · ★ Bestseller" : ""}</small></span></div></td><td data-l="Price">${x.p ? "₹" + esc(x.p) : "–"}</td><td data-l="MRP">${x.w ? "<s>₹" + esc(x.w) + "</s>" : "–"}</td><td data-l="In stock"><label class="sw"><input type="checkbox" data-sxso="${x.si}.${x.ii}"${x.so ? "" : " checked"}><i></i></label></td><td style="text-align:right;white-space:nowrap"><button class="btn g s" data-sx="edit" data-k="${x.si}.${x.ii}">Edit</button></td></tr>`).join("")}</tbody></table></div>${list.length > 300 ? `<p class="hint">Showing 300 of ${list.length}. Search to find the rest.</p>` : ""}`
+    : `<div class="empty"><b>${all.length ? "No products match" : "Add your first product"}</b>${all.length ? "Try another search." : "Add them one by one with a photo, or paste a whole list at once."}<br>${all.length ? "" : `<button class="btn" data-sx="add">+ Add product</button>`}</div>`}
+  ${stSheet()}`;
+};
+function stSheet() {
+  const E = S.stEdit; if (!E) return "";
+  if (E.bulk) return `<div class="pm" data-sxbg><div class="pmb"><div class="ch"><h2 class="H" style="margin:0">Add many products</h2><button class="lnk" data-sx="close">Close</button></div>
+    <p class="mu" style="margin-top:0">One product per line: <b>name, price, MRP, category, description</b>. Only name and price are needed. You can copy the columns from Excel or Google Sheets.</p>
+    <textarea class="in" id="stBulk" rows="9" placeholder="Basmati Rice 5kg, 640, 720, Grocery, Long grain&#10;Amul Butter 500g, 275, , Dairy&#10;Parle-G 800g, 90"></textarea>
+    <button class="btn" data-sx="bulksave" style="margin-top:12px">Add products</button><p class="hint" id="stBulkMsg"></p></div></div>`;
+  const x = E.x, cats = stCats();
+  return `<div class="pm" data-sxbg><div class="pmb"><div class="ch"><h2 class="H" style="margin:0">${E.k ? "Edit product" : "Add product"}</h2><button class="lnk" data-sx="close">Close</button></div>
+    <div style="display:flex;gap:14px;align-items:flex-start"><label class="pmp" style="${x.i ? `background-image:url('${esc(x.i)}')` : ""}">${x.i ? "" : "+ Photo"}<input type="file" accept="image/*" id="stPic" hidden></label>
+    <div style="flex:1;min-width:0"><label class="f">Name<input class="in" id="stN" maxlength="50" value="${esc(x.n || "")}" placeholder="Basmati Rice 5kg"></label></div></div>
+    <div class="row2"><label class="f">Price (₹)<input class="in" id="stP" inputmode="decimal" maxlength="12" value="${esc(x.p || "")}" placeholder="640"></label><label class="f">MRP (₹) <em>(optional)</em><input class="in" id="stW" inputmode="decimal" maxlength="12" value="${esc(x.w || "")}" placeholder="720"></label></div>
+    <label class="f">Category<input class="in" id="stC" list="stCl" maxlength="24" value="${esc(E.sec || cats[0] || "Products")}"><datalist id="stCl">${cats.map(c => `<option value="${esc(c)}">`).join("")}</datalist></label>
+    <label class="f">Description <em>(optional)</em><textarea class="in" id="stD" maxlength="140" rows="2">${esc(x.d || "")}</textarea></label>
+    <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:16px"><label class="sw"><input type="checkbox" id="stS"${x.so ? "" : " checked"}><i></i>In stock</label><label class="sw"><input type="checkbox" id="stB"${x.b ? " checked" : ""}><i></i>Bestseller</label></div>
+    <div style="display:flex;gap:10px;align-items:center"><button class="btn" data-sx="save">Save product</button>${E.k ? `<button class="lnk" data-sx="del">Delete</button>` : ""}</div></div></div>`;
+}
+// Photos are shrunk on the phone before upload (product photos only need to look good on a phone).
+function shrink(f) {
+  return new Promise((ok, no) => { const r = new FileReader(); r.onerror = () => no(new Error("Couldn't read that photo.")); r.onload = () => { const im = new Image(); im.onerror = () => no(new Error("Please pick a JPG or PNG photo.")); im.onload = () => { const k = Math.min(1, 900 / Math.max(im.width, im.height)), c = document.createElement("canvas"); c.width = Math.round(im.width * k); c.height = Math.round(im.height * k); c.getContext("2d").drawImage(im, 0, 0, c.width, c.height); ok(c.toDataURL("image/jpeg", .8)); }; im.src = r.result; }; r.readAsDataURL(f); });
+}
+async function stWrite(fn, msg) { const ok = await patch(fn, msg); if (ok) { S.menuDraft = null; } return ok; }
+function payPlan(btn, plan, done) {
+  btn.disabled = true;
+  (async () => {
+    try {
+      const o = await api("/api/checkout", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "create", id: S.id, plan }) });
+      await loadRzp();
+      new Razorpay({ key: o.keyId, amount: o.amount, currency: o.currency, order_id: o.orderId, name: "GetKeepsake", description: o.description, prefill: o.prefill, theme: { color: "#ff5b2e" },
+        handler: async p => { try { await api("/api/checkout", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "verify", ...p }) }); await done(); } catch (x) { toast(x.message); btn.disabled = false; } },
+        modal: { ondismiss: () => { btn.disabled = false; } } }).open();
+    } catch (x) { toast(x.message); btn.disabled = false; }
+  })();
+}
+const stRedraw = () => { const y = scrollY; go(); scrollTo(0, y); };
+$("#main").addEventListener("click", async ev => {
+  const st = ev.target.closest("[data-stc]"); if (st) { S.stc = +st.dataset.stc; stRedraw(); return; }
+  if (ev.target.matches("[data-sxbg]")) { S.stEdit = null; stRedraw(); return; }
+  const b = ev.target.closest("[data-sx]"); if (!b) return;
+  const a = b.dataset.sx;
+  if (a === "buy") { payPlan(b, "store", async () => { const j = await api("/api/customer-memories?id=" + S.id); S.d = j.data; S.store = !!j.store; toast("Online store unlocked. Add your products."); go(); }); return; }
+  if (a === "ordon") { b.disabled = true; if (await stWrite(d => { d.ord = true; d.pause = false; }, "Orders are on")) go(); return; }
+  if (a === "add") { S.stEdit = { k: "", x: { n: "", p: "", w: "", d: "", i: "", b: false, so: false }, sec: S.stc >= 0 ? stCats()[S.stc] : "" }; stRedraw(); setTimeout(() => $("#stN") && $("#stN").focus(), 50); return; }
+  if (a === "bulk") { S.stEdit = { bulk: true }; stRedraw(); return; }
+  if (a === "close") { S.stEdit = null; stRedraw(); return; }
+  if (a === "edit") { const [si, ii] = b.dataset.k.split(".").map(Number), s = S.d.menu[si]; S.stEdit = { k: b.dataset.k, x: { ...s.items[ii] }, x0n: s.items[ii].n, sec: s.n }; stRedraw(); return; }
+  if (a === "save" || a === "del") {
+    const E = S.stEdit, x = E.x;
+    if (a === "save") { x.n = $("#stN").value.trim(); x.p = $("#stP").value.trim(); x.w = $("#stW").value.trim(); x.d = $("#stD").value.trim(); x.so = !$("#stS").checked; x.b = $("#stB").checked; }
+    if (a === "save" && !x.n) { toast("Write the product name"); $("#stN").focus(); return; }
+    if (a === "save" && !numP(x.p)) { toast("Add the price"); $("#stP").focus(); return; }
+    if (a === "save" && x.w && numP(x.w) <= numP(x.p)) x.w = "";
+    if (a === "del" && !confirm("Delete " + x.n + "?")) return;
+    const sec = (a === "save" ? $("#stC").value.trim() : "") || "Products", item = { n: x.n, p: x.p, d: x.d || "", i: x.i || "", b: !!x.b, ...(x.so ? { so: true } : {}), ...(x.w ? { w: x.w } : {}) };
+    b.disabled = true;
+    const ok = await stWrite(d => {
+      d.menu = Array.isArray(d.menu) ? d.menu : [];
+      if (E.k) { const [si, ii] = E.k.split(".").map(Number), s = d.menu[si]; if (s && s.items[ii] && s.items[ii].n === E.x0n) s.items.splice(ii, 1); else if (s) { const j = s.items.findIndex(y => y && y.n === (E.x0n || x.n)); if (j >= 0) s.items.splice(j, 1); } }
+      if (a === "save") { let s = d.menu.find(y => (y.n || "").toLowerCase() === sec.toLowerCase()); if (!s) { s = { n: sec, items: [] }; d.menu.push(s); } s.items.push(item); }
+      d.menu = d.menu.filter(s => (s.items || []).some(y => y && y.n));
+    }, a === "save" ? "Saved. It's on your page." : "Deleted");
+    if (ok) S.stEdit = null; else b.disabled = false; stRedraw(); return;
+  }
+  if (a === "bulksave") {
+    const rows = $("#stBulk").value.split("\n").map(l => l.split(/\t|,/).map(c => c.trim())).filter(r => r[0] && numP(r[1]));
+    if (!rows.length) { $("#stBulkMsg").textContent = "Write at least one line like: Basmati Rice 5kg, 640"; return; }
+    b.disabled = true;
+    const ok = await stWrite(d => { d.menu = Array.isArray(d.menu) ? d.menu : []; rows.forEach(([n, p, w, c, ds]) => { const sec = (c || "Products").slice(0, 24); let s = d.menu.find(y => (y.n || "").toLowerCase() === sec.toLowerCase()); if (!s) { s = { n: sec, items: [] }; d.menu.push(s); } s.items.push({ n: n.slice(0, 50), p: String(numP(p)), d: (ds || "").slice(0, 140), i: "", b: false, ...(w && numP(w) > numP(p) ? { w: String(numP(w)) } : {}) }); }); }, rows.length + " products added");
+    if (ok) S.stEdit = null; else b.disabled = false; stRedraw(); return;
+  }
+});
+$("#main").addEventListener("change", async ev => {
+  const t = ev.target;
+  if (t.dataset.sxso) { const [si, ii] = t.dataset.sxso.split(".").map(Number), n = ((S.d.menu[si] || {}).items || [])[ii]; t.disabled = true; await stWrite(d => { const y = d.menu[si] && d.menu[si].items[ii]; if (y && n && y.n === n.n) { if (t.checked) delete y.so; else y.so = true; } }, t.checked ? "In stock" : "Marked out of stock"); stRedraw(); return; }
+  if (t.id === "stPic") { const f = t.files[0]; if (!f) return; const box = t.closest(".pmp"); box.classList.add("busy"); box.firstChild && (box.firstChild.textContent = "Uploading…");
+    try { const r = await api("/api/img", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ data: await shrink(f) }) }); S.stEdit.x.i = r.url; box.style.backgroundImage = `url('${r.url}')`; box.firstChild && (box.firstChild.textContent = ""); }
+    catch (x) { toast(x.message); box.firstChild && (box.firstChild.textContent = "+ Photo"); } box.classList.remove("busy"); }
+});
+$("#main").addEventListener("input", ev => { if (ev.target.id === "stq") { S.stq = ev.target.value; const p = ev.target.selectionStart; go(); const n = $("#stq"); n.focus(); n.setSelectionRange(p, p); } });
 
 V.menu = () => {
   const d = S.menuDraft || (S.menuDraft = JSON.parse(JSON.stringify(S.d.menu || [])));
@@ -781,7 +884,7 @@ V.page = () => {
 };
 
 V.qr = () => {
-  const tones = (window.KSQRCards && KSQRCards.TONES) || ["red", "blue", "marigold", "green", "jamun", "whitegold"];
+  const tones = ((window.KSQRCards && KSQRCards.TONES) || ["red", "blue", "marigold", "green", "jamun"]).filter(t => t !== "whitegold");
   const names = (window.KSQRCards && KSQRCards.NAMES) || {};
   return head("QR & cards", "Your QR opens your page. Put it on the counter, the door, tables and bills.", "") +
   `<section class="g2" style="margin-top:0"><div class="cd"><div class="ch"><h2 class="H">Your QR code</h2></div>
@@ -976,7 +1079,7 @@ document.addEventListener("visibilitychange", () => { if (!document.hidden && Da
     const pg = biz.find(p => p.id === want) || biz[0]; S.id = pg.id; store.set("gk-dash-id", S.id);
     const sh = String(pg.ship || "").split("|"); S.ship = sh[0] === "shipped" ? "Printed QR shipped" + (sh[1] ? " · tracking " + sh[1] : "") : sh[0] ? "Printed QR is being prepared" : "";
     const j = await api("/api/customer-memories?id=" + S.id);
-    S.d = j.data; S.stats = j.stats || pg.stats || null; S.loyalty = !!j.loyalty; S.active = j.active !== false;
+    S.d = j.data; S.stats = j.stats || pg.stats || null; S.loyalty = !!j.loyalty; S.store = !!j.store; S.active = j.active !== false;
     await loadOrders(true);
     go(); poll();
     // Customers and loyalty members load in the background (used by several sections).

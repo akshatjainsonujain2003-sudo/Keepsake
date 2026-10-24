@@ -7,7 +7,8 @@ const clip = (v, n) => String(v == null ? "" : v).replace(/[<>]/g, "").trim().sl
 const MAX = { card: 30000, site: 90000, biz: 60000 };
 const kindOf = v => (v === "site" || v === "biz" ? v : "card");
 const urlFor = (kind, id) => (kind === "site" ? "/s/" : kind === "biz" ? "/b/" : "/m/") + id;
-const tooBig = (data, kind) => JSON.stringify(data).length > MAX[kind];
+// A business page with the online store add-on can hold a big product catalogue.
+const tooBig = (data, kind, memory) => JSON.stringify(data).length > (kind === "biz" && memory && memory.store ? 450000 : MAX[kind]);
 // A website is either section-based (older themes) or one of the designed templates.
 const TEMPLATES = ["wildflower", "candlelit", "mixtape"];
 // A business page (shops, cafes): data.biz === 1 with at least a name.
@@ -80,7 +81,7 @@ module.exports = async (req, res) => {
       // The loyalty card add-on shows only once it's paid for (the owner still sees it in their own preview).
       const loyalty = !!memory.loyalty || !pay.configured(), data = !isOwner && !loyalty && memory.data && memory.data.loy ? { ...memory.data, loy: undefined } : memory.data;
       const gf = memory.kind === "biz" ? require("./_geo").publicInfo(memory) : null;
-      return db.reply(res, 200, { ...base, ...(isOwner ? ownerLock(memory) : {}), data, title: memory.title, active: true, owner: isOwner, ...(memory.kind === "biz" ? { loyalty } : {}), ...(gf ? { gf } : {}) });
+      return db.reply(res, 200, { ...base, ...(isOwner ? ownerLock(memory) : {}), data, title: memory.title, active: true, owner: isOwner, ...(memory.kind === "biz" ? { loyalty, store: !!memory.store } : {}), ...(gf ? { gf } : {}) });
     }
     const user = await auth.currentUser(req);
     if (!user) return db.reply(res, 401, { error: "Please log in to manage your memories." });
@@ -116,7 +117,7 @@ module.exports = async (req, res) => {
       const key = "customer-memory:" + id, memory = await db.getj(key);
       if (!memory || memory.owner !== user.id) return db.reply(res, 404, { error: "Memory not found in your account." });
       const kind = kindOf(memory.kind);
-      if (!validData(data, kind) || tooBig(data, kind)) return db.reply(res, 400, { error: "This memory is empty or too large." });
+      if (!validData(data, kind) || tooBig(data, kind, memory)) return db.reply(res, 400, { error: kind === "biz" && !memory.store && JSON.stringify(data || {}).length > MAX.biz ? "Your page is too big. Add the Online store to list all your products." : "This memory is empty or too large." });
       const lockErr = setLock(memory, b); if (lockErr) return db.reply(res, 400, { error: lockErr });
       memory.data = data; memory.title = clip(data.t || "Our Memories", 80) || "Our Memories"; memory.updated = Date.now();
       await db.setj(key, memory);
