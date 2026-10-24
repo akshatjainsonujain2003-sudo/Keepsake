@@ -5,7 +5,14 @@ const pay = require("./_pay");
 module.exports = async (req, res) => {
   if (!db.ok()) return db.reply(res, 501, { error: "Storage not configured. Add Upstash Redis in Vercel → Storage." });
   const ak = process.env.ADMIN_KEY;
-  if (!ak || req.headers["x-admin-key"] !== ak) return db.reply(res, 401, { error: "Wrong admin key (or ADMIN_KEY not set in Vercel)." });
+  // Guessing the admin key: after 10 wrong tries an address is locked out for an hour.
+  const ip = String(req.headers["x-forwarded-for"] || "").split(",")[0].trim() || "?", bad = "adm-bad:" + ip;
+  if (+(await db.cmd("GET", bad)) >= 10) return db.reply(res, 429, { error: "Too many wrong tries. Try again in an hour." });
+  const given = Buffer.from(String(req.headers["x-admin-key"] || "")), want = Buffer.from(String(ak || ""));
+  if (!ak || given.length !== want.length || !require("crypto").timingSafeEqual(given, want)) {
+    const n = await db.cmd("INCR", bad); if (n === 1) await db.cmd("EXPIRE", bad, 3600);
+    return db.reply(res, 401, { error: "Wrong admin key (or ADMIN_KEY not set in Vercel)." });
+  }
   try {
     const b = req.body || {}, days = Math.min(Math.max(+b.days || 30, 1), 3650) * 864e5;
     if (b.action === "create") {
