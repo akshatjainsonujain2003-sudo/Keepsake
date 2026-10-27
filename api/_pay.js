@@ -62,6 +62,8 @@ function catalog() {
     flat: { price: rupees(env.PRICE_CAMP14, 999), days: 14 } };
   // Online store for a business page: every product listed, search, and orders placed on the page itself. PRICE_STORE changes it.
   c.store = { name: "Online store", price: rupees(env.PRICE_STORE, 2000), desc: "List every product, with photos, prices and search. Customers order on your page and you see it on your dashboard." };
+  // Keepsake Pro: a monthly plan for a live business page (30 days per payment, renewed by hand). PRICE_PRO changes it.
+  c.pro = { name: "Keepsake Pro", price: rupees(env.PRICE_PRO, 199), days: 30, desc: "Table QRs, day-end report, win-back offers and printable order slips for 30 days." };
   if (!c.frames) { delete c.delivery.frameQr; delete c.delivery.frameNfc; }
   return c;
 }
@@ -86,6 +88,13 @@ function amountFor(memory, plan, extra) {
     if (kindOf(memory) !== "biz") return { error: "The online store is for business pages." };
     if (memory.store) return { error: "The online store is already unlocked on this page." };
     return memory.paid !== false ? { rupees: c.store.price, upgrade: true } : { rupees: c.products.biz.price + c.store.price, upgrade: false };
+  }
+  if (plan === "pro") {
+    if (kindOf(memory) !== "biz") return { error: "Keepsake Pro is for business pages." };
+    if (memory.paid === false) return { error: "Activate your page first." };
+    // Renewing early adds to the time left, but not more than 2 payments ahead.
+    if ((memory.proUntil || 0) - Date.now() > 45 * 864e5) return { error: "Pro is already paid for the next 45 days." };
+    return { rupees: c.pro.price, upgrade: true };
   }
   if (plan === "claims100" || plan === "claims500" || plan === "camp14") {
     if (kindOf(memory) !== "biz") return { error: "Offer campaigns are for business pages." };
@@ -119,6 +128,7 @@ function amountFor(memory, plan, extra) {
 function describe(memory, plan, upgrade, withQr) {
   const c = catalog(), product = c.products[kindOf(memory)].name;
   if (plan === "sms" || plan === "sms1k") return c.sms.packs[plan].size + " SMS credits";
+  if (plan === "pro") return "Keepsake Pro · 30 days";
   if (plan === "store") return upgrade ? "Online store" : `${product} + Online store`;
   if (plan === "claims100" || plan === "claims500") return c.claims.packs[plan].size + " offer claims";
   if (plan === "camp14") return "Unlimited claims for 14 days";
@@ -188,6 +198,7 @@ async function markPaid(orderId, paymentId) {
       if (order.plan === "loyalty") { memory.loyalty = true; memory.loyaltyAt = order.paidAt; }
       if (order.plan === "geopro") { memory.geopro = true; memory.geoproAt = order.paidAt; }
       if (order.plan === "store") { memory.store = true; memory.storeAt = order.paidAt; memory.data = Object.assign({}, memory.data, { ord: true }); await db.cmd("SET", "store-user:" + memory.owner, "1"); }
+      if (order.plan === "pro") { memory.proUntil = Math.max(Date.now(), memory.proUntil || 0) + catalog().pro.days * 864e5; memory.proAt = order.paidAt; }
       if (hasQr(order)) memory.qrOrders = [...(memory.qrOrders || []), orderId].slice(-10);
       memory.orders = [...(memory.orders || []), orderId].slice(-20);
       await db.setj(mk, memory);
