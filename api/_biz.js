@@ -2,6 +2,7 @@
 // A customer builds an order on the shop's page and sends it on WhatsApp. The same order is saved here so the
 // owner's dashboard can show it (New → Preparing → Ready → Done), add up today's sales and keep a customer list.
 //   bzo:<page>:<ref>    = { ref, at, items: [{ n, q, p }], tot, name, phone, mode, addr, note, st, ts: { prep, ready, done } }
+//                         a sale the owner records in the shop has mode "walkin", offline: true, pay: cash|upi|card, st "done"
 //   bzoz:<page>         = sorted set of order refs by time (newest 2000 kept)
 //   bzc:<page>:<phone>  = { name, phone, n: orders, spend, first, last }
 //   bzcz:<page>         = sorted set of customer phones by last order
@@ -52,14 +53,50 @@ async function placeOrder(b, ip) {
   if ((await db.cmd("SET", "bzo:" + b.id + ":" + ref, JSON.stringify(o), "NX", "EX", KEEP)) !== "OK") return { ok: true, ref, dup: true };
   await db.cmd("ZADD", "bzoz:" + b.id, now, ref);
   await db.cmd("ZREMRANGEBYRANK", "bzoz:" + b.id, 0, -(MAXO + 1));
-  if (phone) {
-    const ck = "bzc:" + b.id + ":" + phone, c = (await db.getj(ck)) || { phone, n: 0, spend: 0, first: now };
-    if (c.n || +(await db.cmd("ZCARD", "bzcz:" + b.id)) < MAXC) {
-      c.name = o.name || c.name || "Customer"; c.n++; c.spend += tot; c.last = now;
-      await db.setj(ck, c); await db.cmd("ZADD", "bzcz:" + b.id, now, phone);
-    }
-  }
+  await touchCustomer(b.id, o, now);
   return { ok: true, ref, tot };
+}
+
+// Adds an order to the customer's record (orders, spend, last visit), if the order has a phone number.
+async function touchCustomer(id, o, now) {
+  if (!o.phone) return;
+  const ck = "bzc:" + id + ":" + o.phone, c = (await db.getj(ck)) || { phone: o.phone, n: 0, spend: 0, first: now };
+  if (c.n || +(await db.cmd("ZCARD", "bzcz:" + id)) < MAXC) {
+    c.name = o.name || c.name || "Customer"; c.n++; c.spend += o.tot; c.last = now;
+    await db.setj(ck, c); await db.cmd("ZADD", "bzcz:" + id, now, o.phone);
+  }
+}
+const RA = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+const mkRef = () => Array.from(require("crypto").randomBytes(5), x => RA[x % RA.length]).join("");
+
+// Keepsake Pro only. The owner records a sale made in the shop: { id, items: [["0.2", 2], …], custom: [{ n, q, p }], disc, pay, name, phone, note }.
+// It is saved like any order, already Done, marked offline, so it counts in sales, top items and the customer list.
+async function ownerSale(id, m, b) {
+  if (!((m.proUntil || 0) > Date.now())) return E(402, "Add sale is part of Keepsake Pro. Start Pro (₹199 for 30 days) on your dashboard.");
+  if (await limit("bzsale-day:" + id, 400, 86400)) return E(429, "That's a lot of sales for one day. Try again tomorrow.");
+  const menu = Array.isArray((m.data || {}).menu) ? m.data.menu : [], items = [];
+  for (const [key, q] of (Array.isArray(b.items) ? b.items : []).filter(Array.isArray).slice(0, 40)) {
+    const [si, ii] = String(key).split(".").map(Number), x = menu[si] && Array.isArray(menu[si].items) && menu[si].items[ii];
+    const qty = Math.round(+q), p = x && num(x.p);
+    if (!x || !x.n || p == null || !(qty >= 1 && qty <= 999)) continue;
+    items.push({ k: si + "." + ii, n: clip(x.n, 50), q: qty, p });
+  }
+  for (const x of (Array.isArray(b.custom) ? b.custom : []).slice(0, 20)) {
+    const n = clip(x && x.n, 50), qty = Math.round(+(x && x.q)), p = Math.round(+(x && x.p) * 100) / 100;
+    if (n && qty >= 1 && qty <= 999 && p >= 0 && p <= 1e6) items.push({ n, q: qty, p });
+  }
+  if (!items.length) return E(400, "Add at least one item.");
+  const sub = items.reduce((t, x) => t + x.q * x.p, 0), disc = Math.min(sub, Math.max(0, Math.round(+b.disc || 0))), tot = sub - disc, now = Date.now();
+  const o = { at: now, items, tot, name: clip(b.name, 40), phone: ph10(b.phone), mode: "walkin", addr: "", note: clip(b.note, 160), st: "done", ts: { done: now }, offline: true, pay: ["cash", "upi", "card"].includes(b.pay) ? b.pay : "cash", ...(disc ? { disc } : {}) };
+  for (let k = 0; k < 6; k++) {
+    o.ref = mkRef();
+    if ((await db.cmd("SET", "bzo:" + id + ":" + o.ref, JSON.stringify(o), "NX", "EX", KEEP)) !== "OK") continue;
+    await db.cmd("ZADD", "bzoz:" + id, now, o.ref);
+    await db.cmd("ZREMRANGEBYRANK", "bzoz:" + id, 0, -(MAXO + 1));
+    await touchCustomer(id, o, now);
+    return { ok: true, order: o };
+  }
+  return E(500, "Couldn't save the sale. Please try again.");
 }
 
 async function handle(b, ctx) {
@@ -92,6 +129,7 @@ async function handle(b, ctx) {
     await db.cmd("SET", k, JSON.stringify(o), "EX", KEEP);
     return { ok: true, order: o };
   }
+  if (a === "bz-own-sale") return ownerSale(id, m, b);
   if (a === "bz-own-customers") {
     const phones = await db.cmd("ZRANGE", "bzcz:" + id, 0, 1499, "REV");
     const cs = phones.length ? (await db.cmd("MGET", ...phones.map(p => "bzc:" + id + ":" + p))).map(parse).filter(Boolean) : [];
