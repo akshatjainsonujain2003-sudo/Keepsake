@@ -24,7 +24,7 @@
 :root{--bg:#f4f1ea;--pa:#fffdf8;--ink:#121110;--mu:#6c665d;--ln:#e2dccf;--ac:#ff5b2e;--ac2:#ffd84d;--fd:'Archivo Black','Arial Black',sans-serif;--fsc:'Pinyon Script',cursive;--fn:'Inter',system-ui,-apple-system,sans-serif}
 *{box-sizing:border-box}[hidden]{display:none!important}
 html{scroll-behavior:smooth}
-html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 var(--fn);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 var(--fn);-webkit-font-smoothing:antialiased;overflow-x:hidden;overflow-x:clip}
 a{color:inherit}
 .wrap{max-width:1180px;margin:0 auto;padding:0 22px}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:16px 26px;border-radius:999px;background:var(--ink);color:#fff;font:700 15.5px var(--fn);text-decoration:none;border:0;cursor:pointer;transition:transform .15s,box-shadow .15s;white-space:nowrap}
@@ -76,6 +76,60 @@ section.s{padding:96px 0 0}
 .step p{margin:0;color:var(--mu)}
 .step:nth-child(2){background:var(--ac2);border-color:transparent}.step:nth-child(2) .n{color:var(--ink)}.step:nth-child(2) p{color:#3b3420}
 .step:nth-child(3){background:var(--ink);color:#fff;border-color:transparent}.step:nth-child(3) p{color:#cfc9bd}
+/* Three steps as a scroll story (desktop): the phone stays pinned and its screen follows the step in view. Phones keep the three cards above. */
+.stor{display:none}
+@media (min-width:900px){
+ .steps{display:none}
+ .stor{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:72px;align-items:start}
+ .stor-l{position:relative;padding-left:34px}
+ .stor-l:before{content:"";position:absolute;left:6px;top:8%;bottom:8%;width:3px;border-radius:3px;background:var(--ln)}
+ .stor-l:after{content:"";position:absolute;left:6px;top:8%;width:3px;border-radius:3px;background:var(--ac);height:0;transition:height .5s cubic-bezier(.2,.8,.2,1)}
+ .stor[data-a="0"] .stor-l:after{height:calc(84% / 3)}.stor[data-a="1"] .stor-l:after{height:calc(84% / 3 * 2)}.stor[data-a="2"] .stor-l:after{height:84%}
+ .stp-i{min-height:58vh;display:flex;flex-direction:column;justify-content:center;opacity:.32;transition:opacity .4s,transform .4s;transform:translateX(-6px);cursor:pointer}
+ .stp-i.on{opacity:1;transform:none}
+ .stp-i:last-child{margin-bottom:32vh}
+ .stp-i .n{font:400 120px/.8 var(--fd);color:var(--ac)}
+ .stp-i h3{font:400 38px/1.05 var(--fd);text-transform:uppercase;margin:26px 0 12px}
+ .stp-i p{margin:0;color:var(--mu);font-size:18px;line-height:1.55;max-width:460px}
+ .stor-r{position:sticky;top:84px;height:640px;display:flex;justify-content:center;align-items:center}
+ .stor-r:before{content:"";position:absolute;inset:34px 0;border-radius:44px;background:var(--ac2);transform:rotate(-3deg);transition:background .5s}
+ .stor[data-a="1"] .stor-r:before{background:var(--ac)}.stor[data-a="2"] .stor-r:before{background:#25d366}
+ .stor-ph{position:relative;width:292px;height:590px;background:var(--ink);border-radius:44px;padding:11px;box-shadow:0 36px 70px -26px #0007}
+ .stor-sc{position:relative;height:100%;border-radius:34px;overflow:hidden;background:var(--pa)}
+ .scn{position:absolute;inset:0;opacity:0;transform:translateY(18px) scale(.98);transition:opacity .45s,transform .45s;pointer-events:none;display:flex;flex-direction:column}
+ .stor[data-a="0"] .scn0,.stor[data-a="1"] .scn1,.stor[data-a="2"] .scn2{opacity:1;transform:none}
+ /* scene 1: scan */
+ .scn0{align-items:center;justify-content:center;gap:18px;background:var(--bg)}
+ .scn0 .qb{position:relative;width:176px;height:176px;background:#fff;border-radius:20px;padding:14px;box-sizing:border-box;box-shadow:0 14px 30px -14px #0004}
+ .scn0 .qb svg{width:100%;height:100%;display:block}
+ .scn0 .qb:before,.scn0 .qb:after{content:"";position:absolute;width:26px;height:26px;border:3px solid var(--ac);border-radius:6px}
+ .scn0 .qb:before{left:-8px;top:-8px;border-right:0;border-bottom:0}.scn0 .qb:after{right:-8px;bottom:-8px;border-left:0;border-top:0}
+ .scn0 .ln{position:absolute;left:8px;right:8px;top:12px;height:3px;border-radius:3px;background:var(--ac);box-shadow:0 0 16px 3px #ff5b2e88;opacity:0}
+ .stor[data-a="0"] .scn0 .ln{opacity:1;animation:gkscan 2.2s ease-in-out infinite}
+ @keyframes gkscan{0%,100%{top:12px}50%{top:calc(100% - 15px)}}
+ .scn0 b{font:400 17px/1 var(--fd);text-transform:uppercase}.scn0 small{color:var(--mu);font-size:13px}
+ .scn0 .op{background:var(--ink);color:#fff;font:700 13px var(--fn);padding:10px 16px;border-radius:999px}
+ /* scene 2: fill in */
+ .scn1{padding:22px 18px;gap:12px;background:var(--pa)}
+ .scn1 h4{margin:0;font:400 20px/1 var(--fd);text-transform:uppercase}
+ .scn1 .ch{display:flex;gap:6px;flex-wrap:wrap}.scn1 .ch i{font:700 12px var(--fn);font-style:normal;border:1.5px solid var(--ink);border-radius:999px;padding:6px 11px}.scn1 .ch i.on{background:var(--ink);color:#fff}
+ .scn1 .fl{border:1.5px solid var(--ln);border-radius:14px;padding:10px 12px;background:#fff}.scn1 .fl small{display:block;font:700 10px var(--fn);letter-spacing:.1em;color:var(--mu)}
+ .scn1 .fl span{display:block;font:700 15px var(--fn);overflow:hidden;white-space:nowrap;width:0}
+ .stor[data-a="1"] .scn1 .fl span{animation:gktype 1.6s steps(12) .3s forwards}
+ @keyframes gktype{to{width:12ch}}
+ .scn1 .rw{display:flex;justify-content:space-between;align-items:center;font:600 14px var(--fn);padding:11px 12px;border-radius:14px;background:var(--bg)}.scn1 .rw em{font-style:normal;color:#16a34a;font-weight:800}
+ .scn1 .go{margin-top:auto;background:var(--ac);color:var(--ink);text-align:center;font:800 15px var(--fn);padding:14px;border-radius:999px}
+ /* scene 3: customers */
+ .scn2{background:var(--pa)}
+ .scn2 .hd{background:var(--ink);color:#fff;padding:22px 18px 16px;font:400 22px/1 var(--fd);text-transform:uppercase}
+ .scn2 .it{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid var(--ln);font:600 14.5px var(--fn)}.scn2 .it span{color:var(--mu);font-weight:500}
+ .scn2 .it b{width:30px;height:30px;border-radius:50%;background:var(--ac);color:var(--ink);display:grid;place-items:center;font-size:18px}
+ .scn2 .wa{margin:auto 14px 16px;background:#25d366;color:#05301a;text-align:center;font:800 14px var(--fn);padding:14px;border-radius:999px}
+ .scn2 .ts{position:absolute;right:12px;bottom:86px;background:var(--ac2);color:var(--ink);font:800 12px var(--fn);padding:9px 12px;border-radius:14px;box-shadow:0 10px 22px -10px #0006;transform:translateY(-8px) scale(.9);opacity:0}
+ .stor[data-a="2"] .scn2 .ts{animation:gkts .6s .5s cubic-bezier(.2,1.4,.4,1) forwards}
+ @keyframes gkts{to{opacity:1;transform:none}}
+}
+@media (prefers-reduced-motion:reduce){.stp-i,.scn,.stor-r:before{transition:none}.stor .ln,.stor .fl span,.stor .ts{animation:none!important}.stor .fl span{width:12ch}.stor .ts{opacity:1;transform:none}}
 /* picker */
 .pick{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:40px;align-items:start}
 .grp{margin-bottom:22px}
@@ -384,6 +438,18 @@ footer a{color:#fff}
 
 <section class="s" id="how"><div class="wrap">
   <div class="sh"><div><div class="eyebrow">How it works</div><h2 data-gk-h2>Three steps. <em>zero</em> tech.</h2></div><p>No app, no website builder, no designer. If you can fill a form on your phone, you're done.</p></div>
+  <div class="stor" data-a="0">
+    <div class="stor-l">
+      <div class="stp-i on"><div class="n">01</div><h3>Scan your QR card</h3><p>Got a GetKeepsake card from our team? Scan it. No card? Just start online and download your own QR.</p></div>
+      <div class="stp-i"><div class="n">02</div><h3>Fill in your page</h3><p>Pick your business type and we set up the right layout and colours. Add your menu, photos, offer and links.</p></div>
+      <div class="stp-i"><div class="n">03</div><h3>Customers scan</h3><p>They see your menu, order on WhatsApp, pay by UPI, follow you on Instagram and leave a Google review.</p></div>
+    </div>
+    <div class="stor-r" aria-hidden="true"><div class="stor-ph"><div class="stor-sc">
+      <div class="scn scn0"><div class="qb"><svg viewBox="0 0 21 21" shape-rendering="crispEdges"><path fill="#121110" d="M0 0h7v7H0zM14 0h7v7h-7zM0 14h7v7H0z"/><path fill="#fff" d="M1 1h5v5H1zM15 1h5v5h-5zM1 15h5v5H1z"/><path fill="#121110" d="M2 2h3v3H2zM16 2h3v3h-3zM2 16h3v3H2zM9 0h2v2H9zM8 3h2v2H8zM11 4h2v2h-2zM9 8h3v2H9zM13 9h2v2h-2zM16 9h4v2h-4zM8 12h2v3H8zM11 13h3v2h-3zM15 13h2v3h-2zM18 14h3v2h-3zM11 17h2v4h-2zM14 18h3v2h-3zM18 18h3v3h-3zM0 9h2v2H0zM3 9h4v2H3zM9 6h2v1H9z"/></svg><span class="ln"></span></div><b>Scan the QR</b><small>Your phone camera is enough</small><span class="op">Opening your studio…</span></div>
+      <div class="scn scn1"><h4>Your page</h4><div class="ch"><i class="on">Café</i><i>Salon</i><i>Gym</i><i>Shop</i></div><div class="fl"><small>SHOP NAME</small><span>Brew &amp; Bloom</span></div><div class="rw">Menu<em>✓ 12 items</em></div><div class="rw">Photos<em>✓ Added</em></div><div class="rw">WhatsApp &amp; UPI<em>✓ Linked</em></div><div class="go">Go live</div></div>
+      <div class="scn scn2"><div class="hd">Brew &amp; Bloom</div><div class="it"><div>Cold coffee<br><span>₹180</span></div><b>+</b></div><div class="it"><div>Waffle<br><span>₹160</span></div><b>+</b></div><div class="it"><div>Brownie<br><span>₹140</span></div><b>+</b></div><div class="wa">Order on WhatsApp · ₹340</div><div class="ts">New order · ₹340</div></div>
+    </div></div></div>
+  </div>
   <div class="steps">
     <div class="step" data-gk-st><div class="n">01</div><h3>Scan your QR card</h3><p>Got a GetKeepsake card from our team? Scan it. No card? Just start online and download your own QR.</p></div>
     <div class="step" data-gk-st><div class="n">02</div><h3>Fill in your page</h3><p>Pick your business type and we set up the right layout and colours. Add your menu, photos, offer and links.</p></div>
@@ -584,7 +650,7 @@ addEventListener("DOMContentLoaded", () => {
   draw(cur, false);
 });
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script><script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script><script src="/assets/gk.v1.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script><script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script><script src="/assets/gk.v1.js" defer></script><script src="/assets/steps.v1.js" defer></script>
 <script>
 (() => {
   const t = Array(14).fill("SCAN ✦ ORDER ✦ COME BACK ✦ GETKEEPSAKE ✦ ").join(""); document.querySelectorAll(".tape .tp").forEach(e => e.textContent = t);
