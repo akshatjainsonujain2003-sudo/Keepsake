@@ -265,13 +265,13 @@ const IC = {
 };
 const NAV = [
   ["Run the shop", [["overview", "Overview", "home"], ["orders", "Orders", "orders"], ["menu", "Menu & prices", "menu"], ["store", "Online store", "orders"], ["customers", "Customers", "people"]]],
-  ["Grow", [["messages", "Messages", "wa"], ["campaigns", "Offer QRs", "qr"], ["nearby", "Walk-in offers", "pin"], ["reviews", "Reviews", "star"], ["offers", "Offers & marketing", "tag"], ["analytics", "Analytics", "chart"]]],
+  ["Grow", [["pro", "Keepsake Pro", "star"], ["messages", "Messages", "wa"], ["campaigns", "Offer QRs", "qr"], ["nearby", "Walk-in offers", "pin"], ["reviews", "Reviews", "star"], ["offers", "Offers & marketing", "tag"], ["analytics", "Analytics", "chart"]]],
   ["Set up", [["page", "My page", "page"], ["qr", "QR & cards", "qr"], ["payments", "Payments", "pay"], ["settings", "Team & settings", "gear"]]]
 ];
 const TITLES = Object.fromEntries(NAV.flatMap(g => g[1]).map(x => [x[0], x[1]]));
 
 // ---------- state ----------
-const S = { user: null, pages: [], id: "", page: null, d: null, stats: null, loyalty: false, active: true, orders: [], ordersAt: 0, seen: null, customers: null, loy: null, view: "overview", otab: "new", csq: "", cf: "all", menuDraft: null, tone: store.get("gk-dash-tone", "red") };
+const S = { proUntil: 0, proPrice: 199, user: null, pages: [], id: "", page: null, d: null, stats: null, loyalty: false, active: true, orders: [], ordersAt: 0, seen: null, customers: null, loy: null, view: "overview", otab: "new", csq: "", cf: "all", menuDraft: null, tone: store.get("gk-dash-tone", "red") };
 
 async function api(url, opt) {
   const r = await fetch(url, Object.assign({ cache: "no-store" }, opt || {}));
@@ -372,6 +372,27 @@ function checklist() {
 const V = {};
 const A = {}; // after-render hooks
 
+const isPro = () => S.proUntil > Date.now();
+const proLeft = () => Math.ceil((S.proUntil - Date.now()) / 864e5);
+// Reminder: shows only for shops that had Pro and are about to lose it (5 days or less), or just lost it.
+function proBar() {
+  if (!S.proUntil || !S.active) return "";
+  const l = proLeft();
+  if (l > 5) return "";
+  return `<div class="bar"><span><b>${l > 0 ? `Keepsake Pro ends in ${l} day${l === 1 ? "" : "s"}.` : "Keepsake Pro has ended."}</b> Renew to keep Table QRs, reports and win-back offers.</span><button class="btn" data-pro="buy">Renew · ₹${S.proPrice}</button></div>`;
+}
+V.pro = () => {
+  const on = isPro(), l = on ? proLeft() : 0, until = new Date(S.proUntil).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
+  const items = [["Table QRs", "A QR for each table. Customers scan, order and pay at the table."], ["Day-end report", "Sales, orders and top items for any day, with a CSV download."], ["Win-back offers", "See new, regular and lapsed customers and send a WhatsApp offer in one tap."], ["Printable order slips", "Print a slip for the kitchen or the parcel from any order."]];
+  return head("Keepsake Pro", "Four tools that bring customers back and save you time. Everything else stays free.", "") +
+  (!S.active ? inactive() : "") +
+  `<section class="cd" style="background:var(--ink);color:#fff;border-color:var(--ink)"><div class="ch"><h2 class="H" style="margin:0">${on ? "Pro is on" : S.proUntil ? "Pro has ended" : "Go Pro"}</h2><span class="pl" style="background:var(--ye)">₹${S.proPrice} / month</span></div>
+    <p style="margin:6px 0 0;color:#d6cfc4">${on ? `Active until <b>${until}</b> (${l} day${l === 1 ? "" : "s"} left).` : S.proUntil ? `It ended on ${until}. Renew to use it again.` : "Pay once for 30 days. Renew by hand whenever you like, no auto-debit."}</p>
+    <div class="g2" style="margin-top:14px">${items.map(x => `<div><b>${x[0]}</b><p style="margin:4px 0 0;color:#b9b2a7;font-size:14px">${x[1]}</p></div>`).join("")}</div>
+    <button class="btn" style="margin-top:20px" data-pro="buy" ${S.active ? "" : "disabled"}>${on ? "Add 30 more days" : S.proUntil ? "Renew" : "Start Pro"} · ₹${S.proPrice}</button><p class="hint" style="color:#b9b2a7">30 days per payment. Renewing adds to the time you have left.</p></section>`;
+};
+// A locked tool shows this instead of its screen.
+const proLock = (what) => `<section class="cd"><div class="empty"><b>${what} is part of Keepsake Pro</b>₹${S.proPrice} for 30 days. Renew by hand, no auto-debit.<br><button class="btn" data-pro="buy" style="margin-top:12px">${S.proUntil ? "Renew" : "Start Pro"} · ₹${S.proPrice}</button></div></section>`;
 V.overview = () => {
   const d = S.d, st = S.stats || {}, t0 = today0(), tod = ordersOn(t0, t0 + 864e5), sales = sum(tod);
   const ch = st.lastSame ? Math.round((st.today - st.lastSame) * 100 / st.lastSame) : null;
@@ -383,7 +404,7 @@ V.overview = () => {
   const cl = checklist(), done = cl.filter(x => x[0]).length;
   const of = d.offer || {};
   const now = new Date();
-  return inactive() + head(`${greet()}, ${esc(shopName().split(/\s+/)[0])}`, `${now.toLocaleDateString("en-IN", { weekday: "long", day: "numeric", month: "short" })} · here is how your shop is doing today.`) +
+  return inactive() + proBar() + head(`${greet()}, ${esc(shopName().split(/\s+/)[0])}`, `${now.toLocaleDateString("en-IN", { weekday: "long", day: "numeric", month: "short" })} · here is how your shop is doing today.`) +
   `<section class="g4" aria-label="Today">
     <div class="kpi o"><span>QR scans today</span><b data-count="${st.today || 0}">${st.today || 0}</b><small>${ch === null ? (st.week ? st.week + " this week" : "Opens of your page") : (ch >= 0 ? "+" : "") + ch + "% vs last " + wk}</small></div>
     <div class="kpi"><span>Orders today</span><b>${tod.length}</b><small class="gd">${waiting() ? waiting() + " waiting for you" : d.ord ? "All caught up" : "Ordering is off"}</small></div>
@@ -557,6 +578,8 @@ const stRedraw = () => { const y = scrollY; go(); scrollTo(0, y); };
 $("#main").addEventListener("click", async ev => {
   const st = ev.target.closest("[data-stc]"); if (st) { S.stc = +st.dataset.stc; stRedraw(); return; }
   if (ev.target.matches("[data-sxbg]")) { S.stEdit = null; stRedraw(); return; }
+  const pb = ev.target.closest("[data-pro]");
+  if (pb) { payPlan(pb, "pro", async () => { const j = await api("/api/customer-memories?id=" + S.id); S.proUntil = j.proUntil || 0; toast("Keepsake Pro is on until " + new Date(S.proUntil).toLocaleDateString("en-IN", { day: "numeric", month: "short" }) + "."); go(); }); return; }
   const b = ev.target.closest("[data-sx]"); if (!b) return;
   const a = b.dataset.sx;
   if (a === "buy") { payPlan(b, "store", async () => { const j = await api("/api/customer-memories?id=" + S.id); S.d = j.data; S.store = !!j.store; toast("Online store unlocked. Add your products."); go(); }); return; }
@@ -1166,7 +1189,7 @@ document.addEventListener("visibilitychange", () => { if (!document.hidden && Da
     const pg = biz.find(p => p.id === want) || biz[0]; S.id = pg.id; store.set("gk-dash-id", S.id);
     const sh = String(pg.ship || "").split("|"); S.ship = sh[0] === "shipped" ? "Printed QR shipped" + (sh[1] ? " · tracking " + sh[1] : "") : sh[0] ? "Printed QR is being prepared" : "";
     const j = await api("/api/customer-memories?id=" + S.id);
-    S.d = j.data; S.stats = j.stats || pg.stats || null; S.loyalty = !!j.loyalty; S.store = !!j.store; S.active = j.active !== false;
+    S.d = j.data; S.stats = j.stats || pg.stats || null; S.loyalty = !!j.loyalty; S.store = !!j.store; S.proUntil = j.proUntil || 0; S.proPrice = j.proPrice || 199; S.active = j.active !== false;
     await loadOrders(true);
     go(); poll();
     // Customers and loyalty members load in the background (used by several sections).

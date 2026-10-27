@@ -49,7 +49,7 @@ module.exports = async (req, res) => {
       // It is saved as a normal paid order (method: cash) so it shows in HQ sales and orders.
       if (b.action === "hq-cash") {
         const id = String(b.id || ""), plan = String(b.plan || "");
-        if (plan !== "store") return db.reply(res, 400, { error: "Only the online store can be unlocked for cash." });
+        if (plan !== "store" && plan !== "pro") return db.reply(res, 400, { error: "Only the online store or Pro can be paid in cash." });
         if (!/^[a-z0-9]{8,16}$/i.test(id)) return db.reply(res, 400, { error: "Invalid page." });
         const memory = await db.getj("customer-memory:" + id);
         if (!memory) return db.reply(res, 404, { error: "Page not found." });
