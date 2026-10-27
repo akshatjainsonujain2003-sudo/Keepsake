@@ -69,9 +69,10 @@ async function touchCustomer(id, o, now) {
 const RA = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 const mkRef = () => Array.from(require("crypto").randomBytes(5), x => RA[x % RA.length]).join("");
 
-// The owner records a sale made in the shop: { id, items: [["0.2", 2], …], custom: [{ n, q, p }], disc, pay, name, phone, note }.
+// Keepsake Pro only. The owner records a sale made in the shop: { id, items: [["0.2", 2], …], custom: [{ n, q, p }], disc, pay, name, phone, note }.
 // It is saved like any order, already Done, marked offline, so it counts in sales, top items and the customer list.
 async function ownerSale(id, m, b) {
+  if (!((m.proUntil || 0) > Date.now())) return E(402, "Add sale is part of Keepsake Pro. Start Pro (₹199 for 30 days) on your dashboard.");
   if (await limit("bzsale-day:" + id, 400, 86400)) return E(429, "That's a lot of sales for one day. Try again tomorrow.");
   const menu = Array.isArray((m.data || {}).menu) ? m.data.menu : [], items = [];
   for (const [key, q] of (Array.isArray(b.items) ? b.items : []).filter(Array.isArray).slice(0, 40)) {

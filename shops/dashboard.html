@@ -387,12 +387,12 @@ function proBar() {
   if (!S.proUntil || !S.active) return "";
   const l = proLeft();
   if (l > 5) return "";
-  return `<div class="bar"><span><b>${l > 0 ? `Keepsake Pro ends in ${l} day${l === 1 ? "" : "s"}.` : "Keepsake Pro has ended."}</b> Renew to keep Table QRs, reports and win-back offers.</span><button class="btn" data-pro="buy">Renew · ₹${S.proPrice}</button></div>`;
+  return `<div class="bar"><span><b>${l > 0 ? `Keepsake Pro ends in ${l} day${l === 1 ? "" : "s"}.` : "Keepsake Pro has ended."}</b> Renew to keep Table QRs, Add sale, reports and win-back offers.</span><button class="btn" data-pro="buy">Renew · ₹${S.proPrice}</button></div>`;
 }
 V.pro = () => {
   const on = isPro(), l = on ? proLeft() : 0, until = new Date(S.proUntil).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
-  const items = [["Table QRs", "A QR for each table. Customers scan, order and pay at the table."], ["Day-end report", "Sales, orders and top items for any day, with a CSV download."], ["Win-back offers", "See new, regular and lapsed customers and send a WhatsApp offer in one tap."], ["Printable order slips", "Print a slip for the kitchen or the parcel from any order."]];
-  return head("Keepsake Pro", "Four tools that bring customers back and save you time. Everything else stays free.", "") +
+  const items = [["Table QRs", "A QR for each table. Customers scan, order and pay at the table."], ["Day-end report", "Sales, orders and top items for any day, with a CSV download."], ["Win-back offers", "See new, regular and lapsed customers and send a WhatsApp offer in one tap."], ["Printable order slips", "Print a slip for the kitchen or the parcel from any order."], ["Add sale", "Record sales made in the shop so your totals and customers stay complete."]];
+  return head("Keepsake Pro", "Five tools that bring customers back and save you time. Everything else stays free.", "") +
   (!S.active ? inactive() : "") +
   `<section class="cd" style="background:var(--ink);color:#fff;border-color:var(--ink)"><div class="ch"><h2 class="H" style="margin:0">${on ? "Pro is on" : S.proUntil ? "Pro has ended" : "Go Pro"}</h2><span class="pl" style="background:var(--ye)">₹${S.proPrice} / month</span></div>
     <p style="margin:6px 0 0;color:#d6cfc4">${on ? `Active until <b>${until}</b> (${l} day${l === 1 ? "" : "s"} left).` : S.proUntil ? `It ended on ${until}. Renew to use it again.` : "Pay once for 30 days. Renew by hand whenever you like, no auto-debit."}</p>
@@ -444,7 +444,7 @@ V.orders = () => {
   const tod = ordersOn(t0, t0 + 864e5);
   return inactive() + head("Orders", `${tod.length} today · ${inr(sum(tod))} in sales · ${waiting()} waiting`) +
   (S.d.ord ? "" : `<div class="bar"><span><b>WhatsApp ordering is off.</b> Customers can only see your menu.</span><button class="btn" data-act="ordOn">Turn on ordering</button></div>`) +
-  `<div class="tg" style="margin-bottom:14px"><button class="btn" data-sale="open">+ Add sale</button><span class="hint" style="align-self:center;margin:0">Sold something in the shop? Record it so your sales and customers stay complete.</span></div>
+  `<div class="tg" style="margin-bottom:14px"><button class="btn" data-sale="open">+ Add sale${isPro() ? "" : `<span class="ofl" style="background:var(--ye);color:var(--ink)">Pro</span>`}</button><span class="hint" style="align-self:center;margin:0">Sold something in the shop? Record it so your sales and customers stay complete.</span></div>
   <div class="tabs" role="tablist">${tabs.map(([k, l]) => `<button type="button" data-otab="${k}" class="${S.otab === k ? "on" : ""}">${l}${(k === "new" || k === "prep" || k === "ready") && counts[k] ? `<em>${counts[k]}</em>` : ""}</button>`).join("")}</div>
   ${list.length ? `<div class="oc">${list.slice(0, 120).map(orderCard).join("")}</div>` : `<div class="empty"><b>${S.otab === "new" ? "No new orders" : "Nothing here"}</b>${S.otab === "new" ? "New orders appear here on their own. Keep this page open and you'll hear a ding." : ""}</div>`}
   <p class="hint">Every order sent from your page appears here, even if the customer didn't press send in WhatsApp. If one never reached you, mark it Cancelled.</p>${saleSheet()}`;
@@ -494,6 +494,9 @@ function saList() {
 }
 function saleSheet() {
   const A = S.sale; if (!A) return "";
+  if (A.locked) return `<div class="pm" data-sabg><div class="pmb"><div class="ch"><h2 class="H" style="margin:0">Add sale is part of Pro</h2><button class="lnk" data-sale="close">Close</button></div>
+    <p class="mu" style="margin:8px 0 0">Record sales you make in the shop, so your totals, top items and customer list are complete. Keepsake Pro is ₹${S.proPrice} for 30 days, and you renew by hand.</p>
+    <button type="button" class="btn" style="margin-top:16px;width:100%" data-pro="buy">${S.proUntil ? "Renew" : "Start Pro"} · ₹${S.proPrice}</button></div></div>`;
   return `<div class="pm" data-sabg><div class="pmb"><div class="ch"><h2 class="H" style="margin:0">Add a sale</h2><button class="lnk" data-sale="close">Close</button></div>
     <p class="mu" style="margin:6px 0 12px">Pick what was sold. It is saved as done and added to today's sales.</p>
     <input class="in" id="saQ" placeholder="Search your items" value="${esc(A.q)}">
@@ -621,7 +624,7 @@ $("#main").addEventListener("click", async ev => {
   const sb = ev.target.closest("[data-sale]");
   if (sb) {
     const a = sb.dataset.sale, A = S.sale;
-    if (a === "open") { S.sale = saNew(); go(); return; }
+    if (a === "open") { S.sale = isPro() ? saNew() : { locked: true }; go(); return; }
     if (!A) return;
     if (a === "close") { S.sale = null; go(); return; }
     if (a === "inc" || a === "dec") { const k = sb.dataset.k; A.lines[k] = Math.max(0, Math.min(999, (A.lines[k] || 0) + (a === "inc" ? 1 : -1))); saRedraw(); return; }
@@ -643,7 +646,7 @@ $("#main").addEventListener("click", async ev => {
     return;
   }
   const pb = ev.target.closest("[data-pro]");
-  if (pb) { payPlan(pb, "pro", async () => { const j = await api("/api/customer-memories?id=" + S.id); S.proUntil = j.proUntil || 0; toast("Keepsake Pro is on until " + new Date(S.proUntil).toLocaleDateString("en-IN", { day: "numeric", month: "short" }) + "."); go(); }); return; }
+  if (pb) { payPlan(pb, "pro", async () => { const j = await api("/api/customer-memories?id=" + S.id); S.proUntil = j.proUntil || 0; S.sale = null; toast("Keepsake Pro is on until " + new Date(S.proUntil).toLocaleDateString("en-IN", { day: "numeric", month: "short" }) + "."); go(); }); return; }
   const b = ev.target.closest("[data-sx]"); if (!b) return;
   const a = b.dataset.sx;
   if (a === "buy") { payPlan(b, "store", async () => { const j = await api("/api/customer-memories?id=" + S.id); S.d = j.data; S.store = !!j.store; toast("Online store unlocked. Add your products."); go(); }); return; }
