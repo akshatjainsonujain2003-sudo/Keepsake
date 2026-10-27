@@ -3,8 +3,13 @@
   "redirects": [
     {
       "source": "/business",
-      "destination": "/shops",
+      "destination": "/",
       "permanent": true
+    },
+    {
+      "source": "/shops",
+      "destination": "/",
+      "permanent": false
     },
     {
       "source": "/business-studio",
