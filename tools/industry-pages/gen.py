@@ -11,7 +11,7 @@ esc = lambda s: html.escape(s, quote=True)
 strip = lambda s: re.sub("<[^>]+>", "", s)
 
 def nav():
-    items = "".join(f'<a href="/shops/{k}">{P[k]["label"]}<small>₹499</small></a>' for k in ORDER)
+    items = "".join(f'<a href="/shops/{k}">{P[k]["label"]}<small>₹1,000</small></a>' for k in ORDER)
     return f'''<header class="nv gk-nav" data-gk-nav><div class="w">
   <a class="lg" href="/shops">GetKeepsake<span>for business</span></a>
   <nav><details><summary>Businesses</summary><div class="dd">{items}</div></details><a href="/shops#pricing">Pricing</a><a href="/shops#faq">FAQ</a><a class="b p" href="/shops/studio">Create your page</a></nav>
@@ -20,7 +20,7 @@ def nav():
 def footer():
     col = lambda ks: "".join(f'<a href="/shops/{k}">{P[k]["label"]}</a>' for k in ks)
     return f'''<footer class="ft"><div class="w">
-  <div><a class="lg" href="/shops">GetKeepsake<span>for business</span></a><p style="margin:0;max-width:360px">A page for your shop behind one QR: menu, offers, WhatsApp orders, UPI, Google reviews and a loyalty card. ₹499 once, no monthly fees.</p>
+  <div><a class="lg" href="/shops">GetKeepsake<span>for business</span></a><p style="margin:0;max-width:360px">A page for your shop behind one QR: menu, offers, WhatsApp orders, UPI, Google reviews and a loyalty card. ₹1,000 once, no monthly fees.</p>
   <p style="margin:14px 0 0">WhatsApp <a style="display:inline;color:#fff" href="https://wa.me/916377547759">+91 63775 47759</a> · <a style="display:inline;color:#fff" href="https://instagram.com/getkeepsake.business" rel="noopener">@getkeepsake.business</a></p></div>
   <div><b>Businesses</b>{col(ORDER[:4])}</div>
   <div><b>&nbsp;</b>{col(ORDER[4:])}<a href="/contact" style="margin-top:12px">Contact</a><a href="/terms">Terms</a><a href="/privacy">Privacy</a></div>
@@ -56,7 +56,7 @@ def page(slug):
         cells = "".join(f'<i class="{"on" if i < have else ("gf" if i == n - 1 else "")}">{"★" if i == n - 1 else i + 1}</i>' for i in range(n))
         cols = 5 if n >= 5 else n
         ly = f'''<section class="ly gk-grain" id="loyalty"><div class="w">
-  <div><h2 data-gk-h2>{EM(h)}</h2><p>{esc(p)}</p><ul>{"".join(f"<li><span>{b}</span></li>" for b in bl)}</ul><div class="pr">Loyalty card: ₹300 once. ₹799 together with your page.</div></div>
+  <div><h2 data-gk-h2>{EM(h)}</h2><p>{esc(p)}</p><ul>{"".join(f"<li><span>{b}</span></li>" for b in bl)}</ul><div class="pr">Loyalty card included with your ₹1,000 page.</div></div>
   <div class="cd" role="img" aria-label="Sample loyalty card: {have} of {n} visits"><div class="t"><b>{esc(shop)}</b><span>Loyalty card</span></div>
    <div class="g" data-gk-stamps style="grid-template-columns:repeat({cols},1fr)">{cells}</div>
    <div class="f"><span><b>{have} of {n}</b> visits</span><span>{n - have} more for a <b>{esc(reward)}</b></span></div><div class="bar"><u style="width:{round(have * 100 / n)}%"></u></div></div>
@@ -68,7 +68,7 @@ def page(slug):
         {"@type": "WebPage", "@id": url + "#page", "url": url, "name": d["title"], "description": d["desc"], "inLanguage": "en-IN", "isPartOf": {"@type": "WebSite", "name": "GetKeepsake", "url": "https://getkeepsake.in/"}},
         {"@type": "Service", "name": f"GetKeepsake for {d['label']}", "serviceType": "Mobile business page with QR code", "description": d["desc"], "areaServed": {"@type": "Country", "name": "India"},
          "provider": {"@type": "Organization", "name": "GetKeepsake", "url": "https://getkeepsake.in/", "telephone": "+91-63775-47759"},
-         "offers": [{"@type": "Offer", "name": "Business page", "price": "499", "priceCurrency": "INR", "url": "https://getkeepsake.in" + studio}]},
+         "offers": [{"@type": "Offer", "name": "Business page", "price": "1000", "priceCurrency": "INR", "url": "https://getkeepsake.in" + studio}]},
         {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in d["faq"]]},
         {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "GetKeepsake for business", "item": "https://getkeepsake.in/shops"}, {"@type": "ListItem", "position": 2, "name": d["label"], "item": url}]}]}
     live = esc(json.dumps(d["live"], ensure_ascii=False))
@@ -103,7 +103,7 @@ def page(slug):
     <h1 data-gk-h1 style="{H1S(d)}">{H1(d)}</h1>
     <p data-gk-in class="hi" lang="hi">{HI(d["hi"])}</p>
     <p data-gk-in class="sub">{esc(d["sub"])}</p>
-    <div data-gk-in class="ct"><a class="b p" data-gk-mag href="{studio}">{esc(d["cta"])} · ₹499</a><a class="b s" href="{live_link}">See a live {esc(d["word"])} page</a></div>
+    <div data-gk-in class="ct"><a class="b p" data-gk-mag href="{studio}">{esc(d["cta"])} · ₹1,000</a><a class="b s" href="{live_link}">See a live {esc(d["word"])} page</a></div>
     <div data-gk-in class="ch">{"".join(f"<span>{esc(c)}</span>" for c in CHIPS[slug])}</div>
     <div data-gk-in class="tr"><span>No app needed</span><span>Ready in 5 minutes</span><span>No monthly fees</span></div>
   </div>
@@ -128,10 +128,10 @@ def page(slug):
 <section class="se" id="pricing"><div class="w">
   <div class="sh"><h2 data-gk-h2>One price. <em>forever</em> yours.</h2><p>No monthly fees and no commission on orders or payments.</p></div>
   <div class="pc">
-    <div class="m" data-gk-st><div class="stk" data-gk-stk>No monthly fees</div><div class="k">{esc(d["word"])} page</div><div class="a">₹<span data-gk-count>499</span><small>one-time</small></div><p>Your {esc(d["word"])} page with its own link and QR, unlimited edits and weekly stats on who scanned.</p><a class="b" href="{studio}">{esc(d["cta"])}</a></div>
+    <div class="m" data-gk-st><div class="stk" data-gk-stk>No monthly fees</div><div class="k">{esc(d["word"])} page</div><div class="a">₹<span data-gk-count>1000</span><small>one-time</small></div><p>Your {esc(d["word"])} page with its own link and QR, unlimited edits and weekly stats on who scanned.</p><a class="b" href="{studio}">{esc(d["cta"])}</a></div>
     <div class="ad" data-gk-st>
-      <div class="r"><b>Business page</b><i></i><em>₹499</em><small>Link, QR, menu or price list, offers, WhatsApp, UPI, reviews</small></div>
-      <div class="r"><b>Loyalty card</b><i></i><em>+ ₹300</em><small>Stamp card for regulars, staff PIN and member list</small></div>
+      <div class="r"><b>Business page</b><i></i><em>₹1,000</em><small>Link, QR, menu or price list, offers, WhatsApp, UPI, reviews</small></div>
+      <div class="r"><b>Loyalty card</b><i></i><em>Included</em><small>Stamp card for regulars, staff PIN and member list</small></div>
       <div class="r"><b>Printed QR, delivered</b><i></i><em>+ ₹99</em><small>3.5 × 5 inch counter board in your colour, anywhere in India</small></div>
     </div>
   </div>
@@ -151,7 +151,7 @@ def page(slug):
 <section class="cl" style="margin-top:0"><div class="w">
   <h2 data-gk-h2>Make your {esc(d["word"])} <em>unmissable</em></h2>
   <p lang="hi">आज ही अपना पेज बनाएँ</p>
-  <div class="ct"><a class="b p" href="{studio}">{esc(d["cta"])} · ₹499</a><a class="b s" href="https://wa.me/916377547759?text={esc("Hi, I'd like a GetKeepsake page for my " + d["word"])}">Ask on WhatsApp</a></div>
+  <div class="ct"><a class="b p" href="{studio}">{esc(d["cta"])} · ₹1,000</a><a class="b s" href="https://wa.me/916377547759?text={esc("Hi, I'd like a GetKeepsake page for my " + d["word"])}">Ask on WhatsApp</a></div>
 </div></section>
 </main>
 {footer()}

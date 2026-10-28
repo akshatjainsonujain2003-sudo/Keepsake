@@ -118,8 +118,8 @@ const KINDS = ["Café / Restaurant", "Sweets / Bakery", "Salon / Spa", "Boutique
 let A = null, J = null, TAB = "today", LF = "open";
 function toast(t) { const e = $("#toast"); e.textContent = t; e.classList.add("on"); clearTimeout(toast.t); toast.t = setTimeout(() => e.classList.remove("on"), 3000); }
 const studio = () => "https://getkeepsake.in/shops/studio?sp=" + A.code;
-const pitch = () => `Hi! I'd like to show you GetKeepsake for Business: a beautiful page for your shop with your menu, offers, Google reviews, Instagram, UPI and WhatsApp orders, all behind one QR on your counter. ₹499 one-time, no monthly fees.\n\nSee examples: https://getkeepsake.in/shops\nCreate your page (my code ${A.code} is already filled in): ${studio()}`;
-const pitchHi = () => `नमस्ते! GetKeepsake से आपकी दुकान का अपना सुंदर पेज बनाइए: मेन्यू, ऑफ़र, Google रिव्यू, Instagram, UPI और WhatsApp ऑर्डर, सब एक QR में। सिर्फ़ ₹499, एक बार। कोई मंथली फ़ीस नहीं।\n\nउदाहरण देखें: https://getkeepsake.in/shops\nअपना पेज बनाएँ (मेरा कोड ${A.code}): ${studio()}`;
+const pitch = () => `Hi! I'd like to show you GetKeepsake for Business: a beautiful page for your shop with your menu, offers, Google reviews, Instagram, UPI and WhatsApp orders, all behind one QR on your counter. ₹1,000 one-time, no monthly fees.\n\nSee examples: https://getkeepsake.in/shops\nCreate your page (my code ${A.code} is already filled in): ${studio()}`;
+const pitchHi = () => `नमस्ते! GetKeepsake से आपकी दुकान का अपना सुंदर पेज बनाइए: मेन्यू, ऑफ़र, Google रिव्यू, Instagram, UPI और WhatsApp ऑर्डर, सब एक QR में। सिर्फ़ ₹1,000, एक बार। कोई मंथली फ़ीस नहीं।\n\nउदाहरण देखें: https://getkeepsake.in/shops\nअपना पेज बनाएँ (मेरा कोड ${A.code}): ${studio()}`;
 const follow = v => encodeURIComponent(`Hi! Thanks for your time today. Here are real GetKeepsake pages for shops like yours: https://getkeepsake.in/shops\nMake yours in 5 minutes (my code ${A.code} is filled in): ${studio()}`);
 
 // ---------- login ----------
@@ -223,7 +223,7 @@ function tools() {
     <button class="btn gh" id="cpl">Copy my link</button>
     <a class="btn gh" href="/assets/getkeepsake-business-sales-sheet.pdf" target="_blank" rel="noopener">Sales sheet (PDF)</a>
   </div>
-  <div class="card" style="margin-top:14px"><b>What to say in 20 seconds</b><p style="margin:6px 0 0;color:var(--mu);font-size:15px">“Your shop gets its own page: menu, offers, Google reviews, UPI and WhatsApp orders, behind one QR on your counter. ₹499 once, no monthly fee. Let me show you a café like yours…” Then open an example and let them scroll.</p></div>`;
+  <div class="card" style="margin-top:14px"><b>What to say in 20 seconds</b><p style="margin:6px 0 0;color:var(--mu);font-size:15px">“Your shop gets its own page: menu, offers, Google reviews, UPI and WhatsApp orders, behind one QR on your counter. ₹1,000 once, no monthly fee. Let me show you a café like yours…” Then open an example and let them scroll.</p></div>`;
 }
 function me() {
   const std = matchMedia("(display-mode: standalone)").matches || navigator.standalone;

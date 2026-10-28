@@ -283,7 +283,7 @@ function pageSheet(id) {
   <div class="acts">${ph ? `<a class="bt sm" href="${wa(ph)}?text=${msg}" target="_blank" rel="noopener">WhatsApp</a><a class="bt sm gh" href="${tel(ph)}">Call</a>` : ""}${p.owner.email ? `<a class="bt sm gh" href="mailto:${esc(p.owner.email)}">Email</a>` : ""}</div>${!ph ? `<small style="color:var(--mu)">No phone saved. Use email.</small>` : ""}</div>
   <dl class="kv"><dt>Opens</dt><dd>${p.views}</dd><dt>Created</dt><dd>${when(p.created)}</dd><dt>Last edit</dt><dd>${when(p.updated)}</dd>${p.qr ? `<dt>Printed QRs</dt><dd>${p.qr}</dd>` : ""}<dt>ID</dt><dd>${esc(p.id)}</dd></dl>
   ${p.kind === "biz" ? (p.store ? `<div class="box"><h4>Online store</h4><b style="color:var(--gd)">Unlocked ✓</b></div>` : `<div class="box"><h4>Online store · paid in cash</h4>
-    <p style="color:var(--mu);font-size:14px;margin:0 0 10px">Took the payment in person? Unlock the store here.${p.live ? "" : " This page isn't live yet, so it goes live too (₹499 + ₹2,000)."}</p>
+    <p style="color:var(--mu);font-size:14px;margin:0 0 10px">Took the payment in person? Unlock the store here.${p.live ? "" : " This page isn't live yet, so it goes live too (₹1,000 + ₹2,000)."}</p>
     <label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px">Cash received (₹)</label><input id="cashAmt" type="number" inputmode="numeric" min="0" value="${p.live ? 2000 : 2499}" class="in" style="margin-bottom:10px">
     <input id="cashNote" maxlength="120" placeholder="Note (optional): who collected it" class="in">
     <button class="bt w" id="cashGo" data-id="${esc(p.id)}">Unlock online store</button></div>`) : ""}
@@ -313,7 +313,7 @@ function team() {
   (rank.map((s, i) => `<button class="row" data-sp="${esc(s.code)}"><span class="av fd" style="color:${i < 3 && s.shops[p] ? "var(--gd)" : "var(--mu)"}">${i + 1}</span><span class="mid"><b>${esc(s.name)} ${s.active ? "" : '<span class="tag r">Paused</span>'}</b><small>${s.visits[p]} visit${s.visits[p] === 1 ? "" : "s"} · ${s.follow} to follow up · active ${s.last ? ago(s.last) : "never"}</small></span><span class="rt"><b class="fd">${s.shops[p]}</b><small>${s.owed ? rs(s.owed) + " owed" : "shops"}</small></span></button>`).join("") || `<div class="empty">No salespeople yet. Add your first one above.</div>`);
 }
 function spShare(sp, pin) {
-  return encodeURIComponent(`Hi ${sp.name.split(" ")[0]}! Your GetKeepsake salesperson login:\n\nOpen: https://getkeepsake.in/sales\nCode: ${sp.code}\nPIN: ${pin}\n\nLog every shop visit there, and ask shops to type your code ${sp.code} before paying ₹499. You earn ${rs(sp.comm)} for every shop that goes live.`);
+  return encodeURIComponent(`Hi ${sp.name.split(" ")[0]}! Your GetKeepsake salesperson login:\n\nOpen: https://getkeepsake.in/sales\nCode: ${sp.code}\nPIN: ${pin}\n\nLog every shop visit there, and ask shops to type your code ${sp.code} before paying ₹1,000. You earn ${rs(sp.comm)} for every shop that goes live.`);
 }
 function addSp() {
   sheet(`<h3>Add salesperson</h3><p class="sub">They get a code and a 6-digit PIN to log in at getkeepsake.in/sales.</p>
