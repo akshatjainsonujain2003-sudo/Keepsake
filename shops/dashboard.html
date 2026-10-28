@@ -1269,7 +1269,7 @@ document.addEventListener("visibilitychange", () => { if (!document.hidden && Da
 (async () => {
   try {
     const a = await api("/api/customer-auth"); S.user = a.user;
-    if (!S.user) { location.replace("/account?next=" + encodeURIComponent(location.pathname + location.search + location.hash)); return; }
+    if (!S.user) { location.replace("/shops/login?next=" + encodeURIComponent(location.pathname + location.search + location.hash)); return; }
     const L = await api("/api/customer-memories"); S.pages = L.memories || [];
     const biz = S.pages.filter(p => p.kind === "biz");
     if (!biz.length) { $("#main").innerHTML = `<div class="load"><div class="empty" style="max-width:460px"><b>You don't have a shop page yet</b>Make one in 5 minutes. Your dashboard fills up as soon as customers start scanning.<br><a class="btn" href="/shops/studio">Create my shop page</a></div></div>`; $("#nav").innerHTML = ""; return; }

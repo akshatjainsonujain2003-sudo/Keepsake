@@ -533,7 +533,7 @@ $("#accReset").onclick = () => { D.ac = ""; themes(); changed(); };
 function needLogin() {
   if (USER) return false;
   save(); status("Log in first to add photos. Your page so far is kept.", "bad");
-  setTimeout(() => location.href = "/account?next=" + encodeURIComponent("/shops/studio?resume=1"), 900);
+  setTimeout(() => location.href = "/shops/login?next=" + encodeURIComponent("/shops/studio?resume=1"), 900);
   return true;
 }
 async function upload(f, box) {
@@ -848,7 +848,7 @@ async function saveBiz() {
   $('[data-k="t"]').classList.remove("bad");
   for (const i of $$("[data-v]")) { if (check(i)) { i.closest("details").open = true; i.focus(); status(i.parentNode.querySelector(".err").textContent, "bad"); return; } }
   if ($("#spIn").value.trim() && !SP && !(await spSet($("#spIn").value))) { $("#spIn").focus(); status("Check the salesperson code, or leave it empty.", "bad"); return; }
-  if (!USER) { save(); status("Log in to save your page. Everything you've typed is kept.", "ok"); setTimeout(() => location.href = "/account?next=" + encodeURIComponent("/shops/studio?resume=1"), 700); return; }
+  if (!USER) { save(); status("Log in to save your page. Everything you've typed is kept.", "ok"); setTimeout(() => location.href = "/shops/login?next=" + encodeURIComponent("/shops/studio?resume=1"), 700); return; }
   const bs = [$("#saveBtn"), $("#saveBtn2")]; bs.forEach(b => b.disabled = true); status("Saving…");
   try {
     D.biz = 1; D.ig = String(D.ig || "").replace(/^@/, "").trim();
@@ -897,7 +897,7 @@ addEventListener("beforeunload", e => { if (dirty && EDIT_ID) { e.preventDefault
 // ---------- start ----------
 (async () => {
   try { const r = await fetch("/api/customer-auth", { cache: "no-store" }); const j = await r.json(); USER = j.user || null; } catch (e) {}
-  $("#nav").innerHTML = USER ? '<a class="chip" href="/shops/dashboard">Dashboard</a>' : '<a class="chip" href="/account?next=%2Fshops%2Fstudio%3Fresume%3D1">Log in</a>';
+  $("#nav").innerHTML = USER ? '<a class="chip" href="/shops/dashboard">Dashboard</a>' : '<a class="chip" href="/shops/login?next=%2Fshops%2Fstudio%3Fresume%3D1">Log in</a>';
   try { const c = await KSCheckout.catalog(); const p = c && c.products && c.products.biz; if (p) { $("#price").textContent = String(p.price); $("#priceTop").textContent = Number(p.price).toLocaleString("en-IN"); } } catch (e) {}
   CLAIM = await claimInit();
   { const u = new URL(location.href), qsp = u.searchParams.get("sp"); let sv = null; try { sv = JSON.parse(localStorage.getItem(SPKEY) || "null"); } catch (e) {}
@@ -919,7 +919,7 @@ addEventListener("beforeunload", e => { if (dirty && EDIT_ID) { e.preventDefault
       return;
     } catch (e) { status(e.message, "bad"); }
   }
-  if (id && !USER) { location.href = "/account?next=" + encodeURIComponent(location.pathname + location.search); return; }
+  if (id && !USER) { location.href = "/shops/login?next=" + encodeURIComponent(location.pathname + location.search); return; }
   const ex = KSBizDemos[q.get("ex")];
   D = ex && !(dr && dr.d && (dr.d.t || "").trim()) ? JSON.parse(JSON.stringify(ex)) : dr && dr.d && dr.d.biz === 1 && !dr.id ? Object.assign(KSBiz.blank(dr.d.cat), dr.d) : KSBiz.blank(q.get("type"));
   if (ex && D.t === ex.t) status("Example loaded: change the name, photos and menu to make it yours.", "ok");
