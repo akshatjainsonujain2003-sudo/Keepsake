@@ -689,6 +689,46 @@
 .L-bold .card{border-radius:20px}
 .L-bold .rev b{font:400 24px/1.05 var(--fh);text-transform:uppercase}
 .L-bold .gal img{border-radius:14px}
+/* ---- Bold, 2026 refresh: full-screen photo hero, gym-pass loyalty card, outlined offer ticket, giant footer ---- */
+.L-bold .sec{padding-top:36px}
+.L-bold .bhero{position:relative;min-height:min(86svh,720px);display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden;background:var(--dk);color:#fff}
+.L-bold .bhero.ni{min-height:auto;padding-top:70px}
+.L-bold .bhero>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.L-bold .bhero .sh{position:absolute;inset:0;background:linear-gradient(180deg,#000b 0%,#0000 28%,#0005 52%,#000e 100%)}
+.L-bold .bhero .tb{position:absolute;top:0;left:0;right:0;z-index:3;background:none;color:#fff}
+.L-bold .bhero .tb .ibtn{background:#ffffff24;color:#fff;backdrop-filter:blur(8px)}
+.L-bold .bhero .tb .ibtn em{background:var(--p1);color:#1d1c14}
+.L-bold .bhero .hx{position:relative;z-index:2;text-align:left;padding:0 20px 32px;max-width:560px;width:100%;margin:0 auto;box-sizing:border-box}
+.L-bold .bhero .hx .pill{margin-bottom:16px}
+.L-bold .bhero .hx small{color:#ffffffcc}
+.L-bold .bhero .hx h1{margin:12px 0 0;max-width:none;font-size:clamp(48px,14.5vw,88px);line-height:1.1;color:#fff}
+.L-bold .bhero .hx .nm{color:#ffffffd9;max-width:340px;font-size:15px;line-height:1.5}
+.L-bold .bhero .hx .btn{margin-top:22px;background:var(--p1);color:#1d1c14;border:0;padding:16px 24px;font-size:15px}
+.L-bold .acts{padding-top:22px}
+.L-bold .offer{background:var(--sf);color:var(--tx);border:2px solid var(--p1)}
+.L-bold .offer b{color:var(--tx)}
+.L-bold.dk .offer b{color:var(--p1)}
+.L-bold .offer .till{background:var(--p1);color:#1d1c14}
+.L-bold .loy{background:var(--p1);color:#1d1c14;border:0;border-radius:22px;padding:24px 20px 20px}
+.L-bold .loy:after{display:none}
+.L-bold .loy .lb{color:#1d1c14}
+.L-bold .loy .lc{background:#1d1c141a;color:#1d1c14}
+.L-bold .loy .lr{font:400 40px/.95 var(--fh);text-transform:uppercase;margin-top:14px}
+.L-bold .loy .lp{color:#1d1c14b8}
+.L-bold .loy .lst i{border:2px solid #1d1c1433;color:#1d1c1499;border-radius:12px}
+.L-bold .loy .lst i.on{background:#1d1c14;color:var(--p1);border:0;transform:rotate(-6deg)}
+.L-bold .loy .lst i.gf{border-color:#1d1c14;color:#1d1c14}
+.L-bold .loy .la .btn{background:#1d1c14;color:var(--p1)}
+.L-bold .loy .la .lk{color:#1d1c14b3}
+.L-bold .loy.rdy{background:var(--p1);outline:3px solid #1d1c14;outline-offset:-8px}
+.L-bold.dk .hr.td{color:var(--p1)}.L-bold.dk .hr.td span:last-child{color:var(--p1)}
+.L-bold .map .ad .btn,.L-bold .upi .btn,.L-bold .rev .btn{background:var(--p1);color:#1d1c14}
+.L-bold .gfoot{margin-top:44px;padding:52px 20px 0;background:var(--dk);color:#f3f1e6;text-align:center;overflow:hidden}
+.L-bold .gfoot .gfn{font:400 clamp(56px,20vw,120px)/.9 var(--fh);text-transform:uppercase;color:var(--p1);letter-spacing:-.01em;overflow-wrap:anywhere}
+.L-bold .gfoot>p{margin:16px auto 0;max-width:320px;font:400 14.5px/1.5 var(--fn);color:#f3f1e6b3}
+.L-bold .gfoot .foot{padding:30px 0 44px}
+.L-bold .gfoot .foot .so a{background:#ffffff12;border-color:#ffffff22;color:#f3f1e6}
+.L-bold .gfoot .foot .mk{color:#f3f1e699}.L-bold .gfoot .foot .mk a{color:#f3f1e6;border-bottom-color:#f3f1e655}
 /* ===== Pop: playful blobs, chunky type, stickers ===== */
 @keyframes bzmq{to{transform:translateX(-50%)}}
 .L-pop{--fh:'Archivo Black','Arial Black',system-ui,sans-serif;--fn:'Bricolage Grotesque','Inter',system-ui,sans-serif;overflow:clip}
@@ -1119,13 +1159,12 @@
           <h3>${esc(s.n)}${!img && from != null ? `<small>Starting at ${money(from)}</small>` : ""}</h3>
           ${s.items.map(x => `<div class="row${m.take ? " op" : ""}"><button type="button" data-acc>${x.b ? "★ " : ""}<span>${esc(x.n)}</span>${x.p ? `<i>₹${esc(x.p)}</i>` : ""}${ic("plus", 16)}</button><div class="dd"><span>${esc(x.d || (x.p ? "₹" + x.p : ""))}</span>${P.qty(m, x)}</div></div>`).join("")}</div>`;
       }).join("");
-      return `<div class="tb"><b>${esc(m.name)}</b><span style="display:flex;gap:8px">${P.bag(m)}${P.share()}</span></div>
-        ${ph.length ? `<div class="strip${ph.length === 1 ? " one" : ""}">${ph.map(u => `<div><img src="${esc(u)}" alt=""></div>`).join("")}</div>` : ""}
-        <div class="wrap"><div class="hx">${m.cat ? `<small>${esc(m.cat)}${m.area ? " · " + esc(m.area) : ""}</small>` : ""}<h1>${mark(m.hl || m.name)}</h1>${m.tag ? `<p class="nm">${esc(m.tag)}</p>` : ""}${cta}</div>
-        <div style="text-align:center;margin-top:16px">${P.status(m).replace('class="pill', 'style="background:color-mix(in srgb,var(--tx) 80%,transparent)" class="pill')}</div>
-        ${P.acts(m)}${P.offer(m)}${P.loy(m)}</div>
+      return `<div class="bhero${ph.length ? "" : " ni"}">${ph.length ? `<img class="kb" src="${esc(ph[0])}" alt="">` : ""}<div class="sh"></div><div class="tb"><b>${esc(m.name)}</b><span style="display:flex;gap:8px">${P.bag(m)}${P.share()}</span></div>
+        <div class="hx">${P.status(m)}${m.cat ? `<small>${esc(m.cat)}${m.area ? " · " + esc(m.area) : ""}</small>` : ""}<h1>${mark(m.hl || m.name)}</h1>${m.tag ? `<p class="nm">${esc(m.tag)}</p>` : ""}${cta}</div></div>
+        <div class="wrap">${P.acts(m)}${P.offer(m)}${P.loy(m)}</div>
         ${m.prop ? `<div class="wrap">${P.props(m)}</div>` : m.menu.length ? `<div class="svc" id="bz-menu" style="--gs:min(${(88 / (Math.max(4, m.menuTitle.length) * 0.5)).toFixed(1)}vw,${Math.round(500 / (Math.max(4, m.menuTitle.length) * 0.5))}px)"><div class="gw">${esc(m.menuTitle)}</div><div class="cards wrap">${cards}</div></div>` : ""}
-        <div class="wrap">${P.feat(m)}${P.review(m)}${P.gallery(m)}${P.tail(m)}</div>`;
+        <div class="wrap">${P.feat(m)}${P.review(m)}${P.gallery(m)}${P.hours(m)}${P.visit(m)}${P.upi(m)}</div>
+        <div class="gfoot"><div class="gfn">${esc(m.name)}</div>${m.tag ? `<p>${esc(m.tag)}</p>` : ""}${P.foot(m)}</div>`;
     },
     // Pop: festival-poster look. Ticker, giant 3D name, sticker headline, arched photos, colour tiles, tagged cards.
     pop(m) {
