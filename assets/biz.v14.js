@@ -606,6 +606,42 @@
 .L-botanical .gal img{border-radius:16px;width:64%}
 .L-botanical .gal img:nth-child(3n+2){border-radius:999px}
 .L-botanical .gal img:nth-child(3n+3){border-radius:999px 999px 16px 16px}
+/* ---- Botanical, 2026 refresh: arched hero window, calm spacing, brand-colour loyalty card, arched footer ---- */
+.L-botanical .sec{padding-top:38px}
+.L-botanical .hero{margin:14px 14px 0;height:min(68svh,600px);min-height:460px;border-radius:999px 999px 28px 28px;box-shadow:0 40px 70px -50px #000c}
+.L-botanical .hero .pill{left:50%;top:26px;transform:translateX(-50%)}
+.L-botanical .hcard{left:0;right:0;bottom:0;max-width:none;border-radius:0;padding:110px 24px 30px;text-align:center;color:#fff;background:linear-gradient(180deg,#0000 0%,#0006 45%,#000b 100%);box-shadow:none}
+.L-botanical .hcard h1{font:600 34px/1.05 var(--fh);color:#fff}
+.L-botanical .hcard p{color:#ffffffd9;max-width:300px;margin:0 auto 18px}
+.L-botanical .hcard .btn{background:var(--bg);color:var(--tx)}
+.L-botanical .wave{display:none}
+.L-botanical .id{padding:30px 22px 0}
+.L-botanical .id .logo{width:68px;height:68px;font-size:28px;border:1.5px solid color-mix(in srgb,var(--ac) 60%,transparent);box-shadow:none;background-color:var(--sf)}
+.L-botanical .id h2{font:600 36px/1.04 var(--fh);margin:14px 0 8px}
+.L-botanical .id:after{content:"✦";display:block;margin:16px auto 0;color:var(--ac);font-size:14px}
+.L-botanical .acts{padding-top:18px}
+.L-botanical .acts .act{color:var(--tx)}
+.L-botanical .offer{outline:1px solid color-mix(in srgb,var(--hit) 30%,transparent);outline-offset:-9px;padding:30px 26px 28px}
+.L-botanical .offer .till{background:color-mix(in srgb,var(--hit) 12%,transparent);color:var(--hit)}
+.L-botanical .loy{background:var(--ac);color:var(--on);border:0;border-radius:18px;text-align:center;padding:28px 22px 22px;outline:1px solid color-mix(in srgb,var(--on) 30%,transparent);outline-offset:-9px}
+.L-botanical .loy:after{display:none}
+.L-botanical .loy .lh{justify-content:center;gap:12px}
+.L-botanical .loy .lb{color:var(--on);opacity:.85}
+.L-botanical .loy .lc{background:color-mix(in srgb,var(--on) 18%,transparent);color:var(--on)}
+.L-botanical .loy .lr{font:600 32px/1.08 var(--fh);margin-top:14px}
+.L-botanical .loy .lp{color:color-mix(in srgb,var(--on) 80%,transparent);max-width:290px;margin:0 auto}
+.L-botanical .loy .lst i{border:1px solid color-mix(in srgb,var(--on) 45%,transparent);color:color-mix(in srgb,var(--on) 75%,transparent)}
+.L-botanical .loy .lst i.on{background:var(--on);color:var(--ac);border:0}
+.L-botanical .loy .lst i.gf{border-color:var(--on);color:var(--on)}
+.L-botanical .loy .la .btn{background:var(--on);color:var(--ac)}
+.L-botanical .loy .la .lk{color:color-mix(in srgb,var(--on) 75%,transparent)}
+.L-botanical .loy.rdy{background:var(--ac);outline-width:2px}
+.L-botanical .hr.td{color:var(--ac)}.L-botanical .hr.td span:last-child{color:var(--ac)}
+.L-botanical .bfoot{margin-top:48px;padding:64px 24px 0;background:var(--sf2);border-radius:999px 999px 0 0 / 120px 120px 0 0;text-align:center}
+.L-botanical .bfoot .bfn{font:600 clamp(34px,10vw,52px)/1.02 var(--fh);letter-spacing:-.01em}
+.L-botanical .bfoot>p{margin:14px auto 0;max-width:300px;font:italic 500 16px/1.5 var(--fh);color:var(--mu)}
+.L-botanical .bfoot:before{content:"✦";display:block;margin:0 auto 18px;color:var(--ac);font-size:14px}
+.L-botanical .bfoot .foot{padding:30px 0 46px}
 
 /* ---------- Bold (gyms, studios, services) ---------- */
 .L-bold{--fh:'Anton',Impact,sans-serif;--dk:#121210}
@@ -1069,7 +1105,8 @@
         <div class="hero">${m.cover ? `<img class="cv kb" src="${esc(m.cover)}" alt="">` : `<div class="ph">${esc(m.name)}</div>`}${P.status(m)}
         <div class="hcard"><h1>${esc(plain(m.hl) || m.name)}</h1>${m.tag ? `<p>${esc(m.tag)}</p>` : ""}${m.menu.length ? `<a class="btn" href="#bz-menu">View ${esc(m.menuTitle.toLowerCase())}</a>` : ""}</div></div>${wave}
         <div class="wrap"><div class="id">${P.logo(m)}<h2>${esc(m.name)}</h2>${m.cat || m.area ? `<div class="cat">${esc([m.cat, m.area].filter(Boolean).join(" · "))}</div>` : ""}</div>
-        ${P.acts(m)}${arch}${P.feat(m)}${P.list(m)}${P.offer(m)}${P.loy(m)}${P.review(m)}${P.gallery(m)}${P.tail(m)}</div>`;
+        ${P.acts(m)}${arch}${P.feat(m)}${P.list(m)}${P.offer(m)}${P.loy(m)}${P.review(m)}${P.gallery(m)}${P.hours(m)}${P.visit(m)}${P.upi(m)}</div>
+        <div class="bfoot"><div class="bfn">${esc(m.name)}</div>${m.tag ? `<p>${esc(m.tag)}</p>` : ""}${P.foot(m)}</div>`;
     },
     bold(m) {
       const ph = [m.cover, ...m.gal].filter(Boolean).slice(0, 3);
