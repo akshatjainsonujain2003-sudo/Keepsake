@@ -20,7 +20,7 @@ def nav():
 def footer():
     col = lambda ks: "".join(f'<a href="/shops/{k}">{P[k]["label"]}</a>' for k in ks)
     return f'''<footer class="ft"><div class="w">
-  <div><a class="lg" href="/" aria-label="GetKeepsake for business, home"><svg class="vf" viewBox="0 0 48 48" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"><path d="M5 15V9a4 4 0 0 1 4-4h6"/><path d="M33 5h6a4 4 0 0 1 4 4v6"/><path d="M43 33v6a4 4 0 0 1-4 4h-6"/><path d="M15 43H9a4 4 0 0 1-4-4v-6"/></g><rect x="11" y="22" width="26" height="4" rx="2" fill="#D4FF3F"/></svg>GetKeepsake<span>[ for business ]</span></a><p style="margin:0;max-width:360px">A page for your shop behind one QR: menu, offers, WhatsApp orders, UPI, Google reviews and a loyalty card. ₹1,000 once, no monthly fees.</p>
+  <div><a class="lg" href="/" aria-label="GetKeepsake for business, home"><svg class="vf" viewBox="0 0 48 48" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"><path d="M5 15V9a4 4 0 0 1 4-4h6"/><path d="M33 5h6a4 4 0 0 1 4 4v6"/><path d="M43 33v6a4 4 0 0 1-4 4h-6"/><path d="M15 43H9a4 4 0 0 1-4-4v-6"/></g><rect x="11" y="22" width="26" height="4" rx="2" fill="#D4FF3F"/></svg>GetKeepsake<span>[ for business ]</span></a><p style="margin:0;max-width:360px">A page for your shop behind one QR: menu, offers, WhatsApp orders, UPI, Google reviews and a loyalty card. ₹1,000 once to start.</p>
   <p style="margin:14px 0 0">WhatsApp <a style="display:inline;color:#fff" href="https://wa.me/916377547759">+91 63775 47759</a> · <a style="display:inline;color:#fff" href="https://instagram.com/getkeepsake.business" rel="noopener">@getkeepsake.business</a></p></div>
   <div><b>Businesses</b>{col(ORDER[:4])}</div>
   <div><b>&nbsp;</b>{col(ORDER[4:])}<a href="/contact" style="margin-top:12px">Contact</a><a href="/terms">Terms</a><a href="/privacy">Privacy</a></div>
@@ -105,7 +105,7 @@ def page(slug):
     <p data-gk-in class="sub">{esc(d["sub"])}</p>
     <div data-gk-in class="ct"><a class="b p" data-gk-mag href="{studio}">{esc(d["cta"])} · ₹1,000</a><a class="b s" href="{live_link}">See a live {esc(d["word"])} page</a></div>
     <div data-gk-in class="ch">{"".join(f"<span>{esc(c)}</span>" for c in CHIPS[slug])}</div>
-    <div data-gk-in class="tr"><span>No app needed</span><span>Ready in 5 minutes</span><span>No monthly fees</span></div>
+    <div data-gk-in class="tr"><span>No app needed</span><span>Ready in 5 minutes</span><span>One-time payment</span></div>
   </div>
   <div class="ar">
     <div class="ph l" data-gk-rise data-gk-par="-14"><div class="sc"><iframe data-live="{side(0.32)}" title="" aria-hidden="true" tabindex="-1" loading="lazy"></iframe></div></div>
@@ -126,9 +126,9 @@ def page(slug):
 </div></section>
 
 <section class="se" id="pricing"><div class="w">
-  <div class="sh"><h2 data-gk-h2>One price. <em>forever</em> yours.</h2><p>No monthly fees and no commission on orders or payments.</p></div>
+  <div class="sh"><h2 data-gk-h2>One price. <em>forever</em> yours.</h2><p>Pay once to go live. No commission on orders or payments.</p></div>
   <div class="pc">
-    <div class="m" data-gk-st><div class="stk" data-gk-stk>No monthly fees</div><div class="k">{esc(d["word"])} page</div><div class="a">₹<span data-gk-count>1,000</span><small>one-time</small></div><p>Your {esc(d["word"])} page with its own link and QR, unlimited edits and weekly stats on who scanned.</p><a class="b" href="{studio}">{esc(d["cta"])}</a></div>
+    <div class="m" data-gk-st><div class="stk" data-gk-stk>Pay once</div><div class="k">{esc(d["word"])} page</div><div class="a">₹<span data-gk-count>1,000</span><small>one-time</small></div><p>Your {esc(d["word"])} page with its own link and QR, unlimited edits and weekly stats on who scanned.</p><a class="b" href="{studio}">{esc(d["cta"])}</a></div>
     <div class="ad" data-gk-st>
       <div class="r"><b>Business page</b><i></i><em>₹1,000</em><small>Link, QR, menu or price list, offers, WhatsApp, UPI, reviews</small></div>
       <div class="r"><b>Loyalty card</b><i></i><em>Included</em><small>Stamp card for regulars, staff PIN and member list</small></div>
