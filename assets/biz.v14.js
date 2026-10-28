@@ -874,7 +874,7 @@
 .L-label .ln .nm i{width:26px;height:26px;border-radius:50%;background:center/cover;flex:none}
 .L-label .ln .r{display:flex;gap:8px}
 .L-label .ibtn{background:var(--sf);color:var(--tx);border:1px solid color-mix(in srgb,var(--tx) 14%,transparent);backdrop-filter:none}
-.L-label .lh{position:relative;max-width:760px;margin:0 auto;padding:0 8px}
+.L-label>.lh{position:relative;max-width:760px;margin:0 auto;padding:0 8px}
 .L-label .lh .ph{position:relative;height:min(122vw,620px);border-radius:28px;overflow:hidden;background:var(--sf2)}
 .L-label .lh .ph img{width:100%;height:100%;object-fit:cover}
 .L-label .sh{position:absolute;inset:0;background:linear-gradient(#0006,transparent 32%,transparent 60%,#0004)}
@@ -897,8 +897,8 @@
 .L-label .hd h2{margin:0;font:700 clamp(40px,12vw,64px)/.98 var(--fh);letter-spacing:-.045em}
 .L-label .hd .dg{position:absolute;right:18px;bottom:-8px;transform:rotate(45deg);color:var(--tx)}
 .L-label .hd p{margin:18px 60px 0 0;font:500 14.5px/1.5 var(--fn);color:var(--mu)}
-.L-label .la{display:flex;gap:8px;flex-wrap:wrap;padding:22px 18px 0}
-.L-label .la a{display:inline-flex;align-items:center;gap:7px;padding:10px 14px;border-radius:999px;background:var(--sf);border:1px solid color-mix(in srgb,var(--tx) 14%,transparent);font:600 13.5px var(--fn)}
+.L-label .wrap>.la{display:flex;gap:8px;flex-wrap:wrap;padding:22px 18px 0}
+.L-label .wrap>.la a{display:inline-flex;align-items:center;gap:7px;padding:10px 14px;border-radius:999px;background:var(--sf);border:1px solid color-mix(in srgb,var(--tx) 14%,transparent);font:600 13.5px var(--fn)}
 .L-label .cs{max-width:760px;margin:34px auto 0}
 .L-label .cr{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(168px,48%);gap:12px;overflow-x:auto;scrollbar-width:none;padding:0 14px 34px;scroll-snap-type:x mandatory;align-items:start}
 .L-label .cr::-webkit-scrollbar{display:none}
@@ -980,13 +980,57 @@
 .L-label .gr{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(140px,36%);gap:6px;overflow-x:auto;scrollbar-width:none}
 .L-label .gr::-webkit-scrollbar{display:none}
 .L-label .gr img{width:100%;aspect-ratio:4/5;object-fit:cover}
-.L-label .gf{position:relative;max-width:760px;margin:44px auto 0;padding:0 8px}
+.L-label .gfw{position:relative;max-width:760px;margin:44px auto 0;padding:0 8px}
 .L-label .gp{position:relative;height:min(100vw,520px);border-radius:28px;overflow:hidden;background:var(--sf2)}
 .L-label .gp img{width:100%;height:100%;object-fit:cover}
 .L-label .gp .btn{position:absolute;left:16px;top:16px;z-index:1}
 .L-label .gx2{position:absolute;left:4px;right:4px;bottom:22px;z-index:1;display:block;margin:0;font:800 clamp(70px,24vw,190px)/.8 var(--fh);letter-spacing:-.075em;color:var(--hi);text-align:center}
 .L-label .gx2 span{display:block;white-space:nowrap}
 .L-label .rg.fb{right:22px;top:20px}
+.L-label>.lh .sh{background:linear-gradient(#0007,transparent 30%,transparent 48%,#000b)}
+.L-label .gx,.L-label .gx2{color:#fff;font-size:clamp(44px,var(--gs),var(--gp));line-height:.86;text-shadow:0 10px 40px #0005}
+.L-label .gx{bottom:22px}.L-label .gx2{bottom:20px}
+.L-label .rg.hb{left:auto;right:22px;bottom:auto;top:72px;width:84px;height:84px}
+.L-label .lm{padding-top:14px}
+.L-label .hd h2{font-weight:600}
+.L-label .cc{border-radius:22px}
+.L-label .b2{background:var(--sf);color:var(--tx);border:1px solid color-mix(in srgb,var(--tx) 10%,transparent)}
+.L-label .b2 .pl{background:var(--sf2)}
+.L-label .lo{position:relative;overflow:hidden;background:var(--hi);color:var(--hit);padding:26px 22px}
+.L-label .lo:after{content:"";position:absolute;right:-60px;bottom:-70px;width:200px;height:200px;border-radius:50%;border:1.5px solid currentColor;opacity:.18}
+.L-label .lo small{color:inherit;opacity:.75}
+.L-label .lo .till{background:var(--hit);color:var(--hi)}
+.L-label .dm{border-style:solid;border-color:color-mix(in srgb,var(--tx) 12%,transparent)}
+.L-label .dm div{font-weight:500}
+.L-label .chips2 button{border-radius:999px;text-transform:none;letter-spacing:0}
+.L-label .chips2 button.on{background:var(--tx);color:var(--bg)}
+.L-label .tg2{gap:18px 12px}
+.L-label .tc{padding:0;border-radius:0;background:none}
+.L-label .tc .ti{aspect-ratio:4/5;border-radius:20px;background:var(--sf2)}
+.L-label .tc .ti img{transition:transform .5s}.L-label .tc:hover .ti img{transform:scale(1.04)}
+.L-label .tc .pc{right:10px;top:10px}.L-label .tc .bs{left:10px;top:10px}
+.L-label .tc .tb{margin-top:0;padding:10px 2px 0;background:none;color:var(--tx);align-items:flex-start}
+.L-label .tc .tb b{font-size:14.5px}
+.L-label .tc .tb small{color:var(--mu)}
+.L-label .tc .q button{background:var(--tx);color:var(--bg)}
+.L-label .tc .q button.m{background:var(--sf2);color:var(--tx)}
+.L-label .tc .q b{color:var(--tx)}
+.L-label .tc .sold{background:var(--sf2);color:var(--mu)}
+.L-label .loy{background:var(--tx);color:var(--bg);border:0;border-radius:24px;padding:24px 20px 20px}
+.L-label .loy:after{width:220px;height:220px;right:-90px;top:-100px;background:none;border:1.5px solid var(--hi);opacity:.35}
+.L-label .loy .lb{color:var(--hi)}
+.L-label .loy .lc{background:color-mix(in srgb,var(--bg) 14%,transparent);color:var(--bg)}
+.L-label .loy .lr{font:700 34px/1 var(--fh);letter-spacing:-.04em;margin-top:14px}
+.L-label .loy .lp{color:color-mix(in srgb,var(--bg) 70%,transparent)}
+.L-label .loy .lst{grid-template-columns:repeat(5,minmax(0,1fr))}
+.L-label .loy .lst.sm{grid-template-columns:repeat(6,minmax(0,1fr))}
+.L-label .loy .lst i{border:1.5px solid color-mix(in srgb,var(--bg) 25%,transparent);color:color-mix(in srgb,var(--bg) 55%,transparent)}
+.L-label .loy .lst i.on{transform:none;background:var(--hi);color:var(--hit);border-color:var(--hi)}
+.L-label .loy .lst i.gf{border-color:var(--hi);color:var(--hi)}
+.L-label .loy .btn{background:var(--hi);color:var(--hit)}
+.L-label .loy .lk{color:color-mix(in srgb,var(--bg) 70%,transparent)}
+.L-label .loy.rdy{outline:2px solid var(--hi);outline-offset:-7px}
+.L-label .gp .sh{background:linear-gradient(transparent 40%,#000a)}
 @media (min-width:700px){.L-label .tg2{grid-template-columns:repeat(3,1fr)}.L-label .cr{grid-auto-columns:minmax(200px,30%)}.L-label .qs{grid-template-columns:1fr 1fr}.L-label .qi{aspect-ratio:auto}.L-label .fw{grid-template-columns:1fr 1fr;align-items:center}}
 
 `;
@@ -1249,16 +1293,17 @@
       const badge = c => `<div class="rg ${c || ""}" aria-hidden="true"><svg viewBox="0 0 100 100"><defs><path id="bzlr" d="M50 50 m-37 0 a37 37 0 1 1 74 0 a37 37 0 1 1 -74 0"/></defs><text textLength="226" lengthAdjust="spacingAndGlyphs"><textPath href="#bzlr" textLength="226" lengthAdjust="spacingAndGlyphs">${esc(ring)} ✦ ${esc(ring)} ✦</textPath></text></svg><span>${ic(m.order ? "bag" : "star", 22)}</span></div>`;
       const ann = m.offer ? m.offer.title : m.hi && m.hi.open ? "Open now" + (m.hi.until ? " till " + m.hi.until : "") : [m.cat, m.area].filter(Boolean).join(" · ");
       const prim = m.menu.length ? `<a class="btn" href="#bz-menu">${m.order ? "Order now" : "See " + esc(m.menuTitle.toLowerCase())}</a>` : m.wa ? `<a class="btn" href="https://wa.me/${m.wa}" target="_blank" rel="noopener">WhatsApp us</a>` : "";
+      const fit = t => `--gs:${Math.min(30, 92 / (Math.max(t.length, 4) * .54)).toFixed(1)}vw;--gp:${Math.min(230, 720 / (Math.max(t.length, 4) * .54)).toFixed(0)}px`;
       const hero = `<div class="lh"><div class="ph">${pics[0] ? `<img class="kb" src="${esc(pics[0])}" alt="">` : `<span class="ni"></span>`}<div class="sh"></div><div class="tl">${P.status(m)}</div><div class="tr">${prim}</div></div>
-        <h1 class="fx gx" aria-label="${esc(m.name)}"><span>${esc(m.name.toLowerCase())}</span></h1>${badge("hb")}</div><div class="lm"><span>${new Date().getFullYear()}</span><span>${esc(m.cat || m.area || "")}</span></div>`;
+        <h1 class="fx gx" style="${fit(m.name)}" aria-label="${esc(m.name)}"><span>${esc(m.name.toLowerCase())}</span></h1>${badge("hb")}</div><div class="lm"><span>${new Date().getFullYear()}</span><span>${esc(m.cat || m.area || "")}</span></div>`;
       const hl = esc(plain(m.hl) || "Welcome to " + m.name).replace(/^(.{6,}?)\s+(\S+\s+\S+)$/, "$1<br>$2");
       const head = `<div class="hd rv"><h2>${hl}</h2><span class="dg">${ic("arrow", 44)}</span>${m.sc || m.area ? `<p>${esc(m.sc || "")}${m.sc && m.area ? " · " : ""}${esc(m.area || "")}</p>` : ""}</div>`;
       const its = m.menu.flatMap(s => s.items.filter(x => x.img).map(x => ({ ...x, sec: s.n, si: s.si }))).slice(0, 6);
       const cards = its.length >= 2 ? `<div class="cs rv"><div class="cr">${its.map((x, i) => `<a class="cc${i === 1 ? " hi" : ""}" href="#bz-menu" data-jump="${x.si}"><img src="${esc(x.img)}" alt="" loading="lazy">${arw}<span class="cl"><small>${esc(x.sec)}</small><b>${esc(x.n)}</b></span></a>`).join("")}</div></div>` : "";
-      const b2t = m.offer ? m.offer.title : m.order ? "Order in one tap on WhatsApp" : m.upi ? "Pay by UPI from your phone" : "Come say hello";
-      const bento = pics.length >= 2 ? `<div class="bn rv"><a class="b1" href="#bz-menu"><img src="${esc(pics[1])}" alt="" loading="lazy">${arw}</a><div class="bc"><div class="b2"><span class="ik">${ic(m.offer ? "gift" : "wa", 20)}</span><span class="pl">${esc(m.name.toLowerCase().replace(/[^a-z0-9]+/g, ""))}</span><b>${esc(b2t)}</b></div>${pics[2] ? `<a class="b3" href="#bz-menu"><img src="${esc(pics[2])}" alt="" loading="lazy">${arw}</a>` : ""}</div></div>` : "";
+      const b2t = m.order ? "Order in one tap on WhatsApp" : m.upi ? "Pay by UPI from your phone" : "Come say hello";
+      const bento = pics.length >= 2 ? `<div class="bn rv"><a class="b1" href="#bz-menu"><img src="${esc(pics[1])}" alt="" loading="lazy">${arw}</a><div class="bc"><div class="b2"><span class="ik">${ic(m.order ? "wa" : m.upi ? "pay" : "pin", 20)}</span><span class="pl">${esc(m.name.toLowerCase().replace(/[^a-z0-9]+/g, ""))}</span><b>${esc(b2t)}</b></div>${pics[2] ? `<a class="b3" href="#bz-menu"><img src="${esc(pics[2])}" alt="" loading="lazy">${arw}</a>` : ""}</div></div>` : "";
       const count = m.menu.reduce((t, s) => t + s.items.length, 0);
-      const tile = (x, j) => `<div class="tc" style="background:${pal[j % 3]}">${x.p ? `<span class="pc">₹${esc(x.p)}</span>` : ""}${x.b ? `<span class="bs" title="Bestseller" aria-label="Bestseller">${ic("star", 13)}</span>` : ""}<div class="ti">${x.img ? `<img src="${esc(x.img)}" alt="" loading="lazy">` : `<span class="ni" style="color:${on(pal[j % 3])}">${esc(x.n.charAt(0).toUpperCase())}</span>`}</div><div class="tb"><span><b>${esc(x.n)}</b>${x.d ? `<small>${esc(x.d)}</small>` : ""}</span>${P.qty(m, x)}</div></div>`;
+      const tile = (x, j) => `<div class="tc">${x.p ? `<span class="pc">₹${esc(x.p)}</span>` : ""}${x.b ? `<span class="bs" title="Bestseller" aria-label="Bestseller">${ic("star", 13)}</span>` : ""}<div class="ti"${x.img ? "" : ` style="background:${pal[j % 3]}"`}>${x.img ? `<img src="${esc(x.img)}" alt="" loading="lazy">` : `<span class="ni" style="color:${on(pal[j % 3])}">${esc(x.n.charAt(0).toUpperCase())}</span>`}</div><div class="tb"><span><b>${esc(x.n)}</b>${x.d ? `<small>${esc(x.d)}</small>` : ""}</span>${P.qty(m, x)}</div></div>`;
       const grid = m.prop ? P.props(m) : m.menu.length ? `<div class="sec rv" id="bz-menu"><div class="mh"><h2>${esc(m.menuTitle)}</h2><span>${count} item${count === 1 ? "" : "s"}${m.menu.length > 1 ? " · " + m.menu.length + " categories" : ""}</span></div>
         ${m.menu.length > 1 ? `<div class="chips2">${m.menu.map((s, i) => `<button type="button" data-tab="${i}"${i ? "" : ' class="on"'}>${esc(s.n)}</button>`).join("")}</div>` : ""}
         ${m.menu.map((s, i) => `<div class="tg2" data-pane="${i}"${i ? " hidden" : ""}>${s.items.map(tile).join("")}</div>`).join("")}</div>` : "";
@@ -1277,7 +1322,7 @@
       const gal = m.gal.length ? `<div class="sec rv gs"><div class="gh"><span class="sp">${ic("ig", 14)} ${m.ig ? "On social" : esc(m.galTitle)}</span>${m.ig ? `<a href="https://instagram.com/${esc(m.ig)}" target="_blank" rel="noopener">${esc(m.ig)}</a>` : ""}</div><div class="gr">${m.gal.map(g => `<img src="${esc(g)}" alt="" loading="lazy">`).join("")}</div></div>` : "";
       const end = m.order ? "order now" : m.menu.length ? "visit us" : "say hello";
       const gpic = pics[Math.min(3, pics.length - 1)];
-      const giant = `<div class="gf rv"><div class="gp">${gpic ? `<img src="${esc(gpic)}" alt="" loading="lazy">` : ""}<div class="sh"></div>${m.order ? `<a class="btn" href="#bz-menu">Get started</a>` : ""}</div><a class="fx gx2" href="${m.menu.length ? "#bz-menu" : m.wa ? "https://wa.me/" + m.wa : "#"}"><span>${esc(end)}</span></a>${badge("fb")}</div>`;
+      const giant = `<div class="gfw rv"><div class="gp">${gpic ? `<img src="${esc(gpic)}" alt="" loading="lazy">` : ""}<div class="sh"></div>${m.order ? `<a class="btn" href="#bz-menu">Get started</a>` : ""}</div><a class="fx gx2" style="${fit(end)}" href="${m.menu.length ? "#bz-menu" : m.wa ? "https://wa.me/" + m.wa : "#"}"><span>${esc(end)}</span></a>${badge("fb")}</div>`;
       return `${ann ? `<div class="an">${esc(ann)}</div>` : ""}<div class="ln"><span class="nm">${m.logo ? `<i style="background-image:url('${esc(m.logo)}')"></i>` : ""}${esc(m.name)}</span><span class="r">${P.bag(m)}${P.share()}</span></div>
         ${hero}<div class="wrap">${head}${acts}</div>${cards}<div class="wrap">${bento}${of}</div>${mq}<div class="wrap">${grid}${quote}${featS}${P.loy(m)}${P.review(m)}</div>${gal}<div class="wrap">${P.hours(m)}${P.visit(m)}${P.upi(m)}</div>${giant}<div class="wrap">${P.foot(m)}</div>`;
     },
