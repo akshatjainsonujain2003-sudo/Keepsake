@@ -40,7 +40,7 @@
       const tv = r2(o.inc && r ? net / (1 + r / 100) : net);
       const c = intra ? r2(tv * r / 200) : 0, s = c, i = intra ? 0 : r2(tv * r / 100);
       const amt = r2(tv + c + s + i);
-      out.push({ n: x.n, hsn: x.hsn || "", q, p, dp, r, tv, c, s, i, amt, net: r2(net) }); // net = the line as priced (after discount)
+      out.push({ n: x.n, hsn: x.hsn || "", u: x.u || (/^99/.test(String(x.hsn || "")) ? "NA" : "NOS"), q, p, dp, r, tv, c, s, i, amt, net: r2(net) }); // net = the line as priced (after discount)
       taxable += tv; cgst += c; sgst += s; igst += i; disc += off;
       const b = byRate[r] = byRate[r] || { r, tv: 0, c: 0, s: 0, i: 0 };
       b.tv += tv; b.c += c; b.s += s; b.i += i;
@@ -67,8 +67,19 @@
     return parts.join(" ") + " Rupee" + (n === 1 ? "" : "s") + " Only";
   }
 
+  // Dates in Indian time (IST, UTC+5:30), whatever clock the server or phone runs on.
+  function ist(t) { const d = new Date((t == null ? Date.now() : +t) + 330 * 60000); return { y: d.getUTCFullYear(), m: d.getUTCMonth() + 1, d: d.getUTCDate() }; }
+  const MON = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const ym = t => { const x = ist(t); return x.y + "-" + String(x.m).padStart(2, "0"); };               // "2026-10"
+  const dmy = t => { const x = ist(t); return String(x.d).padStart(2, "0") + "-" + MON[x.m - 1] + "-" + x.y; }; // "29-Oct-2026", the GST offline tool's format
+  // Start and end (ms) of an IST calendar month "YYYY-MM".
+  function monthRange(s) { const [y, m] = String(s).split("-").map(Number); const a = Date.UTC(y, m - 1, 1) - 330 * 60000, b = Date.UTC(y, m, 1) - 330 * 60000; return [a, b]; }
   // Financial year label for an invoice date: April to March, e.g. "2026-27".
-  function fy(t) { const d = new Date(t == null ? Date.now() : t), y = d.getMonth() >= 3 ? d.getFullYear() : d.getFullYear() - 1; return y + "-" + String((y + 1) % 100).padStart(2, "0"); }
+  function fy(t) { const x = ist(t), y = x.m >= 4 ? x.y : x.y - 1; return y + "-" + String((y + 1) % 100).padStart(2, "0"); }
 
-  return { RATES, STATES, gstinOk, calc, words, fy, r2 };
+  // Units (UQC) the GST portal accepts, the common ones for shops. Services use "NA".
+  const UQC = { NOS: "Numbers", PCS: "Pieces", SET: "Sets", PRS: "Pairs", KGS: "Kilograms", GMS: "Grams", LTR: "Litres", MLT: "Millilitres", MTR: "Metres", BOX: "Boxes", PAC: "Packs", DOZ: "Dozens", BTL: "Bottles", NA: "Service (no unit)", OTH: "Others" };
+  const isService = h => /^99/.test(String(h || ""));
+
+  return { RATES, STATES, UQC, gstinOk, calc, words, fy, ym, dmy, monthRange, ist, isService, r2 };
 });

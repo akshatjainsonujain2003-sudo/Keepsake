@@ -53,7 +53,8 @@ table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
 .upi .q svg{width:100%;height:100%;display:block}
 .made{margin-top:18px;text-align:center;font-size:11.5px;color:var(--mu)}.made a{color:var(--ink)}
 .bar{position:fixed;left:0;right:0;bottom:0;padding:12px 16px calc(12px + env(safe-area-inset-bottom));background:#ffffffee;backdrop-filter:blur(10px);border-top:1px solid var(--line)}
-.bar div{max-width:820px;margin:0 auto;display:flex;gap:8px}
+.bar div{max-width:820px;margin:0 auto;display:flex;gap:8px;flex-wrap:wrap}
+@media (max-width:640px){.bar .btn.pay{flex-basis:100%}.bar .btn{min-height:44px;padding:0 10px;font-size:13.5px}}
 .btn{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 16px;border-radius:999px;border:0;background:var(--ink);color:#fff;font:700 14px Inter;text-decoration:none;cursor:pointer}
 .btn.pay{background:var(--bl)}.btn.g{background:#fff;color:var(--ink);border:1.5px solid var(--ink)}
 .msg{padding:60px 20px;text-align:center;color:var(--mu)}.msg b{display:block;color:var(--ink);font:800 22px 'Inter Tight',sans-serif;margin-bottom:6px}
@@ -68,11 +69,25 @@ table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
   .items td.x{grid-column:1/-1;color:var(--mu);font-size:12.5px}
   .items td.h{display:none}
 }
+.sig{display:flex;flex-direction:column;align-items:flex-end;gap:28px;margin-top:22px;font-size:12.5px;color:var(--mu)}.sig b{color:var(--ink);font-weight:600;padding-top:6px;border-top:1px solid var(--line);min-width:180px;text-align:right}
 @media print{
   @page{size:A4;margin:12mm}
   html,body{background:#fff}.wrap{max-width:none;padding:0}.inv{border:0;padding:0;border-radius:0}
   .bar,.made{display:none}.tot .g{background:#fff;color:var(--ink);border:1.5px solid var(--ink)}.tot .g span:first-child{color:var(--mu)}
   .items thead{display:table-header-group}
+  html.rcpt body{font-size:11px}
+  html.rcpt .wrap{width:72mm}
+  html.rcpt .hd,html.rcpt .to,html.rcpt .ft{display:block}
+  html.rcpt .sel{display:block}.rcpt .lg{display:none}
+  html.rcpt .sel h1{font-size:16px}
+  html.rcpt .kind{text-align:left;margin-top:8px}html.rcpt .kind dl{justify-content:start}
+  html.rcpt .items thead{display:none}
+  html.rcpt .items tr{display:grid;grid-template-columns:1fr auto;gap:0 6px;padding:5px 0;border-bottom:1px dashed #999}
+  html.rcpt .items td{padding:0;border:0;text-align:left}
+  html.rcpt .items td.a{grid-column:2;grid-row:1;text-align:right;font-weight:700}html.rcpt .items td.x{grid-column:1/-1}html.rcpt .items td.h{display:none}
+  html.rcpt .sum{display:block}html.rcpt .tot .g{font-size:16px;padding:6px 0;border:0;border-top:1.5px solid #000;border-radius:0}
+  html.rcpt .upi{margin-top:8px}html.rcpt .upi .q{width:30mm;height:30mm}
+  html.rcpt .sig{align-items:flex-start;gap:14px}
 }
 </style>
 </head>
@@ -99,7 +114,7 @@ function render(b) {
   const rows = (k.lines || []).map((x, i) => `<tr>
     <td class="h">${i + 1}</td>
     <td class="n"><b>${esc(x.n)}</b>${x.hsn ? `<small>HSN/SAC ${esc(x.hsn)}</small>` : ""}</td>
-    <td class="x">${qn(x.q)} × ${rs(x.p)}${x.dp ? ` · ${x.dp}% off` : ""}${tax ? ` · GST ${x.r}%` : ""}</td>
+    <td class="x">${qn(x.q)}${x.u && x.u !== "NA" ? " " + esc(x.u) : ""} × ${rs(x.p)}${x.dp ? ` · ${x.dp}% off` : ""}${tax ? ` · GST ${x.r}%` : ""}</td>
     <td class="a">${rs(x.net != null ? x.net : x.amt)}</td></tr>`).join("");
   const rateRows = tax ? (k.rates || []).filter(r => r.r > 0 || k.rates.length > 1).map(r => `<tr><td>${r.r}%</td><td>${rs(r.tv)}</td>${k.intra ? `<td>${rs(r.c)}</td><td>${rs(r.s)}</td>` : `<td>${rs(r.i)}</td>`}</tr>`).join("") : "";
   const upi = s.upi && !b.paid && !b.cancel ? `upi://pay?pa=${encodeURIComponent(s.upi.id)}&pn=${encodeURIComponent(s.upi.name || s.name || "")}&am=${k.total}&cu=INR&tn=${encodeURIComponent("Bill " + b.no)}` : "";
@@ -111,10 +126,10 @@ function render(b) {
           ${s.addr ? `<p>${esc(s.addr)}</p>` : ""}
           <p>${s.gstin ? `GSTIN <b style="color:var(--ink)">${esc(s.gstin)}</b> · ` : ""}${s.phone ? "+91 " + esc(s.phone) : ""}</p></div></div>
       <div class="kind"><b>${tax ? "Tax invoice" : "Bill of supply"}</b>
-        <dl><dt>Invoice no.</dt><dd>${esc(b.no)}</dd><dt>Date</dt><dd>${date}</dd>${tax ? `<dt>Place of supply</dt><dd>${esc(stName(k.pos))}</dd>` : ""}</dl></div>
+        <dl><dt>Invoice no.</dt><dd>${esc(b.no)}</dd><dt>Date</dt><dd>${date}</dd>${tax ? `<dt>Place of supply</dt><dd>${esc(stName(k.pos))}</dd><dt>Reverse charge</dt><dd>No</dd>` : ""}</dl></div>
     </header>
     <section class="to"><div><span class="lb">Billed to</span><b>${esc(c.name || "Walk-in customer")}</b>
-      ${c.phone ? `<p>+91 ${esc(c.phone)}</p>` : ""}${c.gstin ? `<p>GSTIN ${esc(c.gstin)}</p>` : ""}${c.addr ? `<p>${esc(c.addr)}</p>` : ""}</div>${st}</section>
+      ${c.phone ? `<p>+91 ${esc(c.phone)}</p>` : ""}${c.gstin ? `<p>GSTIN ${esc(c.gstin)} · ${esc(stName(c.state))}</p>` : ""}${c.addr ? `<p>${esc(c.addr)}</p>` : ""}</div>${st}</section>
     <table class="items"><thead><tr><th>#</th><th>Item</th><th>Qty × rate${showDisc ? " · off" : ""}${tax ? " · GST" : ""}</th><th>${tax && !b.inc ? "Taxable" : "Amount"}</th></tr></thead><tbody>${rows}</tbody></table>
     <section class="sum">
       <div>${tax && rateRows ? `<span class="lb">Tax summary</span><table class="rt" style="margin-top:8px"><thead><tr><th>GST</th><th>Taxable</th>${k.intra ? "<th>CGST</th><th>SGST</th>" : "<th>IGST</th>"}</tr></thead><tbody>${rateRows}</tbody></table>` : ""}
@@ -127,16 +142,23 @@ function render(b) {
       </div>
     </section>
     <footer class="ft">
-      <div style="flex:1 1 280px">${b.note ? `<p><b style="color:var(--ink)">Note:</b> ${esc(b.note)}</p>` : ""}${b.terms ? `<p>${esc(b.terms)}</p>` : ""}<p>This is a computer-generated ${tax ? "invoice" : "bill"} and needs no signature.</p></div>
+      <div style="flex:1 1 280px">${b.note ? `<p><b style="color:var(--ink)">Note:</b> ${esc(b.note)}</p>` : ""}${b.terms ? `<p>${esc(b.terms)}</p>` : ""}<p>This is a computer-generated ${tax ? "invoice" : "bill"}.</p></div>
       ${upi ? `<div class="upi"><div class="q" id="uq" aria-label="UPI QR code to pay ${r0(k.total)}"></div><div><span class="lb">Scan to pay</span><p style="margin:4px 0 0;color:var(--ink);font-weight:700">${r0(k.total)}</p><p style="margin:0">${esc(s.upi.id)}</p></div></div>` : ""}
     </footer>
+    <div class="sig"><span>For ${esc(s.legal || s.name)}</span><b>Authorised signatory</b></div>
   </article>
   <p class="made">Bill made with <a href="/">GetKeepsake</a></p>`;
   if (upi) (function draw() { if (!window.qrcode) return setTimeout(draw, 200); const q = qrcode(0, "M"); q.addData(upi); q.make(); $("#uq").innerHTML = q.createSvgTag({ cellSize: 4, margin: 0, scalable: true }); })();
   const wa = s.phone ? `https://wa.me/91${s.phone}?text=${encodeURIComponent("Hi, about bill " + b.no)}` : "";
-  $("#barIn").innerHTML = `${upi ? `<a class="btn pay" href="${esc(upi)}">Pay ${r0(k.total)} by UPI</a>` : ""}<button type="button" class="btn ${upi ? "g" : ""}" id="pdf">Save PDF</button>${wa ? `<a class="btn g" href="${esc(wa)}" target="_blank" rel="noopener" aria-label="WhatsApp the shop">WhatsApp</a>` : ""}`;
+  $("#barIn").innerHTML = `${upi ? `<a class="btn pay" href="${esc(upi)}">Pay ${r0(k.total)} by UPI</a>` : ""}<button type="button" class="btn ${upi ? "g" : ""}" id="pdf">Save PDF</button><button type="button" class="btn g" id="rcpt" aria-label="Print an 80 mm receipt">Receipt</button>${wa ? `<a class="btn g" href="${esc(wa)}" target="_blank" rel="noopener" aria-label="WhatsApp the shop">WhatsApp</a>` : ""}`;
   $("#bar").hidden = false;
   $("#pdf").onclick = () => window.print();
+  $("#rcpt").onclick = () => {
+    const st = document.createElement("style"); st.textContent = "@page{size:80mm auto;margin:3mm}"; document.head.appendChild(st);
+    document.documentElement.classList.add("rcpt");
+    const done = () => { document.documentElement.classList.remove("rcpt"); st.remove(); removeEventListener("afterprint", done); };
+    addEventListener("afterprint", done); window.print(); setTimeout(done, 60000);
+  };
 }
 
 async function load() {

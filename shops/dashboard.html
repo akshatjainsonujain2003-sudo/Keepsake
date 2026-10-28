@@ -234,12 +234,17 @@ td .btn{white-space:nowrap}
 .bl1{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
 .bl2{display:grid;gap:8px;margin-top:8px}.bl2 label{font-size:12.5px;font-weight:600;color:var(--mu)}.bl2 .in{margin-top:4px;padding:10px 11px;font-size:15px}
 .bl2 small{font-weight:500}
+.blrep{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px 18px;padding:16px;border-radius:16px;background:#F6F6F2}
+.blca{margin-top:20px;padding-top:18px;border-top:1px solid var(--line)}
+@media (max-width:560px){.blrep{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.bl2 .in.bad{border-color:#d9534f;background:#fff6f5}
 .blt{display:flex;justify-content:space-between;gap:12px;margin-top:10px;color:var(--mu);font-variant-numeric:tabular-nums}
 .blhd{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;padding:14px 16px;border-radius:16px;background:#F6F6F2}
 .blhd small{display:block;color:var(--mu);font-family:'JetBrains Mono',monospace;font-size:12px;margin-top:3px}
 @media (max-width:700px){.g3 .kpi b{font-size:28px}}
 </style>
 <script src="/assets/gst.v1.js"></script>
+<script src="/assets/gst-export.v1.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js" defer></script>
 <script src="/assets/qr-cards.v9.js" defer></script>
 </head>
@@ -1131,6 +1136,9 @@ const rs2 = n => "₹" + (+n || 0).toLocaleString("en-IN", { minimumFractionDigi
 const blUrl = t => location.origin + "/bill/" + t;
 const blGst = () => !!(S.bl && S.bl.settings && S.bl.settings.gst === "regular");
 const blDefRate = () => S.bl && S.bl.settings ? S.bl.settings.rate : /jewel/.test(S.d.cat || "") ? 3 : /cafe|restaurant|cloud|bakery|sweet|juice|icecream|fastfood|foodtruck|tea/.test(S.d.cat || "") ? 5 : 18;
+const blDefHsn = () => /cafe|restaurant|cloud|fastfood|foodtruck|tea|juice|icecream/.test(S.d.cat || "") ? "996331" : /salon|spa|barber/.test(S.d.cat || "") ? "999721" : /gym|yoga|dance/.test(S.d.cat || "") ? "999723" : "";
+const blMem = n => (S.bl && S.bl.mem && S.bl.mem[String(n || "").toLowerCase()]) || null;
+const blNewLine = (k, n, p) => { const m = blMem(n), st = S.bl.settings; return { k, n, q: 1, p, r: blGst() ? (m ? m.r : st.rate) : 0, hsn: blGst() ? (m ? m.h : st.hsn || "") : "", u: m ? m.u : st.u || "NOS", dp: "" }; };
 const blUpi = () => !!(S.d.upi && /^[\w.\-]{2,64}@[A-Za-z]{2,64}$/.test(S.d.upi.id || ""));
 async function blLoad() { try { S.bl = await blPost({ action: "bl-home" }); } catch (e) { S.bl = { error: e.message }; } if (S.view === "bills") blRedraw(); }
 function blRedraw() { const y = scrollY, sc = $(".pmb") ? $(".pmb").scrollTop : 0; go(); scrollTo(0, y); if ($(".pmb")) $(".pmb").scrollTop = sc; }
@@ -1141,7 +1149,7 @@ function blWa(x) {
 const blStatus = x => x.cancel ? `<span class="pl cancel">Cancelled</span>` : x.paid ? `<span class="pl ready">Paid</span>` : `<span class="pl prep">Payment due</span>`;
 
 function blSetupCard() {
-  const s = S.blSetD || Object.assign({ gst: "regular", gstin: "", legal: "", addr: S.d.addr || "", state: "08", prefix: "INV", inc: true, rate: blDefRate(), terms: "" }, (S.bl && S.bl.settings) || {});
+  const s = S.blSetD || Object.assign({ gst: "regular", gstin: "", legal: "", addr: S.d.addr || "", state: "08", prefix: "INV", inc: true, rate: blDefRate(), hsn: blDefHsn(), u: "NOS", terms: "" }, (S.bl && S.bl.settings) || {});
   S.blSetD = s;
   const G = window.KSGST, ok = s.gst !== "regular" || (G && G.gstinOk(s.gstin)), st = s.gst === "regular" && G && G.gstinOk(s.gstin) ? G.STATES[s.gstin.slice(0, 2)] : "";
   return `<section class="cd" style="max-width:640px">
@@ -1158,6 +1166,8 @@ function blSetupCard() {
       <label>Invoice prefix<input class="in" data-bls="prefix" maxlength="5" placeholder="INV" value="${esc(s.prefix)}" style="text-transform:uppercase"></label>
       ${s.gst === "regular" ? `<label>Usual GST rate<select class="in" data-bls="rate">${BLR.map(r => `<option value="${r}"${+s.rate === r ? " selected" : ""}>${r}%</option>`).join("")}</select></label>` : "<span></span>"}
     </div>
+    ${s.gst === "regular" ? `<div class="row2" style="margin-top:12px"><label>Usual HSN/SAC code<input class="in" data-bls="hsn" inputmode="numeric" maxlength="8" placeholder="e.g. 6211" value="${esc(s.hsn || "")}"></label><label>Usual unit<select class="in" data-bls="u">${Object.entries(KSGST.UQC).map(([k, l]) => `<option value="${k}"${(s.u || "NOS") === k ? " selected" : ""}>${k} · ${esc(l)}</option>`).join("")}</select></label></div>
+      <p class="hint">GST bills need an HSN code (goods) or SAC code (services, starts with 99) on every item. This one fills in by default and you can change it per item. Ask your CA if you're not sure.</p>` : ""}
     <p class="hint">Bills are numbered ${esc((s.prefix || "INV").toUpperCase())}/${(window.KSGST ? KSGST.fy() : "2026-27").slice(2)}/0001, 0002… and start again each April.</p>
     ${s.gst === "regular" ? `<label class="sw" style="margin-top:12px"><input type="checkbox" data-bls="inc"${s.inc ? " checked" : ""}><i></i>My prices already include GST</label>` : ""}
     <label style="display:block;margin-top:12px">Terms on the bill (optional)<input class="in" data-bls="terms" maxlength="300" placeholder="e.g. Goods once sold will not be taken back." value="${esc(s.terms)}"></label>
@@ -1194,9 +1204,10 @@ function blLine(x, i) {
       <label>Price ₹<input class="in" data-bli="p" data-i="${i}" inputmode="decimal" value="${esc(x.p)}"></label>
       ${gst ? `<label>GST<select class="in" data-bli="r" data-i="${i}">${BLR.map(r => `<option value="${r}"${+x.r === r ? " selected" : ""}>${r}%</option>`).join("")}</select></label>` : ""}
     </div>
-    <div class="bl2" style="grid-template-columns:repeat(2,minmax(0,1fr))">
-      ${gst ? `<label>HSN/SAC <small>(optional)</small><input class="in" data-bli="hsn" data-i="${i}" inputmode="numeric" maxlength="8" value="${esc(x.hsn)}"></label>` : ""}
-      <label>Discount % <small>(optional)</small><input class="in" data-bli="dp" data-i="${i}" inputmode="decimal" value="${esc(x.dp || "")}" placeholder="0"></label>
+    <div class="bl2" style="grid-template-columns:repeat(${gst ? 3 : 2},minmax(0,1fr))">
+      ${gst ? `<label>HSN/SAC<input class="in${String(x.hsn || "").replace(/\D/g, "").length >= 4 ? "" : " bad"}" data-bli="hsn" data-i="${i}" inputmode="numeric" maxlength="8" placeholder="4+ digits" value="${esc(x.hsn)}"></label>` : ""}
+      <label>Unit<select class="in" data-bli="u" data-i="${i}">${Object.keys(KSGST.UQC).map(k => `<option value="${k}"${(x.u || "NOS") === k ? " selected" : ""}>${k}</option>`).join("")}</select></label>
+      <label>Discount %<input class="in" data-bli="dp" data-i="${i}" inputmode="decimal" value="${esc(x.dp || "")}" placeholder="0"></label>
     </div></div>`;
 }
 function blNewSheet() {
@@ -1207,9 +1218,10 @@ function blNewSheet() {
   const c = N.cust, gst = blGst(), G = window.KSGST;
   return `<div class="pm" data-blbg><div class="pmb"><div class="ch"><h2 class="H" style="margin:0">New ${gst ? "GST bill" : "bill"}</h2><button class="lnk" data-bl="close">Close</button></div>
     <div class="row2"><label>Customer name<input class="in" data-blc="name" maxlength="80" placeholder="Walk-in customer" value="${esc(c.name)}"></label><label>WhatsApp number<input class="in" data-blc="phone" inputmode="numeric" maxlength="14" placeholder="10-digit mobile" value="${esc(c.phone)}"></label></div>
+    ${N.b2b ? "" : `<label style="display:block;margin-top:10px">Customer address <small class="mu">(needed for sales of ₹50,000 or more)</small><input class="in" data-blc="addr" maxlength="200" value="${esc(c.addr)}"></label>`}
     ${gst ? `<label class="sw" style="margin-top:12px"><input type="checkbox" data-bl="b2b"${N.b2b ? " checked" : ""}><i></i>Business customer (add their GSTIN)</label>` : ""}
     ${gst && N.b2b ? `<div class="row2" style="margin-top:10px"><label>Their GSTIN<input class="in" data-blc="gstin" maxlength="15" style="text-transform:uppercase;font-family:'JetBrains Mono',monospace" value="${esc(c.gstin)}"></label><label>Their state${c.gstin && G.gstinOk(c.gstin) ? `<input class="in" disabled value="${esc(G.STATES[c.gstin.slice(0, 2)])}">` : `<select class="in" data-blc="state">${Object.entries(G.STATES).map(([k, n]) => `<option value="${k}"${c.state === k ? " selected" : ""}>${esc(n)}</option>`).join("")}</select>`}</label></div>
-      <label style="display:block;margin-top:10px">Their address<input class="in" data-blc="addr" maxlength="200" value="${esc(c.addr)}"></label>` : ""}
+      <label style="display:block;margin-top:10px">Their address (needed)<input class="in" data-blc="addr" maxlength="200" value="${esc(c.addr)}"></label>` : ""}
     <b style="display:block;margin-top:18px">Add items</b>
     <input class="in" data-bl-q placeholder="Search your menu or products" value="${esc(N.q)}">
     <div class="blps" id="blPick">${blPick()}</div>
@@ -1237,6 +1249,39 @@ function blBillSheet() {
   </div></div>`;
 }
 
+const blMonthLabel = ym => { const [y, m] = ym.split("-").map(Number); return new Date(y, m - 1, 15).toLocaleDateString("en-IN", { month: "long", year: "numeric" }); };
+const caUrl = k => location.origin + "/ca/" + k;
+async function blMonth(ym) {
+  S.blRep = { ym, loading: true };
+  try { for (let i = 0; !window.KSGSTX && i < 50; i++) await new Promise(r => setTimeout(r, 100)); const j = await blPost({ action: "bl-month", ym }); S.blRep = { ym, bills: j.bills, shop: j.shop, r: KSGSTX.build(j.bills, j.shop) }; }
+  catch (e) { S.blRep = { ym, error: e.message }; }
+  if (S.view === "bills") blRedraw();
+}
+function blReports() {
+  const B = S.bl, ms = B.months || [], ym = S.blym || (ms[0] && ms[0].ym);
+  if (!ym) return "";
+  const R = S.blRep && S.blRep.ym === ym ? S.blRep : null;
+  if (!R) setTimeout(() => blMonth(ym), 0);
+  const gst = blGst(), x = R && R.r;
+  const kv = (l, v) => `<div><span class="mu" style="font-size:13px">${l}</span><b style="display:block;font:800 20px 'Inter Tight',sans-serif;margin-top:2px">${v}</b></div>`;
+  return `<section class="cd" style="margin-top:16px">
+    <div class="ch"><h2 class="H" style="margin:0">Reports for your CA</h2>
+      <select class="in" data-bl-ym style="width:auto;margin:0">${ms.map(m => `<option value="${m.ym}"${m.ym === ym ? " selected" : ""}>${esc(blMonthLabel(m.ym))} · ${m.n} bill${m.n === 1 ? "" : "s"}</option>`).join("")}</select></div>
+    ${!R || R.loading ? `<p class="mu">Loading ${esc(blMonthLabel(ym))}…</p>` : R.error ? `<p class="mu">${esc(R.error)}</p>` : `
+      ${gst ? `<div class="blrep">${kv("Taxable value", rs2(x.s3b.a.tv))}${kv("CGST", rs2(x.s3b.a.c))}${kv("SGST", rs2(x.s3b.a.s))}${kv("IGST", rs2(x.s3b.a.i))}${kv("Nil rated", rs2(x.s3b.nil))}${kv("Bills", x.count.live + (x.count.cancelled ? ` <small class="mu" style="font:600 13px Inter">+ ${x.count.cancelled} cancelled</small>` : ""))}</div>
+        <p class="hint" style="margin-top:8px">GSTR-3B table 3.1(a) for ${esc(blMonthLabel(ym))}. ${x.count.b2b} B2B invoice${x.count.b2b === 1 ? "" : "s"}${x.count.b2cl ? `, ${x.count.b2cl} B2C large` : ""}.</p>`
+      : `<p class="mu">${x.count.live} bill${x.count.live === 1 ? "" : "s"} in ${esc(blMonthLabel(ym))}. Bills of supply carry no GST, so there's no GSTR-1 for them.</p>`}
+      <div class="tg" style="margin-top:14px">${gst ? `<button class="btn" data-bl="xlsx" ${R.bills.length ? "" : "disabled"}>${IC.dl} GST workbook (.xlsx)</button>` : ""}<button class="btn ${gst ? "g" : ""}" data-bl="csv" ${R.bills.length ? "" : "disabled"}>${IC.dl} Sales register (.csv)</button></div>
+      ${gst ? `<p class="hint">The workbook has the GSTR-1 sheets your CA uses (b2b, b2cl, b2cs, exemp, hsn(b2b), hsn(b2c), docs), a GSTR-3B summary and every bill. Your CA should check it before filing.</p>` : ""}`}
+    <div class="blca">
+      <b>Share with your CA</b>
+      ${B.ca ? `<p class="mu" style="margin:4px 0 10px">Your CA can open this private link to see every month and download the reports. They can't change anything.</p>
+        <div class="tg"><input class="in" readonly value="${esc(caUrl(B.ca))}" style="flex:1 1 260px;margin:0;font-family:'JetBrains Mono',monospace;font-size:13px"><button class="btn g s" data-bl="ca-copy">Copy</button><a class="btn w s" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent("GST reports for " + shopName() + ": " + caUrl(B.ca))}">${IC.wa} WhatsApp</a><button class="lnk" data-bl="ca-off">Turn off link</button></div>`
+      : `<p class="mu" style="margin:4px 0 10px">Make a private link for your CA. They see your monthly GST reports and bills, nothing else, and can't change anything.</p><button class="btn g" data-bl="ca-on">Create a link for my CA</button>`}
+    </div>
+  </section>`;
+}
+
 V.bills = () => {
   const B = S.bl, top = s => head("GST bills", "Make a bill, send it on WhatsApp, get paid by UPI.", s || "");
   if (!B) { blLoad(); return top() + `<div class="empty">Loading your bills…</div>`; }
@@ -1259,7 +1304,7 @@ V.bills = () => {
     <div class="srch"><input class="in" data-bl-s placeholder="Search bill no., name or number" value="${esc(S.blq || "")}" aria-label="Search bills"><div class="tabs" style="margin:0">${[["all", "All"], ["due", "Unpaid"], ["paid", "Paid"], ["cx", "Cancelled"]].map(([k, l]) => `<button type="button" data-bl="f" data-k="${k}" class="${f === k ? "on" : ""}">${l}</button>`).join("")}</div></div>
     ${list.length ? `<ul class="blr">${list.map(x => `<li><button type="button" data-bl="open" data-t="${esc(x.t)}"><span class="nm"><b>${esc(x.name || "Walk-in customer")}</b><small>${esc(x.no)} · ${ago(x.at)}</small></span><span class="am"><b>${inr(x.total)}</b>${blStatus(x)}</span></button></li>`).join("")}</ul>`
       : `<div class="empty" style="margin-top:14px"><b>${B.bills.length ? "No bills match." : "No bills yet"}</b>${B.bills.length ? "Try another search or filter." : "Make your first bill in under a minute. Items come straight from your menu."}${B.bills.length ? "" : `<br><button class="btn" data-bl="new">+ New bill</button>`}</div>`}
-  </section>${blNewSheet()}${blBillSheet()}`;
+  </section>${blReports()}${blNewSheet()}${blBillSheet()}`;
 };
 
 function blReadSet() {
@@ -1283,9 +1328,9 @@ $("#main").addEventListener("input", ev => {
     if (k === "gstin" || k === "state") $("#blTot").innerHTML = N.lines.length ? blTotHtml() : "";
     return;
   }
-  if (e.matches("[data-bli]")) { const x = N.lines[+e.dataset.i]; if (!x) return; x[e.dataset.bli] = e.value; $("#blTot").innerHTML = blTotHtml(); }
+  if (e.matches("[data-bli]")) { const x = N.lines[+e.dataset.i]; if (!x) return; x[e.dataset.bli] = e.value; if (e.dataset.bli === "hsn") e.classList.toggle("bad", e.value.replace(/\D/g, "").length < 4); $("#blTot").innerHTML = blTotHtml(); }
 });
-$("#main").addEventListener("change", ev => { const e = ev.target; if (S.blNew && e.matches("select[data-bli], select[data-blc]")) { e.dispatchEvent(new Event("input", { bubbles: true })); } });
+$("#main").addEventListener("change", ev => { const e = ev.target; if (e.matches("[data-bl-ym]")) { S.blym = e.value; S.blRep = null; blRedraw(); return; } if (S.blNew && e.matches("select[data-bli], select[data-blc]")) { e.dispatchEvent(new Event("input", { bubbles: true })); } });
 $("#main").addEventListener("click", async ev => {
   if (ev.target.matches("[data-blbg]")) { S.blNew = null; S.blOpen = null; S.blCx = null; blRedraw(); return; }
   const b = ev.target.closest("[data-bl]"); if (!b) return;
@@ -1301,6 +1346,9 @@ $("#main").addEventListener("click", async ev => {
     return;
   }
   if (a === "f") { S.blf = b.dataset.k; blRedraw(); return; }
+  if (a === "xlsx" || a === "csv") { const R = S.blRep; if (!R || !R.bills) return; (a === "xlsx" ? KSGSTX.downloadWorkbook : KSGSTX.downloadRegister)(R.bills, R.shop, R.ym); toast("Downloading " + blMonthLabel(R.ym) + "…"); return; }
+  if (a === "ca-on" || a === "ca-off") { if (a === "ca-off" && S.blCaX !== 1) { S.blCaX = 1; b.textContent = "Tap again to turn it off"; return; } S.blCaX = 0; try { const j = await blPost({ action: "bl-ca", on: a === "ca-on" }); S.bl.ca = j.ca; toast(a === "ca-on" ? "Link created." : "Link turned off. The old link no longer works."); blRedraw(); } catch (x) { toast(x.message); } return; }
+  if (a === "ca-copy") { try { await navigator.clipboard.writeText(caUrl(S.bl.ca)); toast("Link copied."); } catch (x) { toast(caUrl(S.bl.ca)); } return; }
   if (a === "new") { S.blNew = !S.bl.pro && S.bl.used >= S.bl.free ? { locked: true } : blNew(); go(); return; }
   if (a === "close") { S.blNew = null; S.blOpen = null; S.blCx = null; S.blFresh = null; blRedraw(); return; }
   if (a === "open") { S.blOpen = b.dataset.t; S.blCx = null; S.blFresh = null; blRedraw(); return; }
@@ -1321,22 +1369,24 @@ $("#main").addEventListener("click", async ev => {
   if (a === "add") {
     const k = b.dataset.k, [si, ii] = k.split(".").map(Number), x = ((S.d.menu || [])[si] || { items: [] }).items[ii]; if (!x) return;
     const have = N.lines.find(l => l.k === k);
-    if (have) have.q = (+have.q || 0) + 1; else N.lines.push({ k, n: x.n, q: 1, p: numP(x.p), r: blGst() ? (x.gst != null ? x.gst : blDefRate()) : 0, hsn: x.hsn || "", dp: "" });
+    if (have) have.q = (+have.q || 0) + 1; else N.lines.push(blNewLine(k, x.n, numP(x.p)));
     blRedraw(); return;
   }
   if (a === "addo") {
     const n = ($("#blOn").value || "").trim(), p = +($("#blOp").value || "");
     if (!n || !(p >= 0) || $("#blOp").value === "") { toast("Add a name and a price."); return; }
-    N.lines.push({ k: "o" + Date.now(), n, q: 1, p, r: blGst() ? blDefRate() : 0, hsn: "", dp: "" }); blRedraw(); return;
+    N.lines.push(blNewLine("o" + Date.now(), n, p)); blRedraw(); return;
   }
   if (a === "rm") { N.lines.splice(+b.dataset.i, 1); blRedraw(); return; }
   if (a === "save") {
     if (N.busy) return; N.busy = true; b.disabled = true;
     try {
-      const j = await blPost({ action: "bl-create", cust: N.b2b ? N.cust : { name: N.cust.name, phone: N.cust.phone }, items: N.lines.map(x => ({ n: x.n, q: +x.q, p: +x.p, r: +x.r, hsn: x.hsn, dp: +x.dp || 0 })), inc: N.inc, paid: N.pay !== "due", mode: N.pay, note: N.note });
+      if (blGst()) { const miss = N.lines.find(x => String(x.hsn || "").replace(/\D/g, "").length < 4); if (miss) { N.busy = false; b.disabled = false; toast(`Add the HSN/SAC code for "${miss.n}".`); return; } }
+      const j = await blPost({ action: "bl-create", cust: N.b2b ? N.cust : { name: N.cust.name, phone: N.cust.phone, addr: N.cust.addr }, items: N.lines.map(x => ({ n: x.n, q: +x.q, p: +x.p, r: +x.r, hsn: x.hsn, u: x.u, dp: +x.dp || 0 })), inc: N.inc, paid: N.pay !== "due", mode: N.pay, note: N.note });
+      N.lines.forEach(x => { S.bl.mem[x.n.toLowerCase()] = { h: x.hsn, r: +x.r, u: x.u }; });
       const x = j.bill;
       S.bl.bills.unshift({ t: x.t, no: x.no, at: x.at, name: x.cust.name, phone: x.cust.phone, total: x.calc.total, tax: x.calc.tax, paid: x.paid, cancel: x.cancel });
-      S.bl.used = j.used; S.blNew = null; S.blOpen = x.t; S.blFresh = x.t; toast("Bill " + x.no + " saved."); blRedraw();
+      S.bl.used = j.used; S.blRep = null; const cm = (S.bl.months || []).find(m => m.ym === KSGST.ym(x.at)); if (cm) cm.n++; S.blNew = null; S.blOpen = x.t; S.blFresh = x.t; toast("Bill " + x.no + " saved."); blRedraw();
     } catch (x) { N.busy = false; b.disabled = false; toast(x.message); }
   }
 });
