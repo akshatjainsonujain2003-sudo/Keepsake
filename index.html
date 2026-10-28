@@ -516,9 +516,9 @@ p{margin:0}
         <div class="board" data-par="-0.04"><div class="bwrap"><div id="heroBoard" role="img" aria-label="A GetKeepsake QR board"></div><span class="beam" aria-hidden="true"></span></div><span class="tg">Your printed QR board</span></div>
         <svg class="path" viewBox="0 0 200 120" aria-hidden="true"><path d="M8 100 C 60 10, 140 10, 192 60"/></svg>
         <span class="scanlbl" aria-hidden="true">Scan</span>
-        <div class="ph pb" data-par="-0.1"><div class="sc"><iframe data-demo="cafe" data-scroll="1" title="Café example page" tabindex="-1"></iframe></div><span class="tg">Opens your page</span></div>
-        <div class="fchip f1" aria-hidden="true"><i><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7L12 17.3 5.8 21l1.6-7L2 9.2l7.1-.6z"/></svg></i><span><b>Stamp 7 of 10</b><small>3 more for a free coffee</small></span></div>
-        <div class="fchip f2" aria-hidden="true"><i><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 7h12l-1 13H7zM9 7a3 3 0 016 0"/></svg></i><span><b>New order · ₹340</b><small>2× Cold coffee, 1× Waffle</small></span></div>
+        <div class="ph pb" data-par="-0.1"><div class="sc"><iframe data-demo="boutique" data-scroll="1" title="Boutique example page" tabindex="-1"></iframe></div><span class="tg">Opens your page</span></div>
+        <div class="fchip f1" aria-hidden="true"><i><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7L12 17.3 5.8 21l1.6-7L2 9.2l7.1-.6z"/></svg></i><span><b>Stamp 4 of 5</b><small>1 more for ₹200 off</small></span></div>
+        <div class="fchip f2" aria-hidden="true"><i><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 7h12l-1 13H7zM9 7a3 3 0 016 0"/></svg></i><span><b>New order · ₹4,290</b><small>Kurta set + silk dupatta</small></span></div>
       </div>
     </div>
     <ul class="incl rv" aria-label="Included for ₹1,000">
@@ -816,7 +816,7 @@ addEventListener("DOMContentLoaded", () => {
   const sw = document.getElementById("qxSw"), board = document.getElementById("qxBoard"), go = document.getElementById("qxGo");
   if (!window.KSQRCards || !window.qrcode) return;
   // The hero's counter board: a real, scannable QR that opens this page.
-  try { const hb = document.getElementById("heroBoard"); if (hb) KSQRCards.mount(hb, { tone: "red", url: "https://getkeepsake.in/", code: "YOUR-SHOP" }); } catch (e) {}
+  try { const hb = document.getElementById("heroBoard"); if (hb) KSQRCards.mount(hb, { tone: "jamun", url: "https://getkeepsake.in/", code: "YOUR-SHOP" }); } catch (e) {}
   if (!sw) return;
   const S = { red: ["#8E1424", "linear-gradient(170deg,#C8102E,#4A0E14)"], blue: ["#0D3F57", "linear-gradient(170deg,#0E6A8C,#0A2238)"], marigold: ["#B4440C", "linear-gradient(170deg,#F59E0B,#C2410C)"], green: ["#0B4A35", "linear-gradient(170deg,#108A60,#0B2E24)"], jamun: ["#3E1A63", "linear-gradient(170deg,#6D2E9E,#1E0F33)"], whitegold: ["linear-gradient(160deg,#E2BF6E,#8C6118)", "linear-gradient(180deg,#FFF1D2,#FFFDF8)"] };
   let cur = "red"; try { const v = localStorage.getItem("ks-qr-tone"); if (S[v] && v !== "whitegold") cur = v; } catch (e) {}
