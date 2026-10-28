@@ -220,7 +220,26 @@ td .btn{white-space:nowrap}
 }
 @media (max-width:420px){.g4{grid-template-columns:1fr 1fr}.kpi b{font-size:24px}.sw{padding:7px 12px 7px 8px;font-size:14px}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
-.lg .vf{width:24px;height:24px;flex:none;margin-right:2px;align-self:center}</style>
+.lg .vf{width:24px;height:24px;flex:none;margin-right:2px;align-self:center}
+/* ---------- GST bills ---------- */
+.blr{list-style:none;margin:0;padding:0}
+.blr li{border-bottom:1px solid var(--line)}
+.blr button{display:flex;align-items:center;gap:12px;width:100%;padding:14px 4px;background:none;border:0;text-align:left}
+.blr .nm{flex:1;min-width:0}.blr .nm b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.blr .nm small{color:var(--mu);font-family:'JetBrains Mono',monospace;font-size:12px}
+.blr .am{text-align:right;flex:none}.blr .am b{display:block;font-weight:800}
+.blps{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;max-height:190px;overflow:auto}
+.blp{display:inline-flex;align-items:center;gap:8px;padding:9px 12px;border-radius:12px;border:1.5px solid var(--line);background:#fff;font-weight:600;font-size:13.5px}
+.blp b{color:var(--mu);font-weight:600}.blp.on{border-color:var(--or);background:#EEEDFF}
+.bll{margin-top:12px;padding:12px 14px;border-radius:16px;background:#F6F6F2;border:1px solid var(--line)}
+.bl1{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.bl2{display:grid;gap:8px;margin-top:8px}.bl2 label{font-size:12.5px;font-weight:600;color:var(--mu)}.bl2 .in{margin-top:4px;padding:10px 11px;font-size:15px}
+.bl2 small{font-weight:500}
+.blt{display:flex;justify-content:space-between;gap:12px;margin-top:10px;color:var(--mu);font-variant-numeric:tabular-nums}
+.blhd{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;padding:14px 16px;border-radius:16px;background:#F6F6F2}
+.blhd small{display:block;color:var(--mu);font-family:'JetBrains Mono',monospace;font-size:12px;margin-top:3px}
+@media (max-width:700px){.g3 .kpi b{font-size:28px}}
+</style>
+<script src="/assets/gst.v1.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js" defer></script>
 <script src="/assets/qr-cards.v9.js" defer></script>
 </head>
@@ -270,10 +289,11 @@ const IC = {
   wa: I('<path d="M3.5 20.5l1.3-4.3A8.5 8.5 0 1 1 8 19.3z"/>'),
   call: I('<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/>'),
   ext: I('<path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/>'),
-  dl: I('<path d="M12 4v11M7 10l5 5 5-5M5 20h14"/>')
+  dl: I('<path d="M12 4v11M7 10l5 5 5-5M5 20h14"/>'),
+  bill: I('<path d="M6 2h12v20l-3-2-3 2-3-2-3 2z"/><path d="M9 7h6M9 11h6M9 15h3"/>')
 };
 const NAV = [
-  ["Run the shop", [["overview", "Overview", "home"], ["orders", "Orders", "orders"], ["menu", "Menu & prices", "menu"], ["store", "Online store", "orders"], ["customers", "Customers", "people"]]],
+  ["Run the shop", [["overview", "Overview", "home"], ["orders", "Orders", "orders"], ["bills", "GST bills", "bill"], ["menu", "Menu & prices", "menu"], ["store", "Online store", "orders"], ["customers", "Customers", "people"]]],
   ["Grow", [["pro", "Keepsake Pro", "star"], ["messages", "Messages", "wa"], ["campaigns", "Offer QRs", "qr"], ["nearby", "Walk-in offers", "pin"], ["reviews", "Reviews", "star"], ["offers", "Offers & marketing", "tag"], ["analytics", "Analytics", "chart"]]],
   ["Set up", [["page", "My page", "page"], ["qr", "QR & cards", "qr"], ["payments", "Payments", "pay"], ["settings", "Team & settings", "gear"]]]
 ];
@@ -392,8 +412,8 @@ function proBar() {
 }
 V.pro = () => {
   const on = isPro(), l = on ? proLeft() : 0, until = new Date(S.proUntil).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
-  const items = [["Table QRs", "A QR for each table. Customers scan, order and pay at the table."], ["Day-end report", "Sales, orders and top items for any day, with a CSV download."], ["Win-back offers", "See new, regular and lapsed customers and send a WhatsApp offer in one tap."], ["Printable order slips", "Print a slip for the kitchen or the parcel from any order."], ["Add sale", "Record sales made in the shop so your totals and customers stay complete."]];
-  return head("Keepsake Pro", "Five tools that bring customers back and save you time. Everything else stays free.", "") +
+  const items = [["GST bills", "Unlimited GST bills from your phone, sent on WhatsApp with a UPI QR to pay."], ["Table QRs", "A QR for each table. Customers scan, order and pay at the table."], ["Day-end report", "Sales, orders and top items for any day, with a CSV download."], ["Win-back offers", "See new, regular and lapsed customers and send a WhatsApp offer in one tap."], ["Printable order slips", "Print a slip for the kitchen or the parcel from any order."], ["Add sale", "Record sales made in the shop so your totals and customers stay complete."]];
+  return head("Keepsake Pro", "Six tools that bring customers back and save you time. Everything else stays free.", "") +
   (!S.active ? inactive() : "") +
   `<section class="cd" style="background:var(--ink);color:#fff;border-color:var(--ink)"><div class="ch"><h2 class="H" style="margin:0">${on ? "Pro is on" : S.proUntil ? "Pro has ended" : "Go Pro"}</h2><span class="pl" style="background:var(--ye)">₹${S.proPrice} / month</span></div>
     <p style="margin:6px 0 0;color:#d6cfc4">${on ? `Active until <b>${until}</b> (${l} day${l === 1 ? "" : "s"} left).` : S.proUntil ? `It ended on ${until}. Renew to use it again.` : "Pay once for 30 days. Renew by hand whenever you like, no auto-debit."}</p>
@@ -647,7 +667,7 @@ $("#main").addEventListener("click", async ev => {
     return;
   }
   const pb = ev.target.closest("[data-pro]");
-  if (pb) { payPlan(pb, "pro", async () => { const j = await api("/api/customer-memories?id=" + S.id); S.proUntil = j.proUntil || 0; S.sale = null; toast("Keepsake Pro is on until " + new Date(S.proUntil).toLocaleDateString("en-IN", { day: "numeric", month: "short" }) + "."); go(); }); return; }
+  if (pb) { payPlan(pb, "pro", async () => { const j = await api("/api/customer-memories?id=" + S.id); S.proUntil = j.proUntil || 0; S.sale = null; S.bl = null; S.blNew = null; toast("Keepsake Pro is on until " + new Date(S.proUntil).toLocaleDateString("en-IN", { day: "numeric", month: "short" }) + "."); go(); }); return; }
   const b = ev.target.closest("[data-sx]"); if (!b) return;
   const a = b.dataset.sx;
   if (a === "buy") { payPlan(b, "store", async () => { const j = await api("/api/customer-memories?id=" + S.id); S.d = j.data; S.store = !!j.store; toast("Online store unlocked. Add your products."); go(); }); return; }
@@ -1102,6 +1122,224 @@ function stamp() {
   const el = $("#stamp"); if (!el || !window.KSQRCards) return setTimeout(() => $("#stamp") && stamp(), 300);
   try { KSQRCards.mount(el, { tone: S.tone, url: pageUrl(), code: shopName().slice(0, 18) }); const w = el.offsetWidth || 336; const sc = 220 / w; el.style.transform = "scale(" + sc + ")"; $("#stampWrap").style.height = Math.round((el.offsetHeight || 480) * sc) + "px"; } catch (e) {}
 }
+
+// ---------- GST bills (Keepsake Pro; 10 free bills on Start) ----------
+const blPost = b => post({ id: S.id, ...b });
+const BLR = [0, 5, 18, 40, 3];
+const BLMODE = { due: "Not paid yet", cash: "Cash", upi: "UPI", card: "Card", bank: "Bank" };
+const rs2 = n => "₹" + (+n || 0).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const blUrl = t => location.origin + "/bill/" + t;
+const blGst = () => !!(S.bl && S.bl.settings && S.bl.settings.gst === "regular");
+const blDefRate = () => S.bl && S.bl.settings ? S.bl.settings.rate : /jewel/.test(S.d.cat || "") ? 3 : /cafe|restaurant|cloud|bakery|sweet|juice|icecream|fastfood|foodtruck|tea/.test(S.d.cat || "") ? 5 : 18;
+const blUpi = () => !!(S.d.upi && /^[\w.\-]{2,64}@[A-Za-z]{2,64}$/.test(S.d.upi.id || ""));
+async function blLoad() { try { S.bl = await blPost({ action: "bl-home" }); } catch (e) { S.bl = { error: e.message }; } if (S.view === "bills") blRedraw(); }
+function blRedraw() { const y = scrollY, sc = $(".pmb") ? $(".pmb").scrollTop : 0; go(); scrollTo(0, y); if ($(".pmb")) $(".pmb").scrollTop = sc; }
+function blWa(x) {
+  const txt = `Namaste${x.name ? " " + x.name : ""}! Here is your bill ${x.no} from ${shopName()} for ${inr(x.total)}.\n${blUrl(x.t)}` + (!x.paid && !x.cancel && blUpi() ? "\nYou can pay by UPI from the link." : "") + "\nThank you!";
+  return "https://wa.me/" + (x.phone ? "91" + x.phone : "") + "?text=" + encodeURIComponent(txt);
+}
+const blStatus = x => x.cancel ? `<span class="pl cancel">Cancelled</span>` : x.paid ? `<span class="pl ready">Paid</span>` : `<span class="pl prep">Payment due</span>`;
+
+function blSetupCard() {
+  const s = S.blSetD || Object.assign({ gst: "regular", gstin: "", legal: "", addr: S.d.addr || "", state: "08", prefix: "INV", inc: true, rate: blDefRate(), terms: "" }, (S.bl && S.bl.settings) || {});
+  S.blSetD = s;
+  const G = window.KSGST, ok = s.gst !== "regular" || (G && G.gstinOk(s.gstin)), st = s.gst === "regular" && G && G.gstinOk(s.gstin) ? G.STATES[s.gstin.slice(0, 2)] : "";
+  return `<section class="cd" style="max-width:640px">
+    <div class="ch"><h2 class="H" style="margin:0">${S.bl && S.bl.settings ? "Bill settings" : "Set up your bills"}</h2>${S.bl && S.bl.settings ? `<button class="lnk" data-bl="setclose">Cancel</button>` : ""}</div>
+    <p class="mu" style="margin:-6px 0 14px">Fill this once. Every bill uses these details.</p>
+    <div class="tabs">${[["regular", "I have a GSTIN"], ["none", "No GST (bill of supply)"]].map(([k, l]) => `<button type="button" data-bl="gsttype" data-k="${k}" class="${s.gst === k ? "on" : ""}">${l}</button>`).join("")}</div>
+    ${s.gst === "regular" ? `<label>GSTIN<input class="in" data-bls="gstin" maxlength="15" autocapitalize="characters" placeholder="e.g. 08ABCDE1234F1Z5" value="${esc(s.gstin)}" style="text-transform:uppercase;font-family:'JetBrains Mono',monospace"></label>
+      <p class="hint" id="blGi">${s.gstin ? (ok ? "✓ Valid · " + esc(st) : "Check the 15 characters of your GSTIN.") : "Your 15-character GST number."}</p>
+      <label style="display:block;margin-top:12px">Legal name (as on GST certificate)<input class="in" data-bls="legal" maxlength="80" placeholder="${esc(shopName())}" value="${esc(s.legal)}"></label>`
+    : `<label>State<select class="in" data-bls="state">${Object.entries((G && G.STATES) || { "08": "Rajasthan" }).map(([c, n]) => `<option value="${c}"${s.state === c ? " selected" : ""}>${esc(n)}</option>`).join("")}</select></label>
+      <p class="hint">Without a GSTIN you can't charge GST. Your bills will say "Bill of supply".</p>`}
+    <label style="display:block;margin-top:12px">Shop address on the bill<input class="in" data-bls="addr" maxlength="200" placeholder="Shop no., street, city, PIN" value="${esc(s.addr)}"></label>
+    <div class="row2" style="margin-top:12px">
+      <label>Invoice prefix<input class="in" data-bls="prefix" maxlength="5" placeholder="INV" value="${esc(s.prefix)}" style="text-transform:uppercase"></label>
+      ${s.gst === "regular" ? `<label>Usual GST rate<select class="in" data-bls="rate">${BLR.map(r => `<option value="${r}"${+s.rate === r ? " selected" : ""}>${r}%</option>`).join("")}</select></label>` : "<span></span>"}
+    </div>
+    <p class="hint">Bills are numbered ${esc((s.prefix || "INV").toUpperCase())}/${(window.KSGST ? KSGST.fy() : "2026-27").slice(2)}/0001, 0002… and start again each April.</p>
+    ${s.gst === "regular" ? `<label class="sw" style="margin-top:12px"><input type="checkbox" data-bls="inc"${s.inc ? " checked" : ""}><i></i>My prices already include GST</label>` : ""}
+    <label style="display:block;margin-top:12px">Terms on the bill (optional)<input class="in" data-bls="terms" maxlength="300" placeholder="e.g. Goods once sold will not be taken back." value="${esc(s.terms)}"></label>
+    <button type="button" class="btn" style="margin-top:18px" data-bl="setsave" ${ok ? "" : "disabled"}>Save bill settings</button>
+  </section>`;
+}
+
+function blNew() {
+  const st = S.bl.settings;
+  return { cust: { name: "", phone: "", gstin: "", addr: "", state: st.state }, b2b: false, lines: [], q: "", inc: st.inc, pay: "cash", note: "", busy: false };
+}
+function blCalc() {
+  const N = S.blNew, st = S.bl.settings, G = window.KSGST, c = N.cust;
+  const pos = N.b2b && G.gstinOk(c.gstin) ? c.gstin.slice(0, 2) : (N.b2b ? c.state : st.state);
+  return G.calc(N.lines.map(x => ({ n: x.n, q: +x.q, p: +x.p, r: +x.r, dp: +x.dp })), { gst: blGst(), inc: N.inc, seller: st.state, pos });
+}
+function blTotHtml() {
+  const k = blCalc(), gst = blGst();
+  return `${gst ? `<div class="blt"><span>Taxable value</span><span>${rs2(k.taxable)}</span></div>${k.intra ? `<div class="blt"><span>CGST + SGST</span><span>${rs2(k.cgst)} + ${rs2(k.sgst)}</span></div>` : `<div class="blt"><span>IGST</span><span>${rs2(k.igst)}</span></div>`}` : ""}
+    ${k.roff ? `<div class="blt"><span>Round off</span><span>${k.roff > 0 ? "+" : "−"}${rs2(Math.abs(k.roff)).slice(1)}</span></div>` : ""}
+    <div class="satot"><span>Total</span><span>${inr(k.total)}</span></div>`;
+}
+function blPick() {
+  const N = S.blNew, q = (N.q || "").toLowerCase(), have = new Set(N.lines.map(x => x.k));
+  const all = menuItems().filter(x => numP(x.p) > 0 && (!q || (x.n + " " + x.sec).toLowerCase().includes(q))).slice(0, 40);
+  if (!all.length) return `<p class="hint">${menuItems().length ? "No item matches. Type it below instead." : "Your menu has no items with prices yet. Type items below."}</p>`;
+  return all.map(x => { const k = x.si + "." + x.ii; return `<button type="button" class="blp${have.has(k) ? " on" : ""}" data-bl="add" data-k="${k}"><span>${esc(x.n)}</span><b>${inr(numP(x.p))}</b></button>`; }).join("");
+}
+function blLine(x, i) {
+  const gst = blGst();
+  return `<div class="bll"><div class="bl1"><b>${esc(x.n)}</b><button type="button" class="lnk" data-bl="rm" data-i="${i}">Remove</button></div>
+    <div class="bl2" style="grid-template-columns:repeat(${gst ? 3 : 2},minmax(0,1fr))">
+      <label>Qty<input class="in" data-bli="q" data-i="${i}" inputmode="decimal" value="${esc(x.q)}"></label>
+      <label>Price ₹<input class="in" data-bli="p" data-i="${i}" inputmode="decimal" value="${esc(x.p)}"></label>
+      ${gst ? `<label>GST<select class="in" data-bli="r" data-i="${i}">${BLR.map(r => `<option value="${r}"${+x.r === r ? " selected" : ""}>${r}%</option>`).join("")}</select></label>` : ""}
+    </div>
+    <div class="bl2" style="grid-template-columns:repeat(2,minmax(0,1fr))">
+      ${gst ? `<label>HSN/SAC <small>(optional)</small><input class="in" data-bli="hsn" data-i="${i}" inputmode="numeric" maxlength="8" value="${esc(x.hsn)}"></label>` : ""}
+      <label>Discount % <small>(optional)</small><input class="in" data-bli="dp" data-i="${i}" inputmode="decimal" value="${esc(x.dp || "")}" placeholder="0"></label>
+    </div></div>`;
+}
+function blNewSheet() {
+  const N = S.blNew; if (!N) return "";
+  if (N.locked) return `<div class="pm" data-blbg><div class="pmb"><div class="ch"><h2 class="H" style="margin:0">Your free bills are used</h2><button class="lnk" data-bl="close">Close</button></div>
+    <p class="mu" style="margin:8px 0 0">You've made ${S.bl.free} free bills. Keepsake Pro gives you unlimited GST bills, WhatsApp sending and your bill list, plus every other Pro tool, for ₹${S.proPrice} for 30 days. You renew by hand.</p>
+    <button type="button" class="btn" style="margin-top:16px;width:100%" data-pro="buy">${S.proUntil ? "Renew" : "Start Pro"} · ₹${S.proPrice}</button></div></div>`;
+  const c = N.cust, gst = blGst(), G = window.KSGST;
+  return `<div class="pm" data-blbg><div class="pmb"><div class="ch"><h2 class="H" style="margin:0">New ${gst ? "GST bill" : "bill"}</h2><button class="lnk" data-bl="close">Close</button></div>
+    <div class="row2"><label>Customer name<input class="in" data-blc="name" maxlength="80" placeholder="Walk-in customer" value="${esc(c.name)}"></label><label>WhatsApp number<input class="in" data-blc="phone" inputmode="numeric" maxlength="14" placeholder="10-digit mobile" value="${esc(c.phone)}"></label></div>
+    ${gst ? `<label class="sw" style="margin-top:12px"><input type="checkbox" data-bl="b2b"${N.b2b ? " checked" : ""}><i></i>Business customer (add their GSTIN)</label>` : ""}
+    ${gst && N.b2b ? `<div class="row2" style="margin-top:10px"><label>Their GSTIN<input class="in" data-blc="gstin" maxlength="15" style="text-transform:uppercase;font-family:'JetBrains Mono',monospace" value="${esc(c.gstin)}"></label><label>Their state${c.gstin && G.gstinOk(c.gstin) ? `<input class="in" disabled value="${esc(G.STATES[c.gstin.slice(0, 2)])}">` : `<select class="in" data-blc="state">${Object.entries(G.STATES).map(([k, n]) => `<option value="${k}"${c.state === k ? " selected" : ""}>${esc(n)}</option>`).join("")}</select>`}</label></div>
+      <label style="display:block;margin-top:10px">Their address<input class="in" data-blc="addr" maxlength="200" value="${esc(c.addr)}"></label>` : ""}
+    <b style="display:block;margin-top:18px">Add items</b>
+    <input class="in" data-bl-q placeholder="Search your menu or products" value="${esc(N.q)}">
+    <div class="blps" id="blPick">${blPick()}</div>
+    <div class="row2" style="grid-template-columns:2fr 1fr auto;align-items:end;margin-top:8px"><label>Other item<input class="in" id="blOn" placeholder="Item name"></label><label>Price ₹<input class="in" id="blOp" inputmode="decimal" placeholder="0"></label><button type="button" class="btn g s" data-bl="addo" style="margin-bottom:1px">Add</button></div>
+    <div id="blLines">${N.lines.map(blLine).join("")}</div>
+    ${gst ? `<label class="sw" style="margin-top:14px"><input type="checkbox" data-bl="inc"${N.inc ? " checked" : ""}><i></i>Prices include GST</label>` : ""}
+    <div id="blTot">${N.lines.length ? blTotHtml() : ""}</div>
+    <b style="display:block;margin-top:16px">Payment</b>
+    <div class="tabs" style="margin:8px 0 0">${Object.entries(BLMODE).filter(([k]) => k !== "bank").map(([k, l]) => `<button type="button" data-bl="pay" data-k="${k}" class="${N.pay === k ? "on" : ""}">${l}</button>`).join("")}</div>
+    <label style="display:block;margin-top:12px">Note on the bill (optional)<input class="in" data-blc="note" maxlength="200" value="${esc(N.note)}"></label>
+    <button type="button" class="btn" style="margin-top:16px;width:100%" data-bl="save" ${N.lines.length ? "" : "disabled"}>Save bill</button>
+  </div></div>`;
+}
+function blBillSheet() {
+  const t = S.blOpen; if (!t) return "";
+  const x = (S.bl.bills || []).find(b => b.t === t); if (!x) return "";
+  const fresh = S.blFresh === t;
+  return `<div class="pm" data-blbg><div class="pmb"><div class="ch"><h2 class="H" style="margin:0">${fresh ? "Bill saved" : esc(x.no)}</h2><button class="lnk" data-bl="close">Close</button></div>
+    <div class="blhd"><div><b>${esc(x.name || "Walk-in customer")}</b><small>${esc(x.no)} · ${new Date(x.at).toLocaleString("en-IN", { day: "numeric", month: "short", hour: "numeric", minute: "2-digit" })}</small></div><div style="text-align:right"><b style="font-size:22px">${inr(x.total)}</b>${blStatus(x)}</div></div>
+    <a class="btn w" style="width:100%;margin-top:16px" href="${esc(blWa(x))}" target="_blank" rel="noopener">${IC.wa} Send on WhatsApp${x.phone ? "" : "…"}</a>
+    <div class="row2" style="margin-top:10px"><a class="btn g" href="/bill/${esc(t)}" target="_blank" rel="noopener">Open bill</a><button type="button" class="btn g" data-bl="copy" data-t="${esc(t)}">Copy link</button></div>
+    ${x.cancel ? "" : x.paid ? `<button type="button" class="lnk" style="margin-top:16px" data-bl="unpaid" data-t="${esc(t)}">Mark as not paid</button>`
+      : `<b style="display:block;margin-top:18px">Got paid? Mark it</b><div class="tabs" style="margin:8px 0 0">${["cash", "upi", "card", "bank"].map(k => `<button type="button" data-bl="paid" data-k="${k}" data-t="${esc(t)}">${BLMODE[k]}</button>`).join("")}</div>`}
+    ${x.cancel ? `<p class="hint">This bill is cancelled. Its number stays used, as GST rules ask.</p>` : `<p style="margin:18px 0 0"><button type="button" class="lnk" data-bl="cancel" data-t="${esc(t)}">${S.blCx === t ? "Tap again to cancel this bill" : "Cancel this bill"}</button></p>`}
+  </div></div>`;
+}
+
+V.bills = () => {
+  const B = S.bl, top = s => head("GST bills", "Make a bill, send it on WhatsApp, get paid by UPI.", s || "");
+  if (!B) { blLoad(); return top() + `<div class="empty">Loading your bills…</div>`; }
+  if (B.error) return top() + `<div class="empty"><b>Bills couldn't load.</b>${esc(B.error)}<br><button class="btn" data-bl="reload">Try again</button></div>`;
+  if (!B.settings || S.blSet) return top() + blSetupCard();
+  const now = new Date(), m0 = +new Date(now.getFullYear(), now.getMonth(), 1);
+  const live = B.bills.filter(x => !x.cancel), month = live.filter(x => x.at >= m0), due = live.filter(x => !x.paid);
+  const f = S.blf || "all", q = (S.blq || "").toLowerCase();
+  const list = B.bills.filter(x => f === "all" ? true : f === "due" ? !x.paid && !x.cancel : f === "paid" ? x.paid && !x.cancel : x.cancel)
+    .filter(x => !q || (x.no + " " + (x.name || "") + " " + (x.phone || "")).toLowerCase().includes(q)).slice(0, 200);
+  const left = B.pro ? null : Math.max(0, B.free - B.used);
+  return top(`<div class="tg"><button class="btn" data-bl="new">+ New bill</button><button class="btn g" data-bl="set">Bill settings</button></div>`) +
+  (left != null ? `<div class="bar" style="margin-bottom:16px"><span><b>${left ? left + " of " + B.free + " free bills left." : "Your " + B.free + " free bills are used."}</b> Keepsake Pro gives you unlimited bills for ₹${S.proPrice} a month.</span><button class="btn" data-pro="buy">${S.proUntil ? "Renew" : "Start Pro"} · ₹${S.proPrice}</button></div>` : "") +
+  `<div class="g3" style="margin-bottom:16px">
+    <div class="kpi k"><span>Billed this month</span><b>${inr(month.reduce((t, x) => t + x.total, 0))}</b><small>${month.length} bill${month.length === 1 ? "" : "s"}</small></div>
+    <div class="kpi"><span>Payment due</span><b>${inr(due.reduce((t, x) => t + x.total, 0))}</b><small class="mu">${due.length} unpaid bill${due.length === 1 ? "" : "s"}</small></div>
+    <div class="kpi"><span>${blGst() ? "GST this month" : "Bills in total"}</span><b>${blGst() ? inr(month.reduce((t, x) => t + (x.tax || 0), 0)) : live.length}</b><small class="mu">${blGst() ? "CGST + SGST + IGST" : "not counting cancelled"}</small></div>
+  </div>
+  <section class="cd">
+    <div class="srch"><input class="in" data-bl-s placeholder="Search bill no., name or number" value="${esc(S.blq || "")}" aria-label="Search bills"><div class="tabs" style="margin:0">${[["all", "All"], ["due", "Unpaid"], ["paid", "Paid"], ["cx", "Cancelled"]].map(([k, l]) => `<button type="button" data-bl="f" data-k="${k}" class="${f === k ? "on" : ""}">${l}</button>`).join("")}</div></div>
+    ${list.length ? `<ul class="blr">${list.map(x => `<li><button type="button" data-bl="open" data-t="${esc(x.t)}"><span class="nm"><b>${esc(x.name || "Walk-in customer")}</b><small>${esc(x.no)} · ${ago(x.at)}</small></span><span class="am"><b>${inr(x.total)}</b>${blStatus(x)}</span></button></li>`).join("")}</ul>`
+      : `<div class="empty" style="margin-top:14px"><b>${B.bills.length ? "No bills match." : "No bills yet"}</b>${B.bills.length ? "Try another search or filter." : "Make your first bill in under a minute. Items come straight from your menu."}${B.bills.length ? "" : `<br><button class="btn" data-bl="new">+ New bill</button>`}</div>`}
+  </section>${blNewSheet()}${blBillSheet()}`;
+};
+
+function blReadSet() {
+  const s = S.blSetD || {};
+  $$("[data-bls]").forEach(e => { const k = e.dataset.bls; s[k] = e.type === "checkbox" ? e.checked : k === "gstin" || k === "prefix" ? e.value.toUpperCase().replace(/\s/g, "") : e.value; });
+  S.blSetD = s; return s;
+}
+$("#main").addEventListener("input", ev => {
+  const e = ev.target, N = S.blNew;
+  if (e.matches("[data-bls]")) {
+    const s = blReadSet();
+    if (e.dataset.bls === "gstin") { const ok = window.KSGST && KSGST.gstinOk(s.gstin); $("#blGi").textContent = s.gstin ? (ok ? "✓ Valid · " + KSGST.STATES[s.gstin.slice(0, 2)] : "Check the 15 characters of your GSTIN.") : "Your 15-character GST number."; const b = $('[data-bl="setsave"]'); if (b) b.disabled = !ok; }
+    return;
+  }
+  if (e.matches("[data-bl-s]")) { S.blq = e.value; const y = scrollY, at = e.selectionStart; go(); scrollTo(0, y); const n = $("[data-bl-s]"); if (n) { n.focus(); n.setSelectionRange(at, at); } return; }
+  if (!N) return;
+  if (e.matches("[data-bl-q]")) { N.q = e.value; $("#blPick").innerHTML = blPick(); return; }
+  if (e.matches("[data-blc]")) {
+    const k = e.dataset.blc; if (k === "note") N.note = e.value; else N.cust[k] = k === "gstin" ? e.value.toUpperCase().replace(/\s/g, "") : e.value;
+    if (k === "gstin" && window.KSGST.gstinOk(N.cust.gstin)) { blRedraw(); return; }
+    if (k === "gstin" || k === "state") $("#blTot").innerHTML = N.lines.length ? blTotHtml() : "";
+    return;
+  }
+  if (e.matches("[data-bli]")) { const x = N.lines[+e.dataset.i]; if (!x) return; x[e.dataset.bli] = e.value; $("#blTot").innerHTML = blTotHtml(); }
+});
+$("#main").addEventListener("change", ev => { const e = ev.target; if (S.blNew && e.matches("select[data-bli], select[data-blc]")) { e.dispatchEvent(new Event("input", { bubbles: true })); } });
+$("#main").addEventListener("click", async ev => {
+  if (ev.target.matches("[data-blbg]")) { S.blNew = null; S.blOpen = null; S.blCx = null; blRedraw(); return; }
+  const b = ev.target.closest("[data-bl]"); if (!b) return;
+  const a = b.dataset.bl, N = S.blNew;
+  if (a === "reload") { S.bl = null; go(); return; }
+  if (a === "set") { S.blSet = true; S.blSetD = null; go(); return; }
+  if (a === "setclose") { S.blSet = false; S.blSetD = null; go(); return; }
+  if (a === "gsttype") { blReadSet().gst = b.dataset.k; go(); return; }
+  if (a === "setsave") {
+    const s = blReadSet(); b.disabled = true;
+    try { const j = await blPost({ action: "bl-settings", settings: { ...s, rate: +s.rate } }); S.bl.settings = j.settings; S.blSet = false; S.blSetD = null; toast("Bill settings saved."); go(); }
+    catch (x) { b.disabled = false; toast(x.message); }
+    return;
+  }
+  if (a === "f") { S.blf = b.dataset.k; blRedraw(); return; }
+  if (a === "new") { S.blNew = !S.bl.pro && S.bl.used >= S.bl.free ? { locked: true } : blNew(); go(); return; }
+  if (a === "close") { S.blNew = null; S.blOpen = null; S.blCx = null; S.blFresh = null; blRedraw(); return; }
+  if (a === "open") { S.blOpen = b.dataset.t; S.blCx = null; S.blFresh = null; blRedraw(); return; }
+  if (a === "copy") { try { await navigator.clipboard.writeText(blUrl(b.dataset.t)); toast("Link copied."); } catch (x) { toast(blUrl(b.dataset.t)); } return; }
+  if (a === "paid" || a === "unpaid" || a === "cancel") {
+    if (a === "cancel" && S.blCx !== b.dataset.t) { S.blCx = b.dataset.t; blRedraw(); return; }
+    try {
+      const j = await blPost(a === "cancel" ? { action: "bl-cancel", t: b.dataset.t } : { action: "bl-paid", t: b.dataset.t, paid: a === "paid", mode: b.dataset.k });
+      const x = S.bl.bills.find(y => y.t === b.dataset.t); if (x) { x.paid = j.bill.paid; x.cancel = j.bill.cancel; }
+      S.blCx = null; toast(a === "cancel" ? "Bill cancelled." : a === "paid" ? "Marked as paid." : "Marked as not paid."); blRedraw();
+    } catch (x) { toast(x.message); }
+    return;
+  }
+  if (!N || N.locked) return;
+  if (a === "b2b") { N.b2b = b.checked; blRedraw(); return; }
+  if (a === "inc") { N.inc = b.checked; $("#blTot").innerHTML = N.lines.length ? blTotHtml() : ""; return; }
+  if (a === "pay") { N.pay = b.dataset.k; blRedraw(); return; }
+  if (a === "add") {
+    const k = b.dataset.k, [si, ii] = k.split(".").map(Number), x = ((S.d.menu || [])[si] || { items: [] }).items[ii]; if (!x) return;
+    const have = N.lines.find(l => l.k === k);
+    if (have) have.q = (+have.q || 0) + 1; else N.lines.push({ k, n: x.n, q: 1, p: numP(x.p), r: blGst() ? (x.gst != null ? x.gst : blDefRate()) : 0, hsn: x.hsn || "", dp: "" });
+    blRedraw(); return;
+  }
+  if (a === "addo") {
+    const n = ($("#blOn").value || "").trim(), p = +($("#blOp").value || "");
+    if (!n || !(p >= 0) || $("#blOp").value === "") { toast("Add a name and a price."); return; }
+    N.lines.push({ k: "o" + Date.now(), n, q: 1, p, r: blGst() ? blDefRate() : 0, hsn: "", dp: "" }); blRedraw(); return;
+  }
+  if (a === "rm") { N.lines.splice(+b.dataset.i, 1); blRedraw(); return; }
+  if (a === "save") {
+    if (N.busy) return; N.busy = true; b.disabled = true;
+    try {
+      const j = await blPost({ action: "bl-create", cust: N.b2b ? N.cust : { name: N.cust.name, phone: N.cust.phone }, items: N.lines.map(x => ({ n: x.n, q: +x.q, p: +x.p, r: +x.r, hsn: x.hsn, dp: +x.dp || 0 })), inc: N.inc, paid: N.pay !== "due", mode: N.pay, note: N.note });
+      const x = j.bill;
+      S.bl.bills.unshift({ t: x.t, no: x.no, at: x.at, name: x.cust.name, phone: x.cust.phone, total: x.calc.total, tax: x.calc.tax, paid: x.paid, cancel: x.cancel });
+      S.bl.used = j.used; S.blNew = null; S.blOpen = x.t; S.blFresh = x.t; toast("Bill " + x.no + " saved."); blRedraw();
+    } catch (x) { N.busy = false; b.disabled = false; toast(x.message); }
+  }
+});
 
 V.payments = () => {
   const d = S.d, upi = d.upi && d.upi.id;
