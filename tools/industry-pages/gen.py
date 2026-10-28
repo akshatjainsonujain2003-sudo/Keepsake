@@ -4,7 +4,7 @@ from data import P, ORDER
 REPO = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 CHIPS = {"cafe": ["Cafés", "Restaurants", "Bakeries", "Cloud kitchens", "Juice bars"], "salon": ["Salons", "Beauty parlours", "Spas", "Barbers", "Bridal makeup"], "gym": ["Gyms", "Yoga studios", "CrossFit", "Dance classes", "Martial arts"],
  "real-estate": ["Property dealers", "Builders", "Rentals & PG", "Plots & land", "Interiors"], "general-store": ["Kirana", "General stores", "Dairy", "Hardware", "Mobile shops"],
- "boutique": ["Boutiques", "Sarees & ethnic", "Menswear", "Kids wear", "Jewellery"], "pharmacy": ["Pharmacies", "Chemists", "Medical stores", "Surgical", "Ayurveda"], "clinic": ["Clinics", "Dentists", "Physiotherapy", "Diagnostic labs", "Eye clinics"]}
+ "boutique": ["Boutiques", "Sarees & ethnic", "Menswear", "Kids wear", "Jewellery"], "pharmacy": ["Pharmacies", "Chemists", "Medical stores", "Surgical", "Ayurveda"], "clinic": ["Clinics", "Dentists", "Pharmacies", "Diagnostic labs", "Physiotherapy"]}
 TAB = {"cafe": "Menu", "salon": "Services", "gym": "Plans", "real-estate": "Properties", "general-store": "Products", "boutique": "Collection", "pharmacy": "Products", "clinic": "Services"}
 COVER = {"cafe": "cafe-interior.webp", "salon": "salon-cover.webp", "gym": "gym-cover.webp", "real-estate": "re-villa.webp", "general-store": "kirana-cover.webp", "boutique": "bq-store1.webp", "pharmacy": "clinic-micro.webp", "clinic": "clinic-cover.webp"}
 esc = lambda s: html.escape(s, quote=True)
@@ -155,7 +155,7 @@ def page(slug):
 </main>
 {footer()}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script><script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
-<script src="/assets/ind.v2.js" defer></script><script src="/assets/gk.v1.js" defer></script>
+<script src="/assets/ind.v4.js" defer></script><script src="/assets/gk.v1.js" defer></script>
 <script src="/assets/ks-pixel.v1.js" defer></script>
 </body>
 </html>
