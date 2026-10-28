@@ -212,7 +212,7 @@ async function markPaid(orderId, paymentId) {
     }
     await db.cmd("ZADD", "orders-paid", order.paidAt, orderId);
     // Phone alert to the admin app (best effort, never blocks the payment for long).
-    try { await Promise.race([require("./_hq").notify(), new Promise(r => setTimeout(r, 5000))]); } catch (e) {}
+    if (order.kind === "biz") { try { await Promise.race([require("./_hq").notify(), new Promise(r => setTimeout(r, 5000))]); } catch (e) {} }
     if (order.sp) { try { await require("./_sales").credit(order.sp, order.memory); } catch (e) {} }
     if (order.claim) { try { await require("./_prepaid").linkBiz(order.claim, order.memory, order.owner); } catch (e) {} }
     // Printed QR to deliver: make its own QR code (getkeepsake.in/k/CODE) already linked to this page, ready to print in admin.

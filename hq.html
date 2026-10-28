@@ -2,7 +2,7 @@
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
-<title>GetKeepsake HQ</title>
+<title>HQ · GetKeepsake for Business</title>
 <meta name="theme-color" content="#0B0B14">
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="KS HQ">
@@ -116,13 +116,13 @@ nav .dot{position:absolute;top:0;left:calc(50% + 6px);min-width:18px;height:18px
 </style></head>
 <body>
 <section id="login" hidden><div class="bx">
-  <div class="lg"><svg viewBox="0 0 48 48" aria-hidden="true"><g fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"><path d="M5 15V9a4 4 0 0 1 4-4h6"/><path d="M33 5h6a4 4 0 0 1 4 4v6"/><path d="M43 33v6a4 4 0 0 1-4 4h-6"/><path d="M15 43H9a4 4 0 0 1-4-4v-6"/></g><rect x="11" y="22" width="26" height="4" rx="2" fill="#D4FF3F"/></svg></div><h1 class="fd">GetKeepsake HQ</h1><p>Your orders, shops and customers in one place.</p>
+  <div class="lg"><svg viewBox="0 0 48 48" aria-hidden="true"><g fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"><path d="M5 15V9a4 4 0 0 1 4-4h6"/><path d="M33 5h6a4 4 0 0 1 4 4v6"/><path d="M43 33v6a4 4 0 0 1-4 4h-6"/><path d="M15 43H9a4 4 0 0 1-4-4v-6"/></g><rect x="11" y="22" width="26" height="4" rx="2" fill="#D4FF3F"/></svg></div><h1 class="fd">GetKeepsake HQ</h1><p>Orders, shops and owners for GetKeepsake for Business.</p>
   <input class="in" id="key" type="password" placeholder="Admin key" autocomplete="current-password">
   <button class="bt w" id="go">Open</button><div class="err" id="lerr"></div><span class="mono">Owner only · Admin key</span>
 </div></section>
 
 <main id="app" hidden></main>
-<nav id="nav" hidden><a class="brand" href="/hq"><svg viewBox="0 0 48 48" aria-hidden="true"><g fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"><path d="M5 15V9a4 4 0 0 1 4-4h6"/><path d="M33 5h6a4 4 0 0 1 4 4v6"/><path d="M43 33v6a4 4 0 0 1-4 4h-6"/><path d="M15 43H9a4 4 0 0 1-4-4v-6"/></g><rect x="11" y="22" width="26" height="4" rx="2" fill="#D4FF3F"/></svg><span><b>GetKeepsake</b><small>HQ · Admin</small></span></a><div class="in2">
+<nav id="nav" hidden><a class="brand" href="/hq"><svg viewBox="0 0 48 48" aria-hidden="true"><g fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"><path d="M5 15V9a4 4 0 0 1 4-4h6"/><path d="M33 5h6a4 4 0 0 1 4 4v6"/><path d="M43 33v6a4 4 0 0 1-4 4h-6"/><path d="M15 43H9a4 4 0 0 1-4-4v-6"/></g><rect x="11" y="22" width="26" height="4" rx="2" fill="#D4FF3F"/></svg><span><b>GetKeepsake</b><small>For business · HQ</small></span></a><div class="in2">
   <button data-t="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Home</button>
   <button data-t="orders"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l9-4 9 4-9 4z"/><path d="M3 7v10l9 4 9-4V7M12 11v10"/></svg>Orders<span class="dot" id="shipDot" hidden></span></button>
   <button data-t="shops"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9l1.5-5h13L20 9M4 9h16v11H4zM4 9a3 3 0 0 0 5.3 1.9A3 3 0 0 0 12 12a3 3 0 0 0 2.7-1.1A3 3 0 0 0 20 9"/></svg>Shops</button>
@@ -238,7 +238,7 @@ function draw() {
 function home() {
   const s = S.sum; const h = new Date().getHours(), hi = h < 12 ? "Good morning" : h < 17 ? "Good afternoon" : "Good evening";
   if (!s) return top("HQ", hi) + loading();
-  const mx = Math.max(1, ...s.days.map(d => d.v)), tot = s.kinds.biz + s.kinds.site + s.kinds.card || 1;
+  const mx = Math.max(1, ...s.days.map(d => d.v)), M = s.mix || { page: 0, store: 0, pro: 0, extra: 0 }, tot = M.page + M.store + M.pro + M.extra || 1;
   const recent = s.recent.map(orderRow).join("") || `<div class="empty">No orders yet. They'll show up here the moment someone pays.</div>`;
   return top("HQ", hi + " · " + new Date().toLocaleDateString("en-IN", { weekday: "long", day: "numeric", month: "long" })) +
   `<div class="card hero"><div class="lab">Today</div><div class="big fd">${rs(s.today.rev)}<small>${s.today.n} order${s.today.n === 1 ? "" : "s"}</small></div></div>
@@ -246,8 +246,8 @@ function home() {
   ${s.toShip ? `<div class="card alert" data-go="orders" data-of="ship"><span class="n fd">${s.toShip}</span><div><b>${s.toShip === 1 ? "Order" : "Orders"} to print &amp; ship</b><small>Printed QRs and frames waiting</small></div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 6 6 6-6 6"/></svg></div>` : ""}
   <div class="card" id="alertCard" hidden><div style="display:flex;gap:12px;align-items:center"><div style="flex:1"><b>Get a phone alert for every order</b><small style="display:block;color:var(--mu)">Even when this app is closed.</small></div><button class="bt sm" id="alertBtn">Turn on</button></div></div>
   <div class="card"><div class="lab">Last 30 days</div><div class="chart">${s.days.map((d, i) => `<i class="${i === s.days.length - 1 ? "t" : d.v ? "v" : ""}" style="height:${Math.max(3, Math.round(d.v * 100 / mx))}%" title="${d.d}: ${rs(d.v)} · ${d.n} orders"></i>`).join("")}</div><div class="cx"><span>${new Date(s.days[0].d).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}</span><span>Best day ${rs(mx === 1 ? 0 : mx)}</span><span>Today</span></div>
-  <div class="mix"><span style="width:${s.kinds.biz * 100 / tot}%;background:var(--gd)"></span><span style="width:${s.kinds.site * 100 / tot}%;background:var(--bl)"></span><span style="width:${s.kinds.card * 100 / tot}%;background:var(--gn)"></span></div>
-  <div class="leg"><span><i style="background:var(--gd)"></i>Shops ${rs(s.kinds.biz)}</span><span><i style="background:var(--bl)"></i>Websites ${rs(s.kinds.site)}</span><span><i style="background:var(--gn)"></i>Cards ${rs(s.kinds.card)}</span></div></div>
+  <div class="mix"><span style="width:${M.page * 100 / tot}%;background:var(--gd)"></span><span style="width:${M.store * 100 / tot}%;background:var(--lav)"></span><span style="width:${M.pro * 100 / tot}%;background:#fff"></span><span style="width:${M.extra * 100 / tot}%;background:var(--gn)"></span></div>
+  <div class="leg"><span><i style="background:var(--gd)"></i>Business pages ${rs(M.page)}</span><span><i style="background:var(--lav)"></i>Online store ${rs(M.store)}</span><span><i style="background:#fff"></i>Pro ${rs(M.pro)}</span><span><i style="background:var(--gn)"></i>Add-ons ${rs(M.extra)}</span></div></div>
   <div class="g3" style="grid-template-columns:1fr 1fr"><div class="card" data-go="shops"><small>New shops · 7 days</small><b class="fd">${s.newShops}</b></div><div class="card" data-go="more"><small>Phones with alerts</small><b class="fd">${s.alerts}</b></div></div>
   <div class="sec"><h2>Latest orders</h2><button data-go="orders" data-of="all">See all</button></div>${recent}`;
 }
@@ -264,7 +264,7 @@ function orders() {
   const n = k => os.filter(F[k]).length;
   const list = os.filter(F[S.of]).filter(o => !q || [o.title, o.name, o.email, o.phone, o.id, o.paymentId, o.qrCode, o.address && o.address.city, o.address && o.address.phone].join(" ").toLowerCase().includes(q));
   return top("Orders", os.length + " paid orders") + srch("orders", "Search name, phone, shop, city…") +
-  `<div class="chips">${[["ship", "To ship"], ["all", "All"], ["biz", "Shops"], ["keep", "Keepsakes"], ["shipped", "Shipped"]].map(([k, l]) => `<button data-f="${k}" class="${S.of === k ? "on" : ""}">${l} · ${n(k)}</button>`).join("")}</div>` +
+  `<div class="chips">${[["ship", "To ship"], ["all", "All"], ["shipped", "Shipped"]].map(([k, l]) => `<button data-f="${k}" class="${S.of === k ? "on" : ""}">${l} · ${n(k)}</button>`).join("")}</div>` +
   (list.map(orderRow).join("") || `<div class="empty">${S.of === "ship" ? "Nothing to ship. All caught up ✓" : "No orders match."}</div>`);
 }
 function orderSheet(id) {
@@ -302,8 +302,8 @@ function shops() {
   const hint = S.pf === "draft" ? `<p style="color:var(--mu);font-size:14px;margin:0 2px 12px">Shops that saved a page but haven't paid. Your warmest leads: tap one to WhatsApp them.</p>` : "";
   // Offer QR campaigns where customers say they visited but the shop didn't redeem (the shop may be skipping the QR to save claims).
   const fl = (S.flags || []).length ? `<div class="card" style="border:1.5px solid #e2725b;margin-bottom:14px"><b style="display:block;margin-bottom:6px">⚠ Offer QR flags · ${S.flags.length}</b>${S.flags.map(f => `<button class="row" data-p="${esc(f.page)}" style="padding:10px 0"><span class="mid"><b>${esc(f.shop || f.page)} · ${esc(f.title)}</b><small>${esc(f.reasons.join(" · "))} · ${f.claim} claims</small></span></button>`).join("")}<small style="color:var(--mu)">Call the shop: are they giving offers without the counter QR?</small></div>` : "";
-  return top("Shops & pages", ps.filter(p => p.kind === "biz").length + " business pages") + fl + srch("shops", "Search shop, owner, area…") +
-  `<div class="chips">${[["live", "Live shops"], ["draft", "Shop drafts"], ["keep", "Live keepsakes"], ["kdraft", "Keepsake drafts"]].map(([k, l]) => `<button data-f="${k}" class="${S.pf === k ? "on" : ""}">${l} · ${n(k)}</button>`).join("")}</div>` + hint +
+  return top("Shops", ps.length + " business pages") + fl + srch("shops", "Search shop, owner, area…") +
+  `<div class="chips">${[["live", "Live shops"], ["draft", "Shop drafts"]].map(([k, l]) => `<button data-f="${k}" class="${S.pf === k ? "on" : ""}">${l} · ${n(k)}</button>`).join("")}</div>` + hint +
   (list.map(p => `<button class="row" data-p="${esc(p.id)}"><span class="av">${IC[p.kind]}</span><span class="mid"><b>${esc(p.title || "Untitled")}</b><small>${esc([p.cat, p.area].filter(Boolean).join(" · ") || KIND[p.kind])} · ${esc(p.owner.name)}</small></span><span class="rt">${p.live ? '<span class="tag g">Live</span>' : '<span class="tag y">Draft</span>'}<small style="display:block">${p.live ? p.views + " opens" : ago(p.updated)}</small></span></button>`).join("") || `<div class="empty">Nothing here yet.</div>`);
 }
 function pageSheet(id) {
@@ -404,8 +404,8 @@ function more() {
   <div class="li"><div><b>Alerts on this phone</b><small id="alertTxt">Checking…</small></div><button class="sw" id="alertBtn" aria-label="Order alerts"></button></div>
   <div class="li"><div><b>Send a test alert</b><small>${S.sum ? S.sum.alerts : 0} phone${S.sum && S.sum.alerts === 1 ? "" : "s"} signed up</small></div><button class="bt sm gh" id="testBtn">Test</button></div></div>
   ${std ? "" : `<div class="card"><div class="lab" style="margin-bottom:8px">Install as an app</div><p style="margin:0 0 6px"><b>Android (Chrome):</b> tap ⋮ → <b>Install app</b> (or Add to Home screen).</p><p style="margin:0"><b>iPhone (Safari):</b> tap Share → <b>Add to Home Screen</b>, then open it from the home screen. iPhone alerts only work from the installed app.</p></div>`}
-  <div class="card"><div class="lab" style="margin-bottom:4px">More tools (full admin)</div>
-  ${[["Prepaid & business QR codes", "Make batches, print sheets"], ["Salespeople", "Codes, PINs, commission, payouts"], ["Coupons & creator codes", "Discounts and creator payouts"], ["Gift shop partners", "Shop keys and renewals"]].map(([a, b]) => `<a class="li" href="/admin" style="text-decoration:none;color:inherit"><div><b>${a}</b><small>${b}</small></div><span style="color:var(--gd)">↗</span></a>`).join("")}</div>
+  <div class="card"><div class="lab" style="margin-bottom:4px">More tools</div>
+  ${[["Prepaid & business QR codes", "Make batches, print sheets"], ["Salespeople", "Codes, PINs, commission, payouts"]].map(([a, b]) => `<a class="li" href="/admin" style="text-decoration:none;color:inherit"><div><b>${a}</b><small>${b}</small></div><span style="color:var(--gd)">↗</span></a>`).join("")}</div>
   <button class="bt w gh" id="logout">Log out of HQ</button>`;
 }
 
