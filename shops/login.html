@@ -7,7 +7,7 @@
 <meta name="description" content="Log in or create your GetKeepsake for Business account to edit your shop page, see orders and run your loyalty card.">
 <meta name="robots" content="noindex">
 <meta name="theme-color" content="#1F1BF2">
-<link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
+<link rel="icon" href="/assets/brand/favicon.ico" sizes="any"><link rel="icon" type="image/svg+xml" href="/assets/brand/favicon.svg"><link rel="icon" type="image/png" sizes="192x192" href="/assets/brand/icon-192.png"><link rel="apple-touch-icon" href="/assets/brand/icon-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap">
 <style>
@@ -24,7 +24,7 @@ a{color:inherit}
 .side::before{content:"";position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.07) 1px,transparent 1px);background-size:64px 64px;-webkit-mask-image:radial-gradient(80% 70% at 60% 40%,#000,transparent 75%);mask-image:radial-gradient(80% 70% at 60% 40%,#000,transparent 75%)}
 .side>*{position:relative}
 .logo{display:inline-flex;align-items:baseline;gap:8px;text-decoration:none;font:700 21px/1 var(--fd);letter-spacing:-.04em;min-height:44px;align-items:center}
-.logo .mk{width:12px;height:12px;border-radius:50%;background:var(--lime);box-shadow:0 0 18px var(--lime)}
+.logo .vf{width:26px;height:26px;flex:none}
 .logo small{font:600 10px var(--fm);letter-spacing:.06em;text-transform:uppercase;opacity:.8}
 .lbl{font:600 12px/1.4 var(--fm);letter-spacing:.06em;text-transform:uppercase}
 .side .lbl{color:rgba(255,255,255,.78);margin-top:clamp(40px,8vh,96px)}
@@ -95,7 +95,7 @@ input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 4px rgba(31,2
 <body>
 <div class="shell">
   <aside class="side">
-    <a class="logo" href="/"><span class="mk" aria-hidden="true"></span>GetKeepsake<small>for business</small></a>
+    <a class="logo" href="/"><svg class="vf" viewBox="0 0 48 48" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"><path d="M5 15V9a4 4 0 0 1 4-4h6"/><path d="M33 5h6a4 4 0 0 1 4 4v6"/><path d="M43 33v6a4 4 0 0 1-4 4h-6"/><path d="M15 43H9a4 4 0 0 1-4-4v-6"/></g><rect x="11" y="22" width="26" height="4" rx="2" fill="#D4FF3F"/></svg>GetKeepsake<small>[ for business ]</small></a>
     <p class="lbl">(Owner login)</p>
     <h1>Your shop, <span>one tap away.</span></h1>
     <ul class="perks">

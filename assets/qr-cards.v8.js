@@ -136,7 +136,7 @@
 .st .sp{position:absolute;left:8px;top:8px;right:8px;bottom:8px;overflow:hidden}
 .st .scan{position:absolute;left:0;right:0;top:44px;text-align:center;font:400 96px/0.8 'Archivo Black','Arial Black',sans-serif;letter-spacing:-2.5px;color:transparent;-webkit-text-stroke-width:1.3px;white-space:nowrap}
 .st .top{position:absolute;left:18px;right:18px;top:15px;display:flex;justify-content:space-between;align-items:center}
-.st .br b{display:block;font:400 13px/1 'Archivo Black','Arial Black',sans-serif;letter-spacing:-.35px}
+.st .br{display:flex;align-items:center;gap:6px}.st .br .bm{width:21px;height:21px;flex:none}.st .br b{display:block;font:400 13px/1 'Archivo Black','Arial Black',sans-serif;letter-spacing:-.35px}
 .st .br small{display:block;margin-top:2.5px;font:700 6px/1 Inter,sans-serif;letter-spacing:.26em;text-transform:uppercase}
 .st .in2{display:flex;align-items:baseline;gap:4px}.st .in2 span:first-child{font:700 9.5px/1 Mukta,sans-serif}.st .in2 span+span{font:700 6.5px/1 Inter,sans-serif;letter-spacing:.22em}
 .st .hi{position:absolute;left:0;right:0;top:92px;text-align:center}
@@ -166,7 +166,7 @@
   ${t.solid ? `<div class="pf" style="background:${t.edge}"><svg width="${W}" height="${H}" style="position:absolute;inset:0;display:block" aria-hidden="true"><path fill="#fff" d="${HOLES}"/></svg></div>` : `<div class="pf" style="background:radial-gradient(circle,#fff 5px,transparent 5.6px) -8px -8px/16px 16px,${t.edge}"></div>`}
   <div class="sp" style="background:${t.bg}">
     <div class="scan" style="-webkit-text-stroke-color:${t.stroke}" aria-hidden="true">SCAN</div>
-    <div class="top"><div class="br"><b>GetKeepsake<span style="color:${t.dot}">.</span></b><small>for business</small></div><div class="in2"><span>भारत</span><span>INDIA</span></div></div>
+    <div class="top"><div class="br"><svg class="bm" viewBox="0 0 48 48" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"><path d="M5 15V9a4 4 0 0 1 4-4h6"/><path d="M33 5h6a4 4 0 0 1 4 4v6"/><path d="M43 33v6a4 4 0 0 1-4 4h-6"/><path d="M15 43H9a4 4 0 0 1-4-4v-6"/></g><rect x="11" y="22" width="26" height="4" rx="2" fill="${t.dot}"/></svg><span><b>GetKeepsake</b><small>for business</small></span></div><div class="in2"><span>भारत</span><span>INDIA</span></div></div>
     <div class="hi"><b${t.hi ? ` style="color:${t.hi}"` : ""}>नमस्ते</b><span>Point your camera here for the menu</span></div>
     <div class="qw"${t.solid ? ' style="box-shadow:none;border:1.5px solid #E3CC98"' : ""}><div class="tab" style="background:${t.tab};color:${t.tabInk}">SCAN ME</div>${qrH(base + "/k/" + c.code)}<div class="bdg" style="background:${t.edge}">GK</div></div>
     <div class="chips">${[["menu", "Menu"], ["offer", "Offers"], ["pay", "Pay"], ["star", "Review"]].map(([k, l]) => `<span style="background:${t.pill}">${ci(k)}${l}</span>`).join("")}</div>
