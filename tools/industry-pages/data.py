@@ -184,4 +184,4 @@ P = {
        ("Do patients need an app?", "No. They scan with their phone camera."),
        ("Is there a monthly fee?", "No. ₹1,000 once.")]),
 }
-ORDER = ["cafe", "salon", "gym", "real-estate", "general-store", "boutique", "pharmacy", "clinic"]
+ORDER = ["cafe", "salon", "gym", "real-estate", "general-store", "boutique", "clinic"]

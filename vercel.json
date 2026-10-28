@@ -2,6 +2,11 @@
   "cleanUrls": true,
   "redirects": [
     {
+      "source": "/shops/pharmacy",
+      "destination": "/shops/clinic",
+      "permanent": true
+    },
+    {
       "source": "/business",
       "destination": "/",
       "permanent": true
