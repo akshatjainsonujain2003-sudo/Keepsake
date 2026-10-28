@@ -155,7 +155,7 @@ def page(slug):
 </main>
 {footer()}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script><script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
-<script src="/assets/ind.v2.js" defer></script><script src="/assets/gk.v1.js" defer></script>
+<script src="/assets/ind.v3.js" defer></script><script src="/assets/gk.v1.js" defer></script>
 <script src="/assets/ks-pixel.v1.js" defer></script>
 </body>
 </html>
