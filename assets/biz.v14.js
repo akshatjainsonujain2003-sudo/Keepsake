@@ -441,6 +441,27 @@
 .L-classic .cfoot .so a{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--bg) 12%,transparent)}
 .L-classic .cfoot .mk{font:500 12.5px var(--fn);opacity:.7}.L-classic .cfoot .mk a{border-bottom:1px solid currentColor}
 .L-classic .cfoot .big{font:600 clamp(90px,34vw,240px)/.74 var(--fh);letter-spacing:-.06em;margin:26px -6px -0.04em;opacity:.16;white-space:nowrap;text-transform:capitalize}
+/* ---- Classic, 2026 refresh: tidy contact tiles, solid loyalty card, quieter review tile, calmer rhythm ---- */
+.L-classic .sec{padding-top:36px}
+.L-classic .chero .cg{background:linear-gradient(180deg,#0005 0%,#0000 22%,#0000 40%,#0009 80%,#000c 100%)}
+.L-classic h1{font-weight:300;letter-spacing:-.045em}
+.L-classic .bc{min-height:140px;box-shadow:none}
+.L-classic .bc b{font:500 16px/1.22 var(--fh);overflow-wrap:break-word;word-break:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;padding-right:0}
+.L-classic .bc .go{top:12px;bottom:auto;width:32px;height:32px}
+.L-classic .bc .lb{padding-right:38px}
+.L-classic .bc.wide b{display:block;overflow:visible;padding:0;font:400 36px/1 var(--fh)}
+.L-classic .bc.wide .tx{opacity:.04}
+.L-classic .bc .lb{opacity:.8}
+.L-classic .two{margin-top:40px}
+.L-classic .loy{background:var(--sf);border:1px solid color-mix(in srgb,var(--tx) 9%,transparent);border-radius:22px;padding:24px 20px 20px}
+.L-classic .loy:after{width:200px;height:200px;right:-80px;top:-90px;background:radial-gradient(circle,color-mix(in srgb,var(--ac) 22%,transparent),transparent 70%)}
+.L-classic .loy .lb{color:var(--ac)}
+.L-classic .loy .lr{font:400 32px/1.04 var(--fh);letter-spacing:-.035em;margin-top:14px}
+.L-classic .loy .lst i{border:1px solid color-mix(in srgb,var(--tx) 18%,transparent)}
+.L-classic .loy .lst i.on{transform:none;background:var(--tx);color:var(--bg)}
+.L-classic .loy .lst i.gf{border-color:var(--tx);color:var(--tx)}
+.L-classic .loy.rdy{border:1.5px solid var(--tx)}
+.L-classic .hr.td{margin:0 -12px;padding:12px;border-radius:12px;background:var(--sf2);border-bottom-color:transparent}
 
 /* ---------- Poster (cafés, food, fashion) ---------- */
 .L-poster{--fh:'Archivo Black','Arial Black',sans-serif;--fsc:'Pinyon Script',cursive}
