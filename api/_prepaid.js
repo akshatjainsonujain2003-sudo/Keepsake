@@ -94,7 +94,7 @@ async function claim({ code, pin, id, user, ip }) {
   if (n1 > 30) return { status: 429, error: "Too many tries. Please wait an hour and try again." };
   if (!valid(code)) return { status: 404, error: "That code isn't valid. Check the card in your pack." };
   const tk = "pclaim-tries:" + code, n2 = await db.cmd("INCR", tk); if (n2 === 1) await db.cmd("EXPIRE", tk, 3600);
-  if (n2 > HOURLY) return { status: 429, error: "Too many wrong PINs for this code. Please wait an hour, or WhatsApp us on +91 63775 47759." };
+  if (n2 > HOURLY) return { status: 429, error: "Too many wrong PINs for this code. Please wait an hour, or WhatsApp us on +91 83027 91217." };
   const rec = await db.getj("pcode:" + code);
   if (!rec) return { status: 404, error: "That code isn't valid. Check the card in your pack." };
   if (!/^[a-z0-9]{8,16}$/i.test(String(id || ""))) return { status: 400, error: "Save your keepsake first." };
@@ -103,12 +103,12 @@ async function claim({ code, pin, id, user, ip }) {
     return { status: 409, error: "This code has already been used." };
   }
   if (rec.tier === "biz") return { status: 400, error: "Business QR cards switch on when you pay for your page. Open the card's QR to set it up." };
-  if (rec.locked) return { status: 423, error: "This code is locked after too many wrong PINs. WhatsApp us on +91 63775 47759 with a photo of your card and we'll unlock it." };
+  if (rec.locked) return { status: 423, error: "This code is locked after too many wrong PINs. WhatsApp us on +91 83027 91217 with a photo of your card and we'll unlock it." };
   if (!same(rec.pin, String(pin || "").replace(/\D/g, ""))) {
     rec.fails = (rec.fails || 0) + 1; if (rec.fails >= MAX_FAILS) rec.locked = true;
     await db.setj("pcode:" + code, rec);
     if (rec.tier === "biz") return { status: 400, error: "Business QR cards switch on when you pay for your page. Open the card's QR to set it up." };
-  if (rec.locked) return { status: 423, error: "Too many wrong PINs, so this code is now locked. WhatsApp us on +91 63775 47759 with a photo of your card and we'll unlock it." };
+  if (rec.locked) return { status: 423, error: "Too many wrong PINs, so this code is now locked. WhatsApp us on +91 83027 91217 with a photo of your card and we'll unlock it." };
     return { status: 401, error: `That PIN isn't right. It's the 6-digit number printed inside your box (${MAX_FAILS - rec.fails} tries left).` };
   }
   const mk = "customer-memory:" + id, memory = await db.getj(mk);

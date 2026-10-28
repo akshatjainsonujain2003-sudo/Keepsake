@@ -21,7 +21,7 @@ def footer():
     col = lambda ks: "".join(f'<a href="/shops/{k}">{P[k]["label"]}</a>' for k in ks)
     return f'''<footer class="ft"><div class="w">
   <div><a class="lg" href="/" aria-label="GetKeepsake for business, home"><svg class="vf" viewBox="0 0 48 48" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"><path d="M5 15V9a4 4 0 0 1 4-4h6"/><path d="M33 5h6a4 4 0 0 1 4 4v6"/><path d="M43 33v6a4 4 0 0 1-4 4h-6"/><path d="M15 43H9a4 4 0 0 1-4-4v-6"/></g><rect x="11" y="22" width="26" height="4" rx="2" fill="#D4FF3F"/></svg>GetKeepsake<span>[ for business ]</span></a><p style="margin:0;max-width:360px">A page for your shop behind one QR: menu, offers, WhatsApp orders, UPI, Google reviews and a loyalty card. ₹1,000 once to start.</p>
-  <p style="margin:14px 0 0">WhatsApp <a style="display:inline;color:#fff" href="https://wa.me/916377547759">+91 63775 47759</a> · <a style="display:inline;color:#fff" href="https://instagram.com/getkeepsake.business" rel="noopener">@getkeepsake.business</a></p></div>
+  <p style="margin:14px 0 0">WhatsApp <a style="display:inline;color:#fff" href="https://wa.me/918302791217">+91 83027 91217</a> · <a style="display:inline;color:#fff" href="https://instagram.com/getkeepsake.business" rel="noopener">@getkeepsake.business</a></p></div>
   <div><b>Businesses</b>{col(ORDER[:4])}</div>
   <div><b>&nbsp;</b>{col(ORDER[4:])}<a href="/contact" style="margin-top:12px">Contact</a><a href="/terms">Terms</a><a href="/privacy">Privacy</a></div>
 </div></footer>'''
@@ -67,7 +67,7 @@ def page(slug):
     ld = {"@context": "https://schema.org", "@graph": [
         {"@type": "WebPage", "@id": url + "#page", "url": url, "name": d["title"], "description": d["desc"], "inLanguage": "en-IN", "isPartOf": {"@type": "WebSite", "name": "GetKeepsake", "url": "https://getkeepsake.in/"}},
         {"@type": "Service", "name": f"GetKeepsake for {d['label']}", "serviceType": "Mobile business page with QR code", "description": d["desc"], "areaServed": {"@type": "Country", "name": "India"},
-         "provider": {"@type": "Organization", "name": "GetKeepsake", "url": "https://getkeepsake.in/", "telephone": "+91-63775-47759"},
+         "provider": {"@type": "Organization", "name": "GetKeepsake", "url": "https://getkeepsake.in/", "telephone": "+91-83027-91217"},
          "offers": [{"@type": "Offer", "name": "Business page", "price": "1000", "priceCurrency": "INR", "url": "https://getkeepsake.in" + studio}]},
         {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in d["faq"]]},
         {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "GetKeepsake for business", "item": "https://getkeepsake.in/shops"}, {"@type": "ListItem", "position": 2, "name": d["label"], "item": url}]}]}
@@ -150,7 +150,7 @@ def page(slug):
 <section class="cl" style="margin-top:0"><div class="w">
   <h2 data-gk-h2>Make your {esc(d["word"])} <em>unmissable</em></h2>
   <p lang="hi">आज ही अपना पेज बनाएँ</p>
-  <div class="ct"><a class="b p" href="{studio}">{esc(d["cta"])} · ₹1,000</a><a class="b s" href="https://wa.me/916377547759?text={esc("Hi, I'd like a GetKeepsake page for my " + d["word"])}">Ask on WhatsApp</a></div>
+  <div class="ct"><a class="b p" href="{studio}">{esc(d["cta"])} · ₹1,000</a><a class="b s" href="https://wa.me/918302791217?text={esc("Hi, I'd like a GetKeepsake page for my " + d["word"])}">Ask on WhatsApp</a></div>
 </div></section>
 </main>
 {footer()}
