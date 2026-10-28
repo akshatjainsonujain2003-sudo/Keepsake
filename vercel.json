@@ -90,7 +90,7 @@
       ]
     },
     {
-      "source": "/(hq|admin|shops/dashboard|shops/studio|account|studio|builder|login|reset-password|sales|print-codes|print-kit|creator|dashboard)",
+      "source": "/(hq|admin|shops/dashboard|shops/studio|shops/login|account|studio|builder|login|reset-password|sales|print-codes|print-kit|creator|dashboard)",
       "headers": [
         {
           "key": "X-Frame-Options",

@@ -31,7 +31,7 @@ function catalog() {
       card: { name: "Template", price: onSale(card, s), ...(s ? { was: card } : {}), desc: "One beautiful memory card from our designs." },
       site: { name: "Custom website", price: onSale(site, s), ...(s ? { was: site } : {}), desc: "A full page for your story: photos, videos, songs, timeline and letters." },
       // Business pages for shops and cafes (sold by QR card, paid online by the shop). Never on sale.
-      biz: { name: "Business page", price: rupees(env.PRICE_BUSINESS, 499), desc: "A premium page for your shop: links, menu, photos, offers and UPI." }
+      biz: { name: "Business page", price: rupees(env.PRICE_BUSINESS, 1000), desc: "A premium page for your shop: menu, photos, offers, UPI and a loyalty stamp card." }
     },
     delivery: {
       digital: { name: "Digital", price: 0, desc: "Short link, QR code and NFC-ready link to share or print." },
@@ -41,11 +41,14 @@ function catalog() {
     frames: framesOn()
   };
   // Printed QR sticker for a business page, couriered to the shop (all India).
-  // PRICE_BIZ_QR is added to the ₹499 page (default ₹99). PRICE_BIZ_QR_REORDER is for a page that's already live.
-  c.delivery.bizQr = { name: "Printed QR, delivered", price: rupees0(env.PRICE_BIZ_QR, 99), reorder: rupees(env.PRICE_BIZ_QR_REORDER, 149),
+  // The first printed QR comes with a new page (PRICE_BIZ_QR, default ₹0 = included). PRICE_BIZ_QR_REORDER is for another
+  // board for a page that's already live.
+  c.delivery.bizQr = { name: "Printed QR, delivered", price: rupees0(env.PRICE_BIZ_QR, 0), reorder: rupees(env.PRICE_BIZ_QR_REORDER, 149),
     desc: "Your QR printed on a 3.5 × 5 in counter board in the colour you pick, couriered to your shop anywhere in India." };
-  // Loyalty stamp card add-on for a business page, one-time: ₹499 page + ₹300 = ₹799 together, or ₹300 later. PRICE_LOYALTY changes it.
-  c.delivery.loyalty = { name: "Loyalty card", price: rupees(env.PRICE_LOYALTY, 300),
+  c.delivery.bizQr.incl = c.delivery.bizQr.price === 0;
+  // Loyalty stamp card: included with every new business page (₹1,000). Pages that went live before it was included can still
+  // unlock it on its own for ₹300 (PRICE_LOYALTY). `incl` tells the checkout not to charge it with a new page.
+  c.delivery.loyalty = { name: "Loyalty card", price: rupees(env.PRICE_LOYALTY, 300), incl: true,
     desc: "A stamp card for repeat customers, e.g. 10 visits = a free coffee. Staff PIN and member list." };
   // SMS credit packs for the geofence walk-in reward and nearby SMS blasts (business pages).
   // PRICE_SMS_PACK / SMS_PACK_SIZE (₹299 for 500) and PRICE_SMS_PACK_BIG / SMS_PACK_BIG_SIZE (₹499 for 1000).
@@ -61,7 +64,7 @@ function catalog() {
     claims500: { price: rupees(env.PRICE_CLAIMS_500, 1999), size: Math.max(1, Math.round(+env.CLAIMS_500_SIZE || 500)) } },
     flat: { price: rupees(env.PRICE_CAMP14, 999), days: 14 } };
   // Online store for a business page: every product listed, search, and orders placed on the page itself. PRICE_STORE changes it.
-  c.store = { name: "Online store", price: rupees(env.PRICE_STORE, 2000), desc: "List every product, with photos, prices and search. Customers order on your page and you see it on your dashboard." };
+  c.store = { name: "Online store", price: rupees(env.PRICE_STORE, 1500), desc: "List every product, with photos, prices and search. Customers order on your page and you see it on your dashboard." };
   // Keepsake Pro: a monthly plan for a live business page (30 days per payment, renewed by hand). PRICE_PRO changes it.
   c.pro = { name: "Keepsake Pro", price: rupees(env.PRICE_PRO, 199), days: 30, desc: "Table QRs, day-end report, win-back offers and printable order slips for 30 days." };
   if (!c.frames) { delete c.delivery.frameQr; delete c.delivery.frameNfc; }
@@ -117,7 +120,8 @@ function amountFor(memory, plan, extra) {
     // A live page pays only the add-on; a new page pays page + add-on and goes live with it.
     // With a printed QR too (extra.qr): the QR is added at its delivery price (reorder price for a live page).
     const q = extra.qr ? (active ? c.delivery.bizQr.reorder : c.delivery.bizQr.price) : 0;
-    return active ? { rupees: c.delivery.loyalty.price + q, upgrade: true, ...(q ? { ship: q } : {}) } : { rupees: base + c.delivery.loyalty.price + q, upgrade: false, ...(q ? { ship: q } : {}) };
+    // A new page already includes the loyalty card, so only a page that is live without it pays for it.
+    return active ? { rupees: c.delivery.loyalty.price + q, upgrade: true, ...(q ? { ship: q } : {}) } : { rupees: base + q, upgrade: false, ...(q ? { ship: q } : {}) };
   }
   // A live business page ordering another sticker pays the reorder price.
   if (plan === "bizQr") return active ? { rupees: c.delivery.bizQr.reorder, upgrade: true, ship: c.delivery.bizQr.reorder } : { rupees: base + c.delivery.bizQr.price, upgrade: false, ship: c.delivery.bizQr.price };
@@ -193,9 +197,12 @@ async function markPaid(orderId, paymentId) {
     await db.setj(key, order);
     const mk = "customer-memory:" + order.memory, memory = await db.getj(mk);
     if (memory) {
+      const wasLive = memory.paid !== false;
       memory.paid = true; memory.activatedAt = memory.activatedAt || order.paidAt;
       memory.plan = isFrame(order.plan) ? order.plan : (memory.plan || "digital");
       if (order.plan === "loyalty") { memory.loyalty = true; memory.loyaltyAt = order.paidAt; }
+      // Every business page that goes live now comes with the loyalty card.
+      if (!wasLive && kindOf(memory) === "biz" && !memory.loyalty) { memory.loyalty = true; memory.loyaltyAt = order.paidAt; }
       if (order.plan === "geopro") { memory.geopro = true; memory.geoproAt = order.paidAt; }
       if (order.plan === "store") { memory.store = true; memory.storeAt = order.paidAt; memory.data = Object.assign({}, memory.data, { ord: true }); await db.cmd("SET", "store-user:" + memory.owner, "1"); }
       if (order.plan === "pro") { memory.proUntil = Math.max(Date.now(), memory.proUntil || 0) + catalog().pro.days * 864e5; memory.proAt = order.paidAt; }

@@ -6,24 +6,24 @@
 <title>Shop dashboard · GetKeepsake for business</title>
 <meta name="description" content="Run your shop from one place: orders, menu, customers, offers and stats.">
 <meta name="robots" content="noindex,nofollow">
-<meta name="theme-color" content="#121110">
-<link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
+<meta name="theme-color" content="#0B0B14">
+<link rel="icon" href="/assets/brand/favicon.ico" sizes="any"><link rel="icon" type="image/svg+xml" href="/assets/brand/favicon.svg"><link rel="icon" type="image/png" sizes="192x192" href="/assets/brand/icon-192.png"><link rel="apple-touch-icon" href="/assets/brand/icon-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Pinyon+Script&family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@600;700;800&family=Archivo+Black&family=Rozha+One&family=JetBrains+Mono:wght@500;600&family=Inter:wght@400;500;600;700;800&display=swap">
 <style>
-:root{--bg:#f3f0e9;--card:#fbfaf6;--line:#e5dfd3;--ink:#121110;--mu:#6d675e;--or:#ff5b2e;--ye:#ffd84d;--gr:#1f9d55;--grl:#c9efd6;--sand:#e4ddd0;--side:#121110;--r:22px}
+:root{--bg:#F2F2EE;--card:#FFFFFF;--line:#DADAD3;--ink:#0B0B14;--mu:#5B5B69;--or:#1F1BF2;--ye:#D4FF3F;--gr:#1f9d55;--grl:#c9efd6;--sand:#E6E6E0;--side:#0B0B14;--r:22px;--lav:#8C82FF}
 *{box-sizing:border-box}
 html,body{margin:0;background:var(--bg);color:var(--ink);font:500 15px/1.45 Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
 a{color:inherit}
 button{font:inherit;color:inherit;cursor:pointer}
 input,textarea,select{font:inherit;color:inherit}
-.H{font-family:'Archivo Black','Arial Black',sans-serif;font-weight:400;text-transform:uppercase;letter-spacing:.01em}
+.H{font-family:'Inter Tight','Arial Black',sans-serif;font-weight:700;letter-spacing:-.03em}
 [hidden]{display:none!important}
 /* ---------- shell ---------- */
 .app{display:grid;grid-template-columns:260px minmax(0,1fr);min-height:100vh}
 .side{position:sticky;top:0;height:100vh;overflow:auto;background:var(--side);color:#fff;padding:26px 16px 18px;display:flex;flex-direction:column}
-.lg{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap;text-decoration:none;color:#fff;padding:0 10px 0 12px;font:400 19px/1 'Archivo Black',sans-serif;letter-spacing:-.01em}
-.lg span{font:400 25px/1 'Pinyon Script',cursive;color:var(--ye);letter-spacing:0}
+.lg{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap;text-decoration:none;color:#fff;padding:0 10px 0 12px;font:800 19px/1 'Inter Tight',sans-serif;letter-spacing:-.01em}
+.lg span{font:600 11px/1 'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:.06em;color:var(--ye);letter-spacing:0}
 .nav{margin-top:26px;flex:1}
 .nav small{display:block;margin:20px 0 6px 14px;font:800 10.5px Inter;letter-spacing:.2em;color:#ffffff80;text-transform:uppercase}
 .nav small:first-child{margin-top:0}
@@ -60,7 +60,7 @@ main{min-width:0;padding:30px 34px 60px}
 .g3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:18px}
 .kpi{padding:22px 24px;border-radius:var(--r);background:var(--card);border:1.5px solid var(--line);min-width:0}
 .kpi span{display:block;font-weight:600;font-size:14px}
-.kpi b{display:block;margin:6px 0 6px;font:400 clamp(30px,3.1vw,42px)/1 'Archivo Black',sans-serif;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kpi b{display:block;margin:6px 0 6px;font:800 clamp(30px,3.1vw,42px)/1 'Inter Tight',sans-serif;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .kpi small{display:block;font-weight:700;font-size:13.5px}
 .kpi.o{background:var(--or);border-color:var(--or);color:#fff}
 .kpi.y{background:var(--ye);border-color:var(--ye)}
@@ -71,7 +71,7 @@ main{min-width:0;padding:30px 34px 60px}
 .ch h2{margin:0;font-size:17px}
 .ch small{color:var(--mu);font-size:13.5px}
 .mu{color:var(--mu)}
-.empty{padding:26px 18px;border-radius:16px;background:#f0ebe1;color:var(--mu);text-align:center;font-size:14px}
+.empty{padding:26px 18px;border-radius:16px;background:#ECECE7;color:var(--mu);text-align:center;font-size:14px}
 .empty b{display:block;color:var(--ink);font-size:15px;margin-bottom:4px}
 .empty .btn{margin-top:12px}
 /* bars */
@@ -100,9 +100,9 @@ main{min-width:0;padding:30px 34px 60px}
 /* offer */
 .ofr{padding:18px 18px 20px;border-radius:18px;background:var(--or);color:#fff}
 .ofr small{display:block;font-size:12.5px;opacity:.9}
-.ofr b{display:block;margin-top:6px;font:400 22px/1.1 'Archivo Black',sans-serif;text-transform:uppercase}
+.ofr b{display:block;margin-top:6px;font:800 22px/1.1 'Inter Tight',sans-serif;text-transform:uppercase}
 .ofr p{margin:8px 0 0;font-weight:600}
-.ofr.off{background:#e9e3d8;color:var(--mu)}
+.ofr.off{background:#E6E6E0;color:var(--mu)}
 .wide{width:100%;margin-top:12px;justify-content:flex-start}
 /* forms */
 .f{display:block;margin:0 0 14px;font-weight:600;font-size:13.5px}
@@ -111,7 +111,7 @@ main{min-width:0;padding:30px 34px 60px}
 .in:focus{outline:0;border-color:var(--or)}
 textarea.in{resize:vertical;min-height:70px}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.note{padding:12px 14px;border-radius:12px;background:#fff6d6;border:1.5px solid #f3df92;font-size:13.5px}
+.note{padding:12px 14px;border-radius:12px;background:#F4FFD1;border:1.5px solid #E2FF73;font-size:13.5px}
 .bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:14px 18px;border-radius:16px;background:var(--ink);color:#fff;margin-bottom:18px}
 .bar span{flex:1;min-width:200px}
 /* tabs */
@@ -163,7 +163,7 @@ td .btn{white-space:nowrap}
 .funnel{display:grid;gap:10px}
 .funnel div{display:grid;grid-template-columns:150px 1fr 60px;gap:12px;align-items:center;font-size:14px}
 .funnel i{display:block;height:28px;border-radius:8px;background:var(--or);min-width:4px}
-.funnel div:nth-child(2) i{background:#ff8a5c}.funnel div:nth-child(3) i{background:var(--ye)}
+.funnel div:nth-child(2) i{background:#6E62FF}.funnel div:nth-child(3) i{background:var(--ye)}
 .funnel b{text-align:right}
 .qrb{display:flex;gap:22px;flex-wrap:wrap;align-items:flex-start}
 .qrb .qbox{width:200px;height:200px;padding:12px;border-radius:18px;background:#fff;border:1.5px solid var(--line)}
@@ -178,7 +178,7 @@ td .btn{white-space:nowrap}
 .toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,30px);opacity:0;padding:12px 18px;border-radius:99px;background:var(--ink);color:#fff;font-weight:600;font-size:14px;transition:.25s;z-index:99;pointer-events:none;max-width:calc(100% - 32px);text-align:center}
 .toast.on{opacity:1;transform:translate(-50%,0)}
 .load{display:grid;place-items:center;min-height:60vh;color:var(--mu)}
-.sk{border-radius:var(--r);background:linear-gradient(90deg,#ebe6dc,#f4f0e8,#ebe6dc);background-size:200% 100%;animation:sk 1.2s infinite}
+.sk{border-radius:var(--r);background:linear-gradient(90deg,#E6E6E0,#F2F2EE,#E6E6E0);background-size:200% 100%;animation:sk 1.2s infinite}
 @keyframes sk{to{background-position:-200% 0}}
 .hint{font-size:13px;color:var(--mu);margin:10px 0 0}
 .tabbar{display:none}
@@ -192,7 +192,7 @@ td .btn{white-space:nowrap}
 .ofl{display:inline-block;padding:2px 8px;border-radius:99px;background:var(--sand);font-size:12px;font-weight:700;margin-left:6px}
 .pm{position:fixed;inset:0;z-index:45;background:#0008;display:flex;align-items:center;justify-content:center;padding:16px}
 .pmb{width:min(560px,100%);max-height:92vh;overflow:auto;background:var(--card);border-radius:24px;padding:22px}
-.pmp{flex:none;width:96px;height:96px;border-radius:16px;border:2px dashed var(--line);background:#f0ebe1 center/cover;display:grid;place-items:center;font-weight:700;font-size:13px;color:var(--mu);cursor:pointer}.pmp.busy{opacity:.6}
+.pmp{flex:none;width:96px;height:96px;border-radius:16px;border:2px dashed var(--line);background:#ECECE7 center/cover;display:grid;place-items:center;font-weight:700;font-size:13px;color:var(--mu);cursor:pointer}.pmp.busy{opacity:.6}
 @media (max-width:600px){.pm{align-items:flex-end;padding:0}.pmb{border-radius:24px 24px 0 0}}
 .more>div{width:100%;max-height:85vh;overflow:auto;background:var(--side);border-radius:24px 24px 0 0;padding:18px 14px calc(18px + env(safe-area-inset-bottom))}
 @media (max-width:1180px){.g4{grid-template-columns:repeat(2,minmax(0,1fr))}.g3{grid-template-columns:1fr 1fr}.g3>:last-child{grid-column:1/-1}}
@@ -220,14 +220,14 @@ td .btn{white-space:nowrap}
 }
 @media (max-width:420px){.g4{grid-template-columns:1fr 1fr}.kpi b{font-size:24px}.sw{padding:7px 12px 7px 8px;font-size:14px}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
-</style>
+.lg .vf{width:24px;height:24px;flex:none;margin-right:2px;align-self:center}</style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js" defer></script>
-<script src="/assets/qr-cards.v5.js" defer></script>
+<script src="/assets/qr-cards.v8.js" defer></script>
 </head>
 <body>
 <div class="app">
   <aside class="side" aria-label="Dashboard menu">
-    <a class="lg" href="/shops">GetKeepsake<span>for business</span></a>
+    <a class="lg" href="/shops" aria-label="GetKeepsake for business"><svg class="vf" viewBox="0 0 48 48" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"><path d="M5 15V9a4 4 0 0 1 4-4h6"/><path d="M33 5h6a4 4 0 0 1 4 4v6"/><path d="M43 33v6a4 4 0 0 1-4 4h-6"/><path d="M15 43H9a4 4 0 0 1-4-4v-6"/></g><rect x="11" y="22" width="26" height="4" rx="2" fill="#D4FF3F"/></svg>GetKeepsake<span>[ for business ]</span></a>
     <nav class="nav" id="nav"></nav>
     <div class="shopc" id="shopc"></div>
   </aside>
@@ -397,8 +397,8 @@ V.pro = () => {
   (!S.active ? inactive() : "") +
   `<section class="cd" style="background:var(--ink);color:#fff;border-color:var(--ink)"><div class="ch"><h2 class="H" style="margin:0">${on ? "Pro is on" : S.proUntil ? "Pro has ended" : "Go Pro"}</h2><span class="pl" style="background:var(--ye)">₹${S.proPrice} / month</span></div>
     <p style="margin:6px 0 0;color:#d6cfc4">${on ? `Active until <b>${until}</b> (${l} day${l === 1 ? "" : "s"} left).` : S.proUntil ? `It ended on ${until}. Renew to use it again.` : "Pay once for 30 days. Renew by hand whenever you like, no auto-debit."}</p>
-    <div class="g2" style="margin-top:14px">${items.map(x => `<div><b>${x[0]}</b><p style="margin:4px 0 0;color:#b9b2a7;font-size:14px">${x[1]}</p></div>`).join("")}</div>
-    <button class="btn" style="margin-top:20px" data-pro="buy" ${S.active ? "" : "disabled"}>${on ? "Add 30 more days" : S.proUntil ? "Renew" : "Start Pro"} · ₹${S.proPrice}</button><p class="hint" style="color:#b9b2a7">30 days per payment. Renewing adds to the time you have left.</p></section>`;
+    <div class="g2" style="margin-top:14px">${items.map(x => `<div><b>${x[0]}</b><p style="margin:4px 0 0;color:#B4B4C2;font-size:14px">${x[1]}</p></div>`).join("")}</div>
+    <button class="btn" style="margin-top:20px" data-pro="buy" ${S.active ? "" : "disabled"}>${on ? "Add 30 more days" : S.proUntil ? "Renew" : "Start Pro"} · ₹${S.proPrice}</button><p class="hint" style="color:#B4B4C2">30 days per payment. Renewing adds to the time you have left.</p></section>`;
 };
 // A locked tool shows this instead of its screen.
 const proLock = (what) => `<section class="cd"><div class="empty"><b>${what} is part of Keepsake Pro</b>₹${S.proPrice} for 30 days. Renew by hand, no auto-debit.<br><button class="btn" data-pro="buy" style="margin-top:12px">${S.proUntil ? "Renew" : "Start Pro"} · ₹${S.proPrice}</button></div></section>`;
@@ -468,18 +468,18 @@ const stItems = () => { const out = []; (S.d.menu || []).forEach((s, si) => (s.i
 const stCats = () => (S.d.menu || []).map(s => s.n || "Products");
 const numP = p => { const x = /(\d[\d,]*(?:\.\d+)?)/.exec(String(p || "")); return x ? +x[1].replace(/,/g, "") : 0; };
 V.store = () => {
-  const price = (S.prices && S.prices.store) || 2000;
+  const price = (S.prices && S.prices.store) || 1500;
   if (!S.store) return head("Online store", "Put every product you sell online. Customers search, add to cart and order on your page.", "") +
     `<section class="cd" style="background:var(--ink);color:#fff;border-color:var(--ink)"><div class="ch"><h2 class="H" style="margin:0">Your shop, open 24 hours</h2><span class="pl" style="background:var(--ye)">₹${price.toLocaleString("en-IN")} once</span></div>
       <div class="g2" style="margin-top:0">${[["Every product listed", "Hundreds of products with photos, prices, MRP and descriptions, in categories."], ["Search and shop", "Customers search, browse categories and see each product's details."], ["Orders on your page", "They place the order right on your page. No WhatsApp needed. You see it in Orders with a sound."], ["Live order status", "Customers see when you accept, prepare and finish their order. They pay by UPI or at pickup."]].map(([b, t]) => `<div><b style="display:block;color:var(--ye)">${b}</b><small style="color:#cfc8bd;font-size:14px">${t}</small></div>`).join("")}</div>
-      <button class="btn" style="margin-top:20px" data-sx="buy">Unlock online store · ₹${price.toLocaleString("en-IN")}</button><p class="hint" style="color:#b9b2a7">One-time payment. Unlocks right after payment.</p></section>`;
+      <button class="btn" style="margin-top:20px" data-sx="buy">Unlock online store · ₹${price.toLocaleString("en-IN")}</button><p class="hint" style="color:#B4B4C2">One-time payment. Unlocks right after payment.</p></section>`;
   const all = stItems(), q = (S.stq || "").toLowerCase(), cat = S.stc == null ? -1 : S.stc;
   const list = all.filter(x => (cat < 0 || x.si === cat) && (!q || (x.n + " " + (x.d || "") + " " + x.sec).toLowerCase().includes(q)));
   return head("Online store", `${all.length} product${all.length === 1 ? "" : "s"} on your page. Customers tap "Shop all products" to search and order.`, `<div class="tg"><button class="btn" data-sx="add">+ Add product</button><button class="btn g" data-sx="bulk">Add many</button></div>`) +
   `${S.d.ord ? "" : `<div class="bar"><span><b>Orders are off.</b> Customers can browse but not order.</span><button class="btn" data-sx="ordon">Turn on orders</button></div>`}
   <div class="srch"><input class="in" id="stq" placeholder="Search products" value="${esc(S.stq || "")}"><a class="btn g" href="/b/${S.id}" target="_blank" rel="noopener">View store</a></div>
   ${stCats().length > 1 ? `<div class="tabs"><button type="button" data-stc="-1" class="${cat < 0 ? "on" : ""}">All · ${all.length}</button>${stCats().map((c, i) => `<button type="button" data-stc="${i}" class="${cat === i ? "on" : ""}">${esc(c)} · ${all.filter(x => x.si === i).length}</button>`).join("")}</div>` : ""}
-  ${list.length ? `<div class="tw"><table><thead><tr><th>Product</th><th>Price</th><th>MRP</th><th>In stock</th><th></th></tr></thead><tbody>${list.slice(0, 300).map(x => `<tr><td><div style="display:flex;gap:12px;align-items:center"><span class="ph" style="flex:none;width:46px;height:46px;border-radius:12px;background:#ebe6dc center/cover${x.i ? ` url('${esc(x.i)}')` : ""}"></span><span><b>${esc(x.n)}</b><br><small class="mu">${esc(x.sec)}${x.b ? " · ★ Bestseller" : ""}</small></span></div></td><td data-l="Price">${x.p ? "₹" + esc(x.p) : "–"}</td><td data-l="MRP">${x.w ? "<s>₹" + esc(x.w) + "</s>" : "–"}</td><td data-l="In stock"><label class="sw"><input type="checkbox" data-sxso="${x.si}.${x.ii}"${x.so ? "" : " checked"}><i></i></label></td><td style="text-align:right;white-space:nowrap"><button class="btn g s" data-sx="edit" data-k="${x.si}.${x.ii}">Edit</button></td></tr>`).join("")}</tbody></table></div>${list.length > 300 ? `<p class="hint">Showing 300 of ${list.length}. Search to find the rest.</p>` : ""}`
+  ${list.length ? `<div class="tw"><table><thead><tr><th>Product</th><th>Price</th><th>MRP</th><th>In stock</th><th></th></tr></thead><tbody>${list.slice(0, 300).map(x => `<tr><td><div style="display:flex;gap:12px;align-items:center"><span class="ph" style="flex:none;width:46px;height:46px;border-radius:12px;background:#E6E6E0 center/cover${x.i ? ` url('${esc(x.i)}')` : ""}"></span><span><b>${esc(x.n)}</b><br><small class="mu">${esc(x.sec)}${x.b ? " · ★ Bestseller" : ""}</small></span></div></td><td data-l="Price">${x.p ? "₹" + esc(x.p) : "–"}</td><td data-l="MRP">${x.w ? "<s>₹" + esc(x.w) + "</s>" : "–"}</td><td data-l="In stock"><label class="sw"><input type="checkbox" data-sxso="${x.si}.${x.ii}"${x.so ? "" : " checked"}><i></i></label></td><td style="text-align:right;white-space:nowrap"><button class="btn g s" data-sx="edit" data-k="${x.si}.${x.ii}">Edit</button></td></tr>`).join("")}</tbody></table></div>${list.length > 300 ? `<p class="hint">Showing 300 of ${list.length}. Search to find the rest.</p>` : ""}`
     : `<div class="empty"><b>${all.length ? "No products match" : "Add your first product"}</b>${all.length ? "Try another search." : "Add them one by one with a photo, or paste a whole list at once."}<br>${all.length ? "" : `<button class="btn" data-sx="add">+ Add product</button>`}</div>`}
   ${stSheet()}`;
 };
@@ -867,7 +867,7 @@ V.nearby = () => {
       <p class="hint">Goes to <b>${to}</b> subscriber${to === 1 ? "" : "s"}${md ? " who checked in within " + md + " m" : ""} · uses <b>${to}</b> credit${to === 1 ? "" : "s"} · ${G.credits} left. One blast a day, between 10 am and 9 pm.</p>
       <button class="btn k" data-act="geoBlast"${!to || !t.ready || !G.promoHours || G.nextBlast ? " disabled" : ""}>Send promotional SMS blast</button>
       <p class="hint">${!t.ready ? "This message is waiting for its SMS template approval." : !G.promoHours ? "Promotional SMS can only go out between 10 am and 9 pm." : G.nextBlast ? "Next blast possible in " + ago2(G.nextBlast) + "." : !G.subscribers ? "No subscribers yet. They join when they unlock your walk-in reward." : ""}</p>
-      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:16px;padding:14px;border-radius:14px;background:${lowCredits ? "#fff1ec" : "#f0ebe1"}"><span style="flex:1;min-width:180px"><b>${lowCredits ? "Running low on SMS credits" : "Need more SMS?"}</b><small class="mu" style="display:block">Added right after payment.</small></span>${G.packs.map((p, i) => `<button class="btn${i ? " k" : ""}" data-act="geoRecharge" data-plan="${p.plan}">Recharge ${p.size} SMS credits for ₹${p.price}</button>`).join("")}</div>
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:16px;padding:14px;border-radius:14px;background:${lowCredits ? "#EEEEFF" : "#ECECE7"}"><span style="flex:1;min-width:180px"><b>${lowCredits ? "Running low on SMS credits" : "Need more SMS?"}</b><small class="mu" style="display:block">Added right after payment.</small></span>${G.packs.map((p, i) => `<button class="btn${i ? " k" : ""}" data-act="geoRecharge" data-plan="${p.plan}">Recharge ${p.size} SMS credits for ₹${p.price}</button>`).join("")}</div>
 ` : `<div class="note"><b>SMS isn't set up yet.</b> It needs an SMS provider (MSG91) and approved DLT templates. Until then, use notifications and WhatsApp: they're free.</div>`}
       ${G.logs.length ? `<div class="ch" style="margin:20px 0 6px"><h2 class="H">Sent</h2></div><div class="rows">${G.logs.map(l => `<div><span><b>${esc(l.tpl === "push" ? "Notification" : (G.templates.find(x => x.key === l.tpl) || {}).name || l.tpl)}</b><small>${ago(l.at)}${l.maxDist ? " · within " + l.maxDist + " m" : ""}</small></span><b>${l.n} ${l.tpl === "push" ? "notified" : "SMS"}</b></div>`).join("")}</div>` : ""}
     </div>
@@ -968,8 +968,8 @@ function cpPng(url, top, title, foot, file) {
   if (!window.qrcode) { toast("QR is still loading. Try again in a second."); return; }
   const q = qrcode(0, "M"); q.addData(url); q.make();
   const n = q.getModuleCount(), W = 1200, s = Math.floor(860 / (n + 8)), qs = s * (n + 8), H = 1560, c = document.createElement("canvas"); c.width = W; c.height = H;
-  const x = c.getContext("2d"); x.fillStyle = "#fff"; x.fillRect(0, 0, W, H); x.textAlign = "center"; x.fillStyle = "#121110";
-  x.font = "64px 'Archivo Black', 'Arial Black', sans-serif"; x.fillText(top, W / 2, 150);
+  const x = c.getContext("2d"); x.fillStyle = "#fff"; x.fillRect(0, 0, W, H); x.textAlign = "center"; x.fillStyle = "#0B0B14";
+  x.font = "800 64px 'Inter Tight', 'Arial Black', sans-serif"; x.fillText(top, W / 2, 150);
   x.font = "700 52px Inter, Arial, sans-serif"; const words = String(title).split(" "), lines = [""]; words.forEach(w => { const t = (lines[lines.length - 1] + " " + w).trim(); if (x.measureText(t).width > W - 160 && lines[lines.length - 1]) lines.push(w); else lines[lines.length - 1] = t; }); lines.slice(0, 2).forEach((l, i) => x.fillText(l, W / 2, 240 + i * 64));
   const ox = (W - qs) / 2, oy = 360; for (let r = 0; r < n; r++) for (let k = 0; k < n; k++) if (q.isDark(r, k)) x.fillRect(ox + (k + 4) * s, oy + (r + 4) * s, s, s);
   x.font = "600 40px Inter, Arial, sans-serif"; x.fillText(foot, W / 2, oy + qs + 80); x.fillStyle = "#8a8279"; x.font = "500 30px Inter, Arial, sans-serif"; x.fillText(url.replace(/^https?:\/\//, ""), W / 2, oy + qs + 135);
@@ -1078,7 +1078,7 @@ V.qr = () => {
   <div class="cd"><div class="ch"><h2 class="H">Printed counter board</h2><small>3.5 × 5 inch</small></div>
     <div class="tones" id="tones">${tones.map(t => `<button type="button" data-tone="${t}" class="${S.tone === t ? "on" : ""}" title="${esc(names[t] || t)}" aria-label="${esc(names[t] || t)}" style="background:${{ red: "#c8102e", blue: "#1d4ed8", marigold: "#f59e0b", green: "#15803d", jamun: "#6b21a8", whitegold: "#e9dcc0" }[t] || "#999"}"></button>`).join("")}</div>
     <div style="display:flex;gap:18px;flex-wrap:wrap;align-items:flex-start"><div id="stampWrap" style="width:220px;overflow:hidden;border-radius:10px"><div id="stamp" class="stamp"></div></div>
-    <div style="flex:1;min-width:200px"><p style="margin-top:0"><b>Get it printed and delivered for ₹99</b></p><p class="mu">Thick board in your colour, couriered to your shop anywhere in India in 5–7 days.</p><a class="btn" href="/shops/studio?edit=${S.id}#publish">Order printed QR</a>${S.ship ? `<p class="note" style="margin-top:14px">${esc(S.ship)}</p>` : ""}</div></div></div></section>
+    <div style="flex:1;min-width:200px"><p style="margin-top:0"><b>${S.active ? "Order another printed board" : "Your printed board is included"}</b></p><p class="mu">Thick board in your colour, couriered to your shop anywhere in India in 5–7 days.</p><a class="btn" href="/shops/studio?edit=${S.id}#publish">Order printed QR</a>${S.ship ? `<p class="note" style="margin-top:14px">${esc(S.ship)}</p>` : ""}</div></div></div></section>
   <section class="cd" style="margin-top:18px"><div class="ch"><h2 class="H">Table QRs</h2><small>Dine-in ordering</small></div>
     <p class="mu" style="margin-top:0">One QR for each table. Guests scan it, their table number is filled in for them, and the order arrives in Orders as <b>Table 5</b>. No waiting for staff.</p>
     ${S.d.ord ? "" : `<div class="bar"><span><b>Orders are off.</b> Turn them on so guests can order from the table.</span><button class="btn" data-sx="ordon">Turn on orders</button></div>`}
@@ -1111,8 +1111,8 @@ V.payments = () => {
     ${upi ? `<dl class="kv"><dt>UPI ID</dt><dd>${esc(d.upi.id)}</dd><dt>Name shown</dt><dd>${esc(d.upi.name || shopName())}</dd><dt>Pay taps this week</dt><dd>${(S.stats && S.stats.taps && S.stats.taps.pay) || 0}</dd></dl><p class="hint">Customers tap Pay on your page and their UPI app opens with your ID filled in. Money goes straight to your bank.</p><a class="btn g" href="/shops/studio?edit=${S.id}">Change UPI ID</a>`
       : `<div class="empty"><b>Add your UPI ID</b>Show a Pay button on your page so customers can pay from any UPI app.<br><a class="btn" href="/shops/studio?edit=${S.id}">Add UPI ID</a></div>`}</div>
   <div class="cd"><div class="ch"><h2 class="H">Your plan</h2></div>
-    <dl class="kv"><dt>Business page</dt><dd>${S.active ? "Active · paid once, no monthly fee" : "Not active yet"}</dd><dt>Loyalty card</dt><dd>${S.loyalty ? "Unlocked" : "Not added · ₹300 once"}</dd><dt>Printed QR</dt><dd>${esc(S.ship || "Not ordered · ₹99")}</dd><dt>Created</dt><dd>${pg.created ? new Date(pg.created).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" }) : "–"}</dd></dl>
-    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">${S.active ? "" : `<a class="btn" href="/shops/studio?edit=${S.id}#publish">Activate · ₹499</a>`}${S.loyalty ? "" : `<a class="btn k" href="/shops/studio?edit=${S.id}#publish">Add loyalty card</a>`}<a class="btn g" href="https://wa.me/916377547759?text=${encodeURIComponent("Hi, I need help with my GetKeepsake page " + pageUrl())}" target="_blank" rel="noopener">Billing help</a></div></div></section>`;
+    <dl class="kv"><dt>Business page</dt><dd>${S.active ? "Active · paid once, no monthly fee" : "Not active yet"}</dd><dt>Loyalty card</dt><dd>${S.loyalty ? "Unlocked" : (S.active ? "Not added · ₹300 once" : "Included when your page goes live")}</dd><dt>Printed QR</dt><dd>${esc(S.ship || (S.active ? "Not ordered" : "Included with your page"))}</dd><dt>Created</dt><dd>${pg.created ? new Date(pg.created).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" }) : "–"}</dd></dl>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">${S.active ? "" : `<a class="btn" href="/shops/studio?edit=${S.id}#publish">Activate · ₹1,000</a>`}${S.loyalty || !S.active ? "" : `<a class="btn k" href="/shops/studio?edit=${S.id}#publish">Add loyalty card</a>`}<a class="btn g" href="https://wa.me/916377547759?text=${encodeURIComponent("Hi, I need help with my GetKeepsake page " + pageUrl())}" target="_blank" rel="noopener">Billing help</a></div></div></section>`;
 };
 
 V.settings = () => {
@@ -1122,7 +1122,7 @@ V.settings = () => {
   `<section class="g2" style="margin-top:0"><div class="cd"><div class="ch"><h2 class="H">Staff PIN</h2><small>For the loyalty card</small></div>
     ${S.loyalty ? `<p class="mu" style="margin-top:0">Your staff type this 4-digit PIN on the customer's phone to add a stamp. Share it only with your team. ${l.pin ? "<b>A PIN is set.</b>" : "<b>No PIN set yet.</b>"}</p>
     <div style="display:flex;gap:10px;flex-wrap:wrap"><input class="in" id="pin" inputmode="numeric" maxlength="4" pattern="[0-9]{4}" placeholder="New 4-digit PIN" style="max-width:200px;margin:0" autocomplete="off"><button class="btn" data-act="pin">${l.pin ? "Change PIN" : "Set PIN"}</button></div>`
-    : `<div class="empty"><b>Loyalty card not added</b>Give regulars a stamp card on their phone. Staff add stamps with a PIN.<br><a class="btn" href="/shops/studio?edit=${S.id}#publish">Add for ₹300</a></div>`}</div>
+    : `<div class="empty"><b>Loyalty card not added</b>Give regulars a stamp card on their phone. Staff add stamps with a PIN.<br><a class="btn" href="/shops/studio?edit=${S.id}#publish">${S.active ? "Add for ₹300" : "Included · go live"}</a></div>`}</div>
   <div class="cd"><div class="ch"><h2 class="H">Order alerts</h2></div>
     <div class="rows"><div><span><b>Ding on new orders</b><small>While this dashboard is open.</small></span><label class="sw"><input type="checkbox" data-act="sound"${snd ? " checked" : ""}><i></i>${snd ? "On" : "Off"}</label></div>
     <div><span><b>Phone notifications</b><small>${"Notification" in window ? (Notification.permission === "granted" ? "Allowed on this device." : "Get a pop-up when an order comes in.") : "Not supported on this browser."}</small></span>${"Notification" in window && Notification.permission !== "granted" ? `<button class="btn g s" data-act="notif">Allow</button>` : ""}</div>
@@ -1196,7 +1196,7 @@ $("#main").addEventListener("click", async e => {
     const raw = ($("#tbL").value || "").split(",").map(x => x.replace(/[^A-Za-z0-9 -]/g, "").trim().slice(0, 12)).filter(Boolean);
     const n = Math.max(1, Math.min(60, parseInt($("#tbN").value, 10) || 10)), labels = (raw.length ? raw : Array.from({ length: n }, (_, i) => String(i + 1))).slice(0, 60), nm = esc(S.d.t || "Our shop");
     const cards = labels.map(l => { const q = qrcode(0, "M"); q.addData(pageUrl() + "?t=" + encodeURIComponent(l)); q.make(); return `<div class="c"><div class="t">${nm}</div><div class="q">${q.createSvgTag({ cellSize: 6, margin: 0, scalable: true })}</div><div class="n">${/^\d+$/.test(l) ? "Table " : ""}${esc(l)}</div><div class="s">Scan to see the menu and order</div></div>`; }).join("");
-    const doc = `<!doctype html><meta charset="utf-8"><title>Table QRs · ${nm}</title><style>@page{size:A4;margin:10mm}body{margin:0;font-family:Inter,Arial,sans-serif;color:#121110}.g{display:grid;grid-template-columns:repeat(2,1fr);gap:8mm}.c{border:2px solid #121110;border-radius:6mm;padding:6mm;text-align:center;break-inside:avoid;height:80mm;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between}.t{font:700 13pt Arial}.q{width:42mm;height:42mm;margin:0 auto}.q svg{width:100%;height:100%}.n{font:900 24pt 'Arial Black',Arial}.s{font-size:10pt;color:#555}</style><div class="g">${cards}</div><script>onload=()=>setTimeout(print,300)<\/script>`;
+    const doc = `<!doctype html><meta charset="utf-8"><title>Table QRs · ${nm}</title><style>@page{size:A4;margin:10mm}body{margin:0;font-family:Inter,Arial,sans-serif;color:#0B0B14}.g{display:grid;grid-template-columns:repeat(2,1fr);gap:8mm}.c{border:2px solid #0B0B14;border-radius:6mm;padding:6mm;text-align:center;break-inside:avoid;height:80mm;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between}.t{font:700 13pt Arial}.q{width:42mm;height:42mm;margin:0 auto}.q svg{width:100%;height:100%}.n{font:900 24pt 'Arial Black',Arial}.s{font-size:10pt;color:#555}</style><div class="g">${cards}</div><script>onload=()=>setTimeout(print,300)<\/script>`;
     const w = window.open("", "_blank"); if (!w) { toast("Allow pop-ups to print the sheet."); return; }
     w.document.write(doc); w.document.close(); return;
   }
@@ -1269,7 +1269,7 @@ document.addEventListener("visibilitychange", () => { if (!document.hidden && Da
 (async () => {
   try {
     const a = await api("/api/customer-auth"); S.user = a.user;
-    if (!S.user) { location.replace("/account?next=" + encodeURIComponent(location.pathname + location.search + location.hash)); return; }
+    if (!S.user) { location.replace("/shops/login?next=" + encodeURIComponent(location.pathname + location.search + location.hash)); return; }
     const L = await api("/api/customer-memories"); S.pages = L.memories || [];
     const biz = S.pages.filter(p => p.kind === "biz");
     if (!biz.length) { $("#main").innerHTML = `<div class="load"><div class="empty" style="max-width:460px"><b>You don't have a shop page yet</b>Make one in 5 minutes. Your dashboard fills up as soon as customers start scanning.<br><a class="btn" href="/shops/studio">Create my shop page</a></div></div>`; $("#nav").innerHTML = ""; return; }

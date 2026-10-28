@@ -45,7 +45,7 @@ button{background:#d6b06a;color:#2a0409;border:0;font-weight:700;cursor:pointer}
  <label><small>Batch label: shop, city or salesperson name (printed on the cards)</small><input id="batchPrefix" value="KS-JAIPUR" maxlength="40"></label>
  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
   <label><small>Quantity (max 200)</small><input id="batchQty" type="number" value="50" min="1" max="200"></label>
-  <label><small>Prepaid tier</small><select id="batchTier"><option value="card">Prepaid Template Card (₹99 value)</option><option value="vip">Prepaid VIP Website (₹299 value)</option><option value="biz">Business page QR (shop pays ₹499 online)</option></select></label>
+  <label><small>Prepaid tier</small><select id="batchTier"><option value="card">Prepaid Template Card (₹99 value)</option><option value="vip">Prepaid VIP Website (₹299 value)</option><option value="biz">Business page QR (shop pays ₹1,000 online)</option></select></label>
  </div>
  <div id="salesF" hidden><label><small>Give these cards to a salesperson (they get commission for each shop that activates)</small><select id="batchSp"><option value="">Nobody (direct)</option></select></label></div>
  <button type="button" id="generateBatchBtn">Generate &amp; Export Print Sheet</button>
@@ -55,7 +55,7 @@ button{background:#d6b06a;color:#2a0409;border:0;font-weight:700;cursor:pointer}
 <div class="card"><b>📄 Sales sheet for salespeople</b><p style="margin:2px 0 8px"><small>One-page A4 PDF to show shop owners or print. Each salesperson's private link also has it.</small></p><a href="/assets/getkeepsake-business-sales-sheet.pdf" target="_blank" rel="noopener" style="color:#e4c680;font-weight:700">Download the PDF →</a></div>
 <div class="card" style="border-color:#c9a45a55"><b>🗂️ Owner kit cards</b><p style="margin:2px 0 8px"><small>The how-to card (front) and about us card (back) that go in the box with a shop's QR. Same for every shop, so print them in bulk. 3.5 × 5 in, black &amp; gold, edge to edge with crop marks.</small></p><a href="/print-kit" target="_blank" rel="noopener" style="color:#e4c680;font-weight:700">Open the print sheet →</a></div>
 <div class="card" style="border-color:#9ad8b055"><b>👥 Salespeople</b>
- <p style="margin:2px 0 8px"><small>Each salesperson gets a code and a 6-digit PIN. They log in at <b>getkeepsake.in/sales</b>. Shop owners type the code before paying (it fills in by itself when the shop scans a QR card you gave that salesperson). When the shop pays ₹499, the commission shows in the salesperson's panel.</small></p>
+ <p style="margin:2px 0 8px"><small>Each salesperson gets a code and a 6-digit PIN. They log in at <b>getkeepsake.in/sales</b>. Shop owners type the code before paying (it fills in by itself when the shop scans a QR card you gave that salesperson). When the shop pays ₹1,000, the commission shows in the salesperson's panel.</small></p>
  <div style="display:grid;grid-template-columns:1.4fr 1fr .8fr;gap:8px"><input id="spName" placeholder="Name, e.g. Rahul Verma" maxlength="50"><input id="spPhone" placeholder="Phone" inputmode="tel" maxlength="16"><input id="spComm" type="number" value="100" min="0" max="5000" title="Commission ₹ per shop"></div>
  <button type="button" id="spAdd">Create salesperson (commission ₹ per shop)</button><div id="spNew"></div>
  <div id="spList"></div></div>
