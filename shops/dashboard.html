@@ -222,7 +222,7 @@ td .btn{white-space:nowrap}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 .lg .vf{width:24px;height:24px;flex:none;margin-right:2px;align-self:center}</style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js" defer></script>
-<script src="/assets/qr-cards.v8.js" defer></script>
+<script src="/assets/qr-cards.v9.js" defer></script>
 </head>
 <body>
 <div class="app">
@@ -922,7 +922,7 @@ V.campaigns = () => {
   if (P.error) return head("Offer QRs", "", "") + `<div class="empty"><b>Couldn't load this section</b>${esc(P.error)}<br><button class="btn" data-cp="reload">Try again</button></div>`;
   const all = P.campaigns.reduce((a, c) => { const t = cpTot(c); return { scan: a.scan + t.scan, claim: a.claim + t.claim, red: a.red + t.red }; }, { scan: 0, claim: 0, red: 0 });
   const low = P.credits < 10, ed = S.cpEdit, e = ed && ed !== "new" ? P.campaigns.find(c => c.cid === ed) : null;
-  const wa = "https://wa.me/916377547759?text=" + encodeURIComponent(`Hi GetKeepsake! I want printed pamphlets / stickers with my offer QR for ${shopName()} (${pageUrl()}).`);
+  const wa = "https://wa.me/918302791217?text=" + encodeURIComponent(`Hi GetKeepsake! I want printed pamphlets / stickers with my offer QR for ${shopName()} (${pageUrl()}).`);
   const form = () => { const f = e || { title: "", details: "", start: istDay(), end: istDay(14), max: 0, places: ["Pamphlets", "Shop sticker", "Instagram ad"] }; return `
     <div class="cd" id="cpForm" style="margin-top:18px"><div class="ch"><h2 class="H">${e ? "Edit campaign" : "New campaign"}</h2><button class="lnk" data-cp="cancel">Cancel</button></div>
       <label class="f">Offer <em>(what they get, up to 40 letters)</em><input class="in" id="cpT" maxlength="40" value="${esc(f.title)}" placeholder="Free brownie with any waffle"></label>
@@ -1112,7 +1112,7 @@ V.payments = () => {
       : `<div class="empty"><b>Add your UPI ID</b>Show a Pay button on your page so customers can pay from any UPI app.<br><a class="btn" href="/shops/studio?edit=${S.id}">Add UPI ID</a></div>`}</div>
   <div class="cd"><div class="ch"><h2 class="H">Your plan</h2></div>
     <dl class="kv"><dt>Business page</dt><dd>${S.active ? "Active · paid once" : "Not active yet"}</dd><dt>Loyalty card</dt><dd>${S.loyalty ? "Unlocked" : (S.active ? "Not added · ₹300 once" : "Included when your page goes live")}</dd><dt>Printed QR</dt><dd>${esc(S.ship || (S.active ? "Not ordered" : "Included with your page"))}</dd><dt>Created</dt><dd>${pg.created ? new Date(pg.created).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" }) : "–"}</dd></dl>
-    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">${S.active ? "" : `<a class="btn" href="/shops/studio?edit=${S.id}#publish">Activate · ₹1,000</a>`}${S.loyalty || !S.active ? "" : `<a class="btn k" href="/shops/studio?edit=${S.id}#publish">Add loyalty card</a>`}<a class="btn g" href="https://wa.me/916377547759?text=${encodeURIComponent("Hi, I need help with my GetKeepsake page " + pageUrl())}" target="_blank" rel="noopener">Billing help</a></div></div></section>`;
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">${S.active ? "" : `<a class="btn" href="/shops/studio?edit=${S.id}#publish">Activate · ₹1,000</a>`}${S.loyalty || !S.active ? "" : `<a class="btn k" href="/shops/studio?edit=${S.id}#publish">Add loyalty card</a>`}<a class="btn g" href="https://wa.me/918302791217?text=${encodeURIComponent("Hi, I need help with my GetKeepsake page " + pageUrl())}" target="_blank" rel="noopener">Billing help</a></div></div></section>`;
 };
 
 V.settings = () => {
@@ -1129,7 +1129,7 @@ V.settings = () => {
     <div><span><b>Add to home screen</b><small>Open this page in Chrome, tap ⋮ and "Add to Home screen" to open it like an app.</small></span></div></div></div></section>
   <section class="g2"><div class="cd"><div class="ch"><h2 class="H">Account</h2></div><dl class="kv"><dt>Name</dt><dd>${esc(u.name || "")}</dd><dt>Email</dt><dd>${esc(u.email || "")}</dd><dt>Mobile</dt><dd>${esc(u.phone || "–")}</dd></dl>
     <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px"><a class="btn g" href="/dashboard">All my pages</a><button class="btn k" data-act="logout">Log out</button></div></div>
-  <div class="cd"><div class="ch"><h2 class="H">Help</h2></div><p class="mu" style="margin-top:0">Stuck, or want us to set it up for you? We reply on WhatsApp.</p><a class="btn w" href="https://wa.me/916377547759?text=${encodeURIComponent("Hi, I need help with my shop dashboard " + pageUrl())}" target="_blank" rel="noopener">${IC.wa}WhatsApp +91 63775 47759</a></div></section>`;
+  <div class="cd"><div class="ch"><h2 class="H">Help</h2></div><p class="mu" style="margin-top:0">Stuck, or want us to set it up for you? We reply on WhatsApp.</p><a class="btn w" href="https://wa.me/918302791217?text=${encodeURIComponent("Hi, I need help with my shop dashboard " + pageUrl())}" target="_blank" rel="noopener">${IC.wa}WhatsApp +91 83027 91217</a></div></section>`;
 };
 
 // ---------- actions ----------

@@ -129,7 +129,7 @@ function showLogin(msg) {
     <form class="login" id="lf"><label>Your code<input id="lc" maxlength="12" autocomplete="username" placeholder="SPXXXX" required></label>
     <label>PIN<input id="lp" type="password" inputmode="numeric" maxlength="6" autocomplete="current-password" placeholder="••••••" required></label>
     <p class="err" id="le">${esc(msg || "")}</p><button class="btn" type="submit">Log in</button></form>
-    <p class="foot">Forgot your PIN? WhatsApp <a href="https://wa.me/916377547759">+91 63775 47759</a> and we'll send a new one.</p>`;
+    <p class="foot">Forgot your PIN? WhatsApp <a href="https://wa.me/918302791217">+91 83027 91217</a> and we'll send a new one.</p>`;
   const sv = ls.get(KEY, null); if (sv && sv.code) $("#lc").value = sv.code;
   $("#lf").onsubmit = async e => {
     e.preventDefault(); const le = $("#le"); le.textContent = "Checking…";
@@ -231,7 +231,7 @@ function me() {
   <div class="card"><div class="li"><div><b>New shop alerts</b><small id="alTxt">Get a notification when a shop goes live with your code.</small></div><button class="sw" id="alBtn" aria-label="Alerts"></button></div>
   <div class="li"><div><b>Daily visit goal</b><small>Shown on your Today screen</small></div><select id="goal" style="padding:8px 10px;border-radius:10px;border:1px solid var(--ln);background:#fff">${[5, 8, 10, 12, 15, 20, 25, 30].map(n => `<option${n === ls.get(GK, 10) ? " selected" : ""}>${n}</option>`).join("")}</select></div></div>
   ${std ? "" : `<div class="card"><b>Install this app</b><p style="margin:6px 0 4px;color:var(--mu);font-size:15px"><b>Android (Chrome):</b> tap ⋮ → <b>Install app</b>.</p><p style="margin:0;color:var(--mu);font-size:15px"><b>iPhone (Safari):</b> Share → <b>Add to Home Screen</b>, then open it from your home screen.</p></div>`}
-  <div class="card"><b>Need help?</b><p style="margin:6px 0 10px;color:var(--mu);font-size:15px">Questions about a shop or your commission?</p><a class="btn wa" href="https://wa.me/916377547759" target="_blank" rel="noopener">WhatsApp GetKeepsake</a></div>
+  <div class="card"><b>Need help?</b><p style="margin:6px 0 10px;color:var(--mu);font-size:15px">Questions about a shop or your commission?</p><a class="btn wa" href="https://wa.me/918302791217" target="_blank" rel="noopener">WhatsApp GetKeepsake</a></div>
   <button class="btn gh" id="lo">Log out</button>`;
 }
 function wire() {

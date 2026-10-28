@@ -136,7 +136,7 @@ h2{font:800 24px/1.2 Fraunces,Georgia,serif;margin:0 0 6px}
     if (ask) ask.onclick = async e => {
       const a = e.target.closest("button"); if (!a) return;
       try { await post("visit", { token: c.token, answer: a.dataset.a }); } catch (x) {}
-      ask.innerHTML = a.dataset.a === "yes" ? `<b>Thanks!</b><span class="mu">Next time, scan the <b>Redeem here</b> QR at the counter to use your offer. If the shop didn't let you, tell us on <a href="https://wa.me/916377547759">WhatsApp</a>.</span>` : `<b>No problem.</b><span class="mu">Your offer is valid till ${esc(day(j.offer.end))}.</span>`;
+      ask.innerHTML = a.dataset.a === "yes" ? `<b>Thanks!</b><span class="mu">Next time, scan the <b>Redeem here</b> QR at the counter to use your offer. If the shop didn't let you, tell us on <a href="https://wa.me/918302791217">WhatsApp</a>.</span>` : `<b>No problem.</b><span class="mu">Your offer is valid till ${esc(day(j.offer.end))}.</span>`;
     };
   }
 
