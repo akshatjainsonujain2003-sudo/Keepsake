@@ -504,6 +504,56 @@
 .L-poster .gal img{border-radius:6px}
 .L-poster .rev b{font:400 19px/1.15 var(--fh)}
 .L-poster .btn{border-radius:999px}
+/* ---- Poster, 2026 refresh: floating business card, premium loyalty card, edge-to-edge menu cards, dark footer ---- */
+.L-poster .sec{padding-top:36px}
+.L-poster .hero .foot1{bottom:56px}
+.L-poster .idc{position:relative;z-index:3;margin:-36px 12px 0;padding:0 0 16px;border-radius:26px;background:var(--sf);border:1px solid color-mix(in srgb,var(--tx) 8%,transparent);box-shadow:0 34px 60px -38px #000c}
+.L-poster .idc .id{padding:16px 16px 0}
+.L-poster .idc .logo{width:58px;height:58px;border-radius:18px;font-size:24px;background-color:var(--sf2)}
+.L-poster .idc h1{font-size:24px}
+.L-poster .idc .tag{margin:12px 16px 0;font-size:14.5px}
+.L-poster .idc .acts{display:grid;grid-template-columns:repeat(auto-fit,minmax(58px,1fr));gap:8px;overflow:visible;padding:16px 12px 0}
+.L-poster .idc .act{flex-direction:column;justify-content:center;gap:7px;padding:13px 4px 11px;border-radius:18px;background:var(--sf2);color:var(--tx);font:700 11.5px var(--fn);min-height:64px}
+.L-poster .idc .act span svg{width:20px;height:20px}
+.L-poster .idc .act.pr{background:var(--tx);color:var(--bg)}
+.L-poster .offer{border-radius:24px;padding:26px 24px 24px;background:var(--ac);color:var(--on)}
+.L-poster .offer small{opacity:.75}
+.L-poster .offer .till{margin-top:16px;background:color-mix(in srgb,var(--on) 18%,transparent);color:var(--on)}
+.L-poster .loy{background:var(--tx);color:var(--bg);border:0;border-radius:26px;padding:24px 20px 20px;box-shadow:0 34px 60px -38px #000c}
+.L-poster .loy:after{width:240px;height:240px;right:-90px;top:-100px;background:radial-gradient(circle,color-mix(in srgb,var(--ac) 55%,transparent),transparent 68%)}
+.L-poster .loy .lb{color:color-mix(in srgb,var(--bg) 82%,transparent)}
+.L-poster .loy .lc{background:color-mix(in srgb,var(--bg) 14%,transparent);color:var(--bg)}
+.L-poster .loy .lr{font:400 30px/1.02 var(--fh);text-transform:uppercase;letter-spacing:-.015em}
+.L-poster .loy .lp{color:color-mix(in srgb,var(--bg) 72%,transparent)}
+.L-poster .loy .lst i{border:1.5px solid color-mix(in srgb,var(--bg) 26%,transparent);color:color-mix(in srgb,var(--bg) 62%,transparent)}
+.L-poster .loy .lst i.on{background:var(--ac);color:var(--on);border:0}
+.L-poster .loy .lst i.gf{border-color:var(--ac);color:var(--ac)}
+.L-poster .loy .la .btn{background:var(--bg);color:var(--tx)}
+.L-poster .loy .la .lk{color:color-mix(in srgb,var(--bg) 65%,transparent)}
+.L-poster .loy.rdy{background:var(--tx);border:2px solid var(--ac)}
+.L-poster .chips button{background:transparent;color:var(--tx);box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--tx) 22%,transparent);opacity:1}
+.L-poster .chips button.on{background:var(--tx);color:var(--bg);box-shadow:none}
+.L-poster .grid{gap:14px 12px}
+.L-poster .pc{background:var(--sf);padding:0;border-radius:20px;overflow:hidden;border:1px solid color-mix(in srgb,var(--tx) 8%,transparent);box-shadow:0 20px 36px -32px #000b}
+.L-poster .pc .im{border-radius:0;aspect-ratio:4/5}
+.L-poster .pc .bs{left:10px;top:10px}
+.L-poster .pc b{margin:12px 12px 2px;font-size:14.5px}
+.L-poster .pc p{margin:0 12px}
+.L-poster .pc .rw{margin:10px 12px 12px}
+.L-poster .pc .rw .p{font:400 17px var(--fh);letter-spacing:-.01em}
+.L-poster .pc .q button{width:34px;height:34px;background:var(--tx);color:var(--bg)}
+.L-poster .pc .q button.m{background:color-mix(in srgb,var(--tx) 10%,transparent);color:var(--tx)}
+.L-poster .card{border-radius:24px;box-shadow:none}
+.L-poster .hr.td{margin:0 -12px;padding:12px;border-radius:12px;background:var(--sf2);border-bottom-color:transparent;color:var(--tx)}
+.L-poster .hr.td span:last-child{color:var(--tx)}
+.L-poster .map .ad .btn,.L-poster .upi .btn,.L-poster .rev .btn{background:var(--tx);color:var(--bg)}
+.L-poster .pfoot{margin-top:44px;padding:48px 22px 0;border-radius:32px 32px 0 0;background:var(--tx);color:var(--bg);text-align:center;overflow:hidden}
+.L-poster .pfoot .pfn{font:400 clamp(40px,14vw,84px)/.9 var(--fh);text-transform:uppercase;letter-spacing:-.03em;overflow-wrap:anywhere}
+.L-poster .pfoot>p{margin:16px auto 0;max-width:320px;font:400 14.5px/1.5 var(--fn);color:color-mix(in srgb,var(--bg) 72%,transparent)}
+.L-poster .pfoot .foot{padding:30px 0 44px}
+.L-poster .pfoot .foot .so a{background:color-mix(in srgb,var(--bg) 10%,transparent);border-color:color-mix(in srgb,var(--bg) 18%,transparent);color:var(--bg)}
+.L-poster .pfoot .foot .mk{color:color-mix(in srgb,var(--bg) 60%,transparent)}
+.L-poster .pfoot .foot .mk a{color:var(--bg);border-bottom-color:color-mix(in srgb,var(--bg) 35%,transparent)}
 
 /* ---------- Botanical (salons, spas, florists, wellness) ---------- */
 .L-botanical{--fh:'Playfair Display',Georgia,serif;--fn:'DM Sans',system-ui,sans-serif}
@@ -1002,8 +1052,9 @@
         <div class="top"><span class="brand">${esc(m.name)}</span><span class="r">${P.bag(m)}${P.share()}</span></div>
         <div class="big w1" style="${fs(w1)}">${esc(w1)}</div>${w2 ? `<div class="big w2" style="${fs(w2)}">${esc(w2)}</div>` : ""}${m.sc ? `<div class="scr">${esc(m.sc)}</div>` : ""}
         <div class="foot1">${P.status(m)}${m.menu.length ? `<a class="btn" href="#bz-menu">${esc(m.menuTitle)} ${ic("arrow", 16)}</a>` : ""}</div></div>
-        <div class="wrap"><div class="id">${P.logo(m)}<div><h1>${esc(m.name)}</h1>${m.cat || m.area ? `<div class="cat" style="margin-top:6px">${esc([m.cat, m.area].filter(Boolean).join(" · "))}</div>` : ""}</div></div>${m.tag ? `<p class="tag">${esc(m.tag)}</p>` : ""}
-        ${P.acts(m)}${P.offer(m)}${P.loy(m)}${gridSec}</div>${featSec}<div class="wrap">${P.review(m)}${P.gallery(m)}${P.tail(m)}</div>`;
+        <div class="wrap"><div class="idc"><div class="id">${P.logo(m)}<div><h1>${esc(m.name)}</h1>${m.cat || m.area ? `<div class="cat" style="margin-top:6px">${esc([m.cat, m.area].filter(Boolean).join(" · "))}</div>` : ""}</div></div>${m.tag ? `<p class="tag">${esc(m.tag)}</p>` : ""}
+        ${P.acts(m)}</div>${P.offer(m)}${P.loy(m)}${gridSec}</div>${featSec}<div class="wrap">${P.review(m)}${P.gallery(m)}${P.hours(m)}${P.visit(m)}${P.upi(m)}</div>
+        <div class="pfoot"><div class="pfn">${esc(m.name)}</div>${m.tag ? `<p>${esc(m.tag)}</p>` : ""}${P.foot(m)}</div>`;
     },
     botanical(m) {
       const all = m.menu.flatMap(s => s.items), pics = all.filter(x => x.img);
