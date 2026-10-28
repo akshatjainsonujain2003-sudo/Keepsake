@@ -85,11 +85,11 @@ def page(slug):
 <meta property="og:type" content="website"><meta property="og:site_name" content="GetKeepsake"><meta property="og:locale" content="en_IN"><meta property="og:url" content="{url}">
 <meta property="og:title" content="{esc(strip(d["h1"]))} · GetKeepsake for business"><meta property="og:description" content="{esc(d["desc"])}">
 <meta property="og:image" content="https://getkeepsake.in/assets/og-shops.jpg"><meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#f4f1ea">
+<meta name="theme-color" content="#1F1BF2">
 <link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Pinyon+Script&family=Inter:wght@400;500;600;700;800&family=Mukta:wght@600;700&display=swap">
-<link rel="stylesheet" href="/assets/ind.v4.css"><link rel="stylesheet" href="/assets/gk.v1.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&family=Mukta:wght@600;700&display=swap">
+<link rel="stylesheet" href="/assets/ind.v5.css"><link rel="stylesheet" href="/assets/gk.v2.css">
 <script>document.documentElement.classList.add("gkm")</script>
 <script type="application/ld+json">{json.dumps(ld, ensure_ascii=False).replace("</", "<\\/")}</script>
 </head>
@@ -128,11 +128,11 @@ def page(slug):
 <section class="se" id="pricing"><div class="w">
   <div class="sh"><h2 data-gk-h2>One price. <em>forever</em> yours.</h2><p>No monthly fees and no commission on orders or payments.</p></div>
   <div class="pc">
-    <div class="m" data-gk-st><div class="stk" data-gk-stk>No monthly fees</div><div class="k">{esc(d["word"])} page</div><div class="a">₹<span data-gk-count>1000</span><small>one-time</small></div><p>Your {esc(d["word"])} page with its own link and QR, unlimited edits and weekly stats on who scanned.</p><a class="b" href="{studio}">{esc(d["cta"])}</a></div>
+    <div class="m" data-gk-st><div class="stk" data-gk-stk>No monthly fees</div><div class="k">{esc(d["word"])} page</div><div class="a">₹<span data-gk-count>1,000</span><small>one-time</small></div><p>Your {esc(d["word"])} page with its own link and QR, unlimited edits and weekly stats on who scanned.</p><a class="b" href="{studio}">{esc(d["cta"])}</a></div>
     <div class="ad" data-gk-st>
       <div class="r"><b>Business page</b><i></i><em>₹1,000</em><small>Link, QR, menu or price list, offers, WhatsApp, UPI, reviews</small></div>
       <div class="r"><b>Loyalty card</b><i></i><em>Included</em><small>Stamp card for regulars, staff PIN and member list</small></div>
-      <div class="r"><b>Printed QR, delivered</b><i></i><em>+ ₹99</em><small>3.5 × 5 inch counter board in your colour, anywhere in India</small></div>
+      <div class="r"><b>Printed QR, delivered</b><i></i><em>Included</em><small>3.5 × 5 inch counter board in your colour, anywhere in India</small></div>
     </div>
   </div>
 </div></section>
@@ -147,7 +147,6 @@ def page(slug):
   <div class="ob">{others}</div>
 </div></section>
 
-<div class="gk-perf up" style="--perf:#ff5b2e;margin-top:96px" aria-hidden="true"></div>
 <section class="cl" style="margin-top:0"><div class="w">
   <h2 data-gk-h2>Make your {esc(d["word"])} <em>unmissable</em></h2>
   <p lang="hi">आज ही अपना पेज बनाएँ</p>

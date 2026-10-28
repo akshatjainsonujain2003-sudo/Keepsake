@@ -1,5 +1,5 @@
 # Content for the GetKeepsake for Business business-type pages.
-INC, LOY, PQR = "Included", "Included", "+ ₹99"
+INC, LOY, PQR = "Included", "Included", "Included"
 P = {
 "cafe": dict(type="cafe", live={"demo": "cafe"}, ex="cafe", label="Cafés & restaurants", short="Cafés", word="café",
   title="QR Menu & Loyalty Card for Cafés and Restaurants | GetKeepsake",
@@ -19,12 +19,12 @@ P = {
   ly=("Regulars,<br>rewarded.", "A stamp card that lives on your café's page. Customers collect a stamp each visit and the 10th coffee is on you. No app and no paper cards to lose.",
       ["<b>They come back sooner,</b> because a free coffee is only a few visits away.", "<b>They pick you over the café next door.</b>", "<b>You know your regulars:</b> see every member and send a WhatsApp reminder."],
       "Brew & Bloom", "free coffee", 10, 7),
-  steps=[("Upload your menu photo", "Items and prices fill in by themselves. Check them and add photos."), ("Choose your look", "Pick a layout and colours. Your page updates as you type."), ("Pay ₹1,000 once, go live", "Print your QR for every table, or get it delivered for ₹99.")],
+  steps=[("Upload your menu photo", "Items and prices fill in by themselves. Check them and add photos."), ("Choose your look", "Pick a layout and colours. Your page updates as you type."), ("Pay ₹1,000 once, go live", "Your printed QR board is delivered to your shop. Print more for every table.")],
   faq=[("Can I use it as a QR code menu on every table?", "Yes. Print the same QR for every table. Customers scan it with their phone camera and your menu opens in the browser, no app needed."),
        ("Do I pay commission on WhatsApp orders?", "No. Orders come straight to your WhatsApp with the items and total. We never take a cut, and UPI money goes straight to your bank."),
        ("Can I change prices and items later?", "Any time, from your phone. Log in, edit, tap Save. The QR on your tables stays the same."),
        ("How does the loyalty card work?", "Customers open it from your page and collect one stamp a day when they visit. Your staff add the stamp with a 4-digit PIN. You choose the reward, like a free coffee after 10 visits. It comes with your page at no extra cost."),
-       ("Is there a monthly fee?", "No. ₹1,000 once and your page stays live. The loyalty card is included. Add a printed QR for ₹99 if you like.")]),
+       ("Is there a monthly fee?", "No. ₹1,000 once and your page stays live. The loyalty card and a printed QR board are included.")]),
 "salon": dict(type="salon", live={"demo": "salon"}, ex="salon", label="Salons & spas", short="Salons", word="salon",
   title="Salon Rate Card, WhatsApp Booking & Loyalty Card | GetKeepsake",
   desc="A page for your salon or beauty parlour: services and prices, bookings on WhatsApp, a loyalty card and Google reviews behind one QR. ₹1,000 one-time.",
@@ -48,7 +48,7 @@ P = {
        ("Can I show bridal and package prices?", "Yes. Make sections like Hair, Skin, Bridal and Packages, each with photos and prices."),
        ("How does the loyalty card work?", "Clients collect one stamp per visit, added by your staff with a PIN. You pick the reward, like a free head massage on the 5th visit. Included with your page."),
        ("Do I need a website or app?", "No. Your page has its own link and QR. Clients just scan it with their camera."),
-       ("Is there a monthly fee?", "No. ₹1,000 once. The loyalty card is included; a printed QR is ₹99 extra.")]),
+       ("Is there a monthly fee?", "No. ₹1,000 once. The loyalty card and a printed QR board are included.")]),
 "gym": dict(type="gym", live={"demo": "gym"}, ex="gym", label="Gyms & fitness", short="Gyms", word="gym",
   title="Gym Membership Plans, Free Trial Booking & Loyalty | GetKeepsake",
   desc="A page for your gym or fitness studio: plans and prices, free-trial bookings on WhatsApp, timings and a loyalty card, behind one QR. ₹1,000 one-time.",

@@ -243,9 +243,9 @@
       syncPlan();
       $(".ks-bizbox").hidden = !bizAct();
       if (bizAct()) {
-        $(".ks-base").innerHTML = `<span><b>${esc(prod.name)}</b><small>${loyIncl() ? "Your page with its own link, a loyalty stamp card and a QR you can download and print yourself." : "Your page with its own link, plus a QR you can download and print yourself."}</small></span><span class="ks-pp">${money(prod.price)}</span>`;
-        const add = (k, on, d, title) => d ? `<label class="ks-add"><input type="checkbox" data-add="${k}"${on ? " checked" : ""}><span><b class="ks-ah"><span>${esc(title)}</span><span class="ks-pp">+ ${money(d.price)}</span></b><small>${esc(d.desc || "")}</small></span></label>` : "";
-        $(".ks-adds").innerHTML = add("qr", state.addQr, c.delivery.bizQr, "Printed QR, delivered") + (loyIncl() ? `<div class="ks-add"><span style="padding-left:2px">✓</span><span><b class="ks-ah"><span>Loyalty stamp card</span><span class="ks-pp">Included</span></b><small>${esc(c.delivery.loyalty.desc || "")}</small></span></div>` : add("loy", state.addLoy, c.delivery.loyalty, "Loyalty card"));
+        $(".ks-base").innerHTML = `<span><b>${esc(prod.name)}</b><small>${loyIncl() ? "Your page with its own link, a loyalty stamp card, and your QR printed on a counter board and delivered." : "Your page with its own link, plus a QR you can download and print yourself."}</small></span><span class="ks-pp">${money(prod.price)}</span>`;
+        const add = (k, on, d, title) => d ? `<label class="ks-add"><input type="checkbox" data-add="${k}"${on ? " checked" : ""}><span><b class="ks-ah"><span>${esc(title)}</span><span class="ks-pp">${d.incl ? "Included" : "+ " + money(d.price)}</span></b><small>${esc(d.desc || "")}${d.incl ? " Untick it if you would rather download your QR and print it yourself." : ""}</small></span></label>` : "";
+        $(".ks-adds").innerHTML = add("qr", state.addQr, c.delivery.bizQr, "Printed QR, delivered") + (loyIncl() ? `<label class="ks-add"><input type="checkbox" checked disabled aria-label="Loyalty stamp card, included"><span><b class="ks-ah"><span>Loyalty stamp card</span><span class="ks-pp">Included</span></b><small>${esc(c.delivery.loyalty.desc || "")}</small></span></label>` : add("loy", state.addLoy, c.delivery.loyalty, "Loyalty card"));
       }
       $(".ks-opts").hidden = $(".ks-dq").hidden = plans.length < 2 || bizAct();
       if (!plans.includes(state.plan)) state.plan = plans[0];
@@ -254,7 +254,7 @@
       const frame = bizAct() ? state.addQr : state.plan !== "digital" && state.plan !== "loyalty";
       $(".ks-frame").hidden = !frame; $(".ks-pq").hidden = opts.kind === "biz"; $(".ks-tq").hidden = !qrOn();
       el.querySelectorAll('input[name="ks-tone"]').forEach(i => i.checked = i.value === state.tone);
-      $(".ks-dq").textContent = biz ? (loyIncl() ? "Add a printed QR?" : "Add a printed QR or a loyalty card?") : "How would you like it?";
+      $(".ks-dq").textContent = biz ? (loyIncl() ? "Your printed QR" : "Add a printed QR or a loyalty card?") : "How would you like it?";
       el.querySelectorAll(".ks-pill").forEach(b => b.classList.toggle("on", b.dataset.print === state.print));
       $(".ks-photo").hidden = state.print !== "photo";
       const img = $(".ks-photo img"); img.hidden = !state.photo; if (state.photo) img.src = state.photo;
@@ -285,7 +285,7 @@
       status("Uploading your photo…");
       try { state.photo = await uploadPhoto(f, "print"); status("Photo ready to print ♡", "ok"); render(); } catch (x) { status(x.message, "bad"); }
     });
-    el.addEventListener("change", e => { const a = e.target.dataset && e.target.dataset.add; if (a) { if (a === "qr") state.addQr = e.target.checked; else state.addLoy = e.target.checked; status(""); render(); return; }
+    el.addEventListener("change", e => { const a = e.target.dataset && e.target.dataset.add; if (a) { if (a === "qr") { state.addQr = e.target.checked; state.qrSet = 1; } else state.addLoy = e.target.checked; status(""); render(); return; }
       if (e.target.name === "ks-tone") { state.tone = e.target.value; try { localStorage.setItem("ks-qr-tone", state.tone); } catch (x) {} } });
     $(".ks-pay").addEventListener("click", pay);
 
@@ -334,6 +334,8 @@
           if (typeof opts.wantLoyalty === "function" && opts.wantLoyalty()) state.addLoy = true;
         }
         state.cat = await catalog(); status("");
+        // The printed QR comes with a new page: ticked the first time, the owner can untick it.
+        if (bizAct() && !state.qrSet && state.cat && state.cat.delivery.bizQr && state.cat.delivery.bizQr.incl) { state.qrSet = 1; state.addQr = true; }
         if (!state.code && state.mode === "activate") { const saved = savedCode(); if (saved) await applyCode(saved, false); }
         const cu = opts.customer && opts.customer();
         if (cu) { const n = el.querySelector('[data-a="name"]'), ph = el.querySelector('[data-a="phone"]'); if (!n.value) n.value = cu.name || ""; if (!ph.value) ph.value = cu.phone || ""; }
