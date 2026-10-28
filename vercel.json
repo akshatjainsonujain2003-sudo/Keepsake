@@ -60,6 +60,14 @@
       "destination": "/biz"
     },
     {
+      "source": "/bill/:id",
+      "destination": "/bill"
+    },
+    {
+      "source": "/ca/:id",
+      "destination": "/ca"
+    },
+    {
       "source": "/sitemap.xml",
       "destination": "/api/seo?f=sitemap"
     },
@@ -95,7 +103,7 @@
       ]
     },
     {
-      "source": "/(hq|admin|shops/dashboard|shops/studio|shops/login|account|studio|builder|login|reset-password|sales|print-codes|print-kit|creator|dashboard)",
+      "source": "/(hq|admin|shops/dashboard|shops/studio|shops/login|account|studio|builder|login|reset-password|sales|print-codes|print-kit|creator|dashboard|bill|bill/.*|ca|ca/.*)",
       "headers": [
         {
           "key": "X-Frame-Options",
@@ -141,6 +149,9 @@
   "functions": {
     "api/img.js": {
       "maxDuration": 60
+    },
+    "api/qr.js": {
+      "includeFiles": "assets/gst.v1.js"
     }
   }
 }

@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en-IN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>GST reports · GetKeepsake</title>
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#0B0B14">
+<link rel="icon" href="/assets/brand/favicon.ico" sizes="any"><link rel="icon" type="image/svg+xml" href="/assets/brand/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap">
+<script src="/assets/gst.v1.js"></script>
+<script src="/assets/gst-export.v1.js"></script>
+<style>
+:root{--bg:#F2F2EE;--card:#fff;--ink:#0B0B14;--mu:#5B5B69;--line:#DADAD3;--bl:#1F1BF2;--li:#D4FF3F}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:500 14.5px/1.45 Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.top{background:var(--ink);color:#fff;padding:18px 16px}
+.top div{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.top b{font:800 18px 'Inter Tight',sans-serif;letter-spacing:-.03em}.top span{font:600 11px 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--li)}
+.wrap{max-width:1100px;margin:0 auto;padding:24px 16px 60px}
+h1{margin:0;font:800 clamp(28px,4vw,40px)/1.05 'Inter Tight',sans-serif;letter-spacing:-.035em}
+.sub{margin:6px 0 0;color:var(--mu)}
+.mono{font-family:'JetBrains Mono',monospace}
+.months{display:flex;gap:8px;flex-wrap:wrap;margin:22px 0 16px}
+.months button{padding:9px 14px;border-radius:999px;border:1.5px solid var(--line);background:var(--card);font:600 14px Inter;cursor:pointer}
+.months button.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.months button small{margin-left:6px;opacity:.7}
+.card{background:var(--card);border:1.5px solid var(--line);border-radius:20px;padding:20px 22px;margin-bottom:16px}
+.kp{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:14px}
+.kp span{display:block;color:var(--mu);font-size:12.5px}.kp b{display:block;font:800 20px 'Inter Tight',sans-serif;margin-top:2px;font-variant-numeric:tabular-nums}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.btn{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 18px;border-radius:999px;border:0;background:var(--bl);color:#fff;font:700 14px Inter;cursor:pointer;text-decoration:none}
+.btn.g{background:#fff;color:var(--ink);border:1.5px solid var(--ink)}
+.hint{color:var(--mu);font-size:13px;margin:10px 0 0}
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:13.5px}
+th{text-align:right;font:600 10.5px 'JetBrains Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--mu);padding:10px 8px;border-bottom:1.5px solid var(--line);white-space:nowrap}
+td{text-align:right;padding:10px 8px;border-bottom:1px solid #ecece6;white-space:nowrap}
+th:nth-child(-n+4),td:nth-child(-n+4){text-align:left}
+tr.cx td{color:#9b9b9b;text-decoration:line-through}tr.cx td:last-child{text-decoration:none}
+td a{color:var(--bl);font-weight:600}
+.msg{padding:60px 20px;text-align:center;color:var(--mu)}.msg b{display:block;color:var(--ink);font:800 22px 'Inter Tight',sans-serif;margin-bottom:6px}
+@media (max-width:760px){.kp{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style>
+</head>
+<body>
+<header class="top"><div><b>GetKeepsake</b><span>GST reports · read only</span></div></header>
+<main class="wrap" id="app"><div class="msg">Loading…</div></main>
+<script>
+(() => {
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const rs = n => "₹" + (+n || 0).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const k = (location.pathname.split("/")[2] || new URLSearchParams(location.search).get("k") || "").trim();
+const label = ym => { const [y, m] = ym.split("-").map(Number); return new Date(y, m - 1, 15).toLocaleDateString("en-IN", { month: "short", year: "numeric" }); };
+const S = { home: null, ym: "", rep: null };
+async function call(b) {
+  const r = await fetch("/api/qr", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(b), cache: "no-store" });
+  const j = await r.json().catch(() => ({})); if (!r.ok) throw new Error(j.error || "Something went wrong."); return j;
+}
+function render() {
+  const H = S.home, sh = H.shop, R = S.rep && S.rep.ym === S.ym ? S.rep : null, gst = sh.gst !== "none";
+  const x = R && R.bills ? KSGSTX.build(R.bills, sh) : null;
+  $("#app").innerHTML = `<h1>${esc(sh.name)}</h1>
+    <p class="sub">${sh.legal && sh.legal !== sh.name ? esc(sh.legal) + " · " : ""}${sh.gstin ? `GSTIN <b class="mono">${esc(sh.gstin)}</b> · ${esc(KSGST.STATES[sh.state] || "")}` : "Not registered for GST (bills of supply)"}</p>
+    <div class="months">${H.months.map(m => `<button type="button" data-ym="${m.ym}" class="${m.ym === S.ym ? "on" : ""}">${label(m.ym)}<small>${m.n}</small></button>`).join("")}</div>
+    ${!R ? `<div class="card">Loading ${label(S.ym)}…</div>` : R.error ? `<div class="card">${esc(R.error)}</div>` : `
+    <section class="card">
+      ${gst ? `<div class="kp"><div><span>Taxable value</span><b>${rs(x.s3b.a.tv)}</b></div><div><span>CGST</span><b>${rs(x.s3b.a.c)}</b></div><div><span>SGST</span><b>${rs(x.s3b.a.s)}</b></div><div><span>IGST</span><b>${rs(x.s3b.a.i)}</b></div><div><span>Nil rated</span><b>${rs(x.s3b.nil)}</b></div><div><span>Invoices</span><b>${x.count.live}${x.count.cancelled ? ` <small style="font:600 12px Inter;color:var(--mu)">+${x.count.cancelled} cancelled</small>` : ""}</b></div></div>
+      <p class="hint">GSTR-3B 3.1(a) for ${label(S.ym)} · ${x.count.b2b} B2B · ${x.count.b2cl} B2CL${x.s3b.unreg.length ? " · 3.2 inter-state to unregistered: " + x.s3b.unreg.map(u => esc(u.pos) + " " + rs(u.tv)).join(", ") : ""}</p>` : `<p style="margin:0">${x.count.live} bills of supply in ${label(S.ym)}. No GST is charged on them.</p>`}
+      <div class="btns">${gst ? `<button class="btn" data-dl="xlsx" ${R.bills.length ? "" : "disabled"}>Download GST workbook (.xlsx)</button>` : ""}<button class="btn ${gst ? "g" : ""}" data-dl="csv" ${R.bills.length ? "" : "disabled"}>Sales register (.csv)</button></div>
+      ${gst ? `<p class="hint">Sheets: Sales register, b2b, b2cl, b2cs, exemp, hsn(b2b), hsn(b2c), GSTR-3B summary, docs. Column headings follow the GSTR-1 offline tool. Nil-rated (0%) lines are listed under exemp.</p>` : ""}
+    </section>
+    <section class="card"><div class="tw"><table><thead><tr><th>Date</th><th>Invoice no.</th><th>Customer</th><th>GSTIN</th><th>Taxable</th><th>CGST</th><th>SGST</th><th>IGST</th><th>Total</th><th>Bill</th></tr></thead><tbody>
+      ${R.bills.length ? R.bills.map(b => `<tr class="${b.cancel ? "cx" : ""}"><td>${KSGST.dmy(b.at)}</td><td class="mono">${esc(b.no)}</td><td>${esc(b.cust.name || "Walk-in customer")}</td><td class="mono">${esc(b.cust.gstin || "")}</td><td>${rs(b.calc.taxable)}</td><td>${rs(b.calc.cgst)}</td><td>${rs(b.calc.sgst)}</td><td>${rs(b.calc.igst)}</td><td><b>${rs(b.calc.total)}</b></td><td>${b.cancel ? "Cancelled" : `<a href="/bill/${esc(b.t)}" target="_blank" rel="noopener">Open</a>`}</td></tr>`).join("") : `<tr><td colspan="10" style="text-align:center;color:var(--mu)">No bills this month.</td></tr>`}
+    </tbody></table></div></section>`}`;
+}
+document.addEventListener("click", ev => {
+  const m = ev.target.closest("[data-ym]"); if (m) { S.ym = m.dataset.ym; load(); return; }
+  const d = ev.target.closest("[data-dl]"); if (d && S.rep && S.rep.bills) (d.dataset.dl === "xlsx" ? KSGSTX.downloadWorkbook : KSGSTX.downloadRegister)(S.rep.bills, S.home.shop, S.ym);
+});
+async function load() {
+  render();
+  try { const j = await call({ action: "bl-ca-month", k, ym: S.ym }); S.rep = { ym: S.ym, bills: j.bills }; }
+  catch (e) { S.rep = { ym: S.ym, error: e.message }; }
+  render();
+}
+(async () => {
+  if (!/^[a-z0-9]{12,20}$/.test(k)) { $("#app").innerHTML = `<div class="msg"><b>Link not valid</b>Ask the shop to send the link again.</div>`; return; }
+  try { S.home = await call({ action: "bl-ca-home", k }); S.ym = S.home.months[0].ym; document.title = "GST reports · " + S.home.shop.name; load(); }
+  catch (e) { $("#app").innerHTML = `<div class="msg"><b>Reports unavailable</b>${esc(e.message)}</div>`; }
+})();
+})();
+</script>
+</body>
+</html>
