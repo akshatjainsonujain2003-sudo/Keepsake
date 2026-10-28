@@ -219,8 +219,8 @@
   function mount(host, o) {
     o = o || {};
     const root = host.shadowRoot || host.attachShadow({ mode: "open" });
-    // Boards are cut straight with rounded corners, so the screen preview shows a plain edge unless edge: "stamp" is asked for.
-    const plain = o.edge !== "stamp", rad = plain ? (o.radius == null ? 14 : +o.radius) : 0;
+    // Boards are cut straight with square corners, so the screen preview shows a plain edge unless edge: "stamp" is asked for.
+    const plain = o.edge !== "stamp", rad = plain ? +o.radius || 0 : 0;
     root.innerHTML = `<style>:host{display:block;width:${W}px;height:${H}px}${STAMP_CSS}${plain ? `.st{border-radius:${rad}px}` : ""}</style>` + stamp({ code: o.code || "SAMPLE" }, o.base || "https://getkeepsake.in", TONES[o.tone] ? o.tone : "red");
     if (plain) root.querySelector(".st").classList.add("pl");
     if (o.url) { const x = qrcode(0, "H"); x.addData(o.url); x.make(); root.querySelector(".qw svg").outerHTML = x.createSvgTag({ cellSize: 3, margin: 0, scalable: true }).replace(/fill="#000000"/g, 'fill="#1A1210"').replace(/fill="#ffffff"/g, 'fill="transparent"'); }
