@@ -60,6 +60,9 @@ module.exports = async (req, res) => {
         await pay.markPaid(orderId, "cash");
         return db.reply(res, 200, { ok: true, orderId, amount: rupees });
       }
+      // Pro given free (no payment): one or many shops, for a number of days. Or ended on one shop.
+      if (b.action === "hq-give-pro") { const r = await H.givePro(b.ids, b.days, b.note); return db.reply(res, r.error ? 400 : 200, r); }
+      if (b.action === "hq-end-pro") { const r = await H.endPro(b.id); return db.reply(res, r.error ? 400 : 200, r); }
       if (b.action === "hq-team") return db.reply(res, 200, { team: await require("./_sales").team() });
       if (b.action === "hq-sp") { const x = await require("./_sales").detail(b.code); return x ? db.reply(res, 200, { sp: x }) : db.reply(res, 404, { error: "Salesperson not found." }); }
       if (b.action === "push-key") return db.reply(res, 200, { key: (await H.vapid()).pub });

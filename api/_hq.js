@@ -62,7 +62,7 @@ async function pages() {
     const m = ms[i]; if (!m) return null; const u = U[m.owner] || {}, d = m.data || {};
     return { id, kind: "biz", owner_id: m.owner, title: m.title || "", cat: d.cat || "", area: d.area || "",
       live: m.paid !== false, created: m.created || 0, updated: m.updated || m.created || 0, views: +views[i] || 0, path: pathFor(m.kind, id),
-      owner: { name: u.name || m.ownerName || "", email: u.email || "", phone: u.phone || "", wa: (d.wa || "").replace(/\D/g, "") }, plan: m.plan || "", qr: (m.qrOrders || []).length, store: !!m.store, proUntil: m.proUntil || 0 };
+      owner: { name: u.name || m.ownerName || "", email: u.email || "", phone: u.phone || "", wa: (d.wa || "").replace(/\D/g, "") }, plan: m.plan || "", qr: (m.qrOrders || []).length, store: !!m.store, proUntil: m.proUntil || 0, proGifts: (m.proGifts || []).slice(-3) };
   }).filter(Boolean).sort((a, b) => b.updated - a.updated);
 }
 
@@ -128,4 +128,33 @@ async function latest() {
   return { id: o.id, at: o.paidAt, amount: o.amount, title: o.title || "", what, ship: SHIP(o.plan, o) };
 }
 
-module.exports = { summary, orders, pages, people, vapid, subscribe, unsubscribe, notify, latest, subCount };
+// Pro given free from HQ, to one or many shops. Drafts (not paid yet) are skipped: Pro only works on a live page.
+async function givePro(ids, days, note) {
+  const pay = require("./_pay");
+  ids = [...new Set((Array.isArray(ids) ? ids : []).map(String).filter(x => /^[a-z0-9]{8,16}$/i.test(x)))].slice(0, 200);
+  days = Math.round(+days);
+  if (!ids.length) return { error: "Pick at least one shop." };
+  if (!(days >= 1 && days <= 730)) return { error: "Pick between 1 and 730 days." };
+  const done = [], skipped = [], at = Date.now(), why = String(note || "").replace(/[<>]/g, "").trim().slice(0, 120);
+  for (const id of ids) {
+    const k = "customer-memory:" + id, m = await db.getj(k);
+    if (!m || m.kind !== "biz") { skipped.push({ id, why: "not found" }); continue; }
+    if (m.paid === false) { skipped.push({ id, title: m.title || "", why: "draft, not live yet" }); continue; }
+    await pay.addPro(m, days, at);
+    m.proGifts = [...(m.proGifts || []), { at, days, note: why }].slice(-10);
+    await db.setj(k, m);
+    done.push({ id, title: m.title || "", proUntil: m.proUntil });
+  }
+  return { ok: true, days, done, skipped };
+}
+// Ends Pro on a shop now (a mistake, or a trial that should stop). The store drops to catalogue mode; nothing is deleted.
+async function endPro(id) {
+  if (!/^[a-z0-9]{8,16}$/i.test(String(id || ""))) return { error: "Invalid page." };
+  const k = "customer-memory:" + id, m = await db.getj(k);
+  if (!m || m.kind !== "biz") return { error: "Page not found." };
+  if (!((m.proUntil || 0) > Date.now())) return { error: "Pro isn't on for this shop." };
+  m.proUntil = Date.now() - 1000; m.proGifts = [...(m.proGifts || []), { at: Date.now(), days: 0, note: "Ended from HQ" }].slice(-10);
+  await db.setj(k, m);
+  return { ok: true, id, proUntil: m.proUntil };
+}
+module.exports = { summary, orders, pages, people, vapid, subscribe, unsubscribe, notify, latest, subCount, givePro, endPro };

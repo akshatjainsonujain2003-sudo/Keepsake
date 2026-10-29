@@ -87,6 +87,10 @@ nav .dot{position:absolute;top:0;left:calc(50% + 6px);min-width:18px;height:18px
 .acts{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
 .addr{white-space:pre-line;background:var(--card);border:1px solid var(--ln);border-radius:14px;padding:12px 14px;font-size:14px}
 .box{background:var(--card);border:1px solid var(--ln);border-radius:18px;padding:14px;margin:12px 0}
+.row .ck{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;flex:none;border:2px solid var(--ln);color:transparent}.row.on{border-color:var(--gd)}.row.on .ck{background:var(--gd);border-color:var(--gd);color:#0B0B14}.row .ck svg{width:20px;height:20px}
+.selbar{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(var(--sa) + 84px);z-index:19;width:min(640px,calc(100% - 24px));display:flex;align-items:center;gap:10px;padding:10px 10px 10px 18px;border-radius:999px;background:#1C1C2Af5;border:1px solid var(--ln);box-shadow:0 18px 40px -12px #000c;backdrop-filter:blur(12px)}
+.selbar b{flex:1;font-variant-numeric:tabular-nums}.selbar .lk{background:none;border:0;color:var(--mu);font:600 14px inherit;cursor:pointer;padding:8px}
+.durs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}.durs button{padding:14px 6px;border-radius:14px;border:1px solid var(--ln);background:var(--card2);color:var(--tx);font-weight:700;cursor:pointer}.durs button small{display:block;font-weight:500;color:var(--mu);font-size:12px;margin-top:2px}.durs button.on{border-color:var(--gd);background:#2E3A10;color:var(--gd)}.durs button.on small{color:var(--gd)}
 .box h4{margin:0 0 8px;font:600 11px 'JetBrains Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--mu)}
 .toast{position:fixed;left:50%;top:calc(var(--st) + 14px);transform:translate(-50%,-160%);z-index:60;background:var(--gd);color:#0B0B14;padding:12px 18px;border-radius:999px;font-weight:700;transition:transform .3s;box-shadow:0 10px 30px #0008;max-width:calc(100% - 32px);text-align:center}
 .toast.on{transform:translate(-50%,0)}
@@ -137,7 +141,7 @@ nav .dot{position:absolute;top:0;left:calc(50% + 6px);min-width:18px;height:18px
 const $ = s => document.querySelector(s), esc = t => String(t == null ? "" : t).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 const rs = n => "₹" + Number(n || 0).toLocaleString("en-IN");
 const KK = "ks-hq-key"; let KEY = ""; try { KEY = localStorage.getItem(KK) || ""; } catch (e) {}
-const S = { sum: null, orders: null, pages: null, people: null, team: null, tp: "week", tab: "home", of: "ship", pf: "live", q: { orders: "", shops: "", people: "" } };
+const S = { sel: null, sum: null, orders: null, pages: null, people: null, team: null, tp: "week", tab: "home", of: "ship", pf: "live", q: { orders: "", shops: "", people: "" } };
 const IC = { biz: "🏪", site: "💌", card: "🎴" };
 const ago = t => { if (!t) return ""; const s = (Date.now() - t) / 1000; if (s < 60) return "just now"; if (s < 3600) return Math.floor(s / 60) + "m ago"; if (s < 86400) return Math.floor(s / 3600) + "h ago"; if (s < 172800) return "yesterday"; return new Date(t).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: new Date(t).getFullYear() === new Date().getFullYear() ? undefined : "numeric" }); };
 const when = t => t ? new Date(t).toLocaleString("en-IN", { day: "numeric", month: "short", hour: "numeric", minute: "2-digit" }) : "";
@@ -223,6 +227,10 @@ function draw() {
   A.querySelectorAll("[data-f]").forEach(b => b.onclick = () => { if (S.tab === "orders") S.of = b.dataset.f; else S.pf = b.dataset.f; draw(); });
   A.querySelectorAll("[data-o]").forEach(b => b.onclick = () => orderSheet(b.dataset.o));
   A.querySelectorAll("[data-p]").forEach(b => b.onclick = () => pageSheet(b.dataset.p));
+  A.querySelectorAll("[data-pick]").forEach(b => b.onclick = () => { const id = b.dataset.pick; S.sel.has(id) ? S.sel.delete(id) : S.sel.add(id); const y = scrollY; draw(); scrollTo(0, y); });
+  const sm = A.querySelector("[data-selmode]"); if (sm) sm.onclick = () => { S.sel = S.sel ? null : new Set(); draw(); };
+  const sa = A.querySelector("[data-selall]"); if (sa) sa.onclick = () => { const q = S.q.shops.toLowerCase().trim(), now = Date.now(); (S.pages || []).filter(p => p.kind === "biz" && p.live && (S.pf !== "pro" || p.proUntil > now) && (!q || [p.title, p.cat, p.area, p.owner.name, p.owner.email, p.owner.phone, p.id].join(" ").toLowerCase().includes(q))).forEach(p => S.sel.add(p.id)); draw(); };
+  const gv = A.querySelector("[data-give]"); if (gv) gv.onclick = () => giveSheet([...S.sel]);
   A.querySelectorAll("[data-sp]").forEach(b => b.onclick = () => spSheet(b.dataset.sp));
   A.querySelectorAll("[data-tp]").forEach(b => b.onclick = () => { S.tp = b.dataset.tp; draw(); });
   const ad = $("#addSp"); if (ad) ad.onclick = addSp;
@@ -296,15 +304,47 @@ async function setShip(o, undo, tracking) {
 function shops() {
   if (!S.pages) return top("Shops & pages") + loading();
   const ps = S.pages, q = S.q.shops.toLowerCase().trim();
-  const F = { live: p => p.kind === "biz" && p.live, draft: p => p.kind === "biz" && !p.live, keep: p => p.kind !== "biz" && p.live, kdraft: p => p.kind !== "biz" && !p.live };
+  const now = Date.now(), F = { live: p => p.kind === "biz" && p.live, pro: p => p.kind === "biz" && p.live && p.proUntil > now, draft: p => p.kind === "biz" && !p.live, keep: p => p.kind !== "biz" && p.live, kdraft: p => p.kind !== "biz" && !p.live };
   const n = k => ps.filter(F[k]).length;
   const list = ps.filter(F[S.pf]).filter(p => !q || [p.title, p.cat, p.area, p.owner.name, p.owner.email, p.owner.phone, p.id].join(" ").toLowerCase().includes(q));
   const hint = S.pf === "draft" ? `<p style="color:var(--mu);font-size:14px;margin:0 2px 12px">Shops that saved a page but haven't paid. Your warmest leads: tap one to WhatsApp them.</p>` : "";
   // Offer QR campaigns where customers say they visited but the shop didn't redeem (the shop may be skipping the QR to save claims).
   const fl = (S.flags || []).length ? `<div class="card" style="border:1.5px solid #e2725b;margin-bottom:14px"><b style="display:block;margin-bottom:6px">⚠ Offer QR flags · ${S.flags.length}</b>${S.flags.map(f => `<button class="row" data-p="${esc(f.page)}" style="padding:10px 0"><span class="mid"><b>${esc(f.shop || f.page)} · ${esc(f.title)}</b><small>${esc(f.reasons.join(" · "))} · ${f.claim} claims</small></span></button>`).join("")}<small style="color:var(--mu)">Call the shop: are they giving offers without the counter QR?</small></div>` : "";
   return top("Shops", ps.length + " business pages") + fl + srch("shops", "Search shop, owner, area…") +
-  `<div class="chips">${[["live", "Live shops"], ["draft", "Shop drafts"]].map(([k, l]) => `<button data-f="${k}" class="${S.pf === k ? "on" : ""}">${l} · ${n(k)}</button>`).join("")}</div>` + hint +
-  (list.map(p => `<button class="row" data-p="${esc(p.id)}"><span class="av">${IC[p.kind]}</span><span class="mid"><b>${esc(p.title || "Untitled")}</b><small>${esc([p.cat, p.area].filter(Boolean).join(" · ") || KIND[p.kind])} · ${esc(p.owner.name)}</small></span><span class="rt">${p.live ? '<span class="tag g">Live</span>' : '<span class="tag y">Draft</span>'}<small style="display:block">${p.live ? p.views + " opens" : ago(p.updated)}</small></span></button>`).join("") || `<div class="empty">Nothing here yet.</div>`);
+  `<div class="chips">${[["live", "Live shops"], ["pro", "On Pro"], ["draft", "Shop drafts"]].map(([k, l]) => `<button data-f="${k}" class="${S.pf === k ? "on" : ""}">${l} · ${n(k)}</button>`).join("")}</div>` + hint +
+  (S.pf !== "draft" ? `<div style="display:flex;align-items:center;gap:10px;margin:0 2px 12px"><span style="flex:1;color:var(--mu);font-size:14px">${S.sel ? "Tap shops to select them. Only live shops can get Pro." : "Give Pro free to one or many shops."}</span><button class="bt sm ${S.sel ? "gh" : ""}" data-selmode>${S.sel ? "Cancel" : "Select shops"}</button></div>` : "") +
+  (list.map(p => { const pro = p.proUntil > now, dl = pro ? Math.ceil((p.proUntil - now) / 864e5) : 0, on = S.sel && S.sel.has(p.id);
+    return `<button class="row${on ? " on" : ""}" ${S.sel && p.live ? `data-pick="${esc(p.id)}" aria-pressed="${!!on}"` : `data-p="${esc(p.id)}"`}>${S.sel && p.live ? `<span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg></span>` : `<span class="av">${IC[p.kind]}</span>`}<span class="mid"><b>${esc(p.title || "Untitled")}</b><small>${esc([p.cat, p.area].filter(Boolean).join(" · ") || KIND[p.kind])} · ${esc(p.owner.name)}</small></span><span class="rt">${pro ? `<span class="tag y">Pro · ${dl}d</span>` : p.live ? '<span class="tag g">Live</span>' : '<span class="tag m">Draft</span>'}<small style="display:block">${p.live ? p.views + " opens" : ago(p.updated)}</small></span></button>`; }).join("") || `<div class="empty">Nothing here yet.</div>`) +
+  (S.sel ? `<div class="selbar"><b>${S.sel.size} selected</b><button class="lk" data-selall>Select all ${list.filter(p => p.live).length}</button><button class="bt sm" data-give ${S.sel.size ? "" : "disabled"}>Give Pro</button></div>` : "");
+}
+// Give Pro free to one or more shops: pick how long, add an optional note, done.
+function giveSheet(ids) {
+  const ps = (S.pages || []).filter(p => ids.includes(p.id)), D = [[30, "1 month"], [90, "3 months"], [180, "6 months"], [365, "1 year"]];
+  let days = 30;
+  const until = p => new Date(Math.max(Date.now(), p.proUntil || 0) + days * 864e5).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
+  const draw2 = () => { $("#gvSum").innerHTML = ps.length === 1 ? `Pro until <b>${until(ps[0])}</b>${ps[0].proUntil > Date.now() ? " (added to the days they already have)" : ""}` : `${days} days added to each shop. Shops already on Pro keep their days and get these on top.`; $("#gvGo").textContent = `Give ${days} days of Pro to ${ps.length} shop${ps.length === 1 ? "" : "s"}`; };
+  sheet(`<h3>Give Pro free</h3><p class="sub">${ps.length === 1 ? esc(ps[0].title || "Untitled") : ps.length + " shops: " + esc(ps.slice(0, 3).map(p => p.title || "Untitled").join(", ")) + (ps.length > 3 ? " and " + (ps.length - 3) + " more" : "")}</p>
+    <div class="durs">${D.map(([d, l], i) => `<button type="button" data-d="${d}" class="${i ? "" : "on"}">${l}<small>${d} days</small></button>`).join("")}</div>
+    <label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px">Or type the number of days</label><input id="gvDays" class="in" type="number" inputmode="numeric" min="1" max="730" placeholder="e.g. 14" style="margin-bottom:10px">
+    <input id="gvNote" class="in" maxlength="120" placeholder="Note (optional): Diwali giveaway, trial, friend…">
+    <div class="box" id="gvSum" style="color:var(--mu);font-size:14px"></div>
+    <p style="color:var(--mu);font-size:13px;margin:0 0 4px">No payment is taken. They get the online store and every Pro tool. When it ends, their store goes back to WhatsApp orders and nothing is deleted.</p>
+    <button class="bt w" id="gvGo"></button>`);
+  draw2();
+  $("#sh").querySelectorAll("[data-d]").forEach(b => b.onclick = () => { days = +b.dataset.d; $("#gvDays").value = ""; $("#sh").querySelectorAll("[data-d]").forEach(x => x.classList.toggle("on", x === b)); draw2(); });
+  $("#gvDays").oninput = e => { const v = Math.round(+e.target.value); if (v >= 1 && v <= 730) { days = v; $("#sh").querySelectorAll("[data-d]").forEach(x => x.classList.toggle("on", +x.dataset.d === v)); draw2(); } };
+  $("#gvGo").onclick = async () => {
+    const b = $("#gvGo"); b.disabled = true; b.textContent = "Giving Pro…";
+    try {
+      const r = await api({ action: "hq-give-pro", ids: ps.map(p => p.id), days, note: $("#gvNote").value });
+      toast(`Pro given to ${r.done.length} shop${r.done.length === 1 ? "" : "s"} for ${r.days} days` + (r.skipped.length ? ` · ${r.skipped.length} skipped (not live)` : ""));
+      closeSheet(); S.sel = null; S.pages = null; await load("shops", true);
+    } catch (e) { toast(e.message); b.disabled = false; draw2(); }
+  };
+}
+async function endPro(p) {
+  if (!confirm(`End Pro for "${p.title}" now?\nTheir store goes back to WhatsApp orders. Nothing is deleted.`)) return;
+  try { await api({ action: "hq-end-pro", id: p.id }); toast("Pro ended for " + (p.title || "this shop")); closeSheet(); S.pages = null; await load("shops", true); } catch (e) { toast(e.message); }
 }
 function pageSheet(id) {
   const p = (S.pages || []).find(x => x.id === id); if (!p) return; const ph = p.owner.phone || p.owner.wa;
@@ -313,6 +353,8 @@ function pageSheet(id) {
   <div class="box"><h4>Owner</h4><b>${esc(p.owner.name)}</b><div style="color:var(--mu);font-size:14px">${esc(p.owner.email)}${ph ? " · " + esc(ph) : ""}</div>
   <div class="acts">${ph ? `<a class="bt sm" href="${wa(ph)}?text=${msg}" target="_blank" rel="noopener">WhatsApp</a><a class="bt sm gh" href="${tel(ph)}">Call</a>` : ""}${p.owner.email ? `<a class="bt sm gh" href="mailto:${esc(p.owner.email)}">Email</a>` : ""}</div>${!ph ? `<small style="color:var(--mu)">No phone saved. Use email.</small>` : ""}</div>
   <dl class="kv"><dt>Opens</dt><dd>${p.views}</dd><dt>Created</dt><dd>${when(p.created)}</dd><dt>Last edit</dt><dd>${when(p.updated)}</dd>${p.qr ? `<dt>Printed QRs</dt><dd>${p.qr}</dd>` : ""}<dt>ID</dt><dd>${esc(p.id)}</dd></dl>
+  ${p.kind === "biz" && p.live ? `<div class="box"><h4>Keepsake Pro</h4><p style="color:var(--mu);font-size:14px;margin:0 0 10px">${p.proUntil > Date.now() ? `On until <b style="color:var(--tx)">${esc(new Date(p.proUntil).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }))}</b>.` : "Not on Pro."}${(p.proGifts || []).length ? " Last given: " + esc((p.proGifts[p.proGifts.length - 1].days ? p.proGifts[p.proGifts.length - 1].days + " days" : "ended") + (p.proGifts[p.proGifts.length - 1].note ? " · " + p.proGifts[p.proGifts.length - 1].note : "")) + "." : ""}</p>
+    <div class="acts"><button class="bt sm" id="pgGive">Give Pro free</button>${p.proUntil > Date.now() ? `<button class="bt sm gh" id="pgEnd">End Pro now</button>` : ""}</div></div>` : ""}
   ${p.kind === "biz" ? `<div class="box"><h4>Keepsake Pro · paid in cash</h4>
     <p style="color:var(--mu);font-size:14px;margin:0 0 10px">${p.proUntil > Date.now() ? `<b style="color:var(--gd)">Pro is on</b> until ${esc(new Date(p.proUntil).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }))}. Online store included.` : p.proUntil ? "Pro has ended. The store is in catalogue mode (WhatsApp orders)." : "No Pro yet."} Took the payment in person? Start Pro here.${p.live ? "" : " This page isn't live yet, so it goes live too (+₹1,000)."}</p>
     <div class="seg" role="radiogroup" aria-label="Plan" style="display:flex;gap:8px;margin-bottom:10px"><button type="button" class="bt sm" data-cp="pro" aria-pressed="true">Monthly</button><button type="button" class="bt sm gh" data-cp="proYear" aria-pressed="false">Yearly</button></div>
@@ -320,6 +362,8 @@ function pageSheet(id) {
     <input id="cashNote" maxlength="120" placeholder="Note (optional): who collected it" class="in">
     <button class="bt w" id="cashGo" data-id="${esc(p.id)}" data-plan="pro">Start Pro · monthly</button></div>` : ""}
   ${p.live ? `<a class="bt w" href="${esc(p.path)}" target="_blank" rel="noopener">Open page ↗</a>` : ""}`);
+  const pgG = document.getElementById("pgGive"); if (pgG) pgG.onclick = () => giveSheet([p.id]);
+  const pgE = document.getElementById("pgEnd"); if (pgE) pgE.onclick = () => endPro(p);
   const cg = document.getElementById("cashGo");
   document.querySelectorAll("[data-cp]").forEach(b => b.onclick = () => {
     const yr = b.dataset.cp === "proYear";
