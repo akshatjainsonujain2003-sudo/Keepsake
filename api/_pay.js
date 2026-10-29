@@ -80,6 +80,15 @@ const hasQr = o => !!o && (o.plan === "bizQr" || !!o.withQr);
 const isPro = m => !!m && (m.proUntil || 0) > Date.now();
 const storeOn = m => !!m && (!!m.store || isPro(m));
 const proPlan = plan => plan === "pro" || plan === "proYear";
+// Adds days of Pro to a business page (paid, or given from HQ). Saving the memory is up to the caller.
+async function addPro(memory, days, at) {
+  at = at || Date.now();
+  memory.proUntil = Math.max(Date.now(), memory.proUntil || 0) + days * 864e5; memory.proAt = at;
+  // Pro includes the online store: the first time, switch orders on and give the bigger photo and product allowance.
+  if (!memory.storeAt) { memory.storeAt = at; memory.data = Object.assign({}, memory.data, { ord: true }); }
+  if (memory.owner) await db.cmd("SET", "store-user:" + memory.owner, "1");
+  return memory;
+}
 const kindOf = memory => (memory.kind === "site" || memory.kind === "biz" ? memory.kind : "card");
 
 // What this customer pays for a delivery option on this memory.
@@ -210,12 +219,7 @@ async function markPaid(orderId, paymentId) {
       if (!wasLive && kindOf(memory) === "biz" && !memory.loyalty) { memory.loyalty = true; memory.loyaltyAt = order.paidAt; }
       if (order.plan === "geopro") { memory.geopro = true; memory.geoproAt = order.paidAt; }
       if (order.plan === "store") { memory.store = true; memory.storeAt = order.paidAt; memory.data = Object.assign({}, memory.data, { ord: true }); await db.cmd("SET", "store-user:" + memory.owner, "1"); }
-      if (proPlan(order.plan)) {
-        memory.proUntil = Math.max(Date.now(), memory.proUntil || 0) + catalog()[order.plan].days * 864e5; memory.proAt = order.paidAt;
-        // Pro includes the online store: the first time, switch orders on and give the bigger photo and product allowance.
-        if (!memory.storeAt) { memory.storeAt = order.paidAt; memory.data = Object.assign({}, memory.data, { ord: true }); }
-        await db.cmd("SET", "store-user:" + memory.owner, "1");
-      }
+      if (proPlan(order.plan)) await addPro(memory, catalog()[order.plan].days, order.paidAt);
       if (hasQr(order)) memory.qrOrders = [...(memory.qrOrders || []), orderId].slice(-10);
       memory.orders = [...(memory.orders || []), orderId].slice(-20);
       await db.setj(mk, memory);
@@ -243,4 +247,4 @@ async function markPaid(orderId, paymentId) {
   }
 }
 
-module.exports = { catalog, amountFor, isPro, storeOn, proPlan, describe, isFrame, isShip, hasQr, kindOf, keyId, configured, createOrder, verifyPayment, verifyWebhook, markPaid };
+module.exports = { catalog, amountFor, addPro, isPro, storeOn, proPlan, describe, isFrame, isShip, hasQr, kindOf, keyId, configured, createOrder, verifyPayment, verifyWebhook, markPaid };
