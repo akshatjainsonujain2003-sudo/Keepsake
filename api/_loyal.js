@@ -120,4 +120,14 @@ async function handle(b, ctx) {
   }
   return E(400, "Unknown action.");
 }
-module.exports = { handle, ph10 };
+// A completed Pro Store order earns one stamp (same one-a-day rule as the counter). Returns { s, n, r } or null.
+async function orderStamp(id, phone, name) {
+  const sh = await shop(id); phone = ph10(phone);
+  if (!sh || !sh.live || !sh.cfg || !phone) return null;
+  let c = await db.getj(key(id, phone));
+  if (!c && !(c = await newCard(id, phone, name))) return null;
+  if (addStamp(c, sh.cfg, "order")) return null;
+  await save(id, c);
+  return { s: Math.min(c.s, sh.cfg.n), n: sh.cfg.n, r: sh.cfg.r };
+}
+module.exports = { handle, ph10, orderStamp };
