@@ -47,7 +47,7 @@ async function placeOrder(b, ip) {
   if (!items.length) return E(400, "Your order is empty.");
   const tot = items.reduce((t, x) => t + x.q * x.p, 0), phone = ph10(b.phone), now = Date.now();
   // Online store: the order is placed on the page itself (no WhatsApp), so a mobile number is needed to reach the customer.
-  const direct = !!m.store && b.direct === true;
+  const direct = require("./_pay").storeOn(m) && b.direct === true;
   if (direct && !phone) return E(400, "Please add your 10-digit mobile number.");
   const o = { ref, at: now, items, tot, name: clip(b.name, 40), phone, mode: MODES.includes(b.mode) ? b.mode : "pickup", addr: clip(b.addr, 160), note: clip(b.note, 160), st: "new", ts: {}, ...(direct ? { direct: true, pay: b.pay === "upi" ? "upi" : "cod" } : {}) };
   if ((await db.cmd("SET", "bzo:" + b.id + ":" + ref, JSON.stringify(o), "NX", "EX", KEEP)) !== "OK") return { ok: true, ref, dup: true };
@@ -72,7 +72,7 @@ const mkRef = () => Array.from(require("crypto").randomBytes(5), x => RA[x % RA.
 // Keepsake Pro only. The owner records a sale made in the shop: { id, items: [["0.2", 2], …], custom: [{ n, q, p }], disc, pay, name, phone, note }.
 // It is saved like any order, already Done, marked offline, so it counts in sales, top items and the customer list.
 async function ownerSale(id, m, b) {
-  if (!((m.proUntil || 0) > Date.now())) return E(402, "Add sale is part of Keepsake Pro. Start Pro (₹199 for 30 days) on your dashboard.");
+  if (!((m.proUntil || 0) > Date.now())) return E(402, "Add sale is part of Keepsake Pro. Start Pro on your dashboard.");
   if (await limit("bzsale-day:" + id, 400, 86400)) return E(429, "That's a lot of sales for one day. Try again tomorrow.");
   const menu = Array.isArray((m.data || {}).menu) ? m.data.menu : [], items = [];
   for (const [key, q] of (Array.isArray(b.items) ? b.items : []).filter(Array.isArray).slice(0, 40)) {
