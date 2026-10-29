@@ -63,10 +63,11 @@ function catalog() {
     claims100: { price: rupees(env.PRICE_CLAIMS_100, 499), size: Math.max(1, Math.round(+env.CLAIMS_100_SIZE || 100)) },
     claims500: { price: rupees(env.PRICE_CLAIMS_500, 1999), size: Math.max(1, Math.round(+env.CLAIMS_500_SIZE || 500)) } },
     flat: { price: rupees(env.PRICE_CAMP14, 999), days: 14 } };
-  // Online store for a business page: every product listed, search, and orders placed on the page itself. PRICE_STORE changes it.
-  c.store = { name: "Online store", price: rupees(env.PRICE_STORE, 1500), desc: "List every product, with photos, prices and search. Customers order on your page and you see it on your dashboard." };
+  // The online store (every product, search, checkout on the page) now comes with Keepsake Pro; it isn't sold on its own.
   // Keepsake Pro: a monthly plan for a live business page (30 days per payment, renewed by hand). PRICE_PRO changes it.
-  c.pro = { name: "Keepsake Pro", price: rupees(env.PRICE_PRO, 199), days: 30, desc: "Table QRs, day-end report, win-back offers and printable order slips for 30 days." };
+  c.pro = { name: "Keepsake Pro", price: rupees(env.PRICE_PRO, 299), days: 30, desc: "Online store, GST bills, table QRs, day-end report and win-back offers for 30 days." };
+  // Pro for a year in one payment. PRICE_PRO_YEAR changes it.
+  c.proYear = { name: "Keepsake Pro · 1 year", price: rupees(env.PRICE_PRO_YEAR, 2999), days: 365, desc: "Everything in Pro for 365 days." };
   if (!c.frames) { delete c.delivery.frameQr; delete c.delivery.frameNfc; }
   return c;
 }
@@ -75,6 +76,10 @@ const isFrame = plan => plan === "frameQr" || plan === "frameNfc";
 const isShip = plan => isFrame(plan) || plan === "bizQr";
 // A business order that includes a printed QR: the QR on its own, or page + loyalty card + QR together.
 const hasQr = o => !!o && (o.plan === "bizQr" || !!o.withQr);
+// Online store is on while Pro is paid for (or on pages that bought the old one-time store).
+const isPro = m => !!m && (m.proUntil || 0) > Date.now();
+const storeOn = m => !!m && (!!m.store || isPro(m));
+const proPlan = plan => plan === "pro" || plan === "proYear";
 const kindOf = memory => (memory.kind === "site" || memory.kind === "biz" ? memory.kind : "card");
 
 // What this customer pays for a delivery option on this memory.
@@ -87,17 +92,16 @@ function amountFor(memory, plan, extra) {
     if (memory.paid === false) return { error: "Activate your page first." };
     return { rupees: c.sms.packs[plan].price, upgrade: true };
   }
-  if (plan === "store") {
-    if (kindOf(memory) !== "biz") return { error: "The online store is for business pages." };
-    if (memory.store) return { error: "The online store is already unlocked on this page." };
-    return memory.paid !== false ? { rupees: c.store.price, upgrade: true } : { rupees: c.products.biz.price + c.store.price, upgrade: false };
-  }
-  if (plan === "pro") {
+  if (plan === "store") return { error: "The online store now comes with Keepsake Pro. Start Pro to turn it on." };
+  if (proPlan(plan)) {
     if (kindOf(memory) !== "biz") return { error: "Keepsake Pro is for business pages." };
-    if (memory.paid === false) return { error: "Activate your page first." };
-    // Renewing early adds to the time left, but not more than 2 payments ahead.
-    if ((memory.proUntil || 0) - Date.now() > 45 * 864e5) return { error: "Pro is already paid for the next 45 days." };
-    return { rupees: c.pro.price, upgrade: true };
+    const p = c[plan];
+    // Cash taken in person (HQ) can make a new page live together with Pro; online, the page goes live first.
+    if (memory.paid === false) return extra.cash ? { rupees: c.products.biz.price + p.price, upgrade: false } : { error: "Activate your page first." };
+    // Renewing early adds to the time left, but you can't stack more than 45 days ahead.
+    const left = (memory.proUntil || 0) - Date.now();
+    if (left > 45 * 864e5) return { error: "Pro is already paid until " + new Date(memory.proUntil).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Kolkata" }) + ". You can renew in the last 45 days." };
+    return { rupees: p.price, upgrade: true };
   }
   if (plan === "claims100" || plan === "claims500" || plan === "camp14") {
     if (kindOf(memory) !== "biz") return { error: "Offer campaigns are for business pages." };
@@ -132,7 +136,8 @@ function amountFor(memory, plan, extra) {
 function describe(memory, plan, upgrade, withQr) {
   const c = catalog(), product = c.products[kindOf(memory)].name;
   if (plan === "sms" || plan === "sms1k") return c.sms.packs[plan].size + " SMS credits";
-  if (plan === "pro") return "Keepsake Pro · 30 days";
+  if (plan === "pro") return upgrade ? "Keepsake Pro · 30 days" : `${product} + Keepsake Pro · 30 days`;
+  if (plan === "proYear") return upgrade ? "Keepsake Pro · 1 year" : `${product} + Keepsake Pro · 1 year`;
   if (plan === "store") return upgrade ? "Online store" : `${product} + Online store`;
   if (plan === "claims100" || plan === "claims500") return c.claims.packs[plan].size + " offer claims";
   if (plan === "camp14") return "Unlimited claims for 14 days";
@@ -205,7 +210,12 @@ async function markPaid(orderId, paymentId) {
       if (!wasLive && kindOf(memory) === "biz" && !memory.loyalty) { memory.loyalty = true; memory.loyaltyAt = order.paidAt; }
       if (order.plan === "geopro") { memory.geopro = true; memory.geoproAt = order.paidAt; }
       if (order.plan === "store") { memory.store = true; memory.storeAt = order.paidAt; memory.data = Object.assign({}, memory.data, { ord: true }); await db.cmd("SET", "store-user:" + memory.owner, "1"); }
-      if (order.plan === "pro") { memory.proUntil = Math.max(Date.now(), memory.proUntil || 0) + catalog().pro.days * 864e5; memory.proAt = order.paidAt; }
+      if (proPlan(order.plan)) {
+        memory.proUntil = Math.max(Date.now(), memory.proUntil || 0) + catalog()[order.plan].days * 864e5; memory.proAt = order.paidAt;
+        // Pro includes the online store: the first time, switch orders on and give the bigger photo and product allowance.
+        if (!memory.storeAt) { memory.storeAt = order.paidAt; memory.data = Object.assign({}, memory.data, { ord: true }); }
+        await db.cmd("SET", "store-user:" + memory.owner, "1");
+      }
       if (hasQr(order)) memory.qrOrders = [...(memory.qrOrders || []), orderId].slice(-10);
       memory.orders = [...(memory.orders || []), orderId].slice(-20);
       await db.setj(mk, memory);
@@ -233,4 +243,4 @@ async function markPaid(orderId, paymentId) {
   }
 }
 
-module.exports = { catalog, amountFor, describe, isFrame, isShip, hasQr, kindOf, keyId, configured, createOrder, verifyPayment, verifyWebhook, markPaid };
+module.exports = { catalog, amountFor, isPro, storeOn, proPlan, describe, isFrame, isShip, hasQr, kindOf, keyId, configured, createOrder, verifyPayment, verifyWebhook, markPaid };

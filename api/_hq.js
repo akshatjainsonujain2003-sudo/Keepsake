@@ -30,7 +30,7 @@ async function orders(limit = 4000) {
   return ids.map((id, i) => os[i] && { id, ...os[i] }).filter(isBiz);
 }
 // What a business order paid for: the page itself, the online store, Pro, or an add-on.
-const product = o => o.plan === "store" ? "store" : o.plan === "pro" ? "pro" : !o.upgrade ? "page" : "extra";
+const product = o => o.plan === "store" ? "store" : o.plan === "pro" || o.plan === "proYear" ? "pro" : !o.upgrade ? "page" : "extra";
 
 async function summary() {
   const os = await orders(), now = Date.now(), today = startOfDay(now);
@@ -62,7 +62,7 @@ async function pages() {
     const m = ms[i]; if (!m) return null; const u = U[m.owner] || {}, d = m.data || {};
     return { id, kind: "biz", owner_id: m.owner, title: m.title || "", cat: d.cat || "", area: d.area || "",
       live: m.paid !== false, created: m.created || 0, updated: m.updated || m.created || 0, views: +views[i] || 0, path: pathFor(m.kind, id),
-      owner: { name: u.name || m.ownerName || "", email: u.email || "", phone: u.phone || "", wa: (d.wa || "").replace(/\D/g, "") }, plan: m.plan || "", qr: (m.qrOrders || []).length, store: !!m.store };
+      owner: { name: u.name || m.ownerName || "", email: u.email || "", phone: u.phone || "", wa: (d.wa || "").replace(/\D/g, "") }, plan: m.plan || "", qr: (m.qrOrders || []).length, store: !!m.store, proUntil: m.proUntil || 0 };
   }).filter(Boolean).sort((a, b) => b.updated - a.updated);
 }
 

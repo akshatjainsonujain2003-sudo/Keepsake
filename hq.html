@@ -313,20 +313,28 @@ function pageSheet(id) {
   <div class="box"><h4>Owner</h4><b>${esc(p.owner.name)}</b><div style="color:var(--mu);font-size:14px">${esc(p.owner.email)}${ph ? " · " + esc(ph) : ""}</div>
   <div class="acts">${ph ? `<a class="bt sm" href="${wa(ph)}?text=${msg}" target="_blank" rel="noopener">WhatsApp</a><a class="bt sm gh" href="${tel(ph)}">Call</a>` : ""}${p.owner.email ? `<a class="bt sm gh" href="mailto:${esc(p.owner.email)}">Email</a>` : ""}</div>${!ph ? `<small style="color:var(--mu)">No phone saved. Use email.</small>` : ""}</div>
   <dl class="kv"><dt>Opens</dt><dd>${p.views}</dd><dt>Created</dt><dd>${when(p.created)}</dd><dt>Last edit</dt><dd>${when(p.updated)}</dd>${p.qr ? `<dt>Printed QRs</dt><dd>${p.qr}</dd>` : ""}<dt>ID</dt><dd>${esc(p.id)}</dd></dl>
-  ${p.kind === "biz" ? (p.store ? `<div class="box"><h4>Online store</h4><b style="color:var(--gd)">Unlocked ✓</b></div>` : `<div class="box"><h4>Online store · paid in cash</h4>
-    <p style="color:var(--mu);font-size:14px;margin:0 0 10px">Took the payment in person? Unlock the store here.${p.live ? "" : " This page isn't live yet, so it goes live too (₹1,000 + ₹2,000)."}</p>
-    <label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px">Cash received (₹)</label><input id="cashAmt" type="number" inputmode="numeric" min="0" value="${p.live ? 2000 : 2499}" class="in" style="margin-bottom:10px">
+  ${p.kind === "biz" ? `<div class="box"><h4>Keepsake Pro · paid in cash</h4>
+    <p style="color:var(--mu);font-size:14px;margin:0 0 10px">${p.proUntil > Date.now() ? `<b style="color:var(--gd)">Pro is on</b> until ${esc(new Date(p.proUntil).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }))}. Online store included.` : p.proUntil ? "Pro has ended. The store is in catalogue mode (WhatsApp orders)." : "No Pro yet."} Took the payment in person? Start Pro here.${p.live ? "" : " This page isn't live yet, so it goes live too (+₹1,000)."}</p>
+    <div class="seg" role="radiogroup" aria-label="Plan" style="display:flex;gap:8px;margin-bottom:10px"><button type="button" class="bt sm" data-cp="pro" aria-pressed="true">Monthly</button><button type="button" class="bt sm gh" data-cp="proYear" aria-pressed="false">Yearly</button></div>
+    <label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px">Cash received (₹)</label><input id="cashAmt" type="number" inputmode="numeric" min="0" value="${p.live ? 299 : 1299}" class="in" style="margin-bottom:10px">
     <input id="cashNote" maxlength="120" placeholder="Note (optional): who collected it" class="in">
-    <button class="bt w" id="cashGo" data-id="${esc(p.id)}">Unlock online store</button></div>`) : ""}
+    <button class="bt w" id="cashGo" data-id="${esc(p.id)}" data-plan="pro">Start Pro · monthly</button></div>` : ""}
   ${p.live ? `<a class="bt w" href="${esc(p.path)}" target="_blank" rel="noopener">Open page ↗</a>` : ""}`);
   const cg = document.getElementById("cashGo");
+  document.querySelectorAll("[data-cp]").forEach(b => b.onclick = () => {
+    const yr = b.dataset.cp === "proYear";
+    document.querySelectorAll("[data-cp]").forEach(x => { const on = x === b; x.setAttribute("aria-pressed", on); x.classList.toggle("gh", !on); });
+    cg.dataset.plan = b.dataset.cp; cg.textContent = "Start Pro · " + (yr ? "yearly" : "monthly");
+    document.getElementById("cashAmt").value = (yr ? 2999 : 299) + (p.live ? 0 : 1000);
+  });
   if (cg) cg.onclick = async () => {
     const amt = Math.round(+document.getElementById("cashAmt").value);
     if (!(amt >= 0)) { toast("Enter the amount received"); return; }
-    if (!confirm(`Unlock the online store for "${p.title}"?\nCash received: ₹${amt.toLocaleString("en-IN")}`)) return;
-    cg.disabled = true; cg.textContent = "Unlocking…";
-    try { await api({ action: "hq-cash", id: cg.dataset.id, plan: "store", amount: amt, note: document.getElementById("cashNote").value }); toast("Online store unlocked · ₹" + amt.toLocaleString("en-IN") + " cash recorded"); closeSheet(); S.orders = null; S.sum = null; await load("shops", true); }
-    catch (e) { toast(e.message); cg.disabled = false; cg.textContent = "Unlock online store"; }
+    const yr = cg.dataset.plan === "proYear", lbl = cg.textContent;
+    if (!confirm(`Start Keepsake Pro (${yr ? "1 year" : "30 days"}) for "${p.title}"?\nCash received: ₹${amt.toLocaleString("en-IN")}`)) return;
+    cg.disabled = true; cg.textContent = "Starting…";
+    try { await api({ action: "hq-cash", id: cg.dataset.id, plan: cg.dataset.plan, amount: amt, note: document.getElementById("cashNote").value }); toast("Pro started · ₹" + amt.toLocaleString("en-IN") + " cash recorded"); closeSheet(); S.orders = null; S.sum = null; await load("shops", true); }
+    catch (e) { toast(e.message); cg.disabled = false; cg.textContent = lbl; }
   };
 }
 

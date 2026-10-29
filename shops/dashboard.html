@@ -305,7 +305,7 @@ const NAV = [
 const TITLES = Object.fromEntries(NAV.flatMap(g => g[1]).map(x => [x[0], x[1]]));
 
 // ---------- state ----------
-const S = { proUntil: 0, proPrice: 199, user: null, pages: [], id: "", page: null, d: null, stats: null, loyalty: false, active: true, orders: [], ordersAt: 0, seen: null, customers: null, loy: null, view: "overview", otab: "new", csq: "", cf: "all", menuDraft: null, tone: store.get("gk-dash-tone", "red") };
+const S = { proUntil: 0, proPrice: 299, proYearPrice: 2999, storeWas: false, user: null, pages: [], id: "", page: null, d: null, stats: null, loyalty: false, active: true, orders: [], ordersAt: 0, seen: null, customers: null, loy: null, view: "overview", otab: "new", csq: "", cf: "all", menuDraft: null, tone: store.get("gk-dash-tone", "red") };
 
 async function api(url, opt) {
   const r = await fetch(url, Object.assign({ cache: "no-store" }, opt || {}));
@@ -407,26 +407,31 @@ const V = {};
 const A = {}; // after-render hooks
 
 const isPro = () => S.proUntil > Date.now();
+const rup = n => "₹" + Number(n).toLocaleString("en-IN");
+const proSave = () => Math.max(0, S.proPrice * 12 - S.proYearPrice);
+// The two ways to pay for Pro, as buttons. `dark` is for the ink card.
+const proBtns = (lead, dark) => `<div class="tg" style="margin-top:16px;flex-wrap:wrap;gap:10px"><button class="btn" data-pro="year" ${S.active ? "" : "disabled"}>${lead || (S.proUntil ? "Renew" : "Start Pro")} · ${rup(S.proYearPrice)} / year</button><button class="btn g" data-pro="buy" ${S.active ? "" : "disabled"}${dark ? ' style="background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.4)"' : ""}>${rup(S.proPrice)} / month</button></div>`;
+const proPriceLine = () => `${rup(S.proPrice)} a month, or ${rup(S.proYearPrice)} a year${proSave() ? ` (save ${rup(proSave())})` : ""}. Renew by hand, no auto-debit.`;
 const proLeft = () => Math.ceil((S.proUntil - Date.now()) / 864e5);
 // Reminder: shows only for shops that had Pro and are about to lose it (5 days or less), or just lost it.
 function proBar() {
   if (!S.proUntil || !S.active) return "";
   const l = proLeft();
   if (l > 5) return "";
-  return `<div class="bar"><span><b>${l > 0 ? `Keepsake Pro ends in ${l} day${l === 1 ? "" : "s"}.` : "Keepsake Pro has ended."}</b> Renew to keep Table QRs, Add sale, reports and win-back offers.</span><button class="btn" data-pro="buy">Renew · ₹${S.proPrice}</button></div>`;
+  return `<div class="bar"><span><b>${l > 0 ? `Keepsake Pro ends in ${l} day${l === 1 ? "" : "s"}.` : "Keepsake Pro has ended."}</b> Renew to keep your online store checkout, GST bills, Table QRs, Add sale, reports and win-back offers.${l > 0 ? "" : " Your products still show; customers order on WhatsApp."}</span><button class="btn" data-pro="year">Renew · ${rup(S.proYearPrice)} / year</button><button class="btn g" data-pro="buy" style="background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.4)">${rup(S.proPrice)} / month</button></div>`;
 }
 V.pro = () => {
   const on = isPro(), l = on ? proLeft() : 0, until = new Date(S.proUntil).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
-  const items = [["GST bills", "Unlimited GST bills from your phone, sent on WhatsApp with a UPI QR to pay."], ["Table QRs", "A QR for each table. Customers scan, order and pay at the table."], ["Day-end report", "Sales, orders and top items for any day, with a CSV download."], ["Win-back offers", "See new, regular and lapsed customers and send a WhatsApp offer in one tap."], ["Printable order slips", "Print a slip for the kitchen or the parcel from any order."], ["Add sale", "Record sales made in the shop so your totals and customers stay complete."]];
-  return head("Keepsake Pro", "Six tools that bring customers back and save you time. Everything else stays free.", "") +
+  const items = [["Online store", "Every product with photos, search and checkout on your page. Orders come straight to your dashboard."], ["GST bills", "Unlimited GST bills from your phone, sent on WhatsApp with a UPI QR to pay."], ["Table QRs", "A QR for each table. Customers scan, order and pay at the table."], ["Day-end report", "Sales, orders and top items for any day, with a CSV download."], ["Win-back offers", "See new, regular and lapsed customers and send a WhatsApp offer in one tap."], ["Printable order slips", "Print a slip for the kitchen or the parcel from any order."], ["Add sale", "Record sales made in the shop so your totals and customers stay complete."]];
+  return head("Keepsake Pro", "Your online store plus six tools that bring customers back and save you time. Your page, menu, WhatsApp orders and UPI stay free.", "") +
   (!S.active ? inactive() : "") +
-  `<section class="cd" style="background:var(--ink);color:#fff;border-color:var(--ink)"><div class="ch"><h2 class="H" style="margin:0">${on ? "Pro is on" : S.proUntil ? "Pro has ended" : "Go Pro"}</h2><span class="pl" style="background:var(--ye)">₹${S.proPrice} / month</span></div>
-    <p style="margin:6px 0 0;color:#d6cfc4">${on ? `Active until <b>${until}</b> (${l} day${l === 1 ? "" : "s"} left).` : S.proUntil ? `It ended on ${until}. Renew to use it again.` : "Pay once for 30 days. Renew by hand whenever you like, no auto-debit."}</p>
+  `<section class="cd" style="background:var(--ink);color:#fff;border-color:var(--ink)"><div class="ch"><h2 class="H" style="margin:0">${on ? "Pro is on" : S.proUntil ? "Pro has ended" : "Go Pro"}</h2><span class="pl" style="background:var(--ye)">${rup(S.proPrice)} / month · ${rup(S.proYearPrice)} / year</span></div>
+    <p style="margin:6px 0 0;color:#d6cfc4">${on ? `Active until <b>${until}</b> (${l} day${l === 1 ? "" : "s"} left).` : S.proUntil ? `It ended on ${until}. Renew to use it again.` : "Pay for a month or a year. Renew by hand whenever you like, no auto-debit."}</p>
     <div class="g2" style="margin-top:14px">${items.map(x => `<div><b>${x[0]}</b><p style="margin:4px 0 0;color:#B4B4C2;font-size:14px">${x[1]}</p></div>`).join("")}</div>
-    <button class="btn" style="margin-top:20px" data-pro="buy" ${S.active ? "" : "disabled"}>${on ? "Add 30 more days" : S.proUntil ? "Renew" : "Start Pro"} · ₹${S.proPrice}</button><p class="hint" style="color:#B4B4C2">30 days per payment. Renewing adds to the time you have left.</p></section>`;
+    ${on && l > 45 ? `<p class="hint" style="color:#B4B4C2;margin-top:16px">You can renew in the last 45 days before it ends.</p>` : proBtns(on ? "Add a year" : "", true)}<p class="hint" style="color:#B4B4C2">Yearly is 365 days${proSave() ? `, ${rup(proSave())} less than paying monthly` : ""}. Monthly is 30 days. Renewing adds to the time you have left. If Pro ends, nothing is deleted: your products stay on your page and customers order on WhatsApp.</p></section>`;
 };
 // A locked tool shows this instead of its screen.
-const proLock = (what) => `<section class="cd"><div class="empty"><b>${what} is part of Keepsake Pro</b>₹${S.proPrice} for 30 days. Renew by hand, no auto-debit.<br><button class="btn" data-pro="buy" style="margin-top:12px">${S.proUntil ? "Renew" : "Start Pro"} · ₹${S.proPrice}</button></div></section>`;
+const proLock = (what) => `<section class="cd"><div class="empty"><b>${what} is part of Keepsake Pro</b>${proPriceLine()}<div style="display:flex;justify-content:center">${proBtns()}</div></div></section>`;
 V.overview = () => {
   const d = S.d, st = S.stats || {}, t0 = today0(), tod = ordersOn(t0, t0 + 864e5), sales = sum(tod);
   const ch = st.lastSame ? Math.round((st.today - st.lastSame) * 100 / st.lastSame) : null;
@@ -493,15 +498,15 @@ const stItems = () => { const out = []; (S.d.menu || []).forEach((s, si) => (s.i
 const stCats = () => (S.d.menu || []).map(s => s.n || "Products");
 const numP = p => { const x = /(\d[\d,]*(?:\.\d+)?)/.exec(String(p || "")); return x ? +x[1].replace(/,/g, "") : 0; };
 V.store = () => {
-  const price = (S.prices && S.prices.store) || 1500;
-  if (!S.store) return head("Online store", "Put every product you sell online. Customers search, add to cart and order on your page.", "") +
-    `<section class="cd" style="background:var(--ink);color:#fff;border-color:var(--ink)"><div class="ch"><h2 class="H" style="margin:0">Your shop, open 24 hours</h2><span class="pl" style="background:var(--ye)">₹${price.toLocaleString("en-IN")} once</span></div>
+  // The online store comes with Keepsake Pro. A page that had it keeps its products when Pro ends (catalogue mode).
+  if (!S.store && !S.storeWas) return head("Online store", "Put every product you sell online. Customers search, add to cart and order on your page.", "") +
+    `<section class="cd" style="background:var(--ink);color:#fff;border-color:var(--ink)"><div class="ch"><h2 class="H" style="margin:0">Your shop, open 24 hours</h2><span class="pl" style="background:var(--ye)">Included in Pro</span></div>
       <div class="g2" style="margin-top:0">${[["Every product listed", "Hundreds of products with photos, prices, MRP and descriptions, in categories."], ["Search and shop", "Customers search, browse categories and see each product's details."], ["Orders on your page", "They place the order right on your page. No WhatsApp needed. You see it in Orders with a sound."], ["Live order status", "Customers see when you accept, prepare and finish their order. They pay by UPI or at pickup."]].map(([b, t]) => `<div><b style="display:block;color:var(--ye)">${b}</b><small style="color:#cfc8bd;font-size:14px">${t}</small></div>`).join("")}</div>
-      <button class="btn" style="margin-top:20px" data-sx="buy">Unlock online store · ₹${price.toLocaleString("en-IN")}</button><p class="hint" style="color:#B4B4C2">One-time payment. Unlocks right after payment.</p></section>`;
+      ${proBtns("", true)}<p class="hint" style="color:#B4B4C2">Comes with Keepsake Pro, along with GST bills, Table QRs, reports and win-back offers. ${proPriceLine()}</p></section>`;
   const all = stItems(), q = (S.stq || "").toLowerCase(), cat = S.stc == null ? -1 : S.stc;
   const list = all.filter(x => (cat < 0 || x.si === cat) && (!q || (x.n + " " + (x.d || "") + " " + x.sec).toLowerCase().includes(q)));
   return head("Online store", `${all.length} product${all.length === 1 ? "" : "s"} on your page. Customers tap "Shop all products" to search and order.`, `<div class="tg"><button class="btn" data-sx="add">+ Add product</button><button class="btn g" data-sx="bulk">Add many</button></div>`) +
-  `${S.d.ord ? "" : `<div class="bar"><span><b>Orders are off.</b> Customers can browse but not order.</span><button class="btn" data-sx="ordon">Turn on orders</button></div>`}
+  `${!S.store ? `<div class="bar"><span><b>Catalogue mode.</b> Keepsake Pro has ended, so your products still show but customers order on WhatsApp. Renew to switch checkout on your page back on.</span><button class="btn" data-pro="year">Renew · ${rup(S.proYearPrice)} / year</button><button class="btn g" data-pro="buy" style="background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.4)">${rup(S.proPrice)} / month</button></div>` : ""}${S.d.ord ? "" : `<div class="bar"><span><b>Orders are off.</b> Customers can browse but not order.</span><button class="btn" data-sx="ordon">Turn on orders</button></div>`}
   <div class="srch"><input class="in" id="stq" placeholder="Search products" value="${esc(S.stq || "")}"><a class="btn g" href="/b/${S.id}" target="_blank" rel="noopener">View store</a></div>
   ${stCats().length > 1 ? `<div class="tabs"><button type="button" data-stc="-1" class="${cat < 0 ? "on" : ""}">All · ${all.length}</button>${stCats().map((c, i) => `<button type="button" data-stc="${i}" class="${cat === i ? "on" : ""}">${esc(c)} · ${all.filter(x => x.si === i).length}</button>`).join("")}</div>` : ""}
   ${list.length ? `<div class="tw"><table><thead><tr><th>Product</th><th>Price</th><th>MRP</th><th>In stock</th><th></th></tr></thead><tbody>${list.slice(0, 300).map(x => `<tr><td><div style="display:flex;gap:12px;align-items:center"><span class="ph" style="flex:none;width:46px;height:46px;border-radius:12px;background:#E6E6E0 center/cover${x.i ? ` url('${esc(x.i)}')` : ""}"></span><span><b>${esc(x.n)}</b><br><small class="mu">${esc(x.sec)}${x.b ? " · ★ Bestseller" : ""}</small></span></div></td><td data-l="Price">${x.p ? "₹" + esc(x.p) : "–"}</td><td data-l="MRP">${x.w ? "<s>₹" + esc(x.w) + "</s>" : "–"}</td><td data-l="In stock"><label class="sw"><input type="checkbox" data-sxso="${x.si}.${x.ii}"${x.so ? "" : " checked"}><i></i></label></td><td style="text-align:right;white-space:nowrap"><button class="btn g s" data-sx="edit" data-k="${x.si}.${x.ii}">Edit</button></td></tr>`).join("")}</tbody></table></div>${list.length > 300 ? `<p class="hint">Showing 300 of ${list.length}. Search to find the rest.</p>` : ""}`
@@ -521,8 +526,8 @@ function saList() {
 function saleSheet() {
   const A = S.sale; if (!A) return "";
   if (A.locked) return `<div class="pm" data-sabg><div class="pmb"><div class="ch"><h2 class="H" style="margin:0">Add sale is part of Pro</h2><button class="lnk" data-sale="close">Close</button></div>
-    <p class="mu" style="margin:8px 0 0">Record sales you make in the shop, so your totals, top items and customer list are complete. Keepsake Pro is ₹${S.proPrice} for 30 days, and you renew by hand.</p>
-    <button type="button" class="btn" style="margin-top:16px;width:100%" data-pro="buy">${S.proUntil ? "Renew" : "Start Pro"} · ₹${S.proPrice}</button></div></div>`;
+    <p class="mu" style="margin:8px 0 0">Record sales you make in the shop, so your totals, top items and customer list are complete. Add sale comes with Keepsake Pro: ${proPriceLine()}</p>
+    ${proBtns()}</div></div>`;
   return `<div class="pm" data-sabg><div class="pmb"><div class="ch"><h2 class="H" style="margin:0">Add a sale</h2><button class="lnk" data-sale="close">Close</button></div>
     <p class="mu" style="margin:6px 0 12px">Pick what was sold. It is saved as done and added to today's sales.</p>
     <input class="in" id="saQ" placeholder="Search your items" value="${esc(A.q)}">
@@ -672,10 +677,9 @@ $("#main").addEventListener("click", async ev => {
     return;
   }
   const pb = ev.target.closest("[data-pro]");
-  if (pb) { payPlan(pb, "pro", async () => { const j = await api("/api/customer-memories?id=" + S.id); S.proUntil = j.proUntil || 0; S.sale = null; S.bl = null; S.blNew = null; toast("Keepsake Pro is on until " + new Date(S.proUntil).toLocaleDateString("en-IN", { day: "numeric", month: "short" }) + "."); go(); }); return; }
+  if (pb) { payPlan(pb, pb.dataset.pro === "year" ? "proYear" : "pro", async () => { const j = await api("/api/customer-memories?id=" + S.id); S.proUntil = j.proUntil || 0; S.store = !!j.store; S.storeWas = !!j.storeWas; S.d = j.data || S.d; S.sale = null; S.bl = null; S.blNew = null; toast("Keepsake Pro is on until " + new Date(S.proUntil).toLocaleDateString("en-IN", { day: "numeric", month: "short" }) + "."); go(); }); return; }
   const b = ev.target.closest("[data-sx]"); if (!b) return;
   const a = b.dataset.sx;
-  if (a === "buy") { payPlan(b, "store", async () => { const j = await api("/api/customer-memories?id=" + S.id); S.d = j.data; S.store = !!j.store; toast("Online store unlocked. Add your products."); go(); }); return; }
   if (a === "ordon") { b.disabled = true; if (await stWrite(d => { d.ord = true; d.pause = false; }, "Orders are on")) go(); return; }
   if (a === "add") { S.stEdit = { k: "", x: { n: "", p: "", w: "", d: "", i: "", b: false, so: false }, sec: S.stc >= 0 ? stCats()[S.stc] : "" }; stRedraw(); setTimeout(() => $("#stN") && $("#stN").focus(), 50); return; }
   if (a === "bulk") { S.stEdit = { bulk: true }; stRedraw(); return; }
@@ -1213,8 +1217,8 @@ function blLine(x, i) {
 function blNewSheet() {
   const N = S.blNew; if (!N) return "";
   if (N.locked) return `<div class="pm" data-blbg><div class="pmb"><div class="ch"><h2 class="H" style="margin:0">Your free bills are used</h2><button class="lnk" data-bl="close">Close</button></div>
-    <p class="mu" style="margin:8px 0 0">You've made ${S.bl.free} free bills. Keepsake Pro gives you unlimited GST bills, WhatsApp sending and your bill list, plus every other Pro tool, for ₹${S.proPrice} for 30 days. You renew by hand.</p>
-    <button type="button" class="btn" style="margin-top:16px;width:100%" data-pro="buy">${S.proUntil ? "Renew" : "Start Pro"} · ₹${S.proPrice}</button></div></div>`;
+    <p class="mu" style="margin:8px 0 0">You've made ${S.bl.free} free bills. Keepsake Pro gives you unlimited GST bills, WhatsApp sending and your bill list, plus your online store and every other Pro tool. ${proPriceLine()}</p>
+    ${proBtns()}</div></div>`;
   const c = N.cust, gst = blGst(), G = window.KSGST;
   return `<div class="pm" data-blbg><div class="pmb"><div class="ch"><h2 class="H" style="margin:0">New ${gst ? "GST bill" : "bill"}</h2><button class="lnk" data-bl="close">Close</button></div>
     <div class="row2"><label>Customer name<input class="in" data-blc="name" maxlength="80" placeholder="Walk-in customer" value="${esc(c.name)}"></label><label>WhatsApp number<input class="in" data-blc="phone" inputmode="numeric" maxlength="14" placeholder="10-digit mobile" value="${esc(c.phone)}"></label></div>
@@ -1294,7 +1298,7 @@ V.bills = () => {
     .filter(x => !q || (x.no + " " + (x.name || "") + " " + (x.phone || "")).toLowerCase().includes(q)).slice(0, 200);
   const left = B.pro ? null : Math.max(0, B.free - B.used);
   return top(`<div class="tg"><button class="btn" data-bl="new">+ New bill</button><button class="btn g" data-bl="set">Bill settings</button></div>`) +
-  (left != null ? `<div class="bar" style="margin-bottom:16px"><span><b>${left ? left + " of " + B.free + " free bills left." : "Your " + B.free + " free bills are used."}</b> Keepsake Pro gives you unlimited bills for ₹${S.proPrice} a month.</span><button class="btn" data-pro="buy">${S.proUntil ? "Renew" : "Start Pro"} · ₹${S.proPrice}</button></div>` : "") +
+  (left != null ? `<div class="bar" style="margin-bottom:16px"><span><b>${left ? left + " of " + B.free + " free bills left." : "Your " + B.free + " free bills are used."}</b> Keepsake Pro gives you unlimited bills for ${rup(S.proPrice)} a month or ${rup(S.proYearPrice)} a year.</span><button class="btn" data-pro="year">${S.proUntil ? "Renew" : "Start Pro"} · ${rup(S.proYearPrice)} / year</button></div>` : "") +
   `<div class="g3" style="margin-bottom:16px">
     <div class="kpi k"><span>Billed this month</span><b>${inr(month.reduce((t, x) => t + x.total, 0))}</b><small>${month.length} bill${month.length === 1 ? "" : "s"}</small></div>
     <div class="kpi"><span>Payment due</span><b>${inr(due.reduce((t, x) => t + x.total, 0))}</b><small class="mu">${due.length} unpaid bill${due.length === 1 ? "" : "s"}</small></div>
@@ -1565,7 +1569,7 @@ document.addEventListener("visibilitychange", () => { if (!document.hidden && Da
     const pg = biz.find(p => p.id === want) || biz[0]; S.id = pg.id; store.set("gk-dash-id", S.id);
     const sh = String(pg.ship || "").split("|"); S.ship = sh[0] === "shipped" ? "Printed QR shipped" + (sh[1] ? " · tracking " + sh[1] : "") : sh[0] ? "Printed QR is being prepared" : "";
     const j = await api("/api/customer-memories?id=" + S.id);
-    S.d = j.data; S.stats = j.stats || pg.stats || null; S.loyalty = !!j.loyalty; S.store = !!j.store; S.proUntil = j.proUntil || 0; S.proPrice = j.proPrice || 199; S.active = j.active !== false;
+    S.d = j.data; S.stats = j.stats || pg.stats || null; S.loyalty = !!j.loyalty; S.store = !!j.store; S.proUntil = j.proUntil || 0; S.proPrice = j.proPrice || 299; S.proYearPrice = j.proYearPrice || 2999; S.storeWas = !!j.storeWas; S.active = j.active !== false;
     await loadOrders(true);
     go(); poll();
     // Customers and loyalty members load in the background (used by several sections).
