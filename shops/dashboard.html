@@ -111,6 +111,12 @@ main{min-width:0;padding:30px 34px 60px}
 .in:focus{outline:0;border-color:var(--or)}
 textarea.in{resize:vertical;min-height:70px}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.pmx{margin:4px 0 16px;border-radius:16px;border:1px solid var(--line);padding:4px 14px}.pmx>summary{cursor:pointer;padding:12px 0;font-weight:700;list-style:none;display:flex;justify-content:space-between;align-items:center}.pmx>summary::-webkit-details-marker{display:none}.pmx>summary small{font-weight:500;color:var(--mu)}
+.pmx[open]>summary{border-bottom:1px solid var(--line);margin-bottom:12px}
+.pmg{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}.pmg span{position:relative;width:64px;height:64px;border-radius:12px;background:#ECECE7 center/cover}.pmg span button{position:absolute;top:-6px;right:-6px;width:22px;height:22px;border-radius:11px;border:0;background:var(--ink);color:#fff;font-size:13px;line-height:22px;cursor:pointer}
+.pmg label{width:64px;height:64px;border-radius:12px;border:2px dashed var(--line);display:grid;place-items:center;font-size:12px;font-weight:700;color:var(--mu);cursor:pointer;text-align:center}
+.pmr{display:grid;grid-template-columns:1fr 90px auto auto;gap:8px;align-items:center;margin-bottom:8px}.pmr.ad{grid-template-columns:1fr 90px auto}.pmr .in{padding:10px 12px}.pmr label{font-size:12.5px;display:flex;gap:4px;align-items:center;white-space:nowrap}
+.pmr button{width:34px;height:34px;border-radius:10px;border:1px solid var(--line);background:none;cursor:pointer;font-size:16px}
 .note{padding:12px 14px;border-radius:12px;background:#F4FFD1;border:1.5px solid #E2FF73;font-size:13.5px}
 .bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:14px 18px;border-radius:16px;background:var(--ink);color:#fff;margin-bottom:18px}
 .bar span{flex:1;min-width:200px}
@@ -485,7 +491,7 @@ function orderCard(o) {
   const next = { new: ["prep", "Accept & prepare"], prep: ["ready", "Mark ready"], ready: ["done", "Mark done"] }[o.st];
   const msg = { new: `Hi${o.name ? " " + o.name : ""}! We got your order #${o.ref} from ${shopName()}. We're on it.` + tl, prep: `Hi${o.name ? " " + o.name : ""}! Your order #${o.ref} from ${shopName()} is being prepared.` + tl, ready: `Hi${o.name ? " " + o.name : ""}! Your order #${o.ref} from ${shopName()} is ready${o.mode === "delivery" ? " and on its way" : " for pickup"}.` + tl, done: `Thank you for ordering from ${shopName()}! See you again soon.`, cancel: `Hi${o.name ? " " + o.name : ""}, about your order #${o.ref} from ${shopName()}:` }[o.st];
   return `<article class="${o.st === "new" ? "new" : ""}" data-ref="${o.ref}"><header><span class="av">${esc(ini(o.name))}</span><div><b>${esc(o.name || "Customer")}</b><small>#${o.ref} · ${ago(o.at)}${o.offline ? `<em class="ofl">In shop</em>` : ""}</small></div><span class="pl ${o.st}">${STL[o.st]}</span></header>
-    <ul>${o.items.map(x => `<li><span>${x.q} × ${esc(x.n)}</span><span>${inr(x.q * x.p)}</span></li>`).join("")}</ul>
+    <ul>${o.items.map(x => `<li><span>${x.q} × ${esc(x.n)}</span><span>${inr(x.q * x.p)}</span></li>`).join("")}${o.fee ? `<li><span>Delivery</span><span>${inr(o.fee)}</span></li>` : ""}</ul>${o.loy ? `<p class="hint" style="margin:6px 0 0">Loyalty stamp added: ${o.loy.s} of ${o.loy.n}.</p>` : ""}
     <div class="tot"><span>Total</span><span>${inr(o.tot)}</span></div>
     <div class="meta">${o.direct ? `<span><b>${o.pay === "upi" ? "Paying by UPI · check your UPI app" : (o.mode === "table" ? "Pay at the table" : "Pay at pickup / delivery")}</b></span>` : ""}${o.mode === "table" && o.addr ? `<span><b class="tbl">Table ${esc(o.addr)}</b></span>` : `<span><b>${MODEL[o.mode] || "Pickup"}</b>${o.offline ? " · " + (PAYL[o.pay] || "Cash") + (o.disc ? " · " + inr(o.disc) + " off" : "") : ""}${o.addr ? " · " + esc(o.addr) : ""}</span>`}${o.note ? `<span>Note: ${esc(o.note)}</span>` : ""}${o.phone ? `<span>${esc(o.phone)}</span>` : ""}</div>
     <div class="acts">${next ? `<button class="btn s" data-st="${next[0]}" data-ref="${o.ref}">${next[1]}</button>` : ""}${o.phone ? `<a class="btn w s" href="https://wa.me/${waNum(o.phone)}?text=${encodeURIComponent(msg)}" target="_blank" rel="noopener">${IC.wa}WhatsApp</a><a class="btn g s" href="tel:+${waNum(o.phone)}" aria-label="Call">${IC.call}</a>` : ""}</div>
@@ -506,13 +512,22 @@ V.store = () => {
   const all = stItems(), q = (S.stq || "").toLowerCase(), cat = S.stc == null ? -1 : S.stc;
   const list = all.filter(x => (cat < 0 || x.si === cat) && (!q || (x.n + " " + (x.d || "") + " " + x.sec).toLowerCase().includes(q)));
   return head("Online store", `${all.length} product${all.length === 1 ? "" : "s"} on your page. Customers tap "Shop all products" to search and order.`, `<div class="tg"><button class="btn" data-sx="add">+ Add product</button><button class="btn g" data-sx="bulk">Add many</button></div>`) +
-  `${!S.store ? `<div class="bar"><span><b>Catalogue mode.</b> Keepsake Pro has ended, so your products still show but customers order on WhatsApp. Renew to switch checkout on your page back on.</span><button class="btn" data-pro="year">Renew · ${rup(S.proYearPrice)} / year</button><button class="btn g" data-pro="buy" style="background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.4)">${rup(S.proPrice)} / month</button></div>` : ""}${S.d.ord ? "" : `<div class="bar"><span><b>Orders are off.</b> Customers can browse but not order.</span><button class="btn" data-sx="ordon">Turn on orders</button></div>`}
+  stSettings() + `${!S.store ? `<div class="bar"><span><b>Catalogue mode.</b> Keepsake Pro has ended, so your products still show but customers order on WhatsApp. Renew to switch checkout on your page back on.</span><button class="btn" data-pro="year">Renew · ${rup(S.proYearPrice)} / year</button><button class="btn g" data-pro="buy" style="background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.4)">${rup(S.proPrice)} / month</button></div>` : ""}${S.d.ord ? "" : `<div class="bar"><span><b>Orders are off.</b> Customers can browse but not order.</span><button class="btn" data-sx="ordon">Turn on orders</button></div>`}
   <div class="srch"><input class="in" id="stq" placeholder="Search products" value="${esc(S.stq || "")}"><a class="btn g" href="/b/${S.id}" target="_blank" rel="noopener">View store</a></div>
   ${stCats().length > 1 ? `<div class="tabs"><button type="button" data-stc="-1" class="${cat < 0 ? "on" : ""}">All · ${all.length}</button>${stCats().map((c, i) => `<button type="button" data-stc="${i}" class="${cat === i ? "on" : ""}">${esc(c)} · ${all.filter(x => x.si === i).length}</button>`).join("")}</div>` : ""}
   ${list.length ? `<div class="tw"><table><thead><tr><th>Product</th><th>Price</th><th>MRP</th><th>In stock</th><th></th></tr></thead><tbody>${list.slice(0, 300).map(x => `<tr><td><div style="display:flex;gap:12px;align-items:center"><span class="ph" style="flex:none;width:46px;height:46px;border-radius:12px;background:#E6E6E0 center/cover${x.i ? ` url('${esc(x.i)}')` : ""}"></span><span><b>${esc(x.n)}</b><br><small class="mu">${esc(x.sec)}${x.b ? " · ★ Bestseller" : ""}</small></span></div></td><td data-l="Price">${x.p ? "₹" + esc(x.p) : "–"}</td><td data-l="MRP">${x.w ? "<s>₹" + esc(x.w) + "</s>" : "–"}</td><td data-l="In stock"><label class="sw"><input type="checkbox" data-sxso="${x.si}.${x.ii}"${x.so ? "" : " checked"}><i></i></label></td><td style="text-align:right;white-space:nowrap"><button class="btn g s" data-sx="edit" data-k="${x.si}.${x.ii}">Edit</button></td></tr>`).join("")}</tbody></table></div>${list.length > 300 ? `<p class="hint">Showing 300 of ${list.length}. Search to find the rest.</p>` : ""}`
     : `<div class="empty"><b>${all.length ? "No products match" : "Add your first product"}</b>${all.length ? "Try another search." : "Add them one by one with a photo, or paste a whole list at once."}<br>${all.length ? "" : `<button class="btn" data-sx="add">+ Add product</button>`}</div>`}
   ${stSheet()}`;
 };
+// Store settings: look, free delivery, delivery charge, loyalty stamps for online orders.
+function stSettings() {
+  const d = S.d, look = { "": "Automatic (from your business type)", edit: "Fashion: big photos, sizes and colours", aisle: "Grocery: fast list with units and + / –", menu: "Food: menu with veg marks and add-ons" };
+  return `<details class="cd" style="margin-bottom:16px"><summary style="cursor:pointer;font-weight:700;list-style:none">Store settings <small class="mu" style="font-weight:500">look, delivery, loyalty</small></summary>
+    <div style="margin-top:14px"><label class="f">Store look<select class="in" id="ssLk">${Object.entries(look).map(([k, l]) => `<option value="${k}"${(d.pss || "") === k ? " selected" : ""}>${l}</option>`).join("")}</select></label>
+    <div class="row2"><label class="f">Free delivery above (₹) <em>(optional)</em><input class="in" id="ssFd" inputmode="numeric" maxlength="6" value="${esc(d.fd ? String(d.fd) : "")}" placeholder="299"></label><label class="f">Delivery charge (₹) <em>(optional)</em><input class="in" id="ssDf" inputmode="numeric" maxlength="4" value="${esc(d.dfee ? String(d.dfee) : "")}" placeholder="30"></label></div>
+    ${d.loy && d.loy.on ? `<label class="sw" style="margin-bottom:14px"><input type="checkbox" id="ssLo"${d.loy.ord === false ? "" : " checked"}><i></i>Give a loyalty stamp when you mark an online order Done</label>` : ""}
+    <button class="btn" data-sx="sset">Save settings</button></div></details>`;
+}
 // ---------- Add sale: the owner records a sale made in the shop ----------
 const saKeys = () => Object.keys(S.sale.lines).filter(k => S.sale.lines[k] > 0);
 function saItem(k) { const [si, ii] = k.split(".").map(Number), x = ((S.d.menu || [])[si] || { items: [] }).items[ii]; return x && x.n ? { n: x.n, p: numP(x.p) } : null; }
@@ -563,8 +578,36 @@ function stSheet() {
     <div class="row2"><label class="f">Price (₹)<input class="in" id="stP" inputmode="decimal" maxlength="12" value="${esc(x.p || "")}" placeholder="640"></label><label class="f">MRP (₹) <em>(optional)</em><input class="in" id="stW" inputmode="decimal" maxlength="12" value="${esc(x.w || "")}" placeholder="720"></label></div>
     <label class="f">Category<input class="in" id="stC" list="stCl" maxlength="24" value="${esc(E.sec || cats[0] || "Products")}"><datalist id="stCl">${cats.map(c => `<option value="${esc(c)}">`).join("")}</datalist></label>
     <label class="f">Description <em>(optional)</em><textarea class="in" id="stD" maxlength="140" rows="2">${esc(x.d || "")}</textarea></label>
-    <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:16px"><label class="sw"><input type="checkbox" id="stS"${x.so ? "" : " checked"}><i></i>In stock</label><label class="sw"><input type="checkbox" id="stB"${x.b ? " checked" : ""}><i></i>Bestseller</label></div>
+    <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:16px"><label class="sw"><input type="checkbox" id="stS"${x.so ? "" : " checked"}><i></i>In stock</label><label class="sw"><input type="checkbox" id="stB"${x.b ? " checked" : ""}><i></i>Bestseller</label><label class="sw"><input type="checkbox" id="stNw"${x.nw ? " checked" : ""}><i></i>New</label></div>
+    ${stMore(x)}
     <div style="display:flex;gap:10px;align-items:center"><button class="btn" data-sx="save">Save product</button>${E.k ? `<button class="lnk" data-sx="del">Delete</button>` : ""}</div></div></div>`;
+}
+// Pro Store product details: more photos, unit and stock, options with prices, colours, add-ons, veg mark.
+function stMore(x) {
+  const g = Array.isArray(x.g) ? x.g : [], v = Array.isArray(x.v) ? x.v : [], a = Array.isArray(x.a) ? x.a : [];
+  const n = g.length + v.length + a.length + (x.u ? 1 : 0) + (x.k != null && x.k !== "" ? 1 : 0) + ((x.c || []).length ? 1 : 0) + (x.vg ? 1 : 0);
+  return `<details class="pmx"${S.stMoreOpen || n ? " open" : ""}><summary>More details <small>${n ? n + " added" : "photos, sizes, colours, add-ons"}</small></summary>
+    <div class="pmg">${g.map((u, i) => `<span style="background-image:url('${esc(u)}')"><button type="button" data-sx="gdel" data-i="${i}" aria-label="Remove photo">×</button></span>`).join("")}${g.length < 4 ? `<label>+ Photo<input type="file" accept="image/*" id="stPic2" hidden></label>` : ""}</div>
+    <div class="row2"><label class="f">Unit <em>(optional)</em><input class="in" id="stU" maxlength="16" value="${esc(x.u || "")}" placeholder="1 kg, 500 ml, Pack of 6"></label><label class="f">Stock count <em>(optional)</em><input class="in" id="stK" inputmode="numeric" maxlength="5" value="${esc(x.k != null ? String(x.k) : "")}" placeholder="Shows “Only 3 left”"></label></div>
+    <label class="f">Option name <em>(optional)</em><input class="in" id="stVt" maxlength="16" value="${esc(x.vt || "")}" placeholder="Size, Weight, Pack"></label>
+    ${v.map((o, i) => `<div class="pmr"><input class="in" data-sv="${i}" data-k="n" maxlength="20" value="${esc(o.n || "")}" placeholder="M, Large, 1 kg"><input class="in" data-sv="${i}" data-k="p" inputmode="decimal" maxlength="8" value="${esc(o.p ? String(o.p) : "")}" placeholder="+ ₹0"><label><input type="checkbox" data-sv="${i}" data-k="so"${o.so ? " checked" : ""}> Sold out</label><button type="button" data-sx="vdel" data-i="${i}" aria-label="Remove option">×</button></div>`).join("")}
+    <button type="button" class="btn g s" data-sx="vadd" style="margin-bottom:14px">+ Add option</button><p class="hint" style="margin:-6px 0 14px">Customers must pick one. Put an extra price if it costs more (Large + ₹40), or leave it empty.</p>
+    <label class="f">Colours <em>(optional)</em><input class="in" id="stCo" maxlength="160" value="${esc((x.c || []).join(", "))}" placeholder="Ivory, Maroon, Bottle green"></label>
+    ${a.map((o, i) => `<div class="pmr ad"><input class="in" data-sa="${i}" data-k="n" maxlength="24" value="${esc(o.n || "")}" placeholder="Extra shot"><input class="in" data-sa="${i}" data-k="p" inputmode="decimal" maxlength="8" value="${esc(o.p ? String(o.p) : "")}" placeholder="+ ₹30"><button type="button" data-sx="adel" data-i="${i}" aria-label="Remove add-on">×</button></div>`).join("")}
+    <button type="button" class="btn g s" data-sx="aadd" style="margin-bottom:14px">+ Add-on</button>
+    <label class="f">Food mark <em>(optional)</em><select class="in" id="stVg"><option value="">None</option><option value="v"${x.vg === "v" ? " selected" : ""}>Veg</option><option value="n"${x.vg === "n" ? " selected" : ""}>Non-veg</option></select></label>
+    <p class="hint">These show in your online store, which comes with Keepsake Pro.</p></details>`;
+}
+// Reads the product form into S.stEdit.x (before redrawing it, and on save).
+function stCollect() {
+  const E = S.stEdit; if (!E || E.bulk) return; const x = E.x, v = id => { const e = $("#" + id); return e ? e.value.trim() : undefined; };
+  if ($("#stN")) { x.n = v("stN"); x.p = v("stP"); x.w = v("stW"); x.d = v("stD"); x.so = !$("#stS").checked; x.b = $("#stB").checked; x.nw = !!($("#stNw") && $("#stNw").checked); E.sec = v("stC"); }
+  if (!$("#stU")) return;
+  x.u = v("stU"); const k = v("stK"); x.k = k === "" ? null : Math.max(0, Math.round(+k.replace(/\D/g, "") || 0)); x.vt = v("stVt");
+  x.c = v("stCo").split(",").map(c => c.trim()).filter(Boolean).slice(0, 8); x.vg = v("stVg");
+  x.v = (x.v || []).map((o, i) => ({ n: (($(`[data-sv="${i}"][data-k="n"]`) || {}).value || "").trim(), p: numP(($(`[data-sv="${i}"][data-k="p"]`) || {}).value) || 0, so: !!($(`[data-sv="${i}"][data-k="so"]`) || {}).checked }));
+  x.a = (x.a || []).map((o, i) => ({ n: (($(`[data-sa="${i}"][data-k="n"]`) || {}).value || "").trim(), p: numP(($(`[data-sa="${i}"][data-k="p"]`) || {}).value) || 0 }));
+  S.stMoreOpen = !!($(".pmx") && $(".pmx").open);
 }
 // Photos are shrunk on the phone before upload (product photos only need to look good on a phone).
 function shrink(f) {
@@ -687,16 +730,28 @@ $("#main").addEventListener("click", async ev => {
     const csv = "﻿Name,Price,MRP,Category,Description\r\nBasmati Rice 5kg,640,720,Grocery,Long grain\r\nAmul Butter 500g,275,,Dairy,\r\nParle-G 800g,90,,Biscuits,\r\n";
     const u = URL.createObjectURL(new Blob([csv], { type: "text/csv" })), l = document.createElement("a"); l.href = u; l.download = "keepsake-products-template.csv"; document.body.appendChild(l); l.click(); l.remove(); setTimeout(() => URL.revokeObjectURL(u), 2000); return;
   }
-  if (a === "close") { S.stEdit = null; stRedraw(); return; }
-  if (a === "edit") { const [si, ii] = b.dataset.k.split(".").map(Number), s = S.d.menu[si]; S.stEdit = { k: b.dataset.k, x: { ...s.items[ii] }, x0n: s.items[ii].n, sec: s.n }; stRedraw(); return; }
+  if (a === "close") { S.stEdit = null; S.stMoreOpen = false; stRedraw(); return; }
+  if (["vadd", "vdel", "aadd", "adel", "gdel"].includes(a)) {
+    stCollect(); const x = S.stEdit.x, i = +b.dataset.i; S.stMoreOpen = true;
+    if (a === "vadd") x.v = [...(x.v || []), { n: "", p: 0 }].slice(0, 8);
+    if (a === "vdel") x.v.splice(i, 1);
+    if (a === "aadd") x.a = [...(x.a || []), { n: "", p: 0 }].slice(0, 10);
+    if (a === "adel") x.a.splice(i, 1);
+    if (a === "gdel") x.g.splice(i, 1);
+    stRedraw(); return;
+  }
+  if (a === "edit") { const [si, ii] = b.dataset.k.split(".").map(Number), s = S.d.menu[si]; S.stEdit = { k: b.dataset.k, x: JSON.parse(JSON.stringify(s.items[ii])), x0n: s.items[ii].n, sec: s.n }; stRedraw(); return; }
   if (a === "save" || a === "del") {
     const E = S.stEdit, x = E.x;
-    if (a === "save") { x.n = $("#stN").value.trim(); x.p = $("#stP").value.trim(); x.w = $("#stW").value.trim(); x.d = $("#stD").value.trim(); x.so = !$("#stS").checked; x.b = $("#stB").checked; }
+    if (a === "save") stCollect();
     if (a === "save" && !x.n) { toast("Write the product name"); $("#stN").focus(); return; }
     if (a === "save" && !numP(x.p)) { toast("Add the price"); $("#stP").focus(); return; }
     if (a === "save" && x.w && numP(x.w) <= numP(x.p)) x.w = "";
     if (a === "del" && !confirm("Delete " + x.n + "?")) return;
-    const sec = (a === "save" ? $("#stC").value.trim() : "") || "Products", item = { n: x.n, p: x.p, d: x.d || "", i: x.i || "", b: !!x.b, ...(x.so ? { so: true } : {}), ...(x.w ? { w: x.w } : {}) };
+    const sec = (a === "save" ? E.sec || "" : "") || "Products", vs = (x.v || []).filter(o => o.n), as = (x.a || []).filter(o => o.n);
+    const item = { n: x.n, p: x.p, d: x.d || "", i: x.i || "", b: !!x.b, ...(x.so ? { so: true } : {}), ...(x.w ? { w: x.w } : {}), ...(x.nw ? { nw: true } : {}),
+      ...((x.g || []).length ? { g: x.g.slice(0, 4) } : {}), ...(x.u ? { u: x.u } : {}), ...(x.k != null && x.k !== "" ? { k: x.k } : {}), ...(vs.length ? { v: vs, ...(x.vt ? { vt: x.vt } : {}) } : {}),
+      ...((x.c || []).length ? { c: x.c } : {}), ...(as.length ? { a: as } : {}), ...(x.vg ? { vg: x.vg } : {}) };
     b.disabled = true;
     const ok = await stWrite(d => {
       d.menu = Array.isArray(d.menu) ? d.menu : [];
@@ -704,7 +759,12 @@ $("#main").addEventListener("click", async ev => {
       if (a === "save") { let s = d.menu.find(y => (y.n || "").toLowerCase() === sec.toLowerCase()); if (!s) { s = { n: sec, items: [] }; d.menu.push(s); } s.items.push(item); }
       d.menu = d.menu.filter(s => (s.items || []).some(y => y && y.n));
     }, a === "save" ? "Saved. It's on your page." : "Deleted");
-    if (ok) S.stEdit = null; else b.disabled = false; stRedraw(); return;
+    if (ok) { S.stEdit = null; S.stMoreOpen = false; } else b.disabled = false; stRedraw(); return;
+  }
+  if (a === "sset") {
+    const fd = numP($("#ssFd").value) || 0, df = numP($("#ssDf").value) || 0, look = $("#ssLk").value, lo = $("#ssLo") ? $("#ssLo").checked : true;
+    b.disabled = true;
+    if (await stWrite(d => { if (fd) d.fd = fd; else delete d.fd; if (df) d.dfee = Math.min(df, 2000); else delete d.dfee; if (look) d.pss = look; else delete d.pss; if (d.loy) d.loy.ord = lo; }, "Store settings saved")) go(); else b.disabled = false; return;
   }
   if (a === "bulksave") {
     const rows = $("#stBulk").value.split("\n").map(l => (l.includes("\t") ? l.split("\t") : l.split(",")).map(c => c.trim())).filter(r => r[0] && numP(r[1]));
@@ -731,6 +791,9 @@ $("#main").addEventListener("change", async ev => {
     } catch (x) { msg.textContent = x.message; }
     t.value = ""; return;
   }
+  if (t.id === "stPic2") { const f = t.files[0]; if (!f) return; const lab = t.closest("label"); lab.firstChild.textContent = "Uploading…";
+    try { const r = await api("/api/img", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ data: await shrink(f) }) }); stCollect(); S.stEdit.x.g = [...(S.stEdit.x.g || []), r.url].slice(0, 4); S.stMoreOpen = true; stRedraw(); }
+    catch (x) { toast(x.message); lab.firstChild.textContent = "+ Photo"; } return; }
   if (t.id === "stPic") { const f = t.files[0]; if (!f) return; const box = t.closest(".pmp"); box.classList.add("busy"); box.firstChild && (box.firstChild.textContent = "Uploading…");
     try { const r = await api("/api/img", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ data: await shrink(f) }) }); S.stEdit.x.i = r.url; box.style.backgroundImage = `url('${r.url}')`; box.firstChild && (box.firstChild.textContent = ""); }
     catch (x) { toast(x.message); box.firstChild && (box.firstChild.textContent = "+ Photo"); } box.classList.remove("busy"); }

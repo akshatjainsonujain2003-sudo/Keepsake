@@ -37,24 +37,50 @@ async function placeOrder(b, ip) {
   if (!REF.test(ref)) return E(400, "Invalid order.");
   if (await limit("bzo-ip:" + ip, 25, 3600) || await limit("bzo-day:" + b.id, 600, 86400)) return E(429, "Too many orders. Please wait a little.");
   const menu = Array.isArray(d.menu) ? d.menu : [], items = [];
-  for (const [key, q, nm] of (Array.isArray(b.items) ? b.items : []).filter(Array.isArray).slice(0, 40)) {
+  const store = require("./_pay").storeOn(m);
+  for (const [key, q, nm, sel] of (Array.isArray(b.items) ? b.items : []).filter(Array.isArray).slice(0, 40)) {
     const [si, ii] = String(key).split(".").map(Number), x = menu[si] && Array.isArray(menu[si].items) && menu[si].items[ii];
-    const qty = Math.round(+q);
+    let qty = Math.round(+q);
     if (!x || !x.n || x.so || !(qty >= 1 && qty <= 99) || (nm && clip(nm, 50) !== clip(x.n, 50))) continue; // menu changed since the page was opened
-    const p = num(x.p); if (p == null) continue;
-    items.push({ k: si + "." + ii, n: clip(x.n, 50), q: qty, p });
+    let p = num(x.p); if (p == null) continue;
+    // Pro Store: the chosen option, colour and add-ons are priced here from the shop's own product, never from the phone.
+    const ch = store ? choice(x, sel) : { ok: true, extra: [], add: 0 };
+    if (!ch.ok) continue;
+    const k0 = x.k === "" || x.k == null ? null : Math.round(+x.k);
+    if (store && k0 != null && isFinite(k0)) { if (k0 <= 0) continue; qty = Math.min(qty, k0); }
+    p += ch.add;
+    items.push({ k: si + "." + ii, n: clip(x.n + (ch.extra.length ? " (" + ch.extra.join(", ") + ")" : ""), 90), q: qty, p });
   }
   if (!items.length) return E(400, "Your order is empty.");
-  const tot = items.reduce((t, x) => t + x.q * x.p, 0), phone = ph10(b.phone), now = Date.now();
+  const phone = ph10(b.phone), now = Date.now();
   // Online store: the order is placed on the page itself (no WhatsApp), so a mobile number is needed to reach the customer.
-  const direct = require("./_pay").storeOn(m) && b.direct === true;
+  const direct = store && b.direct === true;
+  const sub = items.reduce((t, x) => t + x.q * x.p, 0), mode0 = MODES.includes(b.mode) ? b.mode : "pickup";
+  // Delivery charge set by the shop (Pro Store), waived above its free-delivery amount.
+  const dfee = Math.max(0, Math.min(num(d.dfee) || 0, 2000)), fd = Math.max(0, num(d.fd) || 0);
+  const fee = direct && mode0 === "delivery" && dfee && !(fd && sub >= fd) ? dfee : 0, tot = sub + fee;
   if (direct && !phone) return E(400, "Please add your 10-digit mobile number.");
-  const o = { ref, at: now, items, tot, name: clip(b.name, 40), phone, mode: MODES.includes(b.mode) ? b.mode : "pickup", addr: clip(b.addr, 160), note: clip(b.note, 160), st: "new", ts: {}, ...(direct ? { direct: true, pay: b.pay === "upi" ? "upi" : "cod" } : {}) };
+  const o = { ref, at: now, items, tot, name: clip(b.name, 40), phone, mode: mode0, addr: clip(b.addr, 160), note: clip(b.note, 160), st: "new", ts: {}, ...(fee ? { fee } : {}), ...(direct ? { direct: true, pay: b.pay === "upi" ? "upi" : "cod" } : {}) };
   if ((await db.cmd("SET", "bzo:" + b.id + ":" + ref, JSON.stringify(o), "NX", "EX", KEEP)) !== "OK") return { ok: true, ref, dup: true };
   await db.cmd("ZADD", "bzoz:" + b.id, now, ref);
   await db.cmd("ZREMRANGEBYRANK", "bzoz:" + b.id, 0, -(MAXO + 1));
   await touchCustomer(b.id, o, now);
   return { ok: true, ref, tot };
+}
+
+// A product's chosen option (v: index), colour (c: index) and add-ons (a: [index]). Options are required when the product has them.
+function choice(x, sel) {
+  const V = (Array.isArray(x.v) ? x.v : []).filter(o => o && o.n).slice(0, 8), C = (Array.isArray(x.c) ? x.c : []).filter(Boolean).slice(0, 8), A = (Array.isArray(x.a) ? x.a : []).filter(o => o && o.n).slice(0, 10);
+  const s = sel && typeof sel === "object" ? sel : {}, extra = []; let add = 0;
+  if (V.length) {
+    let vi = Number.isInteger(s.v) ? s.v : -1;
+    if (vi < 0) vi = V.findIndex(o => !o.so); // an older page without option buttons: the first one in stock
+    const o = V[vi]; if (!o || o.so) return { ok: false };
+    add += Math.max(0, num(o.p) || 0); extra.push(clip(o.n, 20));
+  }
+  if (C.length) { const ci = Number.isInteger(s.c) && C[s.c] ? s.c : 0; extra.push(clip(C[ci], 20)); }
+  for (const ai of [...new Set((Array.isArray(s.a) ? s.a : []).filter(Number.isInteger))].slice(0, 10)) { const o = A[ai]; if (o) { add += Math.max(0, num(o.p) || 0); extra.push(clip(o.n, 24)); } }
+  return { ok: true, extra, add };
 }
 
 // Adds an order to the customer's record (orders, spend, last visit), if the order has a phone number.
@@ -106,7 +132,7 @@ async function handle(b, ctx) {
   if (a === "bz-status") {
     if (!ID.test(String(b.id || "")) || !REF.test(String(b.ref || ""))) return E(400, "Invalid order.");
     if (await limit("bzs-ip:" + ctx.ip, 240, 3600)) return E(429, "Too many requests.");
-    const o = await db.getj("bzo:" + b.id + ":" + b.ref); return o ? { ok: true, st: o.st, tot: o.tot, at: o.at, mode: o.mode, items: (o.items || []).map(x => ({ n: x.n, q: x.q })), ...(o.direct ? { direct: true, pay: o.pay } : {}) } : E(404, "Order not found.");
+    const o = await db.getj("bzo:" + b.id + ":" + b.ref); return o ? { ok: true, st: o.st, tot: o.tot, at: o.at, mode: o.mode, items: (o.items || []).map(x => ({ n: x.n, q: x.q })), ...(o.direct ? { direct: true, pay: o.pay } : {}), ...(o.loy ? { loy: o.loy } : {}) } : E(404, "Order not found.");
   }
   // ---------- owner only ----------
   const m = await page(b.id);
@@ -126,6 +152,9 @@ async function handle(b, ctx) {
     const k = "bzo:" + id + ":" + ref, o = await db.getj(k);
     if (!o) return E(404, "That order wasn't found.");
     o.st = st; o.ts = o.ts || {}; o.ts[st] = Date.now();
+    if (st === "done" && o.direct && o.phone && !o.loy && !(m.data && m.data.loy && m.data.loy.ord === false)) {
+      try { const r = await require("./_loyal").orderStamp(id, o.phone, o.name); if (r) o.loy = r; } catch (e) {}
+    }
     await db.cmd("SET", k, JSON.stringify(o), "EX", KEEP);
     return { ok: true, order: o };
   }
