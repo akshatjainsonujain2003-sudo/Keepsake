@@ -393,6 +393,37 @@ function orderRow(o) {
   const n = o.items.reduce((a, x) => a + x.q, 0);
   return `<li><span class="av">${esc(ini(o.name))}</span><span class="nm"><b>${esc(o.name || "Customer")}</b><small>${n} item${n === 1 ? "" : "s"} · ${ago(o.at)}</small></span><span class="am"><b>${inr(o.tot)}</b><span class="pl ${o.st}">${STL[o.st]}</span></span></li>`;
 }
+// Shops on Google: how ready this page is to show up in Google and AI answers (mirrors api/_shopseo.js readiness).
+function gReady() {
+  const d = S.d, items = menuItems(), pics = items.filter(x => x.i).length + (Array.isArray(d.gal) ? d.gal.length : 0);
+  const hrs = d.hours && Array.isArray(d.hours.d) && d.hours.d.some(x => x && !x[2] && x[0] && x[1]);
+  const ed = "/shops/studio?edit=" + S.id;
+  const L = [
+    [!!(d.t && d.cat), "Shop name and business type", "So Google knows what you are", ed],
+    [!!d.area, "Your area", "People search “café in Vaishali Nagar”", ed],
+    [!!d.addr, "Full address", "Google shows shops with a clear address", ed],
+    [!!(d.phone || d.wa), "Phone or WhatsApp", "So people can reach you from Google", ed],
+    [!!hrs, "Opening hours", "Google shows if you're open now", ed],
+    [items.length >= 5, "At least 5 items with prices", "Pages with real prices show up more", "/shops/studio?edit=" + S.id],
+    [!!(d.cover || d.logo) && pics >= 3, "A cover photo and 3 more photos", "Photos make people click", ed],
+    [String(d.tag || "").length >= 30, "A one-line description", "Shown under your name on Google", ed],
+    [!!d.review, "Your Google review link", "Reviews build trust", ed],
+    [!!d.gbp, "Page link added to your Google Business Profile", "Paste your page link in the Website field", "#gbp"]
+  ];
+  const n = items.length, ok = S.active && !d.noidx && !!d.t && (n >= 3 || !!(d.addr && (d.phone || d.wa)));
+  const why = !S.active ? "Your page isn't live yet." : d.noidx ? "You've hidden your page from Google." : !d.t ? "Add your shop name." : ok ? "" : "Add at least 3 items, or your address and phone.";
+  return { L, score: Math.round(L.filter(x => x[0]).length * 100 / L.length), ok, why };
+}
+function googleCard() {
+  const g = gReady(), url = location.origin + "/b/" + S.id, todo = g.L.filter(x => !x[0]);
+  return `<div class="cd" id="gbp"><div class="ch"><h2 class="H">On Google</h2><small>${g.score}/100 ready</small></div>
+    <div style="height:8px;border-radius:9px;background:var(--line,#e7e1d6);overflow:hidden;margin:2px 0 12px"><div style="height:100%;width:${g.score}%;background:${g.score >= 80 ? "#1F8A4C" : g.score >= 50 ? "#D4A017" : "#D9622B"};border-radius:9px"></div></div>
+    <p class="mu" style="margin:0 0 12px">${g.ok ? "Your page can show up on Google and in AI answers when people search your shop's name. The more you fill in, the better it does." : esc(g.why) + " Until then, Google won't list it."}</p>
+    ${todo.length ? `<div class="rows">${todo.slice(0, 4).map(([, t, s, href]) => `<div><i class="ck"></i><span><b>${esc(t)}</b><small>${esc(s)}</small></span>${href === "#gbp" ? "" : `<a class="go" href="${href}">Do it →</a>`}</div>`).join("")}</div>` : `<p class="mu" style="margin:0 0 10px">All done. Nice work.</p>`}
+    <div style="margin-top:14px;padding:14px;border-radius:14px;background:var(--sand,#F3EEE6)"><b style="display:block;margin-bottom:4px">Add your page to your Google Business Profile</b><small class="mu">Open your profile on Google, tap Edit profile → Contact → Website, and paste this link. It's the biggest boost for “near me” searches.</small>
+      <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap"><button class="btn s" data-act="gCopy" data-u="${esc(url)}">Copy page link</button><label class="sw"><input type="checkbox" data-act="gbpDone"${S.d.gbp ? " checked" : ""}><i></i>I've added it</label></div></div>
+    <label class="sw wide" style="margin-top:14px"><input type="checkbox" data-act="gShow"${S.d.noidx ? "" : " checked"}><i></i>Show my page on Google</label></div>`;
+}
 function checklist() {
   const d = S.d, items = menuItems(), noPhoto = items.filter(x => !x.i).length;
   const scanned = S.stats && (S.stats.week || S.stats.prevWeek);
@@ -469,6 +500,7 @@ V.overview = () => {
       <p class="hint">Offers get more taps than a plain menu. <a href="#offers">Edit offer</a></p></div>
     <div class="cd"><div class="ch"><h2 class="H">Top items ${top.length ? "today" : "this week"}</h2></div>
       ${topW.length ? `<div class="rows">${topW.map(x => `<div><span><b>${esc(x.n)}</b><small>${x.q} sold</small></span><b>${inr(x.v)}</b></div>`).join("")}</div>` : `<div class="empty">Your best sellers will show here once orders come in.</div>`}</div>
+    ${googleCard()}
     <div class="cd"><div class="ch"><h2 class="H">Grow faster</h2><small>${done} of ${cl.length} done</small></div>
       <div class="rows">${cl.map(([ok, t, s, href]) => `<div><i class="ck${ok ? " on" : ""}">${ok ? IC.check : ""}</i><span><b>${esc(t)}</b>${ok ? "" : `<small>${esc(s)}</small>`}</span>${ok ? "" : `<a class="go" href="${href}">Do it →</a>`}</div>`).join("")}</div></div>
   </section>`;
@@ -1533,6 +1565,7 @@ $("#main").addEventListener("click", async e => {
   if (t.closest("#bcst")) { t.closest("#bcst").href = "https://wa.me/?text=" + encodeURIComponent($("#bc").value); return; }
   const a = t.closest("[data-act]"); if (!a || a.tagName === "INPUT") return;
   const act = a.dataset.act;
+  if (act === "gCopy") { try { await navigator.clipboard.writeText(a.dataset.u); toast("Page link copied. Paste it in your Google profile's Website field."); } catch (x) { prompt("Copy your page link", a.dataset.u); } return; }
   if (act === "ordOn") { a.disabled = true; if (await patch(d => { d.ord = true; d.pause = false; }, "Ordering is on. Customers can now order on WhatsApp.")) go(); return; }
   if (act === "mReset") { S.menuDraft = null; go(); return; }
   if (act === "mSave") { a.disabled = true; const draft = S.menuDraft; if (await patch(d => { (d.menu || []).forEach((s, si) => (s.items || []).forEach((x, ii) => { const y = draft[si] && draft[si].items && draft[si].items[ii]; if (y && x && y.n === x.n) { x.p = y.p; x.b = !!y.b; if (y.so) x.so = true; else delete x.so; } })); }, "Menu saved. Your page is updated.")) { S.menuDraft = null; go(); } else a.disabled = false; return; }
@@ -1572,6 +1605,8 @@ $("#main").addEventListener("click", async e => {
 $("#main").addEventListener("change", async e => {
   const t = e.target, act = t.dataset && t.dataset.act;
   if (act === "geoOn") { t.disabled = true; geoSave({ on: t.checked }, t.checked ? "Walk-in reward is live" : "Walk-in reward is off"); return; }
+  if (act === "gbpDone") { t.disabled = true; await patch(d => { if (t.checked) d.gbp = true; else delete d.gbp; }, t.checked ? "Great. That helps you show up on Google Maps." : "Unticked"); go(); return; }
+  if (act === "gShow") { t.disabled = true; await patch(d => { if (t.checked) delete d.noidx; else d.noidx = true; }, t.checked ? "Your page can show up on Google" : "Your page is hidden from Google. People with the link or QR can still open it."); go(); return; }
   if (act === "offerOn") { t.disabled = true; await patch(d => { d.offer = Object.assign({}, d.offer, { on: t.checked }); }, t.checked ? "Offer is live on your page" : "Offer hidden"); go(); return; }
   if (act === "ordSw") { t.disabled = true; await patch(d => { d.ord = t.checked; }, t.checked ? "Ordering is on" : "Ordering is off. Your menu still shows."); go(); return; }
   if (act === "placed") { store.set("gk-qr-placed:" + S.id, t.checked); toast(t.checked ? "Nice. Ticked off your list." : "Unticked"); return; }

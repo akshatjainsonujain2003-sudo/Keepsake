@@ -57,7 +57,7 @@
     },
     {
       "source": "/b/:id",
-      "destination": "/biz"
+      "destination": "/api/seo?f=shop&id=:id"
     },
     {
       "source": "/bill/:id",
@@ -78,6 +78,10 @@
     {
       "source": "/api/config",
       "destination": "/api/seo?f=config"
+    },
+    {
+      "source": "/9f4c2a7e1b6d48c3a5e0f7b2d9c1e8a4.txt",
+      "destination": "/api/seo?f=inkey"
     }
   ],
   "headers": [
@@ -124,7 +128,7 @@
       ]
     },
     {
-      "source": "/api/(.*)",
+      "source": "/api/((?!seo).*)",
       "headers": [
         {
           "key": "X-Robots-Tag",
@@ -152,6 +156,9 @@
     },
     "api/qr.js": {
       "includeFiles": "assets/gst.v1.js"
+    },
+    "api/seo.js": {
+      "includeFiles": "biz.html"
     }
   }
 }
