@@ -1,12 +1,25 @@
 import json, html, re, sys, os
 sys.path.insert(0, os.path.dirname(__file__))
-from data import P, ORDER
+from data import P, ORDER as ORDER0
+from data_more import Q, MORE, CHIPS_M, TAB_M, COVER_M
+import datetime
+P.update(Q); ORDER = ORDER0 + MORE
+UPDATED = datetime.date.today().isoformat()
+# Related pages shown at the bottom of each page: the same kind of business first.
+GRP = {"food": ["cafe", "restaurant", "bakery", "sweet-shop", "cloud-kitchen", "tea-stall"], "fashion": ["boutique", "ethnic-wear", "jewellery", "gift-shop"],
+       "care": ["salon", "barber", "gym", "clinic", "optician"], "stores": ["general-store", "hardware", "mobile-repair", "sweet-shop"], "more": ["coaching", "real-estate", "clinic", "general-store"]}
+def related(slug):
+    mine = [g for g in GRP.values() if slug in g]; out = []
+    for g in mine:
+        out += [k for k in g if k != slug and k not in out]
+    out += [k for k in ORDER if k != slug and k not in out]
+    return out[:6]
 REPO = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
-CHIPS = {"cafe": ["Cafés", "Restaurants", "Bakeries", "Cloud kitchens", "Juice bars"], "salon": ["Salons", "Beauty parlours", "Spas", "Barbers", "Bridal makeup"], "gym": ["Gyms", "Yoga studios", "CrossFit", "Dance classes", "Martial arts"],
+CHIPS = {**CHIPS_M, "cafe": ["Cafés", "Restaurants", "Bakeries", "Cloud kitchens", "Juice bars"], "salon": ["Salons", "Beauty parlours", "Spas", "Barbers", "Bridal makeup"], "gym": ["Gyms", "Yoga studios", "CrossFit", "Dance classes", "Martial arts"],
  "real-estate": ["Property dealers", "Builders", "Rentals & PG", "Plots & land", "Interiors"], "general-store": ["Kirana", "General stores", "Dairy", "Hardware", "Mobile shops"],
  "boutique": ["Boutiques", "Sarees & ethnic", "Menswear", "Kids wear", "Jewellery"], "pharmacy": ["Pharmacies", "Chemists", "Medical stores", "Surgical", "Ayurveda"], "clinic": ["Clinics", "Dentists", "Pharmacies", "Diagnostic labs", "Physiotherapy"]}
-TAB = {"cafe": "Menu", "salon": "Services", "gym": "Plans", "real-estate": "Properties", "general-store": "Products", "boutique": "Collection", "pharmacy": "Products", "clinic": "Services"}
-COVER = {"cafe": "cafe-interior.webp", "salon": "salon-cover.webp", "gym": "gym-cover.webp", "real-estate": "re-villa.webp", "general-store": "kirana-cover.webp", "boutique": "bq-store1.webp", "pharmacy": "clinic-micro.webp", "clinic": "clinic-cover.webp"}
+TAB = {**TAB_M, "cafe": "Menu", "salon": "Services", "gym": "Plans", "real-estate": "Properties", "general-store": "Products", "boutique": "Collection", "pharmacy": "Products", "clinic": "Services"}
+COVER = {**COVER_M, "cafe": "cafe-interior.webp", "salon": "salon-cover.webp", "gym": "gym-cover.webp", "real-estate": "re-villa.webp", "general-store": "kirana-cover.webp", "boutique": "bq-store1.webp", "pharmacy": "clinic-micro.webp", "clinic": "clinic-cover.webp"}
 esc = lambda s: html.escape(s, quote=True)
 strip = lambda s: re.sub("<[^>]+>", "", s)
 
@@ -19,11 +32,13 @@ def nav():
 
 def footer():
     col = lambda ks: "".join(f'<a href="/shops/{k}">{P[k]["label"]}</a>' for k in ks)
+    third = (len(ORDER) + 2) // 3
     return f'''<footer class="ft"><div class="w">
   <div><a class="lg" href="/" aria-label="GetKeepsake for business, home"><svg class="vf" viewBox="0 0 48 48" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"><path d="M5 15V9a4 4 0 0 1 4-4h6"/><path d="M33 5h6a4 4 0 0 1 4 4v6"/><path d="M43 33v6a4 4 0 0 1-4 4h-6"/><path d="M15 43H9a4 4 0 0 1-4-4v-6"/></g><rect x="11" y="22" width="26" height="4" rx="2" fill="#D4FF3F"/></svg>GetKeepsake<span>[ for business ]</span></a><p style="margin:0;max-width:360px">A page for your shop behind one QR: menu, offers, WhatsApp orders, UPI, Google reviews and a loyalty card. ₹1,000 once to start.</p>
   <p style="margin:14px 0 0">WhatsApp <a style="display:inline;color:#fff" href="https://wa.me/918302791217">+91 83027 91217</a> · <a style="display:inline;color:#fff" href="https://instagram.com/getkeepsake.business" rel="noopener">@getkeepsake.business</a></p></div>
-  <div><b>Businesses</b>{col(ORDER[:4])}</div>
-  <div><b>&nbsp;</b>{col(ORDER[4:])}<a href="/contact" style="margin-top:12px">Contact</a><a href="/terms">Terms</a><a href="/privacy">Privacy</a></div>
+  <div><b>Businesses</b>{col(ORDER[:third])}</div>
+  <div><b>&nbsp;</b>{col(ORDER[third:2 * third])}</div>
+  <div><b>&nbsp;</b>{col(ORDER[2 * third:])}<a href="/shops/jaipur">Jaipur</a><a href="/hi/dukaan-ki-website">Hindi mein padhein</a><a href="/contact" style="margin-top:12px">Contact</a><a href="/terms">Terms</a><a href="/privacy">Privacy</a></div>
 </div></footer>'''
 
 def H1(d):
@@ -44,7 +59,9 @@ def EM(h):
 def page(slug):
     d = P[slug]; url = f"https://getkeepsake.in/shops/{slug}"
     studio = f"/shops/studio?type={d['type']}"
-    live_link = f"/shops/studio?ex={d['ex']}" if d["ex"] else studio
+    live_link = f"/shops/studio?ex={d['ex']}" if d["ex"] else "#how"
+    live_txt = f"See a live {esc(d['word'])} page" if d["ex"] else "See how it works"
+    if "cat" in d["live"]: d["live"].setdefault("data", {})["cat"] = d["live"]["cat"]
     fa, fc = d["fa"], d["fc"]
     stamps = "".join(f'<i class="{"" if i >= fa[2] else ""}" style="background:{"var(--haldi)" if i < fa[2] else "none"};{"box-shadow:inset 0 0 0 1.5px #CDBFB2" if i >= fa[2] else ""}"></i>' for i in range(5)) if fa[2] else ""
     fl_a = f'<div class="fl a" data-gk-pop><b>{esc(fa[0])}</b>{esc(fa[1])}{"<div class=st>" + "".join("<i" + ("" if i < round(fa[2] / 2) else " class=o") + "></i>" for i in range(5)) + "</div>" if fa[2] else ""}</div>'
@@ -63,9 +80,9 @@ def page(slug):
 </div></section>'''
     steps = "".join(f"<div data-gk-st><b>{esc(a)}</b><p>{esc(b)}</p></div>" for a, b in d["steps"])
     faq = "".join(f"<details data-gk-st><summary>{esc(q)}</summary><p>{esc(a)}</p></details>" for q, a in d["faq"])
-    others = "".join(f'<a data-gk-st href="/shops/{k}"><span class="im" style="background-image:url(/assets/demo/biz/{COVER[k]})"></span><span class="tx"><b>{P[k]["short"]}</b><small>{P[k]["label"]}</small></span></a>' for k in ORDER if k != slug)
+    others = "".join(f'<a data-gk-st href="/shops/{k}"><span class="im" style="background-image:url(/assets/demo/biz/{COVER[k]})"></span><span class="tx"><b>{P[k]["short"]}</b><small>{P[k]["label"]}</small></span></a>' for k in related(slug))
     ld = {"@context": "https://schema.org", "@graph": [
-        {"@type": "WebPage", "@id": url + "#page", "url": url, "name": d["title"], "description": d["desc"], "inLanguage": "en-IN", "isPartOf": {"@type": "WebSite", "name": "GetKeepsake", "url": "https://getkeepsake.in/"}},
+        {"@type": "WebPage", "@id": url + "#page", "url": url, "name": d["title"], "description": d["desc"], "inLanguage": "en-IN", "dateModified": UPDATED, "isPartOf": {"@type": "WebSite", "name": "GetKeepsake", "url": "https://getkeepsake.in/"}},
         {"@type": "Service", "name": f"GetKeepsake for {d['label']}", "serviceType": "Mobile business page with QR code", "description": d["desc"], "areaServed": {"@type": "Country", "name": "India"},
          "provider": {"@type": "Organization", "name": "GetKeepsake", "url": "https://getkeepsake.in/", "telephone": "+91-83027-91217"},
          "offers": [{"@type": "Offer", "name": "Business page", "price": "1000", "priceCurrency": "INR", "url": "https://getkeepsake.in" + studio}]},
@@ -85,7 +102,7 @@ def page(slug):
 <meta property="og:type" content="website"><meta property="og:site_name" content="GetKeepsake"><meta property="og:locale" content="en_IN"><meta property="og:url" content="{url}">
 <meta property="og:title" content="{esc(strip(d["h1"]))} · GetKeepsake for business"><meta property="og:description" content="{esc(d["desc"])}">
 <meta property="og:image" content="https://getkeepsake.in/assets/brand/og.jpg"><meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#1F1BF2">
+<meta name="theme-color" content="#1F1BF2"><meta property="article:modified_time" content="{UPDATED}">
 <link rel="icon" href="/assets/brand/favicon.ico" sizes="any"><link rel="icon" type="image/svg+xml" href="/assets/brand/favicon.svg"><link rel="icon" type="image/png" sizes="192x192" href="/assets/brand/icon-192.png"><link rel="apple-touch-icon" href="/assets/brand/icon-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&family=Mukta:wght@600;700&display=swap">
@@ -103,7 +120,7 @@ def page(slug):
     <h1 data-gk-h1 style="{H1S(d)}">{H1(d)}</h1>
     <p data-gk-in class="hi" lang="hi">{HI(d["hi"])}</p>
     <p data-gk-in class="sub">{esc(d["sub"])}</p>
-    <div data-gk-in class="ct"><a class="b p" data-gk-mag href="{studio}">{esc(d["cta"])} · ₹1,000</a><a class="b s" href="{live_link}">See a live {esc(d["word"])} page</a></div>
+    <div data-gk-in class="ct"><a class="b p" data-gk-mag href="{studio}">{esc(d["cta"])} · ₹1,000</a><a class="b s" href="{live_link}">{live_txt}</a></div>
     <div data-gk-in class="ch">{"".join(f"<span>{esc(c)}</span>" for c in CHIPS[slug])}</div>
     <div data-gk-in class="tr"><span>No app needed</span><span>Ready in 5 minutes</span><span>One-time payment</span></div>
   </div>
