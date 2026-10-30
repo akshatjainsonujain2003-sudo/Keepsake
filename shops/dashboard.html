@@ -248,6 +248,29 @@ td .btn{white-space:nowrap}
 .blhd{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;padding:14px 16px;border-radius:16px;background:#F6F6F2}
 .blhd small{display:block;color:var(--mu);font-family:'JetBrains Mono',monospace;font-size:12px;margin-top:3px}
 @media (max-width:700px){.g3 .kpi b{font-size:28px}}
+/* ---------- Smart Udhaar ---------- */
+.pl.kh-due{background:#fff0d6;color:#8a5300}.pl.kh-od{background:#f6d9d3;color:#9b2c16}.pl.kh-clr{background:var(--grl);color:#0d5a2f}
+.khl .av{width:38px;height:38px;font-size:13px}
+.khq{display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:space-between;margin-bottom:16px;padding:14px 18px;border-radius:18px;background:#fff7e6;border:1.5px solid #f2d9a6}
+.khq span{flex:1 1 260px}
+.khlb{display:block;margin-top:12px;font-size:13px;font-weight:600;color:var(--mu)}.khlb .in{margin-top:5px}
+.khamt{font:800 26px 'Inter Tight',sans-serif!important;letter-spacing:-.01em}
+.khw{margin-top:14px;padding:14px 16px;border-radius:16px;background:#fff7e6;border:1.5px solid #f2d9a6}.khw p{margin:4px 0 10px;color:#6b4a12;font-size:14px}
+.khbal{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:18px;border-radius:18px;background:var(--ink);color:#fff}
+.khbal small{display:block;color:#B4B4C2;font-weight:600}.khbal b{display:block;font:800 36px/1.1 'Inter Tight',sans-serif;letter-spacing:-.02em;margin:4px 0}.khbal div>span{font-size:13px;color:#B4B4C2}
+.khbal.clr{background:#0d5a2f}
+.khlnk{display:flex;align-items:center;gap:12px;margin-top:16px;padding:12px 14px;border-radius:14px;background:#F6F6F2}.khlnk span{flex:1;min-width:0}.khlnk small{display:block;color:var(--mu);font-size:12.5px}
+.khe{list-style:none;margin:8px 0 0;padding:0}
+.khe li{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--line)}
+.khe li>span:first-child{flex:1;min-width:0}.khe small{display:block;color:var(--mu);font-size:12.5px;margin-top:2px}
+.khe .am{text-align:right;font-variant-numeric:tabular-nums}.khe li.gv .am b{color:#9b2c16}.khe li.pd .am b{color:var(--gr)}
+.khe .lnk{min-width:44px;min-height:36px;font-size:15px}
+.okc{font-style:normal;color:var(--gr);font-weight:600}
+.khlim{display:flex;align-items:flex-end;gap:10px;margin-top:18px}
+.khqr{display:flex;align-items:center;gap:12px;width:100%}.khqr .btn{flex:none}.khqr .nm{flex:1;min-width:0}.khqr .nm small{display:block;color:var(--mu);font-size:12.5px}
+.khpitch .H{margin:10px 0 6px;font-size:clamp(24px,3vw,32px)}.khf{margin-top:18px}.khf p{margin:4px 0 0;font-size:14px}
+@media (max-width:420px){.khk .kpi b{font-size:22px}}
+
 </style>
 <script src="/assets/gst.v1.js"></script>
 <script src="/assets/gst-export.v1.js" defer></script>
@@ -301,10 +324,11 @@ const IC = {
   call: I('<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/>'),
   ext: I('<path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/>'),
   dl: I('<path d="M12 4v11M7 10l5 5 5-5M5 20h14"/>'),
-  bill: I('<path d="M6 2h12v20l-3-2-3 2-3-2-3 2z"/><path d="M9 7h6M9 11h6M9 15h3"/>')
+  bill: I('<path d="M6 2h12v20l-3-2-3 2-3-2-3 2z"/><path d="M9 7h6M9 11h6M9 15h3"/>'),
+  book: I('<path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v17H6.5A2.5 2.5 0 0 0 4 21.5z"/><path d="M4 21.5A2.5 2.5 0 0 1 6.5 19H20v3H6.5M9 7h7M9 11h5"/>')
 };
 const NAV = [
-  ["Run the shop", [["overview", "Overview", "home"], ["orders", "Orders", "orders"], ["bills", "GST bills", "bill"], ["menu", "Menu & prices", "menu"], ["store", "Online store", "orders"], ["customers", "Customers", "people"]]],
+  ["Run the shop", [["overview", "Overview", "home"], ["orders", "Orders", "orders"], ["bills", "GST bills", "bill"], ["khata", "Udhaar khata", "book"], ["menu", "Menu & prices", "menu"], ["store", "Online store", "orders"], ["customers", "Customers", "people"]]],
   ["Grow", [["pro", "Keepsake Pro", "star"], ["messages", "Messages", "wa"], ["campaigns", "Offer QRs", "qr"], ["nearby", "Walk-in offers", "pin"], ["reviews", "Reviews", "star"], ["offers", "Offers & marketing", "tag"], ["analytics", "Analytics", "chart"]]],
   ["Set up", [["page", "My page", "page"], ["qr", "QR & cards", "qr"], ["payments", "Payments", "pay"], ["settings", "Team & settings", "gear"]]]
 ];
@@ -455,12 +479,12 @@ function proBar() {
   if (!S.proUntil || !S.active) return "";
   const l = proLeft();
   if (l > 5) return "";
-  return `<div class="bar"><span><b>${l > 0 ? `Keepsake Pro ends in ${l} day${l === 1 ? "" : "s"}.` : "Keepsake Pro has ended."}</b> Renew to keep your online store checkout, GST bills, Table QRs, Add sale, reports and win-back offers.${l > 0 ? "" : " Your products still show; customers order on WhatsApp."}</span><button class="btn" data-pro="year">Renew · ${rup(S.proYearPrice)} / year</button><button class="btn g" data-pro="buy" style="background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.4)">${rup(S.proPrice)} / month</button></div>`;
+  return `<div class="bar"><span><b>${l > 0 ? `Keepsake Pro ends in ${l} day${l === 1 ? "" : "s"}.` : "Keepsake Pro has ended."}</b> Renew to keep your online store checkout, GST bills, Udhaar khata, Table QRs, Add sale, reports and win-back offers.${l > 0 ? "" : " Your products still show; customers order on WhatsApp."}</span><button class="btn" data-pro="year">Renew · ${rup(S.proYearPrice)} / year</button><button class="btn g" data-pro="buy" style="background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.4)">${rup(S.proPrice)} / month</button></div>`;
 }
 V.pro = () => {
   const on = isPro(), l = on ? proLeft() : 0, until = new Date(S.proUntil).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
-  const items = [["Online store", "Every product with photos, search and checkout on your page. Orders come straight to your dashboard."], ["GST bills", "Unlimited GST bills from your phone, sent on WhatsApp with a UPI QR to pay."], ["Table QRs", "A QR for each table. Customers scan, order and pay at the table."], ["Day-end report", "Sales, orders and top items for any day, with a CSV download."], ["Win-back offers", "See new, regular and lapsed customers and send a WhatsApp offer in one tap."], ["Printable order slips", "Print a slip for the kitchen or the parcel from any order."], ["Add sale", "Record sales made in the shop so your totals and customers stay complete."]];
-  return head("Keepsake Pro", "Your online store plus six tools that bring customers back and save you time. Your page, menu, WhatsApp orders and UPI stay free.", "") +
+  const items = [["Online store", "Every product with photos, search and checkout on your page. Orders come straight to your dashboard."], ["GST bills", "Unlimited GST bills from your phone, sent on WhatsApp with a UPI QR to pay."], ["Smart Udhaar", "A khata customers confirm on WhatsApp, with one-tap reminders and a UPI link to pay. See who owes what and since when."], ["Table QRs", "A QR for each table. Customers scan, order and pay at the table."], ["Day-end report", "Sales, orders and top items for any day, with a CSV download."], ["Win-back offers", "See new, regular and lapsed customers and send a WhatsApp offer in one tap."], ["Printable order slips", "Print a slip for the kitchen or the parcel from any order."], ["Add sale", "Record sales made in the shop so your totals and customers stay complete."]];
+  return head("Keepsake Pro", "Your online store plus seven tools that bring customers back and save you time. Your page, menu, WhatsApp orders and UPI stay free.", "") +
   (!S.active ? inactive() : "") +
   `<section class="cd" style="background:var(--ink);color:#fff;border-color:var(--ink)"><div class="ch"><h2 class="H" style="margin:0">${on ? "Pro is on" : S.proUntil ? "Pro has ended" : "Go Pro"}</h2><span class="pl" style="background:var(--ye)">${rup(S.proPrice)} / month · ${rup(S.proYearPrice)} / year</span></div>
     <p style="margin:6px 0 0;color:#d6cfc4">${on ? `Active until <b>${until}</b> (${l} day${l === 1 ? "" : "s"} left).` : S.proUntil ? `It ended on ${until}. Renew to use it again.` : "Pay for a month or a year. Renew by hand whenever you like, no auto-debit."}</p>
@@ -526,7 +550,7 @@ function orderCard(o) {
     <ul>${o.items.map(x => `<li><span>${x.q} × ${esc(x.n)}</span><span>${inr(x.q * x.p)}</span></li>`).join("")}${o.fee ? `<li><span>Delivery</span><span>${inr(o.fee)}</span></li>` : ""}</ul>${o.loy ? `<p class="hint" style="margin:6px 0 0">Loyalty stamp added: ${o.loy.s} of ${o.loy.n}.</p>` : ""}
     <div class="tot"><span>Total</span><span>${inr(o.tot)}</span></div>
     <div class="meta">${o.direct ? `<span><b>${o.pay === "upi" ? "Paying by UPI · check your UPI app" : (o.mode === "table" ? "Pay at the table" : "Pay at pickup / delivery")}</b></span>` : ""}${o.mode === "table" && o.addr ? `<span><b class="tbl">Table ${esc(o.addr)}</b></span>` : `<span><b>${MODEL[o.mode] || "Pickup"}</b>${o.offline ? " · " + (PAYL[o.pay] || "Cash") + (o.disc ? " · " + inr(o.disc) + " off" : "") : ""}${o.addr ? " · " + esc(o.addr) : ""}</span>`}${o.note ? `<span>Note: ${esc(o.note)}</span>` : ""}${o.phone ? `<span>${esc(o.phone)}</span>` : ""}</div>
-    <div class="acts">${next ? `<button class="btn s" data-st="${next[0]}" data-ref="${o.ref}">${next[1]}</button>` : ""}${o.phone ? `<a class="btn w s" href="https://wa.me/${waNum(o.phone)}?text=${encodeURIComponent(msg)}" target="_blank" rel="noopener">${IC.wa}WhatsApp</a><a class="btn g s" href="tel:+${waNum(o.phone)}" aria-label="Call">${IC.call}</a>` : ""}</div>
+    <div class="acts">${next ? `<button class="btn s" data-st="${next[0]}" data-ref="${o.ref}">${next[1]}</button>` : ""}${o.phone ? `<a class="btn w s" href="https://wa.me/${waNum(o.phone)}?text=${encodeURIComponent(msg)}" target="_blank" rel="noopener">${IC.wa}WhatsApp</a><a class="btn g s" href="tel:+${waNum(o.phone)}" aria-label="Call">${IC.call}</a>` : ""}${o.phone && o.st !== "cancel" ? `<button class="btn g s" data-kh="from" data-src="order:${esc(o.ref)}" data-p="${esc(o.phone)}" data-n="${esc(o.name || "")}" data-a="${o.tot}">Add to udhaar</button>` : ""}</div>
     ${o.st !== "cancel" && (o.st !== "done" || o.offline) ? `<div style="margin-top:10px"><button class="lnk" data-st="cancel" data-ref="${o.ref}">${o.offline ? "Cancel sale" : "Cancel order"}</button></div>` : o.st === "cancel" ? `<div style="margin-top:10px"><button class="lnk" data-st="${o.offline ? "done" : "new"}" data-ref="${o.ref}">Restore ${o.offline ? "sale" : "order"}</button></div>` : ""}
   </article>`;
 }
@@ -752,7 +776,7 @@ $("#main").addEventListener("click", async ev => {
     return;
   }
   const pb = ev.target.closest("[data-pro]");
-  if (pb) { payPlan(pb, pb.dataset.pro === "year" ? "proYear" : "pro", async () => { const j = await api("/api/customer-memories?id=" + S.id); S.proUntil = j.proUntil || 0; S.store = !!j.store; S.storeWas = !!j.storeWas; S.d = j.data || S.d; S.sale = null; S.bl = null; S.blNew = null; toast("Keepsake Pro is on until " + new Date(S.proUntil).toLocaleDateString("en-IN", { day: "numeric", month: "short" }) + "."); go(); }); return; }
+  if (pb) { payPlan(pb, pb.dataset.pro === "year" ? "proYear" : "pro", async () => { const j = await api("/api/customer-memories?id=" + S.id); S.proUntil = j.proUntil || 0; S.store = !!j.store; S.storeWas = !!j.storeWas; S.d = j.data || S.d; S.sale = null; S.bl = null; S.blNew = null; S.kh = null; S.khNew = null; toast("Keepsake Pro is on until " + new Date(S.proUntil).toLocaleDateString("en-IN", { day: "numeric", month: "short" }) + "."); go(); }); return; }
   const b = ev.target.closest("[data-sx]"); if (!b) return;
   const a = b.dataset.sx;
   if (a === "ordon") { b.disabled = true; if (await stWrite(d => { d.ord = true; d.pause = false; }, "Orders are on")) go(); return; }
@@ -1344,6 +1368,7 @@ function blBillSheet() {
     <div class="row2" style="margin-top:10px"><a class="btn g" href="/bill/${esc(t)}" target="_blank" rel="noopener">Open bill</a><button type="button" class="btn g" data-bl="copy" data-t="${esc(t)}">Copy link</button></div>
     ${x.cancel ? "" : x.paid ? `<button type="button" class="lnk" style="margin-top:16px" data-bl="unpaid" data-t="${esc(t)}">Mark as not paid</button>`
       : `<b style="display:block;margin-top:18px">Got paid? Mark it</b><div class="tabs" style="margin:8px 0 0">${["cash", "upi", "card", "bank"].map(k => `<button type="button" data-bl="paid" data-k="${k}" data-t="${esc(t)}">${BLMODE[k]}</button>`).join("")}</div>`}
+    ${!x.cancel && !x.paid && x.phone ? `<button type="button" class="btn g" style="width:100%;margin-top:10px" data-kh="from" data-src="bill:${esc(x.no)}" data-p="${esc(x.phone)}" data-n="${esc(x.name || "")}" data-a="${x.total}">Add to udhaar khata</button>` : ""}
     ${x.cancel ? `<p class="hint">This bill is cancelled. Its number stays used, as GST rules ask.</p>` : `<p style="margin:18px 0 0"><button type="button" class="lnk" data-bl="cancel" data-t="${esc(t)}">${S.blCx === t ? "Tap again to cancel this bill" : "Cancel this bill"}</button></p>`}
   </div></div>`;
 }
@@ -1487,6 +1512,154 @@ $("#main").addEventListener("click", async ev => {
       S.bl.bills.unshift({ t: x.t, no: x.no, at: x.at, name: x.cust.name, phone: x.cust.phone, total: x.calc.total, tax: x.calc.tax, paid: x.paid, cancel: x.cancel });
       S.bl.used = j.used; S.blRep = null; const cm = (S.bl.months || []).find(m => m.ym === KSGST.ym(x.at)); if (cm) cm.n++; S.blNew = null; S.blOpen = x.t; S.blFresh = x.t; toast("Bill " + x.no + " saved."); blRedraw();
     } catch (x) { N.busy = false; b.disabled = false; toast(x.message); }
+  }
+});
+
+// ---------- Smart Udhaar (Keepsake Pro): who owes the shop, since when; customers confirm and pay by UPI ----------
+const khPost = b => post({ id: S.id, ...b });
+const khUrl = c => location.origin + "/u/" + c.tok;
+const khDays = n => n <= 0 ? "today" : n === 1 ? "1 day" : n + " days";
+async function khLoad() { try { S.kh = await khPost({ action: "kh-own-list" }); } catch (e) { S.kh = { error: e.message }; } if (S.view === "khata") khRedraw(); }
+function khRedraw() { const y = scrollY, sc = $(".pmb") ? $(".pmb").scrollTop : 0; go(); scrollTo(0, y); if ($(".pmb")) $(".pmb").scrollTop = sc; }
+const khState = c => c.bal <= 0 ? ["clr", "Cleared"] : c.age > 30 ? ["od", khDays(c.age) + " due"] : c.lim && c.bal > c.lim ? ["od", "Over limit"] : ["due", "Due"];
+// Open WhatsApp in a tab first (so phones don't block it), then point it at the message once the server answers.
+function khWa(fn) {
+  const w = window.open("about:blank", "_blank");
+  return fn().then(url => { if (!url) { if (w) w.close(); return; } if (w) w.location.href = url; else location.href = url; }).catch(e => { if (w) w.close(); toast(e.message); });
+}
+// Start an entry from anywhere (an order, a bill, the khata itself).
+function khStart(o) { S.khNew = { kind: "give", phone: "", name: "", amount: "", note: "", src: "", ...o }; S.khOpen = null; S.khQueue = false; if (location.hash !== "#khata") location.hash = "#khata"; else khRedraw(); }
+
+V.khata = () => {
+  const K = S.kh, top = r => head("Udhaar khata", "Who owes you, how much and since when. Customers confirm each entry on their phone and pay you by UPI.", r == null ? "" : r);
+  if (!K) { khLoad(); return top() + `<div class="empty">Loading your khata…</div>`; }
+  if (K.error) return top() + `<div class="empty"><b>Your khata couldn't load.</b>${esc(K.error)}<br><button class="btn" data-kh="reload">Try again</button></div>`;
+  const cs = K.customers || [], pro = isPro();
+  if (!pro && !cs.length) return top() + `<section class="cd khpitch"><div class="khp1"><span class="pl" style="background:var(--ye)">Keepsake Pro</span><h2 class="H">Stop losing money to udhaar</h2><p class="mu">The notebook can't remind anyone, and customers forget. Smart Udhaar keeps the book on your phone and does the asking for you.</p></div>
+    <div class="g2 khf">${[["Customer confirms it", "Every entry goes to the customer on WhatsApp. They tap “Sahi hai”, so there's no argument later."], ["Polite reminders", "One tap sends a reminder that gets firmer each time. You never have to ask face to face."], ["Paid by UPI", "Their khata link has a Pay button with the exact amount. You see who paid and when."], ["Know who's slow", "See what's pending, who is overdue past 30 days, and what came back this month. Set a limit per customer."]].map(x => `<div><b>${x[0]}</b><p class="mu">${x[1]}</p></div>`).join("")}</div>
+    <p class="mu" style="margin:16px 0 0">${proPriceLine()}</p>${proBtns()}</section>`;
+  const f = S.khf || "due", q = (S.khq || "").toLowerCase().trim(), s = K.sum || {};
+  const list = cs.filter(c => f === "all" ? true : f === "due" ? c.bal > 0 : f === "od" ? c.bal > 0 && c.age > 30 : c.bal <= 0)
+    .filter(c => !q || (c.name + " " + c.phone).toLowerCase().includes(q))
+    .sort((a, b) => f === "clr" ? b.last - a.last : b.bal - a.bal);
+  const due = cs.filter(c => c.bal > 0);
+  return top(`<div class="tg"><button class="btn" data-kh="new" data-k="give">+ Udhaar</button><button class="btn g" data-kh="new" data-k="pay">Got payment</button></div>`) +
+  (!pro ? `<div class="bar" style="margin-bottom:16px"><span><b>Keepsake Pro has ended.</b> Your khata is safe. You can still record payments and send reminders; adding new udhaar needs Pro.</span><button class="btn" data-pro="year">Renew · ${rup(S.proYearPrice)} / year</button></div>` : "") +
+  `<div class="g4 khk" style="margin-bottom:16px">
+    <div class="kpi k"><span>To collect</span><b>${inr(s.pending)}</b><small>${s.due || 0} customer${s.due === 1 ? "" : "s"}</small></div>
+    <div class="kpi y"><span>Came back this month</span><b>${inr(s.recovered)}</b><small>payments recorded</small></div>
+    <div class="kpi"><span>Over 30 days</span><b>${s.overdue || 0}</b><small class="mu">${s.overdue ? "remind them today" : "nobody is late"}</small></div>
+    <div class="kpi"><span>Say they've paid</span><b>${s.claims || 0}</b><small class="mu">${s.claims ? "check your UPI app" : "nothing to check"}</small></div>
+  </div>
+  ${due.length ? `<div class="khq"><span><b>${due.length} customer${due.length === 1 ? "" : "s"} owe${due.length === 1 ? "s" : ""} you ${inr(s.pending)}.</b> Send each one a polite WhatsApp reminder with a UPI link.</span><button class="btn w" data-kh="queue">${IC.wa} Remind all</button></div>` : ""}
+  <section class="cd">
+    <div class="srch"><input class="in" data-kh-s placeholder="Search name or number" value="${esc(S.khq || "")}" aria-label="Search the khata"><div class="tabs" style="margin:0">${[["due", "Due"], ["od", "Over 30 days"], ["clr", "Cleared"], ["all", "All"]].map(([k, l]) => `<button type="button" data-kh="f" data-k="${k}" class="${f === k ? "on" : ""}">${l}</button>`).join("")}</div></div>
+    ${list.length ? `<ul class="blr khl">${list.map(c => { const [cl, lb] = khState(c); return `<li><button type="button" data-kh="open" data-p="${c.phone}"><span class="av">${esc(ini(c.name))}</span><span class="nm"><b>${esc(c.name)}</b><small>${c.bal > 0 ? "since " + khDays(c.age) : "last " + ago(c.last)}${c.nr ? " · reminded " + c.nr + "×" : ""}${c.claims ? " · says paid" : ""}</small></span><span class="am"><b>${inr(Math.max(0, c.bal))}</b><span class="pl kh-${cl}">${lb}</span></span></button></li>`; }).join("")}</ul>`
+      : `<div class="empty" style="margin-top:14px"><b>${cs.length ? "Nobody here." : "Your khata is empty"}</b>${cs.length ? "Try another filter or search." : "Add the first udhaar. The customer gets it on WhatsApp and confirms it with one tap."}${cs.length ? "" : `<br><button class="btn" data-kh="new" data-k="give">+ Add udhaar</button>`}</div>`}
+  </section>
+  <p class="hint">Reminders open WhatsApp with the message ready; you press send. The customer's link shows only their own khata.</p>${khNewSheet()}${khCustSheet()}${khQueueSheet()}`;
+};
+
+function khNewSheet() {
+  const N = S.khNew; if (!N) return "";
+  if (N.done) return `<div class="pm" data-khbg><div class="pmb"><div class="ch"><h2 class="H" style="margin:0">${N.kind === "pay" ? "Payment saved" : "Udhaar saved"}</h2><button class="lnk" data-kh="close">Close</button></div>
+    <div class="blhd"><div><b>${esc(N.done.customer.name)}</b><small>+91 ${esc(N.done.customer.phone)}</small></div><div style="text-align:right"><small>${N.done.customer.bal > 0 ? "Now owes" : "All clear"}</small><b style="font-size:22px">${inr(Math.max(0, N.done.customer.bal))}</b></div></div>
+    ${N.done.stamp ? `<p class="hint">Paid on time, so a loyalty stamp was added: ${N.done.stamp.s} of ${N.done.stamp.n}.</p>` : ""}
+    <a class="btn w" style="width:100%;margin-top:16px" href="${esc(N.done.wa)}" target="_blank" rel="noopener">${IC.wa} ${N.kind === "pay" ? "Send thank-you on WhatsApp" : "Send to customer to confirm"}</a>
+    <div class="row2" style="margin-top:10px"><button type="button" class="btn g" data-kh="open" data-p="${N.done.customer.phone}">Open khata</button><button type="button" class="btn g" data-kh="new" data-k="${N.kind}">Add another</button></div>
+  </div></div>`;
+  const give = N.kind !== "pay", known = (S.kh && S.kh.customers || []).find(c => c.phone === N.phone.replace(/\D/g, "").slice(-10));
+  const sug = !known && N.phone.length >= 2 ? (S.kh && S.kh.customers || []).filter(c => (c.phone + " " + c.name.toLowerCase()).includes(N.phone.toLowerCase())).sort((a, b) => b.bal - a.bal || b.last - a.last).slice(0, 6) : [];
+  return `<div class="pm" data-khbg><div class="pmb"><div class="ch"><h2 class="H" style="margin:0">${give ? "Add udhaar" : "Record a payment"}</h2><button class="lnk" data-kh="close">Close</button></div>
+    <div class="tabs" style="margin:6px 0 14px">${[["give", "Udhaar given"], ["pay", "Payment received"]].map(([k, l]) => `<button type="button" data-kh="kind" data-k="${k}" class="${N.kind === k ? "on" : ""}">${l}</button>`).join("")}</div>
+    ${give && !isPro() ? `<div class="empty"><b>Adding udhaar is part of Keepsake Pro</b>${proPriceLine()}${proBtns()}</div>` : `
+    <label class="khlb">Customer's mobile<input class="in" data-khi="phone" inputmode="tel" maxlength="14" placeholder="10-digit number" value="${esc(N.phone)}" autocomplete="off"></label>
+    ${sug.length ? `<div class="blps" style="margin-top:6px">${sug.map(c => `<button type="button" class="blp" data-kh="pick" data-p="${c.phone}">${esc(c.name)} <b>${inr(Math.max(0, c.bal))}</b></button>`).join("")}</div>` : ""}
+    ${known ? `<p class="hint" style="margin:6px 0 0"><b style="color:var(--ink)">${esc(known.name)}</b> owes ${inr(Math.max(0, known.bal))}${known.lim ? " · limit " + inr(known.lim) : ""}</p>` : `<label class="khlb">Name<input class="in" data-khi="name" placeholder="Customer's name" value="${esc(N.name)}" autocomplete="off"></label>`}
+    <label class="khlb">Amount (₹)<input class="in khamt" data-khi="amount" inputmode="numeric" placeholder="₹ 0" value="${esc(N.amount)}"></label>
+    ${!give && known && known.bal > 0 ? `<div class="tg" style="margin-top:6px"><button type="button" class="btn g s" data-kh="full">Full ${inr(known.bal)}</button></div>` : ""}
+    <label class="khlb">Note (optional)<input class="in" data-khi="note" maxlength="80" placeholder="${give ? "e.g. 5 kg atta, 2 oil" : "e.g. UPI, cash"}" value="${esc(N.note)}"></label>
+    ${N.src ? `<p class="hint" style="margin:6px 0 0">From ${esc(N.src.replace(":", " "))}</p>` : ""}
+    ${N.warn ? `<div class="khw"><b>Check first</b><p>${esc(N.warn)}</p><button type="button" class="btn" data-kh="save" data-force="1">Yes, add it</button></div>` : `<button type="button" class="btn" style="margin-top:16px;width:100%" data-kh="save">${give ? "Save udhaar" : "Save payment"}</button>`}`}
+  </div></div>`;
+}
+
+function khCustSheet() {
+  const p = S.khOpen; if (!p) return "";
+  const C = S.khC && S.khC.customer && S.khC.customer.phone === p ? S.khC : null;
+  if (!C) return `<div class="pm" data-khbg><div class="pmb"><div class="ch"><h2 class="H" style="margin:0">Khata</h2><button class="lnk" data-kh="close">Close</button></div><p class="mu">Loading…</p></div></div>`;
+  const c = C.customer, [cl, lb] = khState(c);
+  let run = 0; const rows = c.e.slice().reverse().map(x => (run += x.a, { ...x, run })).reverse();
+  return `<div class="pm" data-khbg><div class="pmb"><div class="ch"><h2 class="H" style="margin:0">${esc(c.name)}</h2><button class="lnk" data-kh="close">Close</button></div>
+    <div class="khbal ${cl}"><div><small>${c.bal > 0 ? "Owes you" : "All clear"}</small><b>${inr(Math.max(0, c.bal))}</b><span>+91 ${esc(c.phone)}${c.bal > 0 ? " · oldest " + khDays(c.age) : ""}</span></div><span class="pl kh-${cl}">${lb}</span></div>
+    ${(c.c || []).map(x => `<div class="khw"><b>${esc(c.name)} says they paid ${inr(x.a)}</b><p>${ago(x.t)}. Check your UPI app or cash, then accept it.</p><div class="tg"><button type="button" class="btn s" data-kh="accept" data-c="${x.id}" data-a="${x.a}">It came, record it</button><button type="button" class="btn g s" data-kh="reject" data-c="${x.id}">It didn't come</button></div></div>`).join("")}
+    <div class="row2" style="margin-top:14px">${isPro() ? `<button type="button" class="btn" data-kh="new" data-k="give" data-p="${c.phone}">+ Udhaar</button>` : ""}<button type="button" class="btn ${isPro() ? "g" : ""}" data-kh="new" data-k="pay" data-p="${c.phone}">Got payment</button></div>
+    ${c.bal > 0 ? `<button type="button" class="btn w" style="width:100%;margin-top:10px" data-kh="remind" data-p="${c.phone}">${IC.wa} ${c.nr ? "Send reminder " + Math.min(3, c.nr + 1) : "Send a reminder"}</button><p class="hint" style="margin:6px 0 0">${c.nr ? "Last reminder " + ago(c.lr) + ". Each one is a little firmer." : "A polite note with their UPI link."}</p>` : ""}
+    <div class="khlnk"><span><b>Customer's khata link</b><small>They see their own entries and pay by UPI.</small></span><button type="button" class="btn g s" data-kh="copy" data-u="${esc(C.link)}">Copy</button></div>
+    <b style="display:block;margin-top:18px">Entries</b>
+    ${rows.length ? `<ul class="khe">${rows.map(x => `<li class="${x.a > 0 ? "gv" : "pd"}"><span><b>${x.a > 0 ? "Udhaar" : "Paid"}${x.note ? " · " + esc(x.note) : ""}</b><small>${new Date(x.t).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "2-digit" })}${x.a > 0 ? (x.ok ? ` · <i class="okc">✓ Customer confirmed</i>` : " · not confirmed yet") : ""}${x.src ? " · " + esc(x.src.replace(":", " ")) : ""}</small></span><span class="am"><b>${x.a > 0 ? "+" : "−"}${inr(Math.abs(x.a))}</b><small>bal ${inr(x.run)}</small></span><button type="button" class="lnk" data-kh="del" data-e="${x.id}" aria-label="Delete entry">${S.khDel === x.id ? "Delete?" : "×"}</button></li>`).join("")}</ul>` : `<p class="mu">No entries.</p>`}
+    <div class="khlim"><label class="khlb" style="margin:0;flex:1">Udhaar limit (₹)<input class="in" data-kh-lim inputmode="numeric" placeholder="No limit" value="${c.lim || ""}"></label><button type="button" class="btn g s" data-kh="lim" data-p="${c.phone}">Save</button></div>
+    <p class="hint">Above the limit, you're asked before adding more.</p>
+  </div></div>`;
+}
+
+function khQueueSheet() {
+  if (!S.khQueue) return "";
+  const due = (S.kh.customers || []).filter(c => c.bal > 0).sort((a, b) => b.age - a.age || b.bal - a.bal);
+  return `<div class="pm" data-khbg><div class="pmb"><div class="ch"><h2 class="H" style="margin:0">Remind everyone</h2><button class="lnk" data-kh="close">Close</button></div>
+    <p class="mu" style="margin:4px 0 12px">Tap each one. WhatsApp opens with the message ready; send it and come back for the next. Oldest first.</p>
+    <ul class="khe">${due.map(c => { const sent = S.khSent && S.khSent[c.phone]; return `<li><div class="khqr"><span class="nm"><b>${esc(c.name)}</b><small>${inr(c.bal)} · ${khDays(c.age)}${c.lr ? " · last reminded " + ago(c.lr) : ""}</small></span>${sent ? `<span class="pl kh-clr">Sent</span>` : `<button type="button" class="btn w s" data-kh="remind" data-p="${c.phone}" data-q="1">${IC.wa} Remind</button>`}</div></li>`; }).join("")}</ul>
+  </div></div>`;
+}
+
+function khMerge(c) { const L = S.kh.customers, i = L.findIndex(x => x.phone === c.phone); if (i >= 0) L[i] = c; else L.unshift(c); const s = S.kh.sum; s.pending = L.reduce((t, x) => t + Math.max(0, x.bal), 0); s.due = L.filter(x => x.bal > 0).length; s.overdue = L.filter(x => x.bal > 0 && x.age > 30).length; s.claims = L.reduce((t, x) => t + (x.claims || 0), 0); }
+async function khOpen(p) { S.khOpen = p; S.khNew = null; S.khQueue = false; S.khDel = null; khRedraw(); try { S.khC = await khPost({ action: "kh-own-get", phone: p }); khMerge(S.khC.customer); } catch (e) { toast(e.message); S.khOpen = null; } khRedraw(); }
+
+$("#main").addEventListener("input", ev => {
+  const e = ev.target;
+  if (e.matches("[data-kh-s]")) { S.khq = e.value; const at = e.selectionStart; khRedraw(); const n = $("[data-kh-s]"); if (n) { n.focus(); n.setSelectionRange(at, at); } return; }
+  if (e.matches("[data-khi]") && S.khNew) {
+    const k = e.dataset.khi; S.khNew[k] = k === "amount" ? e.value.replace(/[^\d]/g, "") : e.value; S.khNew.warn = "";
+    if (k === "phone") { const at = e.selectionStart; khRedraw(); const n = $('[data-khi="phone"]'); if (n) { n.focus(); n.setSelectionRange(at, at); } }
+  }
+});
+$("#main").addEventListener("click", async ev => {
+  if (ev.target.matches("[data-khbg]")) { S.khNew = null; S.khOpen = null; S.khQueue = false; khRedraw(); return; }
+  const b = ev.target.closest("[data-kh]"); if (!b) return;
+  const a = b.dataset.kh;
+  if (a === "reload") { S.kh = null; go(); return; }
+  if (a === "f") { S.khf = b.dataset.k; khRedraw(); return; }
+  if (a === "close") { S.khNew = null; S.khOpen = null; S.khQueue = false; S.khSent = null; khRedraw(); return; }
+  if (a === "new") { khStart({ kind: b.dataset.k, phone: b.dataset.p || "" }); return; }
+  if (a === "from") { S.blOpen = null; khStart({ kind: "give", phone: String(b.dataset.p).replace(/\D/g, "").slice(-10), name: b.dataset.n, amount: String(Math.round(+b.dataset.a || 0)), src: b.dataset.src, note: b.dataset.src.startsWith("bill:") ? "Bill " + b.dataset.src.slice(5) : "Order #" + b.dataset.src.slice(6) }); if (!S.kh) khLoad(); return; }
+  if (a === "kind") { S.khNew.kind = b.dataset.k; S.khNew.warn = ""; khRedraw(); return; }
+  if (a === "pick") { S.khNew.phone = b.dataset.p; khRedraw(); return; }
+  if (a === "full") { const c = S.kh.customers.find(x => x.phone === S.khNew.phone.replace(/\D/g, "").slice(-10)); if (c) S.khNew.amount = String(c.bal); khRedraw(); return; }
+  if (a === "open") { khOpen(b.dataset.p); return; }
+  if (a === "queue") { S.khQueue = true; S.khSent = {}; khRedraw(); return; }
+  if (a === "copy") { try { await navigator.clipboard.writeText(b.dataset.u); toast("Link copied."); } catch (x) { prompt("Copy this link:", b.dataset.u); } return; }
+  if (a === "save") {
+    const N = S.khNew; if (!N || N.busy) return; N.busy = true; b.disabled = true;
+    try {
+      const j = await khPost({ action: "kh-own-add", kind: N.kind, phone: N.phone, name: N.name, amount: N.amount, note: N.note, src: N.src, claim: N.claim, force: !!b.dataset.force });
+      N.busy = false;
+      if (j.warn) { N.warn = j.warn; khRedraw(); return; }
+      khMerge(j.customer); if (N.kind === "pay") S.kh.sum.recovered += -j.entry.a;
+      N.done = j; S.khC = null; khRedraw();
+    } catch (x) { N.busy = false; b.disabled = false; toast(x.message); }
+    return;
+  }
+  if (a === "remind") {
+    const p = b.dataset.p; b.disabled = true;
+    khWa(async () => { const j = await khPost({ action: "kh-own-remind", phone: p }); khMerge(j.customer); if (S.khC && S.khC.customer.phone === p) Object.assign(S.khC.customer, j.customer); if (b.dataset.q) S.khSent[p] = 1; khRedraw(); return j.wa; }).finally(() => { b.disabled = false; });
+    return;
+  }
+  if (a === "accept") { const c = S.khC.customer; khStart({ kind: "pay", phone: c.phone, amount: b.dataset.a, note: "UPI (customer said paid)", claim: b.dataset.c }); return; }
+  if (a === "reject") { try { const j = await khPost({ action: "kh-own-reject", phone: S.khOpen, claim: b.dataset.c }); khMerge(j.customer); toast("Removed. You can remind them again."); khOpen(S.khOpen); } catch (x) { toast(x.message); } return; }
+  if (a === "lim") { const v = ($("[data-kh-lim]") || {}).value || ""; try { const j = await khPost({ action: "kh-own-limit", phone: b.dataset.p, lim: +v.replace(/\D/g, "") || 0 }); khMerge(j.customer); S.khC.customer.lim = j.customer.lim; toast(j.customer.lim ? "Limit set to " + inr(j.customer.lim) + "." : "Limit removed."); khRedraw(); } catch (x) { toast(x.message); } return; }
+  if (a === "del") {
+    if (S.khDel !== b.dataset.e) { S.khDel = b.dataset.e; khRedraw(); return; }
+    try { const j = await khPost({ action: "kh-own-del", phone: S.khOpen, eid: b.dataset.e }); khMerge(j.customer); toast("Entry deleted."); khOpen(S.khOpen); } catch (x) { toast(x.message); }
   }
 });
 
@@ -1649,7 +1822,7 @@ async function loadOrders(quiet) {
       ding(); toast(fresh.length === 1 ? `New order from ${fresh[0].name || "a customer"} · ${inr(fresh[0].tot)}` : fresh.length + " new orders");
       try { if ("Notification" in window && Notification.permission === "granted" && document.hidden) new Notification("New order · " + inr(fresh[0].tot), { body: (fresh[0].name || "Customer") + ": " + fresh[0].items.map(x => x.q + "× " + x.n).join(", "), icon: "/assets/icon-192.png" }); } catch (e) {}
     }
-    if (!quiet || fresh.length || ["overview", "orders"].includes(S.view)) { const y = scrollY; const typing = document.activeElement && /INPUT|TEXTAREA/.test(document.activeElement.tagName); if (!typing && !S.sale) { go(); scrollTo(0, y); } else shell(); }
+    if (!quiet || fresh.length || ["overview", "orders"].includes(S.view)) { const y = scrollY; const typing = document.activeElement && /INPUT|TEXTAREA/.test(document.activeElement.tagName); if (!typing && !S.sale && !S.khNew && !S.khOpen) { go(); scrollTo(0, y); } else shell(); }
   } catch (e) { /* offline for a moment: try again next round */ }
 }
 function poll() { setTimeout(async () => { if (!document.hidden) await loadOrders(true); poll(); }, 20000); }
