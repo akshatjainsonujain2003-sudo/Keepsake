@@ -200,7 +200,7 @@ async function load(t, force) {
   } catch (e) { toast(e.message); }
   dot();
 }
-async function refresh() { const b = $("#rf"); if (b) b.classList.add("spin"); S[{ home: "sum", orders: "orders", shops: "pages", team: "team", people: "people", more: "sum" }[S.tab]] = null; await load(S.tab, true); if (S.tab !== "home") { try { S.sum = await api({ action: "hq-summary" }); } catch (e) {} } dot(); }
+async function refresh() { S.scans = null; const b = $("#rf"); if (b) b.classList.add("spin"); S[{ home: "sum", orders: "orders", shops: "pages", team: "team", people: "people", more: "sum" }[S.tab]] = null; await load(S.tab, true); if (S.tab !== "home") { try { S.sum = await api({ action: "hq-summary" }); } catch (e) {} } dot(); }
 let lastN = null;
 async function poll() {
   try {
@@ -226,7 +226,7 @@ function draw() {
   const q = $("#q"); if (q) { q.oninput = () => { S.q[S.tab] = q.value; const p = q.selectionStart; draw(); const n = $("#q"); n.focus(); n.setSelectionRange(p, p); }; }
   A.querySelectorAll("[data-f]").forEach(b => b.onclick = () => { if (S.tab === "orders") S.of = b.dataset.f; else S.pf = b.dataset.f; draw(); });
   A.querySelectorAll("[data-o]").forEach(b => b.onclick = () => orderSheet(b.dataset.o));
-  A.querySelectorAll("[data-p]").forEach(b => b.onclick = () => pageSheet(b.dataset.p));
+  A.querySelectorAll("[data-p]").forEach(b => b.onclick = async () => { if (!S.pages) { try { S.pages = (await api({ action: "hq-pages" })).pages; } catch (e) { toast(e.message); return; } } pageSheet(b.dataset.p); });
   A.querySelectorAll("[data-pick]").forEach(b => b.onclick = () => { const id = b.dataset.pick; S.sel.has(id) ? S.sel.delete(id) : S.sel.add(id); const y = scrollY; draw(); scrollTo(0, y); });
   const sm = A.querySelector("[data-selmode]"); if (sm) sm.onclick = () => { S.sel = S.sel ? null : new Set(); draw(); };
   const sa = A.querySelector("[data-selall]"); if (sa) sa.onclick = () => { const q = S.q.shops.toLowerCase().trim(), now = Date.now(); (S.pages || []).filter(p => p.kind === "biz" && p.live && (S.pf !== "pro" || p.proUntil > now) && (!q || [p.title, p.cat, p.area, p.owner.name, p.owner.email, p.owner.phone, p.id].join(" ").toLowerCase().includes(q))).forEach(p => S.sel.add(p.id)); draw(); };
@@ -237,12 +237,24 @@ function draw() {
   A.querySelectorAll("[data-u]").forEach(b => b.onclick = () => personSheet(b.dataset.u));
   A.querySelectorAll("[data-go]").forEach(b => b.onclick = () => { if (b.dataset.of) S.of = b.dataset.of; go(b.dataset.go); });
   const al = $("#alertBtn"); if (al) al.onclick = toggleAlerts;
+  const inb = $("#inowBtn"); if (inb) inb.onclick = async () => { inb.disabled = true; try { const r = await api({ action: "hq-indexnow" }); toast(r.n + " pages sent to Bing"); } catch (e) { toast(e.message); } inb.disabled = false; };
   const ts = $("#testBtn"); if (ts) ts.onclick = async () => { try { const r = await api({ action: "push-test" }); toast(r.sent ? "Test alert sent to " + r.sent + " phone" + (r.sent > 1 ? "s" : "") : "No phone has alerts on yet."); } catch (e) { toast(e.message); } };
   const lo = $("#logout"); if (lo) lo.onclick = () => logout();
   if (S.tab === "home" || S.tab === "more") alertState();
 }
 
 // ---------- home ----------
+// QR scans across all shops (opens of shop pages), loaded after the summary so Home stays fast.
+function scansCard() {
+  const x = S.scans;
+  if (!x) { if (!S.scansLoading) { S.scansLoading = true; api({ action: "hq-scans" }).then(r => { S.scans = r; S.scansLoading = false; if (S.tab === "home") draw(); }).catch(() => { S.scansLoading = false; }); } return `<div class="card"><div class="lab">Shop QR scans</div><small style="color:var(--mu)">Counting…</small></div>`; }
+  const mx = Math.max(1, ...x.days.map(d => d.n));
+  return `<div class="card"><div class="lab">Shop QR scans · ${x.shops} live shop${x.shops === 1 ? "" : "s"}</div>
+    <div class="g3" style="margin:6px 0 10px"><div><small>Today</small><b class="fd" style="display:block;font-size:26px">${x.today.toLocaleString("en-IN")}</b></div><div><small>7 days</small><b class="fd" style="display:block;font-size:26px">${x.week.toLocaleString("en-IN")}</b></div><div><small>30 days</small><b class="fd" style="display:block;font-size:26px">${x.month.toLocaleString("en-IN")}</b></div></div>
+    <div class="chart">${x.days.map((d, i) => `<i class="${i === x.days.length - 1 ? "t" : d.n ? "v" : ""}" style="height:${Math.max(3, Math.round(d.n * 100 / mx))}%" title="${d.d}: ${d.n} scans"></i>`).join("")}</div>
+    ${x.top.length ? `<div style="margin-top:12px"><small style="color:var(--mu)">Most scanned, last 30 days</small>${x.top.map((t, i) => `<button class="li" data-p="${esc(t.id)}" style="width:100%;background:none;border:0;color:inherit;text-align:left;cursor:pointer"><div><b>${i + 1}. ${esc(t.title)}</b><small>${esc(t.area)}</small></div><b class="fd">${t.n.toLocaleString("en-IN")}</b></button>`).join("")}</div>` : `<small style="color:var(--mu);display:block;margin-top:10px">No scans yet in the last 30 days.</small>`}
+    <small style="display:block;color:var(--mu);margin-top:8px">A scan is one opening of a shop's page (from the QR or its link). The owner's own visits aren't counted.</small></div>`;
+}
 function home() {
   const s = S.sum; const h = new Date().getHours(), hi = h < 12 ? "Good morning" : h < 17 ? "Good afternoon" : "Good evening";
   if (!s) return top("HQ", hi) + loading();
@@ -256,6 +268,7 @@ function home() {
   <div class="card"><div class="lab">Last 30 days</div><div class="chart">${s.days.map((d, i) => `<i class="${i === s.days.length - 1 ? "t" : d.v ? "v" : ""}" style="height:${Math.max(3, Math.round(d.v * 100 / mx))}%" title="${d.d}: ${rs(d.v)} · ${d.n} orders"></i>`).join("")}</div><div class="cx"><span>${new Date(s.days[0].d).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}</span><span>Best day ${rs(mx === 1 ? 0 : mx)}</span><span>Today</span></div>
   <div class="mix"><span style="width:${M.page * 100 / tot}%;background:var(--gd)"></span><span style="width:${M.store * 100 / tot}%;background:var(--lav)"></span><span style="width:${M.pro * 100 / tot}%;background:#fff"></span><span style="width:${M.extra * 100 / tot}%;background:var(--gn)"></span></div>
   <div class="leg"><span><i style="background:var(--gd)"></i>Business pages ${rs(M.page)}</span><span><i style="background:var(--lav)"></i>Online store ${rs(M.store)}</span><span><i style="background:#fff"></i>Pro ${rs(M.pro)}</span><span><i style="background:var(--gn)"></i>Add-ons ${rs(M.extra)}</span></div></div>
+  ${scansCard()}
   <div class="g3" style="grid-template-columns:1fr 1fr"><div class="card" data-go="shops"><small>New shops · 7 days</small><b class="fd">${s.newShops}</b></div><div class="card" data-go="more"><small>Phones with alerts</small><b class="fd">${s.alerts}</b></div></div>
   <div class="sec"><h2>Latest orders</h2><button data-go="orders" data-of="all">See all</button></div>${recent}`;
 }
@@ -458,6 +471,8 @@ function more() {
   ${std ? "" : `<div class="card"><div class="lab" style="margin-bottom:8px">Install as an app</div><p style="margin:0 0 6px"><b>Android (Chrome):</b> tap ⋮ → <b>Install app</b> (or Add to Home screen).</p><p style="margin:0"><b>iPhone (Safari):</b> tap Share → <b>Add to Home Screen</b>, then open it from the home screen. iPhone alerts only work from the installed app.</p></div>`}
   <div class="card"><div class="lab" style="margin-bottom:4px">More tools</div>
   ${[["Prepaid & business QR codes", "Make batches, print sheets"], ["Salespeople", "Codes, PINs, commission, payouts"]].map(([a, b]) => `<a class="li" href="/admin" style="text-decoration:none;color:inherit"><div><b>${a}</b><small>${b}</small></div><span style="color:var(--gd)">↗</span></a>`).join("")}</div>
+  <div class="card"><div class="lab" style="margin-bottom:4px">Search engines</div>
+  <div class="li"><div><b>Tell Bing about all pages</b><small>Sends every page in the sitemap (site pages and live shops) to Bing and other IndexNow engines. Shop pages are also sent on their own when they change.</small></div><button class="bt sm gh" id="inowBtn">Send</button></div></div>
   <button class="bt w gh" id="logout">Log out of HQ</button>`;
 }
 

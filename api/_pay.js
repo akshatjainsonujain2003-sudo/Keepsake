@@ -223,6 +223,8 @@ async function markPaid(orderId, paymentId) {
       if (hasQr(order)) memory.qrOrders = [...(memory.qrOrders || []), orderId].slice(-10);
       memory.orders = [...(memory.orders || []), orderId].slice(-20);
       await db.setj(mk, memory);
+      // A shop page that just went live: tell Bing and the other IndexNow engines.
+      if (!wasLive && kindOf(memory) === "biz") { try { await require("./_shopseo").ping(order.memory, memory); } catch (e) {} }
     }
     await db.cmd("ZADD", "orders-paid", order.paidAt, orderId);
     // Phone alert to the admin app (best effort, never blocks the payment for long).

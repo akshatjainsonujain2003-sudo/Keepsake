@@ -128,6 +128,20 @@ async function latest() {
   return { id: o.id, at: o.paidAt, amount: o.amount, title: o.title || "", what, ship: SHIP(o.plan, o) };
 }
 
+// QR scans across every live shop: opens of shop pages today, last 7 and 30 days, and the 10 most-scanned shops this month.
+// Counts come from the same daily counters each shop sees on its dashboard (bzv:<id>:<day>, kept 40 days).
+async function scans() {
+  const ps = (await pages()).filter(p => p.live), now = Date.now(), today = startOfDay(now);
+  const days = Array.from({ length: 30 }, (_, i) => dayKey(today - (29 - i) * DAY));
+  const keys = ps.flatMap(p => days.map(d => "bzv:" + p.id + ":" + d));
+  const vals = [];
+  for (let i = 0; i < keys.length; i += 500) vals.push(...(await db.cmd("MGET", ...keys.slice(i, i + 500))));
+  const byDay = days.map(() => 0), byShop = ps.map(() => 0);
+  vals.forEach((v, k) => { const n = +v || 0, si = Math.floor(k / 30), di = k % 30; byDay[di] += n; byShop[si] += n; });
+  const sumLast = n => byDay.slice(30 - n).reduce((a, b) => a + b, 0);
+  const top = ps.map((p, i) => ({ id: p.id, title: p.title || "Untitled", area: p.area || "", n: byShop[i] })).filter(x => x.n).sort((a, b) => b.n - a.n).slice(0, 10);
+  return { today: byDay[29], week: sumLast(7), month: sumLast(30), shops: ps.length, days: days.map((d, i) => ({ d, n: byDay[i] })), top };
+}
 // Pro given free from HQ, to one or many shops. Drafts (not paid yet) are skipped: Pro only works on a live page.
 async function givePro(ids, days, note) {
   const pay = require("./_pay");
@@ -157,4 +171,4 @@ async function endPro(id) {
   await db.setj(k, m);
   return { ok: true, id, proUntil: m.proUntil };
 }
-module.exports = { summary, orders, pages, people, vapid, subscribe, unsubscribe, notify, latest, subCount, givePro, endPro };
+module.exports = { summary, orders, pages, people, vapid, subscribe, unsubscribe, notify, latest, subCount, givePro, endPro, scans };

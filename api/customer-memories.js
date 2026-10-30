@@ -123,6 +123,8 @@ module.exports = async (req, res) => {
       const lockErr = setLock(memory, b); if (lockErr) return db.reply(res, 400, { error: lockErr });
       memory.data = data; memory.title = clip(data.t || "Our Memories", 80) || "Our Memories"; memory.updated = Date.now();
       await db.setj(key, memory);
+      // A live shop page changed: tell Bing and the other IndexNow engines (at most once an hour per page).
+      if (kind === "biz" && memory.paid !== false) await require("./_shopseo").ping(id, memory);
       return db.reply(res, 200, { id, kind, url: urlFor(kind, id), title: memory.title, updated: memory.updated, active: memory.paid !== false, locked: !!memory.lock, ...ownerLock(memory) });
     }
     if (req.method === "DELETE") {

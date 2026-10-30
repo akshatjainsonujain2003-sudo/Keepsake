@@ -61,6 +61,10 @@ module.exports = async (req, res) => {
         return db.reply(res, 200, { ok: true, orderId, amount: rupees });
       }
       // Pro given free (no payment): one or many shops, for a number of days. Or ended on one shop.
+      if (b.action === "hq-scans") return db.reply(res, 200, await H.scans());
+      // Tell Bing and the other IndexNow engines about every page in the sitemap (marketing pages and live shops).
+      if (b.action === "hq-indexnow") { const S = require("./_shopseo"), shops = await S.sitemapShops();
+        const urls = [...require("./seo").PAGES.map(p => S.BASE + p), ...shops.map(x => S.BASE + "/b/" + x.id)]; const ok = await S.indexNow(urls); return db.reply(res, ok ? 200 : 502, ok ? { ok: true, n: urls.length } : { error: "Couldn't reach IndexNow. Try again in a minute." }); }
       if (b.action === "hq-give-pro") { const r = await H.givePro(b.ids, b.days, b.note); return db.reply(res, r.error ? 400 : 200, r); }
       if (b.action === "hq-end-pro") { const r = await H.endPro(b.id); return db.reply(res, r.error ? 400 : 200, r); }
       if (b.action === "hq-team") return db.reply(res, 200, { team: await require("./_sales").team() });
