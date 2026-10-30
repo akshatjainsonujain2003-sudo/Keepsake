@@ -60,6 +60,10 @@
       "destination": "/api/seo?f=shop&id=:id"
     },
     {
+      "source": "/u/:tok",
+      "destination": "/khata"
+    },
+    {
       "source": "/bill/:id",
       "destination": "/bill"
     },
@@ -107,7 +111,7 @@
       ]
     },
     {
-      "source": "/(hq|admin|shops/dashboard|shops/studio|shops/login|account|studio|builder|login|reset-password|sales|print-codes|print-kit|creator|dashboard|bill|bill/.*|ca|ca/.*)",
+      "source": "/(hq|admin|shops/dashboard|shops/studio|shops/login|account|studio|builder|login|reset-password|sales|print-codes|print-kit|creator|dashboard|bill|bill/.*|ca|ca/.*|khata|u/.*)",
       "headers": [
         {
           "key": "X-Frame-Options",

@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en-IN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Your khata · GetKeepsake</title>
+<meta name="robots" content="noindex,nofollow">
+<meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#0B0B14">
+<link rel="icon" href="/assets/brand/favicon.ico" sizes="any"><link rel="icon" type="image/svg+xml" href="/assets/brand/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js" defer></script>
+<style>
+:root{--bg:#F2F2EE;--card:#fff;--ink:#0B0B14;--mu:#5B5B69;--line:#DADAD3;--bl:#1F1BF2;--li:#D4FF3F;--gr:#14733f;--grl:#d9f5e3;--rd:#9b2c16}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:500 15px/1.5 Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+button,input{font:inherit}
+.wrap{max-width:520px;margin:0 auto;padding:16px 16px 40px}
+.shop{display:flex;align-items:center;gap:12px;padding:6px 2px 16px}
+.lg{flex:none;width:46px;height:46px;border-radius:13px;background:var(--ink) center/cover no-repeat;color:var(--li);display:grid;place-items:center;font:800 19px 'Inter Tight',sans-serif}
+.shop b{display:block;font:800 19px/1.15 'Inter Tight',sans-serif;letter-spacing:-.02em}
+.shop small{color:var(--mu);font:600 11px 'JetBrains Mono',monospace;letter-spacing:.12em;text-transform:uppercase}
+.bal{position:relative;overflow:hidden;padding:24px 22px 22px;border-radius:26px;background:var(--ink);color:#fff}
+.bal::after{content:"";position:absolute;right:-60px;top:-60px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,#1F1BF2 0,#1F1BF200 70%);opacity:.9}
+.bal.clr{background:var(--gr)}.bal.clr::after{background:radial-gradient(circle,#D4FF3F55 0,#D4FF3F00 70%)}
+.bal small{position:relative;z-index:1;display:block;color:#B4B4C2;font-weight:600}
+.bal.clr small{color:#cfeedd}
+.bal b{position:relative;z-index:1;display:block;margin:6px 0 4px;font:800 clamp(44px,13vw,60px)/1 'Inter Tight',sans-serif;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.bal p{position:relative;z-index:1;margin:0;color:#D6D6DE;font-size:14px}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:52px;padding:0 18px;border-radius:999px;border:0;background:var(--bl);color:#fff;font-weight:700;font-size:16px;text-decoration:none;cursor:pointer;touch-action:manipulation}
+.btn:active{transform:scale(.98)}.btn[disabled]{opacity:.5}
+.btn.g{background:#fff;color:var(--ink);border:1.5px solid var(--ink)}
+.btn.s{width:auto;min-height:44px;font-size:14px;padding:0 16px}
+.btn.okb{background:var(--gr);color:#fff}
+.acts{display:grid;gap:10px;margin-top:14px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cd{margin-top:14px;padding:18px;border-radius:22px;background:var(--card);border:1px solid var(--line)}
+.lb{font:600 11px 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--mu)}
+.q{display:none;align-items:center;gap:16px;margin-top:14px}
+.q div{width:120px;height:120px;padding:8px;border:1px solid var(--line);border-radius:14px;background:#fff;flex:none}.q svg{width:100%;height:100%;display:block}
+@media (hover:hover) and (pointer:fine){.q{display:flex}}
+.pend{margin-top:14px;padding:14px 16px;border-radius:18px;background:#fff7e6;border:1.5px solid #f2d9a6;color:#6b4a12;font-size:14px}
+.pend b{color:var(--ink)}
+.cf{margin-top:14px;padding:16px;border-radius:20px;background:#EEEDFF;border:1.5px solid #cfcdfb}
+.cf b{display:block;font-size:15px}.cf p{margin:3px 0 12px;color:#3c3a6b;font-size:14px}
+.cfl{margin:6px 0 12px}.cfl li{padding:7px 0;font-size:14px;border-color:#d9d7fa}.cfl .a{color:var(--ink)}
+ul{list-style:none;margin:8px 0 0;padding:0}
+li{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid #ecece6}
+li:last-child{border-bottom:0}
+li .t{flex:1;min-width:0}li .t b{display:block;font-weight:600}li .t small{display:block;color:var(--mu);font-size:12.5px}
+li .a{font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap}
+li.gv .a{color:var(--rd)}li.pd .a{color:var(--gr)}
+.ok{color:var(--gr);font-weight:600}
+.dot{flex:none;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:15px}
+li.gv .dot{background:#f6e3df;color:var(--rd)}li.pd .dot{background:var(--grl);color:var(--gr)}
+.paid{display:flex;gap:10px;margin-top:10px}
+.paid input{flex:1;min-width:0;min-height:48px;padding:0 14px;border-radius:14px;border:1.5px solid var(--line);background:#fff;font-size:18px;font-weight:700}
+.paid input:focus{outline:2px solid var(--bl);outline-offset:1px}
+.hint{margin:8px 0 0;color:var(--mu);font-size:13px}
+.made{margin-top:22px;text-align:center;font-size:12px;color:var(--mu)}.made a{color:var(--ink)}
+.msg{padding:80px 20px;text-align:center;color:var(--mu)}.msg b{display:block;color:var(--ink);font:800 22px 'Inter Tight',sans-serif;margin-bottom:6px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,20px);opacity:0;padding:12px 18px;border-radius:999px;background:var(--ink);color:#fff;font-weight:600;font-size:14px;transition:.2s;pointer-events:none;max-width:calc(100% - 32px)}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+:focus-visible{outline:2px solid var(--bl);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<main class="wrap" id="app" aria-live="polite"><div class="msg">Loading your khata…</div></main>
+<div class="toast" id="toast" role="status"></div>
+<script>
+(() => {
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const r0 = n => "₹" + Math.round(+n || 0).toLocaleString("en-IN");
+const day = t => new Date(t).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
+const tok = (location.pathname.split("/")[2] || new URLSearchParams(location.search).get("t") || "").trim();
+const toast = t => { const e = $("#toast"); e.textContent = t; e.classList.add("on"); clearTimeout(e._h); e._h = setTimeout(() => e.classList.remove("on"), 2600); };
+let K = null, busy = false;
+
+async function call(body) {
+  const r = await fetch("/api/qr", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ tok, ...body }), cache: "no-store" });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(j.error || "Something went wrong. Please try again.");
+  return j.khata;
+}
+
+function render() {
+  const s = K.shop || {}, due = Math.max(0, K.bal), claimed = (K.claims || []).reduce((t, x) => t + x.a, 0);
+  document.title = "Khata · " + (s.name || "Shop");
+  const upi = s.upi && due > 0 ? `upi://pay?pa=${encodeURIComponent(s.upi.id)}&pn=${encodeURIComponent(s.upi.name || s.name || "")}&am=${due}&cu=INR&tn=${encodeURIComponent("Khata " + (s.name || ""))}` : "";
+  const open = (K.e || []).filter(x => x.a > 0 && !x.ok);
+  const wa = s.wa ? `https://wa.me/91${s.wa}?text=${encodeURIComponent("Namaste, about my khata (" + r0(due) + " pending):")}` : "";
+  $("#app").innerHTML = `
+    <header class="shop"><span class="lg" style="${s.logo ? `background-image:url('${esc(s.logo)}')` : ""}">${s.logo ? "" : esc((s.name || "?").charAt(0))}</span><div style="min-width:0"><small>Udhaar khata</small><b>${esc(s.name)}</b></div></header>
+    <section class="bal ${due > 0 ? "" : "clr"}"><small>${esc(K.name && K.name !== "Customer" ? K.name + ", " : "")}${due > 0 ? "aapka baaki · you owe" : "khata clear · all paid"}</small><b>${r0(due)}</b><p>${due > 0 ? "Pay whenever you can. Thank you!" : "Dhanyavaad! Nothing is pending."}</p></section>
+    ${claimed ? `<div class="pend"><b>You said you paid ${r0(claimed)}.</b> ${esc(s.name)} will check and update your khata soon.</div>` : ""}
+    ${open.length ? `<div class="cf"><b>Is this right? ${open.length === 1 ? r0(open[0].a) + " udhaar" : open.length + " new entries · " + r0(open.reduce((t, x) => t + x.a, 0))}</b>${open.length > 1 ? `<ul class="cfl">${open.map(x => `<li><span class="t">${day(x.t)}${x.note ? " · " + esc(x.note) : ""}</span><span class="a">${r0(x.a)}</span></li>`).join("")}</ul>` : `<p>${day(open[0].t)}${open[0].note ? " · " + esc(open[0].note) : ""}</p>`}<div class="row"><button class="btn okb s" data-ok="${open.length === 1 ? open[0].id : "all"}">Haan, sahi hai</button>${wa ? `<a class="btn g s" href="${esc(wa)}" target="_blank" rel="noopener">Not right</a>` : ""}</div></div>` : ""}
+    ${due > 0 ? `<div class="acts">${upi ? `<a class="btn" href="${esc(upi)}" id="pay">Pay ${r0(due)} by UPI</a>` : ""}${wa ? `<a class="btn g" href="${esc(wa)}" target="_blank" rel="noopener">WhatsApp ${esc(s.name)}</a>` : ""}</div>
+      ${upi ? `<div class="q"><div id="uq" aria-label="UPI QR code to pay ${r0(due)}"></div><p class="hint" style="margin:0">On a computer? Scan this with any UPI app on your phone.<br><b style="color:var(--ink)">${esc(s.upi.id)}</b></p></div>` : ""}
+      <section class="cd"><span class="lb">Already paid?</span><p class="hint" style="margin-top:4px">Tell the shop how much you paid. They'll check and update your khata.</p>
+        <form class="paid" id="pf"><input id="amt" inputmode="numeric" autocomplete="off" placeholder="₹ ${due}" aria-label="Amount you paid" maxlength="8"><button class="btn s" type="submit">I've paid</button></form></section>` : wa ? `<div class="acts"><a class="btn g" href="${esc(wa)}" target="_blank" rel="noopener">WhatsApp ${esc(s.name)}</a></div>` : ""}
+    <section class="cd"><span class="lb">Entries</span>
+      ${(K.e || []).length ? `<ul>${K.e.map(x => `<li class="${x.a > 0 ? "gv" : "pd"}"><span class="dot" aria-hidden="true">${x.a > 0 ? "+" : "✓"}</span><span class="t"><b>${x.a > 0 ? "Udhaar" : "Paid"}${x.note ? " · " + esc(x.note) : ""}</b><small>${day(x.t)}${x.a > 0 && x.ok ? ` · <span class="ok">confirmed</span>` : ""}</small></span><span class="a">${x.a > 0 ? "+" : "−"}${r0(Math.abs(x.a))}</span></li>`).join("")}</ul>` : `<p class="hint">No entries yet.</p>`}
+    </section>
+    <p class="made">This link is only for you. Khata by <a href="/">GetKeepsake</a></p>`;
+  if (upi && $("#uq")) (function draw() { if (!window.qrcode) return setTimeout(draw, 200); const q = qrcode(0, "M"); q.addData(upi); q.make(); $("#uq").innerHTML = q.createSvgTag({ cellSize: 4, margin: 0, scalable: true }); })();
+  document.querySelectorAll("[data-ok]").forEach(b => b.onclick = async () => {
+    if (busy) return; busy = true; b.disabled = true;
+    try { K = await call({ action: "kh-confirm", eid: b.dataset.ok }); toast("Thank you! Confirmed."); render(); } catch (e) { toast(e.message); b.disabled = false; }
+    busy = false;
+  });
+  const pf = $("#pf"); if (pf) pf.onsubmit = async ev => {
+    ev.preventDefault(); if (busy) return;
+    const v = Math.round(+String($("#amt").value).replace(/[^\d.]/g, ""));
+    if (!(v >= 1)) { toast("Enter the amount you paid."); $("#amt").focus(); return; }
+    busy = true;
+    try { K = await call({ action: "kh-claim", amount: v }); toast("Sent to " + (K.shop.name || "the shop") + "."); render(); } catch (e) { toast(e.message); }
+    busy = false;
+  };
+}
+
+(async () => {
+  if (!/^[a-f0-9]{16}$/.test(tok)) { $("#app").innerHTML = `<div class="msg"><b>Khata not found</b>Check the link the shop sent you.</div>`; return; }
+  try { K = await call({ action: "kh-view" }); render(); }
+  catch (e) { $("#app").innerHTML = `<div class="msg"><b>Khata not found</b>${esc(e.message)}</div>`; }
+})();
+})();
+</script>
+</body>
+</html>
