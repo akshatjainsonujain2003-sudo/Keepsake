@@ -1,0 +1,62 @@
+# GetKeepsake for Business
+
+> GetKeepsake for Business (getkeepsake.in) gives local shops in India a mobile business page behind one QR code: menu or price list with photos, orders on WhatsApp, UPI payments, a Google review button, offers and a loyalty stamp card. A printed QR board is delivered to the shop. It costs ₹1,000 one-time with no monthly fee and no commission on orders. An optional Keepsake Pro plan adds an online store and GST billing.
+
+## What a shop gets (Start, ₹1,000 one-time)
+- A mobile page with its own link and QR code; customers scan with the phone camera, no app needed
+- Menu, rate card or price list with photos, sections, bestseller tags; editable any time from the phone
+- Orders sent to the shop's WhatsApp with the total; 0% commission
+- UPI Pay button; money goes straight to the shop's bank
+- Google review button, offer of the day, live "Open now" hours, map, call, Instagram
+- Loyalty stamp card (for example "every 10th coffee free"), stamped by staff with a PIN
+- A printed 3.5 × 5 inch QR board delivered anywhere in India
+- 10 free GST bills
+
+## Keepsake Pro (optional: ₹299 a month or ₹2,999 a year)
+- Online store: every product with photos, search, sizes/options with prices, colours, add-ons, cart and checkout on the page, live order status
+- Unlimited GST bills from the phone (CGST/SGST/IGST, HSN, 0/3/5/18/40% rates), sent on WhatsApp with a UPI QR
+- Reports for the shop's CA: monthly sales register, GSTR-1 sections (B2B, B2CL, B2CS, HSN) in Excel/CSV, GSTR-3B summary, via a read-only link
+- Table QRs, day-end report, add sale for walk-ins, win-back offers, printable order slips
+- If Pro ends, the page stays live and products stay visible; customers order on WhatsApp
+
+Not included today: purchase bills, input tax credit tracking, stock accounting, e-invoice and e-way bills.
+
+## Who it is for
+Cafés, restaurants, bakeries, sweet shops, cloud kitchens, tea stalls, boutiques, sarees and ethnic wear, jewellery, gift shops, salons, barbers, gyms, clinics, opticians, coaching centres, kirana and general stores, hardware and electrical shops, mobile repair shops, real estate dealers. Based in India; now in Jaipur and available across India.
+
+## Key pages
+- [Home: features and pricing](https://getkeepsake.in/)
+- [Create a page](https://getkeepsake.in/shops/studio)
+- [Cafés & restaurants](https://getkeepsake.in/shops/cafe)
+- [Restaurants & dhabas](https://getkeepsake.in/shops/restaurant)
+- [Bakeries](https://getkeepsake.in/shops/bakery)
+- [Sweet shops](https://getkeepsake.in/shops/sweet-shop)
+- [Cloud kitchens](https://getkeepsake.in/shops/cloud-kitchen)
+- [Tea stalls](https://getkeepsake.in/shops/tea-stall)
+- [Kirana & general stores](https://getkeepsake.in/shops/general-store)
+- [Boutiques](https://getkeepsake.in/shops/boutique)
+- [Sarees & ethnic wear](https://getkeepsake.in/shops/ethnic-wear)
+- [Jewellery](https://getkeepsake.in/shops/jewellery)
+- [Gift shops](https://getkeepsake.in/shops/gift-shop)
+- [Salons](https://getkeepsake.in/shops/salon)
+- [Barbers](https://getkeepsake.in/shops/barber)
+- [Gyms](https://getkeepsake.in/shops/gym)
+- [Clinics](https://getkeepsake.in/shops/clinic)
+- [Opticians](https://getkeepsake.in/shops/optician)
+- [Coaching & tuition](https://getkeepsake.in/shops/coaching)
+- [Hardware & electricals](https://getkeepsake.in/shops/hardware)
+- [Mobile repair](https://getkeepsake.in/shops/mobile-repair)
+- [Real estate](https://getkeepsake.in/shops/real-estate)
+- [Shops in Jaipur](https://getkeepsake.in/shops/jaipur)
+
+## Guides in Hinglish
+- [Dukaan ki website ₹1,000 mein](https://getkeepsake.in/hi/dukaan-ki-website)
+- [QR menu kaise banayein](https://getkeepsake.in/hi/qr-menu-kaise-banaye)
+- [WhatsApp pe GST bill kaise bhejein](https://getkeepsake.in/hi/whatsapp-gst-bill)
+
+## Contact
+- WhatsApp: +91 83027 91217
+- Instagram: @getkeepsake.business
+- Website: https://getkeepsake.in
+
+Note: the same domain also sells personal digital keepsakes (memory cards and love-story websites) under /gifts; "GetKeepsake for Business" refers only to the shop product above.
