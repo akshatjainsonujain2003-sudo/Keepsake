@@ -1,6 +1,6 @@
 # More business-type pages (GEO): each answers the questions owners of that business actually ask, with real prices.
 INC, LOY, PQR, PRO = "Included", "Included", "Included", "With Pro"
-PRO_A = "Keepsake Pro is ₹299 a month or ₹2,999 a year and adds an online store with checkout, unlimited GST bills with CA reports, table QRs and day-end reports. It's optional."
+PRO_A = "Keepsake Pro is ₹299 a month or ₹2,999 a year and adds an online store with checkout, unlimited GST bills with CA reports, an udhaar khata customers confirm on WhatsApp with one-tap reminders, table QRs and day-end reports. It's optional."
 FEE_A = "No. ₹1,000 once and your page stays live, with no commission on orders or UPI payments. The loyalty card and a printed QR board are included. " + PRO_A
 
 def svc(*names):  # a simple menu for the live example: [(section, [(name, price)])]

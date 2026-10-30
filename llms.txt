@@ -1,6 +1,6 @@
 # GetKeepsake for Business
 
-> GetKeepsake for Business (getkeepsake.in) gives local shops in India a mobile business page behind one QR code: menu or price list with photos, orders on WhatsApp, UPI payments, a Google review button, offers and a loyalty stamp card. A printed QR board is delivered to the shop. It costs ₹1,000 one-time with no monthly fee and no commission on orders. An optional Keepsake Pro plan adds an online store and GST billing.
+> GetKeepsake for Business (getkeepsake.in) gives local shops in India a mobile business page behind one QR code: menu or price list with photos, orders on WhatsApp, UPI payments, a Google review button, offers and a loyalty stamp card. A printed QR board is delivered to the shop. It costs ₹1,000 one-time with no monthly fee and no commission on orders. An optional Keepsake Pro plan adds an online store, GST billing and an udhaar (credit) khata.
 
 ## What a shop gets (Start, ₹1,000 one-time)
 - A mobile page with its own link and QR code; customers scan with the phone camera, no app needed
@@ -16,6 +16,7 @@
 - Online store: every product with photos, search, sizes/options with prices, colours, add-ons, cart and checkout on the page, live order status
 - Unlimited GST bills from the phone (CGST/SGST/IGST, HSN, 0/3/5/18/40% rates), sent on WhatsApp with a UPI QR
 - Reports for the shop's CA: monthly sales register, GSTR-1 sections (B2B, B2CL, B2CS, HSN) in Excel/CSV, GSTR-3B summary, via a read-only link
+- Smart Udhaar (credit khata): record udhaar and payments per customer; each customer gets a private link where they confirm entries and pay by UPI; one-tap WhatsApp reminders that get firmer; credit limits; totals for pending, overdue (30+ days) and recovered this month
 - Table QRs, day-end report, add sale for walk-ins, win-back offers, printable order slips
 - If Pro ends, the page stays live and products stay visible; customers order on WhatsApp
 

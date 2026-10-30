@@ -23,7 +23,7 @@ const handler = async (req, res) => {
     res.setHeader("Content-Type", "text/plain; charset=utf-8");
     // AI answer engines (ChatGPT, Perplexity, Claude, Gemini, Apple, Common Crawl) may read the public pages, same as search engines.
     const ai = ["GPTBot", "OAI-SearchBot", "ChatGPT-User", "PerplexityBot", "Perplexity-User", "ClaudeBot", "Claude-SearchBot", "Claude-User", "Google-Extended", "Applebot-Extended", "CCBot", "Bingbot"];
-    return res.status(200).send(ai.map(b => `User-agent: ${b}\nAllow: /\nDisallow: /admin\nDisallow: /hq\nDisallow: /api/\nDisallow: /m/\nDisallow: /s/\nDisallow: /k/\n`).join("\n") + `\nUser-agent: *\nAllow: /\nDisallow: /admin\nDisallow: /login\nDisallow: /dashboard\nDisallow: /m/\nDisallow: /s/\nDisallow: /c/\nDisallow: /k/\nDisallow: /creator\nDisallow: /api/\nDisallow: /hq\n\nSitemap: https://getkeepsake.in/sitemap.xml\n# Plain summary for AI assistants: https://getkeepsake.in/llms.txt\n`);
+    return res.status(200).send(ai.map(b => `User-agent: ${b}\nAllow: /\nDisallow: /admin\nDisallow: /hq\nDisallow: /api/\nDisallow: /m/\nDisallow: /s/\nDisallow: /k/\nDisallow: /u/\n`).join("\n") + `\nUser-agent: *\nAllow: /\nDisallow: /admin\nDisallow: /login\nDisallow: /dashboard\nDisallow: /m/\nDisallow: /s/\nDisallow: /c/\nDisallow: /k/\nDisallow: /u/\nDisallow: /creator\nDisallow: /api/\nDisallow: /hq\n\nSitemap: https://getkeepsake.in/sitemap.xml\n# Plain summary for AI assistants: https://getkeepsake.in/llms.txt\n`);
   }
   const base = "https://getkeepsake.in", day = new Date().toISOString().slice(0, 10);
   // Live shop pages that are ready for Google (see api/_shopseo.js), each with its last update.
