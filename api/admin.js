@@ -61,6 +61,9 @@ module.exports = async (req, res) => {
         return db.reply(res, 200, { ok: true, orderId, amount: rupees });
       }
       // Pro given free (no payment): one or many shops, for a number of days. Or ended on one shop.
+      // Page builder from Google Maps (private preview to show a shop owner)
+      if (/^hq-pb-(search|build|quick)$/.test(b.action)) { const P = require("./_places"); if (await P.guard("hq", 300)) return db.reply(res, 429, { error: "Daily limit reached. Try tomorrow." });
+        const r = b.action === "hq-pb-search" ? await P.search(b.q) : b.action === "hq-pb-quick" ? await P.quick(b, "hq") : await P.build(b.place, "hq"); return r.error ? db.reply(res, r.status || 400, { error: r.error }) : db.reply(res, 200, r); }
       if (b.action === "hq-scans") return db.reply(res, 200, await H.scans());
       // Tell Bing and the other IndexNow engines about every page in the sitemap (marketing pages and live shops).
       if (b.action === "hq-indexnow") { const S = require("./_shopseo"), shops = await S.sitemapShops();
