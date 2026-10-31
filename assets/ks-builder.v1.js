@@ -1,5 +1,5 @@
 /* GetKeepsake page builder: search a shop on Google Maps, build a private preview of its page, send it to the owner.
-   KSBuilder.open({ post: (action, body) => Promise<json>, pre: "hq-pb" | "sp-pb" }) */
+   KSBuilder.open({ post: (action, body) => Promise<json>, pre: "hq-pb" | "sp-pb", google: true to also offer Google Maps search }) */
 (() => {
   const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const CSS = `
@@ -31,13 +31,28 @@
 .kb .kb-act{display:grid;gap:8px}
 .kb .kb-act b{font:800 20px/1.15 'Inter Tight',sans-serif}
 .kb .kb-act small{color:#5B5B69}
+.kb .kb-tabs{display:flex;gap:6px;margin:0 0 14px;padding:4px;border-radius:999px;background:#E6E6E0}.kb .kb-tabs button{flex:1;min-height:42px;border:0;border-radius:999px;background:none;font:700 14px Inter,sans-serif;color:#5B5B69;cursor:pointer}.kb .kb-tabs button.on{background:#0B0B14;color:#fff}
+.kb .kb-qf{display:grid;gap:10px}.kb .kb-qf label{display:grid;gap:5px;font:600 13px Inter,sans-serif;color:#5B5B69}.kb select{min-height:50px;padding:0 12px;border-radius:14px;border:1.5px solid #DADAD3;background:#fff;font:500 16px Inter,sans-serif;color:#0B0B14}.kb .kb-qf .kb-b{margin-top:6px}
 .kb .kb-note{margin-top:14px;font-size:12.5px;color:#5B5B69}`;
+  const CATS = [["cafe", "Café"], ["restaurant", "Restaurant / dhaba"], ["bakery", "Bakery / cakes"], ["sweets", "Sweet shop"], ["fastfood", "Fast food"], ["tea", "Tea stall"], ["icecream", "Ice cream"], ["juice", "Juice bar"],
+    ["grocery", "Kirana / grocery"], ["boutique", "Boutique / clothing"], ["ethnic", "Sarees & ethnic wear"], ["jewellery", "Jewellery"], ["footwear", "Footwear"], ["gifts", "Gift shop"], ["florist", "Florist"],
+    ["salon", "Salon / parlour"], ["barber", "Barber"], ["spa", "Spa"], ["gym", "Gym"], ["yoga", "Yoga"], ["coaching", "Coaching / tuition"], ["clinic", "Clinic / doctor"], ["dentist", "Dentist"], ["pharmacy", "Pharmacy"], ["optician", "Optician"],
+    ["hardware", "Hardware / electricals"], ["repair", "Mobile repair"], ["store", "Other shop"], ["realestate", "Property dealer"], ["other", "Other business"]];
   let ov = null, S = null;
   function close() { if (ov) ov.remove(); ov = null; }
   function draw() {
     const k = ov.querySelector(".kb");
     let body = "";
-    if (S.view === "search") {
+    if (S.view === "search" && S.mode === "quick") {
+      const Q = S.qd;
+      body = `<form class="kb-qf" id="kbQF"><label>Shop name<input id="qn" value="${esc(Q.name)}" placeholder="e.g. Kanha Sweets" autocomplete="off"></label>
+        <label>Type of business<select id="qc">${CATS.map(([k, l]) => `<option value="${k}"${Q.cat === k ? " selected" : ""}>${l}</option>`).join("")}</select></label>
+        <label>Area and city<input id="qa" value="${esc(Q.area)}" placeholder="e.g. Vaishali Nagar, Jaipur" autocomplete="off"></label>
+        <label>Owner's mobile (optional)<input id="qp" value="${esc(Q.phone)}" inputmode="tel" maxlength="14" placeholder="10-digit number" autocomplete="off"></label>
+        <button class="kb-b" ${S.busy ? "disabled" : ""}>${S.busy ? "Building…" : "Build the page"}</button></form>
+        ${S.err ? `<div class="kb-msg bad">${esc(S.err)}</div>` : ""}
+        <p class="kb-note">The preview is private: only people with the link can see it, and it disappears after 30 days. Menu and photos are samples the owner replaces.</p>`;
+    } else if (S.view === "search") {
       body = `<form id="kbF"><input id="kbQ" placeholder="Shop name and area" value="${esc(S.q)}" autocomplete="off" enterkeyhint="search" aria-label="Shop name and area"><button class="kb-b" ${S.busy ? "disabled" : ""}>${S.busy ? "…" : "Search"}</button></form>
         ${S.err ? `<div class="kb-msg bad">${esc(S.err)}</div>` : ""}
         ${S.results ? (S.results.length ? `<ul>${S.results.map((r, i) => `<li><button data-i="${i}" ${S.busy ? "disabled" : ""}><i>${esc((r.name || "S").charAt(0).toUpperCase())}</i><span><b>${esc(r.name)}</b><small>${esc(r.kind ? r.kind + " · " : "")}${esc(r.addr)}</small></span></button></li>`).join("")}</ul>` : `<div class="kb-msg">No shops found. Try the name with the area or city.</div>`) : ""}
@@ -54,8 +69,16 @@
         <p class="kb-note">Menu and photos are samples. When the owner taps “Make it mine”, everything opens in the page maker to check and edit before paying.${d.wa ? "" : " No mobile number on Google, so send it from your own WhatsApp."}</p>`;
     }
     k.innerHTML = `<div class="kb-hd"><h2>${S.view === "search" ? "Build a shop's page" : "Preview ready"}</h2><button class="kb-x" id="kbX">Close</button></div>
-      ${S.view === "search" ? `<p class="kb-s">Type the shop's name and area as it appears on Google Maps. Show the owner their own page in 10 seconds.</p>` : ""}${body}`;
+      ${S.view === "search" ? `<p class="kb-s">Show the owner their own page in 10 seconds.</p>${S.google ? `<div class="kb-tabs"><button type="button" data-m="quick" class="${S.mode === "quick" ? "on" : ""}">Type details</button><button type="button" data-m="maps" class="${S.mode === "maps" ? "on" : ""}">Search Google Maps</button></div>` : ""}` : ""}${body}`;
     k.querySelector("#kbX").onclick = close;
+    k.querySelectorAll("[data-m]").forEach(b => b.onclick = () => { S.mode = b.dataset.m; S.err = ""; draw(); });
+    const qf = k.querySelector("#kbQF");
+    if (qf) { if (!S.qd.name && !S.busy) setTimeout(() => k.querySelector("#qn").focus(), 50);
+      qf.onsubmit = async e => { e.preventDefault(); const Q = S.qd; Q.name = k.querySelector("#qn").value.trim(); Q.cat = k.querySelector("#qc").value; Q.area = k.querySelector("#qa").value.trim(); Q.phone = k.querySelector("#qp").value.trim();
+        if (!Q.name) { S.err = "Type the shop's name."; draw(); return; }
+        S.err = ""; S.busy = true; draw();
+        try { S.res = await S.post(S.pre + "-quick", { name: Q.name, cat: Q.cat, area: Q.area, phone: Q.phone }); S.view = "done"; } catch (x) { S.err = x.message; }
+        S.busy = false; draw(); }; }
     const f = k.querySelector("#kbF");
     if (f) { const q = k.querySelector("#kbQ"); if (!S.results && !S.busy) setTimeout(() => q.focus(), 50);
       f.onsubmit = async e => { e.preventDefault(); S.q = q.value.trim(); S.err = ""; S.busy = true; draw();
@@ -65,11 +88,11 @@
         try { S.res = await S.post(S.pre + "-build", { place: r.id }); S.view = "done"; } catch (x) { S.err = x.message; }
         S.busy = false; draw(); }); }
     const c = k.querySelector("#kbC"); if (c) c.onclick = async () => { try { await navigator.clipboard.writeText(S.res.url); c.textContent = "Copied ✓"; } catch (e) { prompt("Copy this link:", S.res.url); } };
-    const bk = k.querySelector("#kbBack"); if (bk) bk.onclick = () => { S.view = "search"; S.res = null; draw(); };
+    const bk = k.querySelector("#kbBack"); if (bk) bk.onclick = () => { S.view = "search"; S.res = null; S.qd = { name: "", cat: S.qd.cat, area: S.qd.area, phone: "" }; draw(); };
   }
   function open(o) {
     if (!document.getElementById("kb-css")) { const st = document.createElement("style"); st.id = "kb-css"; st.textContent = CSS; document.head.appendChild(st); }
-    S = { post: o.post, pre: o.pre, view: "search", q: "", results: null, res: null, busy: false, err: "" };
+    S = { post: o.post, pre: o.pre, google: !!o.google, mode: o.google ? "maps" : "quick", qd: { name: "", cat: "cafe", area: "", phone: "" }, view: "search", q: "", results: null, res: null, busy: false, err: "" };
     close(); ov = document.createElement("div"); ov.className = "kb-ov"; ov.innerHTML = '<div class="kb" role="dialog" aria-modal="true" aria-label="Build a shop\'s page"></div>';
     ov.onclick = e => { if (e.target === ov) close(); }; document.body.appendChild(ov); draw();
   }

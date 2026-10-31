@@ -48,7 +48,7 @@ module.exports = async (req, res) => {
       if (b.action === "pv-get") { const r = await P.get(b.tok, ip(req)); return r.error ? db.reply(res, r.status, { error: r.error }) : db.reply(res, 200, r); }
       const sp = await require("./_sales").auth(b.code, b.tok); if (!sp) return db.reply(res, 401, { error: "Please log in again." });
       if (await P.guard("sp:" + sp.code, 60)) return db.reply(res, 429, { error: "You've built 60 previews today. Try tomorrow." });
-      const r = b.action === "sp-pb-search" ? await P.search(b.q) : await P.build(b.place, sp.code); return r.error ? db.reply(res, r.status || 400, { error: r.error }) : db.reply(res, 200, r); }
+      const r = b.action === "sp-pb-search" ? await P.search(b.q) : b.action === "sp-pb-quick" ? await P.quick(b, sp.code) : await P.build(b.place, sp.code); return r.error ? db.reply(res, r.status || 400, { error: r.error }) : db.reply(res, 200, r); }
     if (/^kh-/.test(String((req.body || {}).action || ""))) { const r = await require("./_khata").handle(req.body, { ip: ip(req), user: () => auth.currentUser(req) }); return r.error ? db.reply(res, r.status || 400, { error: r.error }) : db.reply(res, 200, r); }
     if (/^bl-/.test(String((req.body || {}).action || ""))) { const r = await require("./_bill").handle(req.body, { ip: ip(req), user: () => auth.currentUser(req) }); return r.error ? db.reply(res, r.status || 400, { error: r.error }) : db.reply(res, 200, r); }
     if (/^bz-/.test(String((req.body || {}).action || ""))) { const r = await require("./_biz").handle(req.body, { ip: ip(req), user: () => auth.currentUser(req) }); return r.error ? db.reply(res, r.status || 400, { error: r.error }) : db.reply(res, 200, r); }

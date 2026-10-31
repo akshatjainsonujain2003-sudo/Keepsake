@@ -53,3 +53,13 @@ test("build makes a private preview that anyone with the link can open; bad link
   delete process.env.GOOGLE_MAPS_API_KEY; assert.equal((await P.search("Kanha Cafe")).status, 502);
   delete global.fetch;
 });
+
+test("quick build without Google: typed name, type, area and phone", async () => {
+  kv.clear();
+  const r = await P.quick({ name: "Kanha Sweets", cat: "sweets", area: "Vaishali Nagar, Jaipur", phone: "+91 98290 11111" }, "RAHUL1");
+  assert.equal(r.data.t, "Kanha Sweets"); assert.equal(r.data.cat, "sweets"); assert.equal(r.data.wa, "9829011111"); assert.ok(r.data.menu.length);
+  assert.equal((await P.get(r.tok)).sp, "RAHUL1");
+  assert.equal((await P.quick({ name: "X" }, "hq")).status, 400);
+  assert.equal((await P.quick({ name: "Shop", phone: "123" }, "hq")).status, 400);
+  assert.equal((await P.quick({ name: "Shop", cat: "<script>" }, "hq")).data.cat, "other");
+});

@@ -27,7 +27,7 @@ const TYPE = [
   [/grocery|supermarket|convenience|market|kirana/, "grocery"], [/real_estate/, "realestate"], [/accounting|lawyer|insurance|consultant/, "pro"],
   [/store|shop/, "store"]
 ];
-const GROUP = { cafe: "food", bakery: "food", icecream: "food", juice: "food", sweets: "food", fastfood: "food", restaurant: "food", jewellery: "fashion", footwear: "fashion", gifts: "fashion", florist: "fashion", boutique: "fashion",
+const GROUP = { tea: "food", ethnic: "fashion", cafe: "food", bakery: "food", icecream: "food", juice: "food", sweets: "food", fastfood: "food", restaurant: "food", jewellery: "fashion", footwear: "fashion", gifts: "fashion", florist: "fashion", boutique: "fashion",
   barber: "beauty", spa: "beauty", skincare: "beauty", salon: "beauty", gym: "services", yoga: "services", dance: "services", tattoo: "services", photo: "services", pets: "services", hotel: "services", coaching: "services", repair: "services", pro: "services",
   dentist: "health", pharmacy: "health", optician: "health", lab: "health", clinic: "health", hardware: "stores", grocery: "stores", store: "stores", realestate: "realty", other: "stores" };
 const it = (n, p, b, d) => ({ n, p, d: d || "", b: !!b, i: "" });
@@ -103,6 +103,20 @@ async function get(tok, ip) {
   const p = await db.getj("pv:" + tok); if (!p) return E(404, "This preview has expired. Ask for a new one.");
   return { ok: true, data: p.d, sp: p.by !== "hq" ? p.by : "" };
 }
+// Quick build without Google: the agent types the name, type, area and phone.
+const CATS_OK = new Set(Object.keys(GROUP));
+async function quick(b, by) {
+  const name = clip(b.name, 60), cat = CATS_OK.has(b.cat) ? b.cat : "other", area = clip(b.area, 60), phone = ph10(b.phone);
+  if (name.length < 2) return E(400, "Type the shop's name.");
+  if (b.phone && !phone) return E(400, "Check the phone number (10 digits).");
+  const s = SAMPLE[GROUP[cat] || "stores"];
+  const d = { cat, t: name, area, addr: area, phone, wa: /^[6-9]/.test(phone) ? phone : "", tag: area ? "Welcome to " + name + ", " + area.split(",")[0] + "." : "Welcome to " + name + ".",
+    cover: "/assets/demo/biz/" + s.cover + ".webp", menu: JSON.parse(JSON.stringify(s.menu)), sample: true };
+  const tok = crypto.randomBytes(8).toString("hex").slice(0, 12);
+  await db.setj("pv:" + tok, { d, name, place: "", by: String(by || "hq").slice(0, 20), at: Date.now() });
+  await db.cmd("EXPIRE", "pv:" + tok, TTL);
+  return { ok: true, tok, url: "https://getkeepsake.in/p/" + tok, data: d };
+}
 // Rate limits: HQ 300 lookups a day, each field agent 60 (keeps the Google bill small).
 async function guard(who, max) { const day = new Date(Date.now() + 5.5 * 3600e3).toISOString().slice(0, 10); return await limit("pb:" + who + ":" + day, max, 2 * 86400); }
-module.exports = { search, build, get, guard, catOf, hoursOf, pageOf };
+module.exports = { search, build, quick, get, guard, catOf, hoursOf, pageOf };
