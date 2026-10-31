@@ -146,4 +146,4 @@ async function push(code, tok, b) {
   if (b.action === "sp-push-test") return H.notify(set);
   return { status: 400, error: "Unknown action." };
 }
-module.exports = { norm, valid, get, create, update, credit, list, payout, login, me, pub, logVisit, visits, team, detail, STATUS, push };
+module.exports = { norm, valid, get, auth, create, update, credit, list, payout, login, me, pub, logVisit, visits, team, detail, STATUS, push };
