@@ -922,6 +922,18 @@ addEventListener("beforeunload", e => { if (dirty && EDIT_ID) { e.preventDefault
     } catch (e) { status(e.message, "bad"); }
   }
   if (id && !USER) { location.href = "/shops/login?next=" + encodeURIComponent(location.pathname + location.search); return; }
+  // A preview built from Google Maps (/p/<token>): start from it, then the owner checks and edits everything.
+  const pv = q.get("pv");
+  if (pv && /^[a-z0-9]{10,16}$/.test(pv)) {
+    try {
+      const r = await fetch("/api/qr", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "pv-get", tok: pv }), cache: "no-store" });
+      const j = await r.json(); if (!r.ok) throw new Error(j.error || "This preview has expired.");
+      D = Object.assign(KSBiz.blank(j.data.cat), j.data); delete D.sample; all(); save();
+      const u = new URL(location.href); u.searchParams.delete("pv"); history.replaceState(null, "", u.pathname + u.search + u.hash);
+      status("Your page is filled in from Google Maps. Check the details, swap in your real menu and photos, then publish.", "ok");
+      return;
+    } catch (e) { status(e.message, "bad"); }
+  }
   const ex = KSBizDemos[q.get("ex")];
   D = ex && !(dr && dr.d && (dr.d.t || "").trim()) ? JSON.parse(JSON.stringify(ex)) : dr && dr.d && dr.d.biz === 1 && !dr.id ? Object.assign(KSBiz.blank(dr.d.cat), dr.d) : KSBiz.blank(q.get("type"));
   if (ex && D.t === ex.t) status("Example loaded: change the name, photos and menu to make it yours.", "ok");
