@@ -1,5 +1,6 @@
 // Loyalty stamp cards for business pages ("Visit 10 times, get a free coffee"). Not a route: api/qr.js passes loy-* actions here.
-// The shop turns it on in the studio (page data.loy = { on, n: stamps needed, r: reward, t: note }) and sets a 4-digit staff PIN.
+// The shop turns it on in the studio (page data.loy = { on, n: stamps needed, r: reward, t: note, pin: false to switch the PIN off }) and sets a 4-digit staff PIN.
+// With the PIN off, customers can't stamp their own card; the owner adds stamps and gives rewards from the dashboard.
 // A customer gets a card on the shop's page with their phone number. At the counter, staff type the PIN on the
 // customer's phone to add a stamp (one per visit, at most one every 4 hours). When the card is full, staff redeem the reward.
 // The owner (logged in) sees every member and can stamp or redeem by phone number from the studio.
@@ -26,12 +27,12 @@ async function shop(id) {
   const m = await db.getj("customer-memory:" + id);
   if (!m || m.kind !== "biz") return null;
   const l = (m.data && m.data.loy) || {}, n = Math.round(+l.n);
-  const cfg = unlocked(m) && l.on && n >= 2 && n <= 30 ? { n, r: clip(l.r, 40) || "A free treat" } : null;
+  const cfg = unlocked(m) && l.on && n >= 2 && n <= 30 ? { n, r: clip(l.r, 40) || "A free treat", pin: l.pin !== false } : null;
   return { m, cfg, live: m.paid !== false, paid: unlocked(m) };
 }
 const key = (id, p) => "loy:" + id + ":" + p;
 const view = (c, cfg) => ({ name: c.name, phone: c.phone, s: Math.min(c.s, cfg.n), n: cfg.n, reward: cfg.r, ready: c.s >= cfg.n, rewards: c.r || 0, visits: c.v || 0, last: c.last || 0,
-  today: today(c) });
+  today: today(c), pin: cfg.pin });
 const own = c => ({ ...c, tok: undefined, h: (c.h || []).slice(-10) });
 
 async function limit(k, max, secs) { const n = await db.cmd("INCR", k); if (n === 1) await db.cmd("EXPIRE", k, secs); return n > max; }
@@ -114,6 +115,8 @@ async function handle(b, ctx) {
   if (!c || !b.tok || String(b.tok) !== c.tok) return E(401, "Please open your card again.", { gone: true });
   if (a === "loy-card") return { ok: true, card: view(c, sh.cfg) };
   if (a === "loy-stamp" || a === "loy-redeem") {
+    // PIN switched off by the owner: only the shop adds stamps and gives rewards, from its dashboard.
+    if (!sh.cfg.pin) return E(409, "Show this card at the counter. The shop adds your stamp from their phone.", { card: view(c, sh.cfg) });
     const bad = await pinOk(id, b.pin, ctx.ip); if (bad) return bad;
     const err = a === "loy-stamp" ? addStamp(c, sh.cfg, "pin") : redeem(c, sh.cfg, "pin"); if (err) return { ...err, card: view(c, sh.cfg) };
     await save(id, c); return { ok: true, card: view(c, sh.cfg) };
