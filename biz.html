@@ -9,8 +9,14 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&family=Inter:wght@400;500;600;700&display=swap">
 <link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
+<script>document.documentElement.classList.add("js")</script>
 <style>
 html,body{margin:0;background:#1f1611;min-height:100%}
+/* The readable copy in #biz is for search engines and old browsers; people see a short loader until the page is drawn. */
+.js #biz>.pre{display:none}
+.boot{display:none}.js .boot.on{position:fixed;inset:0;z-index:80;display:grid;place-items:center;align-content:center;gap:18px;background:#1f1611;color:#f4ebde;font:500 15px Inter,system-ui,sans-serif;text-align:center;padding:24px}
+.boot b{display:block;font:500 28px/1.2 Fraunces,Georgia,serif}.boot i{width:34px;height:34px;border-radius:50%;border:3px solid rgba(244,235,222,.2);border-top-color:#d9a066;animation:bt .8s linear infinite;margin:0 auto}
+@keyframes bt{to{transform:rotate(1turn)}}@media (prefers-reduced-motion:reduce){.boot i{animation:none}}
 .msg{min-height:100svh;display:grid;place-items:center;padding:30px;text-align:center;color:#f4ebde;font:20px/1.5 Georgia,serif;background:radial-gradient(ellipse at top,#3a2a20,#140e0b 70%)}
 .msg small{display:block;font:15px/1.5 system-ui,sans-serif;opacity:.75;margin-top:8px}
 .msg a{color:#d9a066}
@@ -24,10 +30,19 @@ html,body{margin:0;background:#1f1611;min-height:100%}
 </head>
 <body>
 <main id="biz" aria-live="polite"></main>
+<div class="boot" id="boot" aria-hidden="true"><i></i><div><b></b><span>Opening the menu…</span></div></div>
+<script>
+// While the page loads, show the shop's name and a spinner instead of the plain text version.
+{ const pre = document.querySelector("#biz>.pre"), bt = document.getElementById("boot");
+  if (pre) { const h = pre.querySelector("h1"); bt.querySelector("b").textContent = h ? h.textContent : ""; bt.classList.add("on");
+    // If the page can't be drawn (very old phone, no network), show the plain version after 10 seconds.
+    setTimeout(() => { if (document.querySelector("#biz>.pre")) { document.documentElement.classList.remove("js"); bt.remove(); } }, 10000); } }
+</script>
 <script>
 (async () => {
   const root = document.getElementById("biz");
-  const say = (t, s) => { root.className = "msg"; root.innerHTML = ""; const d = document.createElement("div"); d.textContent = t; if (s) { const x = document.createElement("small"); x.textContent = s; d.appendChild(x); } root.appendChild(d); };
+  const unboot = () => { const b = document.getElementById("boot"); if (b) b.remove(); };
+  const say = (t, s) => { unboot(); root.className = "msg"; root.innerHTML = ""; const d = document.createElement("div"); d.textContent = t; if (s) { const x = document.createElement("small"); x.textContent = s; d.appendChild(x); } root.appendChild(d); };
   const m = location.pathname.match(/^\/b\/([a-z0-9]{8,16})\/?$/i) || (new URLSearchParams(location.search).get("b") || "").match(/^([a-z0-9]{8,16})$/i);
   if (!m) return say("This page could not be found.");
   let j;
@@ -35,12 +50,12 @@ html,body{margin:0;background:#1f1611;min-height:100%}
   if (j.error) return j.inactive ? say("This page isn’t live yet.", "If it’s your business, log in and activate it.") : say("This page could not be found.");
   if (j.kind !== "biz") { location.replace((j.kind === "site" ? "/s/" : "/m/") + m[1]); return; }
   const loy = j.active !== false && j.loyalty && j.data.loy && j.data.loy.on;
-  KSBiz.render(root, j.data, { url: location.origin + "/b/" + m[1], id: j.owner ? "" : m[1], loyLive: !!loy, store: !!j.store, pid: m[1] });
+  KSBiz.render(root, j.data, { url: location.origin + "/b/" + m[1], id: j.owner ? "" : m[1], loyLive: !!loy, store: !!j.store, pid: m[1] }); unboot();
   // Walk-in reward: the shop's geofence (customers only, never the owner's own preview)
   if (j.gf && !j.owner) { const s = document.createElement("script"); s.src = "/assets/geofence.v2.js"; s.onload = () => KSGeo.mount(root, m[1], j.gf, j.data.t || "this shop"); document.head.appendChild(s); }
   // "My orders & offers": this phone's orders (live status) and offer codes claimed from a pamphlet QR
   { const s = document.createElement("script"); s.src = "/assets/mypanel.v1.js"; s.onload = () => KSMine.mount(root, { pid: m[1], name: j.data.t || "the shop" }); document.head.appendChild(s); }
-  if (loy) { const s = document.createElement("script"); s.src = "/assets/loyal.v1.js"; s.onload = () => KSLoyal.mount(root, m[1]); document.head.appendChild(s); }
+  if (loy) { const s = document.createElement("script"); s.src = "/assets/loyal.v2.js"; s.onload = () => KSLoyal.mount(root, m[1], { pin: j.data.loy.pin !== false }); document.head.appendChild(s); }
   // links like /b/ID#bz-loy (loyalty card) or #bz-menu jump to that part once the page is drawn
   if (/^#bz-[\w-]+$/.test(location.hash)) setTimeout(() => { const t = document.querySelector(location.hash); if (t) t.scrollIntoView({ block: "start" }); }, 350);
   // The server already sends the shop's title and description (api/_shopseo.js); only fill them in if they're missing.

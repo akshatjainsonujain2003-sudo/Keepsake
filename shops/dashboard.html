@@ -248,6 +248,12 @@ td .btn{white-space:nowrap}
 .blhd{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;padding:14px 16px;border-radius:16px;background:#F6F6F2}
 .blhd small{display:block;color:var(--mu);font-family:'JetBrains Mono',monospace;font-size:12px;margin-top:3px}
 @media (max-width:700px){.g3 .kpi b{font-size:28px}}
+/* ---------- Give a stamp ---------- */
+.lsb{margin-bottom:16px}.lsb .in{margin:0}
+.lsr{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}.lsr:last-child{border-bottom:0}
+.lsr .nm{flex:1;min-width:0}.lsr .nm b{display:block}.lsr .nm small{color:var(--mu);font-size:13px}
+.lsr .av{width:40px;height:40px;font-size:13px}
+.lsr.nw{flex-wrap:wrap}.lsr .lsf{display:flex;gap:8px;flex-basis:100%}.lsr .lsf .in{flex:1;min-width:0;margin:0}
 /* ---------- Smart Udhaar ---------- */
 .pl.kh-due{background:#fff0d6;color:#8a5300}.pl.kh-od{background:#f6d9d3;color:#9b2c16}.pl.kh-clr{background:var(--grl);color:#0d5a2f}
 .khl .av{width:38px;height:38px;font-size:13px}
@@ -885,11 +891,24 @@ V.customers = () => {
   const loyOn = S.loy && S.loy.cfg;
   const list = all.filter(c => (S.cf === "all" || (S.cf === "loy" && c.loy) || (S.cf === "reg" && c.n >= 2) || (S.cf === "new" && c.first >= wk)) && (!q || (c.name || "").toLowerCase().includes(q) || c.phone.includes(q)));
   return head("Customers", `${all.length} customer${all.length === 1 ? "" : "s"} · ${all.filter(c => c.n >= 2).length} came back · ${all.filter(c => c.first >= wk).length} new this week`, `<div class="tg"><button class="btn g" data-act="csv"${all.length ? "" : " disabled"}>${IC.dl}Download list</button></div>`) +
+  (loyOn ? stampBox() : "") +
   `<div class="srch"><input class="in" id="csq" placeholder="Search name or number" value="${esc(S.csq)}" aria-label="Search customers"><div class="tabs" style="margin:0">${[["all", "All"], ["reg", "Regulars"], ["new", "New"], ...(loyOn || (S.loy && S.loy.members.length) ? [["loy", "Loyalty"]] : [])].map(([k, l]) => `<button type="button" data-cf="${k}" class="${S.cf === k ? "on" : ""}">${l}</button>`).join("")}</div></div>
-  ${list.length ? `<div class="tw"><table><thead><tr><th>Customer</th><th>Orders</th><th>Spent</th>${loyOn ? "<th>Loyalty card</th>" : ""}<th>Last seen</th><th></th></tr></thead><tbody>${list.slice(0, 500).map(c => `<tr><td><b>${esc(c.name || "Customer")}</b><br><small class="mu">${esc(c.phone)}</small>${c.n >= 3 ? ' <span class="tag">Regular</span>' : c.first >= wk ? ' <span class="tag g">New</span>' : ""}</td><td data-l="Orders">${c.n || "–"}</td><td data-l="Spent">${c.spend ? inr(c.spend) : "–"}</td>${loyOn ? `<td data-l="Card">${c.loy ? `<b>${Math.min(c.loy.s, S.loy.cfg.n)}/${S.loy.cfg.n}</b> <small class="mu">stamps</small>${c.loy.s >= S.loy.cfg.n ? ' <span class="tag g">Reward ready</span>' : ""}` : '<small class="mu">Not joined</small>'}</td>` : ""}<td data-l="Last seen"><small>${c.last ? ago(c.last) : "–"}</small></td><td style="text-align:right;white-space:nowrap">${loyOn ? `<button class="btn g s" data-stamp="${esc(c.phone)}" data-nm="${esc(c.name || "")}">+ Stamp</button> ` : ""}<a class="btn w s" href="https://wa.me/${waNum(c.phone)}?text=${encodeURIComponent(c.loy && loyOn ? fill(TPL.loy.t(), c) : "Hi" + (c.name ? " " + c.name : "") + "! ")}" target="_blank" rel="noopener" title="${c.loy && loyOn ? "Send their stamp update" : "WhatsApp"}">${IC.wa}${c.loy && loyOn ? "Stamps" : ""}</a></td></tr>`).join("")}</tbody></table></div>`
+  ${list.length ? `<div class="tw"><table><thead><tr><th>Customer</th><th>Orders</th><th>Spent</th>${loyOn ? "<th>Loyalty card</th>" : ""}<th>Last seen</th><th></th></tr></thead><tbody>${list.slice(0, 500).map(c => `<tr><td><b>${esc(c.name || "Customer")}</b><br><small class="mu">${esc(c.phone)}</small>${c.n >= 3 ? ' <span class="tag">Regular</span>' : c.first >= wk ? ' <span class="tag g">New</span>' : ""}</td><td data-l="Orders">${c.n || "–"}</td><td data-l="Spent">${c.spend ? inr(c.spend) : "–"}</td>${loyOn ? `<td data-l="Card">${c.loy ? `<b>${Math.min(c.loy.s, S.loy.cfg.n)}/${S.loy.cfg.n}</b> <small class="mu">stamps</small>${c.loy.s >= S.loy.cfg.n ? ' <span class="tag g">Reward ready</span>' : ""}` : '<small class="mu">Not joined</small>'}</td>` : ""}<td data-l="Last seen"><small>${c.last ? ago(c.last) : "–"}</small></td><td style="text-align:right;white-space:nowrap">${loyOn ? (c.loy && c.loy.s >= S.loy.cfg.n ? `<button class="btn s" data-redeem="${esc(c.phone)}">Give reward</button> ` : `<button class="btn g s" data-stamp="${esc(c.phone)}" data-nm="${esc(c.name || "")}">+ Stamp</button> `) : ""}<a class="btn w s" href="https://wa.me/${waNum(c.phone)}?text=${encodeURIComponent(c.loy && loyOn ? fill(TPL.loy.t(), c) : "Hi" + (c.name ? " " + c.name : "") + "! ")}" target="_blank" rel="noopener" title="${c.loy && loyOn ? "Send their stamp update" : "WhatsApp"}">${IC.wa}${c.loy && loyOn ? "Stamps" : ""}</a></td></tr>`).join("")}</tbody></table></div>`
   : `<div class="empty"><b>${all.length ? "No one matches" : "No customers yet"}</b>${all.length ? "" : "Everyone who orders with their number" + (S.loyalty ? " or joins your loyalty card" : "") + " is saved here, so you can message them about offers."}</div>`}
   <p class="hint">Numbers are only those customers shared with you when ordering or joining your card. Message them about things they'd want, not every day.</p>`;
 };
+
+// Loyalty: add a stamp by phone number (always works; the main way when the staff PIN is off).
+function stampBox() {
+  const cfg = S.loy.cfg, q = (S.lsq || "").replace(/\D/g, ""), ms = S.loy.members || [];
+  const hits = q.length >= 3 ? ms.filter(m => m.phone.includes(q)).slice(0, 4) : [], exact = q.length === 10 && !ms.some(m => m.phone === q);
+  return `<section class="cd lsb"><div class="ch"><h2 class="H">Give a stamp</h2><small>${cfg.pin === false ? "PIN off · you add stamps here" : "No PIN needed here"}</small></div>
+    <p class="mu" style="margin:0 0 10px">Type the customer's mobile number, or the last few digits shown on their card.</p>
+    <input class="in" id="lsq" inputmode="numeric" maxlength="12" placeholder="Mobile number" value="${esc(S.lsq || "")}" autocomplete="off" aria-label="Customer mobile number">
+    ${hits.map(m => { const full = m.s >= cfg.n; return `<div class="lsr"><span class="av">${esc(ini(m.name))}</span><span class="nm"><b>${esc(m.name || "Customer")}</b><small>${esc(m.phone)} · ${Math.min(m.s, cfg.n)}/${cfg.n} stamps${full ? " · reward ready" : ""}</small></span>${full ? `<button class="btn s" data-redeem="${esc(m.phone)}">Give ${esc(cfg.r)}</button>` : `<button class="btn s" data-stamp="${esc(m.phone)}" data-nm="${esc(m.name || "")}">+ Stamp</button>`}</div>`; }).join("")}
+    ${exact ? `<div class="lsr nw"><span class="av">+</span><span class="nm"><b>New member</b><small>${esc(q)} hasn't joined yet. Their card starts with this stamp.</small></span><div class="lsf"><input class="in" id="lsn" placeholder="Customer's name (optional)"><button class="btn s" data-stamp="${esc(q)}" data-nmf="1">+ Stamp</button></div></div>` : ""}
+    ${q.length >= 3 && !hits.length && !exact ? `<p class="hint" style="margin:8px 0 0">No member with those digits. Type the full 10-digit number to start a card.</p>` : ""}</section>`;
+}
 
 V.reviews = () => {
   const d = S.d, st = S.stats || {}, rv = (st.taps || {}).review || 0;
@@ -1680,8 +1699,10 @@ V.settings = () => {
   const snd = store.get("gk-dash-sound", true);
   return head("Team & settings", "Your account, your staff PIN and order alerts.", "") +
   `<section class="g2" style="margin-top:0"><div class="cd"><div class="ch"><h2 class="H">Staff PIN</h2><small>For the loyalty card</small></div>
-    ${S.loyalty ? `<p class="mu" style="margin-top:0">Your staff type this 4-digit PIN on the customer's phone to add a stamp. Share it only with your team. ${l.pin ? "<b>A PIN is set.</b>" : "<b>No PIN set yet.</b>"}</p>
-    <div style="display:flex;gap:10px;flex-wrap:wrap"><input class="in" id="pin" inputmode="numeric" maxlength="4" pattern="[0-9]{4}" placeholder="New 4-digit PIN" style="max-width:200px;margin:0" autocomplete="off"><button class="btn" data-act="pin">${l.pin ? "Change PIN" : "Set PIN"}</button></div>`
+    ${S.loyalty ? `<label class="sw wide" style="margin:0 0 12px"><input type="checkbox" data-act="loyPinOn"${S.d.loy && S.d.loy.pin === false ? "" : " checked"}><i></i>Staff PIN at the counter</label>
+    ${S.d.loy && S.d.loy.pin === false ? `<p class="mu" style="margin-top:0"><b>PIN is off.</b> Customers show their card at the counter and you add the stamp from <a href="#customers">Customers</a> in one tap. Their card updates by itself.</p>`
+    : `<p class="mu" style="margin-top:0">Your staff type this 4-digit PIN on the customer's phone to add a stamp. Share it only with your team. ${l.pin ? "<b>A PIN is set.</b>" : "<b>No PIN set yet.</b>"} Prefer to add stamps yourself? Switch the PIN off.</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap"><input class="in" id="pin" inputmode="numeric" maxlength="4" pattern="[0-9]{4}" placeholder="New 4-digit PIN" style="max-width:200px;margin:0" autocomplete="off"><button class="btn" data-act="pin">${l.pin ? "Change PIN" : "Set PIN"}</button></div>`}`
     : `<div class="empty"><b>Loyalty card not added</b>Give regulars a stamp card on their phone. Staff add stamps with a PIN.<br><a class="btn" href="/shops/studio?edit=${S.id}#publish">${S.active ? "Add for ₹300" : "Included · go live"}</a></div>`}</div>
   <div class="cd"><div class="ch"><h2 class="H">Order alerts</h2></div>
     <div class="rows"><div><span><b>Ding on new orders</b><small>While this dashboard is open.</small></span><label class="sw"><input type="checkbox" data-act="sound"${snd ? " checked" : ""}><i></i>${snd ? "On" : "Off"}</label></div>
@@ -1715,7 +1736,13 @@ $("#main").addEventListener("click", async e => {
   }
   const stp = t.closest("[data-stamp]"); if (stp) {
     stp.disabled = true;
-    try { const r = await post({ action: "loy-own-stamp", id: S.id, phone: stp.dataset.stamp, name: stp.dataset.nm }); const ms = S.loy.members, i = ms.findIndex(x => x.phone === r.card.phone); if (i >= 0) ms[i] = r.card; else ms.unshift(r.card); toast("Stamp added: " + Math.min(r.card.s, S.loy.cfg.n) + "/" + S.loy.cfg.n + ". Tap Stamps to tell them on WhatsApp."); go(); } catch (x) { toast(x.message); stp.disabled = false; }
+    try { const r = await post({ action: "loy-own-stamp", id: S.id, phone: stp.dataset.stamp, name: stp.dataset.nmf ? ($("#lsn") || {}).value || "" : stp.dataset.nm }); S.lsq = ""; const ms = S.loy.members, i = ms.findIndex(x => x.phone === r.card.phone); if (i >= 0) ms[i] = r.card; else ms.unshift(r.card); toast("Stamp added: " + Math.min(r.card.s, S.loy.cfg.n) + "/" + S.loy.cfg.n + ". Tap Stamps to tell them on WhatsApp."); go(); } catch (x) { toast(x.message); stp.disabled = false; }
+    return;
+  }
+  const rdm = t.closest("[data-redeem]"); if (rdm) {
+    if (!confirm("Give the " + S.loy.cfg.r + " now? Their card starts again from 0.")) return;
+    rdm.disabled = true;
+    try { const r = await post({ action: "loy-own-redeem", id: S.id, phone: rdm.dataset.redeem }); const ms = S.loy.members, i = ms.findIndex(x => x.phone === r.card.phone); if (i >= 0) ms[i] = r.card; S.lsq = ""; toast("Reward given. A new card starts now."); go(); } catch (x) { toast(x.message); rdm.disabled = false; }
     return;
   }
   const mso = t.closest("[data-mso]"), mb = t.closest("[data-mb]");
@@ -1780,6 +1807,7 @@ $("#main").addEventListener("change", async e => {
   if (act === "geoOn") { t.disabled = true; geoSave({ on: t.checked }, t.checked ? "Walk-in reward is live" : "Walk-in reward is off"); return; }
   if (act === "gbpDone") { t.disabled = true; await patch(d => { if (t.checked) d.gbp = true; else delete d.gbp; }, t.checked ? "Great. That helps you show up on Google Maps." : "Unticked"); go(); return; }
   if (act === "gShow") { t.disabled = true; await patch(d => { if (t.checked) delete d.noidx; else d.noidx = true; }, t.checked ? "Your page can show up on Google" : "Your page is hidden from Google. People with the link or QR can still open it."); go(); return; }
+  if (act === "loyPinOn") { t.disabled = true; await patch(d => { d.loy = Object.assign({}, d.loy); if (t.checked) delete d.loy.pin; else d.loy.pin = false; }, t.checked ? "Staff PIN is on. Staff type it on the customer's phone." : "PIN off. Add stamps from Customers."); if (S.loy && S.loy.cfg) S.loy.cfg.pin = t.checked; go(); return; }
   if (act === "offerOn") { t.disabled = true; await patch(d => { d.offer = Object.assign({}, d.offer, { on: t.checked }); }, t.checked ? "Offer is live on your page" : "Offer hidden"); go(); return; }
   if (act === "ordSw") { t.disabled = true; await patch(d => { d.ord = t.checked; }, t.checked ? "Ordering is on" : "Ordering is off. Your menu still shows."); go(); return; }
   if (act === "placed") { store.set("gk-qr-placed:" + S.id, t.checked); toast(t.checked ? "Nice. Ticked off your list." : "Unticked"); return; }
@@ -1787,6 +1815,7 @@ $("#main").addEventListener("change", async e => {
 });
 $("#main").addEventListener("input", e => {
   const t = e.target;
+  if (t.id === "lsq") { S.lsq = t.value; const pos = t.selectionStart; go(); const n = $("#lsq"); n.focus(); n.setSelectionRange(pos, pos); return; }
   if (t.id === "csq") { S.csq = t.value; const pos = t.selectionStart; go(); const n = $("#csq"); n.focus(); n.setSelectionRange(pos, pos); return; }
   if (t.dataset.mp) { const [si, ii] = t.dataset.mp.split(".").map(Number); S.menuDraft[si].items[ii].p = t.value; menuDirty(); return; }
   if (t.id === "bc") { store.set("gk-bc:" + S.id, t.value); return; }
