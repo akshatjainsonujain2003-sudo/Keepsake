@@ -1,6 +1,6 @@
 // Run: node --test tests/*.test.js
 const test = require("node:test"), assert = require("node:assert/strict");
-const G = require("../assets/gst.v1.js"), X = require("../assets/gst-export.v1.js");
+const G = require("../assets/gst.v2.js"), X = require("../assets/gst-export.v2.js");
 const CH = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const gstin = st => [...CH].map(c => st + "AAPFU0939F1Z" + c).find(G.gstinOk);
 const SELLER = gstin("08"), MH = gstin("27"), RJB = [...CH].map(c => "08AABCT1332L1Z" + c).find(G.gstinOk);

@@ -247,6 +247,45 @@ td .btn{white-space:nowrap}
 .blt{display:flex;justify-content:space-between;gap:12px;margin-top:10px;color:var(--mu);font-variant-numeric:tabular-nums}
 .blhd{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;padding:14px 16px;border-radius:16px;background:#F6F6F2}
 .blhd small{display:block;color:var(--mu);font-family:'JetBrains Mono',monospace;font-size:12px;margin-top:3px}
+.pl.est{background:#e9e8ff;color:#2b27c9}.pl.ret{background:#e6e1d7;color:#5d574e}
+.blh{display:block;margin:18px 0 8px}
+.blopt{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.blopt.d{grid-template-columns:repeat(4,minmax(0,1fr))}
+.blopt button{text-align:left;padding:12px;border-radius:14px;border:1.5px solid var(--line);background:var(--card);display:flex;flex-direction:column;gap:3px;min-height:44px}
+.blopt button b{font-size:14px}.blopt button small{color:var(--mu);font-size:12px;line-height:1.35}
+.blopt button.on{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink);background:#F6F6F2}
+.dz{display:block;height:46px;border-radius:8px;margin-bottom:6px;background:#fff;border:1px solid var(--line);position:relative;overflow:hidden}
+.dz.a4m::before{content:"";position:absolute;left:8px;right:8px;top:8px;height:4px;border-radius:3px;background:linear-gradient(90deg,#1F1BF2 70%,#D4FF3F 70%)}.dz.a4m::after{content:"";position:absolute;right:8px;bottom:8px;width:40%;height:9px;border-radius:4px;background:#1F1BF2}
+.dz.a4c::before{content:"";position:absolute;left:8px;right:8px;top:8px;height:2px;background:#0B0B14}.dz.a4c::after{content:"";position:absolute;right:8px;bottom:8px;width:40%;height:9px;border:1.5px solid #0B0B14;border-radius:2px}
+.dz.t80,.dz.t58{background:#ECECE7}.dz.t80::before,.dz.t58::before{content:"";position:absolute;left:50%;top:5px;bottom:0;width:34%;transform:translateX(-50%);background:#fff repeating-linear-gradient(#fff 0 5px,#ddd 5px 6px);border-radius:2px 2px 0 0}.dz.t58::before{width:24%}
+@media (max-width:600px){.blopt,.blopt.d{grid-template-columns:1fr 1fr}.blopt:not(.d) button:first-child{grid-column:1/-1}}
+.blk{width:min(640px,100%);padding-bottom:0}
+.blseg{display:flex;padding:4px;border-radius:999px;background:#ECECE7;margin:0 0 12px}
+.blseg button{flex:1;min-height:40px;border:0;border-radius:999px;background:none;font-weight:700;font-size:14px;color:var(--mu)}
+.blseg button.on{background:var(--card);color:var(--ink);box-shadow:0 1px 3px #0002}
+.blfs{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px;margin-top:10px;max-height:min(300px,36vh);overflow:auto;padding:2px}
+.blf{position:relative;display:flex;flex-direction:column;justify-content:space-between;gap:6px;min-height:68px;padding:10px 11px;border-radius:14px;border:1.5px solid var(--line);background:var(--card);text-align:left;font-weight:600;font-size:13.5px;line-height:1.25;touch-action:manipulation}
+.blf span{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.blf b{color:var(--mu);font-weight:600;font-size:13px}
+.blf:active{transform:scale(.97)}.blf.on{border-color:var(--ink);background:#F6F6F2}
+.blf em{position:absolute;top:-6px;right:-6px;min-width:24px;height:24px;padding:0 6px;border-radius:99px;background:var(--ink);color:#fff;font:700 12px/24px Inter;font-style:normal;text-align:center}
+.blq{display:grid;grid-template-columns:1fr 1.3fr auto;gap:8px;margin-top:12px;align-items:center}.blq .in{margin:0}
+.blc{margin-top:8px;padding:10px 12px;border-radius:14px;background:#F6F6F2;border:1px solid var(--line)}.blc.bad{border-color:#e7a29a}
+.blc1{display:flex;align-items:center;gap:10px}
+.blcn{flex:1;min-width:0;background:none;border:0;padding:0;text-align:left}.blcn b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.blcn small{color:var(--mu);font-size:12px}.blc.bad .blcn small{color:#a3281a}
+.qst{display:flex;align-items:center;border:1.5px solid var(--line);border-radius:999px;background:var(--card);flex:none}
+.qst button{width:38px;height:38px;border:0;background:none;font:700 20px/1 Inter;color:var(--ink);touch-action:manipulation}.qst span{min-width:24px;text-align:center;font-weight:700;font-variant-numeric:tabular-nums}
+.blam{flex:none;min-width:78px;text-align:right;font-variant-numeric:tabular-nums}
+.blft{position:sticky;bottom:0;display:flex;align-items:center;justify-content:space-between;gap:12px;margin:16px -22px 0;padding:12px 22px calc(12px + env(safe-area-inset-bottom));background:var(--card);border-top:1px solid var(--line)}
+.blft small{display:block;color:var(--mu);font-size:12px}.blft span b{font:800 24px 'Inter Tight',sans-serif}.blft .btn{min-height:50px;padding:0 22px;font-size:16px}
+.bltt{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:14px 16px;border-radius:16px;background:var(--ink);color:#fff;margin-top:6px}.bltt span{color:#B4B4C2;font-weight:600}.bltt b{font:800 30px 'Inter Tight',sans-serif;letter-spacing:-.02em}
+.blpm{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.blpm.sm{grid-template-columns:repeat(3,minmax(0,1fr))}
+.blpm button{min-height:46px;border-radius:12px;border:1.5px solid var(--line);background:var(--card);font-weight:700;font-size:14px}.blpm button.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.blgo{width:100%;min-height:52px;margin-top:16px;font-size:16px}
+.blk>.blgo{margin-bottom:22px}
+.bl3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:10px}.bl3 .btn{padding:10px 8px;font-size:13.5px}
+.blkh{margin-top:12px;padding:12px 14px;border-radius:14px;background:#fff0d6;color:#5c3a00}.blkh b{display:block}.blkh span{font-size:13px}
+.okd{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--grl);color:#0d5a2f;font-size:16px;vertical-align:2px}
+@media (max-width:600px){.blk .row2{grid-template-columns:1fr 1fr}.blbk{grid-template-columns:1fr 1fr!important}.blbk label:first-child{grid-column:1/-1}.blft{margin:16px -22px 0}.bltt b{font-size:26px}}
 @media (max-width:700px){.g3 .kpi b{font-size:28px}}
 /* ---------- Give a stamp ---------- */
 .lsb{margin-bottom:16px}.lsb .in{margin:0}
@@ -278,8 +317,8 @@ td .btn{white-space:nowrap}
 @media (max-width:420px){.khk .kpi b{font-size:22px}}
 
 </style>
-<script src="/assets/gst.v1.js"></script>
-<script src="/assets/gst-export.v1.js" defer></script>
+<script src="/assets/gst.v2.js"></script>
+<script src="/assets/gst-export.v2.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js" defer></script>
 <script src="/assets/qr-cards.v9.js" defer></script>
 </head>
@@ -334,7 +373,7 @@ const IC = {
   book: I('<path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v17H6.5A2.5 2.5 0 0 0 4 21.5z"/><path d="M4 21.5A2.5 2.5 0 0 1 6.5 19H20v3H6.5M9 7h7M9 11h5"/>')
 };
 const NAV = [
-  ["Run the shop", [["overview", "Overview", "home"], ["orders", "Orders", "orders"], ["bills", "GST bills", "bill"], ["khata", "Udhaar khata", "book"], ["menu", "Menu & prices", "menu"], ["store", "Online store", "orders"], ["customers", "Customers", "people"]]],
+  ["Run the shop", [["overview", "Overview", "home"], ["orders", "Orders", "orders"], ["bills", "Bills", "bill"], ["khata", "Udhaar khata", "book"], ["menu", "Menu & prices", "menu"], ["store", "Online store", "orders"], ["customers", "Customers", "people"]]],
   ["Grow", [["pro", "Keepsake Pro", "star"], ["messages", "Messages", "wa"], ["campaigns", "Offer QRs", "qr"], ["nearby", "Walk-in offers", "pin"], ["reviews", "Reviews", "star"], ["offers", "Offers & marketing", "tag"], ["analytics", "Analytics", "chart"]]],
   ["Set up", [["page", "My page", "page"], ["qr", "QR & cards", "qr"], ["payments", "Payments", "pay"], ["settings", "Team & settings", "gear"]]]
 ];
@@ -489,7 +528,7 @@ function proBar() {
 }
 V.pro = () => {
   const on = isPro(), l = on ? proLeft() : 0, until = new Date(S.proUntil).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
-  const items = [["Online store", "Every product with photos, search and checkout on your page. Orders come straight to your dashboard."], ["GST bills", "Unlimited GST bills from your phone, sent on WhatsApp with a UPI QR to pay."], ["Smart Udhaar", "A khata customers confirm on WhatsApp, with one-tap reminders and a UPI link to pay. See who owes what and since when."], ["Table QRs", "A QR for each table. Customers scan, order and pay at the table."], ["Day-end report", "Sales, orders and top items for any day, with a CSV download."], ["Win-back offers", "See new, regular and lapsed customers and send a WhatsApp offer in one tap."], ["Printable order slips", "Print a slip for the kitchen or the parcel from any order."], ["Add sale", "Record sales made in the shop so your totals and customers stay complete."]];
+  const items = [["Online store", "Every product with photos, search and checkout on your page. Orders come straight to your dashboard."], ["Billing", "Unlimited bills with or without GST, estimates and returns. Print a receipt or send it on WhatsApp with a UPI QR."], ["Smart Udhaar", "A khata customers confirm on WhatsApp, with one-tap reminders and a UPI link to pay. See who owes what and since when."], ["Table QRs", "A QR for each table. Customers scan, order and pay at the table."], ["Day-end report", "Sales, orders and top items for any day, with a CSV download."], ["Win-back offers", "See new, regular and lapsed customers and send a WhatsApp offer in one tap."], ["Printable order slips", "Print a slip for the kitchen or the parcel from any order."], ["Add sale", "Record sales made in the shop so your totals and customers stay complete."]];
   return head("Keepsake Pro", "Your online store plus seven tools that bring customers back and save you time. Your page, menu, WhatsApp orders and UPI stay free.", "") +
   (!S.active ? inactive() : "") +
   `<section class="cd" style="background:var(--ink);color:#fff;border-color:var(--ink)"><div class="ch"><h2 class="H" style="margin:0">${on ? "Pro is on" : S.proUntil ? "Pro has ended" : "Go Pro"}</h2><span class="pl" style="background:var(--ye)">${rup(S.proPrice)} / month · ${rup(S.proYearPrice)} / year</span></div>
@@ -1288,108 +1327,197 @@ function blWa(x) {
   const txt = `Namaste${x.name ? " " + x.name : ""}! Here is your bill ${x.no} from ${shopName()} for ${inr(x.total)}.\n${blUrl(x.t)}` + (!x.paid && !x.cancel && blUpi() ? "\nYou can pay by UPI from the link." : "") + "\nThank you!";
   return "https://wa.me/" + (x.phone ? "91" + x.phone : "") + "?text=" + encodeURIComponent(txt);
 }
-const blStatus = x => x.cancel ? `<span class="pl cancel">Cancelled</span>` : x.paid ? `<span class="pl ready">Paid</span>` : `<span class="pl prep">Payment due</span>`;
+const blQn = n => String(Math.round((+n || 0) * 1000) / 1000);
+const blIsBill = x => !x.kind || x.kind === "tax" || x.kind === "supply" || x.kind === "cash";
+const blDue = x => blIsBill(x) && !x.cancel && !x.paid ? Math.max(0, x.total - (x.rcv || 0)) : 0;
+const blRowOf = x => ({ t: x.t, no: x.no, at: x.at, kind: x.kind, name: x.cust.name, phone: x.cust.phone, total: x.calc.total, tax: x.calc.tax, paid: x.paid, rcv: x.rcv || 0, cancel: x.cancel, ref: x.ref ? x.ref.no : "", conv: x.conv || "" });
+const blStatus = x => x.kind === "est" ? `<span class="pl est">${x.conv ? "Billed" : "Estimate"}</span>` : x.cancel ? `<span class="pl cancel">Cancelled</span>` : x.kind === "credit" ? `<span class="pl ret">Return</span>` : x.paid ? `<span class="pl ready">Paid</span>` : `<span class="pl prep">${x.rcv > 0 ? "Part paid" : "Payment due"}</span>`;
+function blWa(x) {
+  const what = x.kind === "est" ? "estimate" : x.kind === "credit" ? "credit note" : "bill", due = blDue(x);
+  const txt = `Namaste${x.name ? " " + x.name : ""}! Here is your ${what} ${x.no} from ${shopName()} for ${inr(x.total)}.\n${blUrl(x.t)}` + (due && blUpi() ? "\nYou can pay " + inr(due) + " by UPI from the link." : "") + "\nThank you!";
+  return "https://wa.me/" + (x.phone ? "91" + x.phone : "") + "?text=" + encodeURIComponent(txt);
+}
+const BLGT = { regular: ["Regular GST", "Tax invoices with CGST and SGST (or IGST)."], composition: ["Composition scheme", "Bills of supply. You pay tax yourself and can't charge GST to customers."], none: ["No GST", "Simple bills (cash memos) without GST."] };
+const BLDES = { a4m: ["A4 Modern", "Clean, colourful. Best for WhatsApp and PDF."], a4c: ["A4 Classic", "Black and white, boxed. Prints well anywhere."], t80: ["Receipt 80 mm", "For thermal printers at the counter."], t58: ["Receipt 58 mm", "For small handheld printers."] };
 
 function blSetupCard() {
-  const s = S.blSetD || Object.assign({ gst: "regular", gstin: "", legal: "", addr: S.d.addr || "", state: "08", prefix: "INV", inc: true, rate: blDefRate(), hsn: blDefHsn(), u: "NOS", terms: "" }, (S.bl && S.bl.settings) || {});
+  const s = S.blSetD || Object.assign({ gst: "regular", gstin: "", legal: "", addr: S.d.addr || "", state: "08", prefix: "INV", inc: true, rate: blDefRate(), hsn: blDefHsn(), u: "NOS", terms: "", big: false, design: "a4m", bank: null, sign: "" }, JSON.parse(JSON.stringify((S.bl && S.bl.settings) || {})));
+  s.bank = s.bank || { name: "", acc: "", ifsc: "" };
   S.blSetD = s;
-  const G = window.KSGST, ok = s.gst !== "regular" || (G && G.gstinOk(s.gstin)), st = s.gst === "regular" && G && G.gstinOk(s.gstin) ? G.STATES[s.gstin.slice(0, 2)] : "";
-  return `<section class="cd" style="max-width:640px">
+  const G = window.KSGST, hasG = s.gst !== "none", ok = !hasG || (G && G.gstinOk(s.gstin)), st = hasG && G && G.gstinOk(s.gstin) ? G.STATES[s.gstin.slice(0, 2)] : "", reg = s.gst === "regular";
+  return `<section class="cd" style="max-width:680px">
     <div class="ch"><h2 class="H" style="margin:0">${S.bl && S.bl.settings ? "Bill settings" : "Set up your bills"}</h2>${S.bl && S.bl.settings ? `<button class="lnk" data-bl="setclose">Cancel</button>` : ""}</div>
     <p class="mu" style="margin:-6px 0 14px">Fill this once. Every bill uses these details.</p>
-    <div class="tabs">${[["regular", "I have a GSTIN"], ["none", "No GST (bill of supply)"]].map(([k, l]) => `<button type="button" data-bl="gsttype" data-k="${k}" class="${s.gst === k ? "on" : ""}">${l}</button>`).join("")}</div>
-    ${s.gst === "regular" ? `<label>GSTIN<input class="in" data-bls="gstin" maxlength="15" autocapitalize="characters" placeholder="e.g. 08ABCDE1234F1Z5" value="${esc(s.gstin)}" style="text-transform:uppercase;font-family:'JetBrains Mono',monospace"></label>
+    <b class="blh" style="margin-top:0">Your GST type</b>
+    <div class="blopt">${Object.entries(BLGT).map(([k, [l, d]]) => `<button type="button" data-bl="gsttype" data-k="${k}" class="${s.gst === k ? "on" : ""}" aria-pressed="${s.gst === k}"><b>${l}</b><small>${d}</small></button>`).join("")}</div>
+    ${hasG ? `<label style="display:block;margin-top:14px">GSTIN<input class="in" data-bls="gstin" maxlength="15" autocapitalize="characters" placeholder="e.g. 08ABCDE1234F1Z5" value="${esc(s.gstin)}" style="text-transform:uppercase;font-family:'JetBrains Mono',monospace"></label>
       <p class="hint" id="blGi">${s.gstin ? (ok ? "✓ Valid · " + esc(st) : "Check the 15 characters of your GSTIN.") : "Your 15-character GST number."}</p>
       <label style="display:block;margin-top:12px">Legal name (as on GST certificate)<input class="in" data-bls="legal" maxlength="80" placeholder="${esc(shopName())}" value="${esc(s.legal)}"></label>`
-    : `<label>State<select class="in" data-bls="state">${Object.entries((G && G.STATES) || { "08": "Rajasthan" }).map(([c, n]) => `<option value="${c}"${s.state === c ? " selected" : ""}>${esc(n)}</option>`).join("")}</select></label>
-      <p class="hint">Without a GSTIN you can't charge GST. Your bills will say "Bill of supply".</p>`}
+    : `<label style="display:block;margin-top:14px">State<select class="in" data-bls="state">${Object.entries((G && G.STATES) || { "08": "Rajasthan" }).map(([c, n]) => `<option value="${c}"${s.state === c ? " selected" : ""}>${esc(n)}</option>`).join("")}</select></label>`}
     <label style="display:block;margin-top:12px">Shop address on the bill<input class="in" data-bls="addr" maxlength="200" placeholder="Shop no., street, city, PIN" value="${esc(s.addr)}"></label>
     <div class="row2" style="margin-top:12px">
-      <label>Invoice prefix<input class="in" data-bls="prefix" maxlength="5" placeholder="INV" value="${esc(s.prefix)}" style="text-transform:uppercase"></label>
-      ${s.gst === "regular" ? `<label>Usual GST rate<select class="in" data-bls="rate">${BLR.map(r => `<option value="${r}"${+s.rate === r ? " selected" : ""}>${r}%</option>`).join("")}</select></label>` : "<span></span>"}
+      <label>Bill number prefix<input class="in" data-bls="prefix" maxlength="5" placeholder="INV" value="${esc(s.prefix)}" style="text-transform:uppercase"></label>
+      ${reg ? `<label>Usual GST rate<select class="in" data-bls="rate">${BLR.map(r => `<option value="${r}"${+s.rate === r ? " selected" : ""}>${r}%</option>`).join("")}</select></label>` : "<span></span>"}
     </div>
-    ${s.gst === "regular" ? `<div class="row2" style="margin-top:12px"><label>Usual HSN/SAC code<input class="in" data-bls="hsn" inputmode="numeric" maxlength="8" placeholder="e.g. 6211" value="${esc(s.hsn || "")}"></label><label>Usual unit<select class="in" data-bls="u">${Object.entries(KSGST.UQC).map(([k, l]) => `<option value="${k}"${(s.u || "NOS") === k ? " selected" : ""}>${k} · ${esc(l)}</option>`).join("")}</select></label></div>
-      <p class="hint">GST bills need an HSN code (goods) or SAC code (services, starts with 99) on every item. This one fills in by default and you can change it per item. Ask your CA if you're not sure.</p>` : ""}
-    <p class="hint">Bills are numbered ${esc((s.prefix || "INV").toUpperCase())}/${(window.KSGST ? KSGST.fy() : "2026-27").slice(2)}/0001, 0002… and start again each April.</p>
-    ${s.gst === "regular" ? `<label class="sw" style="margin-top:12px"><input type="checkbox" data-bls="inc"${s.inc ? " checked" : ""}><i></i>My prices already include GST</label>` : ""}
-    <label style="display:block;margin-top:12px">Terms on the bill (optional)<input class="in" data-bls="terms" maxlength="300" placeholder="e.g. Goods once sold will not be taken back." value="${esc(s.terms)}"></label>
+    <p class="hint">Bills are numbered ${esc((s.prefix || "INV").toUpperCase())}/${(window.KSGST ? KSGST.fy() : "2026-27").slice(2)}/0001, 0002… and start again each April. Estimates use EST/ and returns use CN/.</p>
+    ${hasG ? `<div class="row2" style="margin-top:12px"><label>Usual HSN/SAC code<input class="in" data-bls="hsn" inputmode="numeric" maxlength="8" placeholder="e.g. 6211" value="${esc(s.hsn || "")}"></label><label>Usual unit<select class="in" data-bls="u">${Object.entries(KSGST.UQC).map(([k, l]) => `<option value="${k}"${(s.u || "NOS") === k ? " selected" : ""}>${k} · ${esc(l)}</option>`).join("")}</select></label></div>
+      <p class="hint">${reg ? "GST bills need an HSN code (goods) or SAC code (services, starts with 99) on every item." : "Optional on a bill of supply, but your CA will like it."} This one fills in by default and you can change it per item.</p>` : ""}
+    ${reg ? `<div class="tg" style="margin-top:12px"><label class="sw"><input type="checkbox" data-bls="inc"${s.inc ? " checked" : ""}><i></i>My prices already include GST</label><label class="sw"><input type="checkbox" data-bls="big"${s.big ? " checked" : ""}><i></i>Turnover above ₹5 crore</label></div>
+      <p class="hint">Above ₹5 crore a year, GST rules ask for 6-digit HSN codes.</p>` : ""}
+    <b class="blh">Bill design</b>
+    <div class="blopt d">${Object.entries(BLDES).map(([k, [l, d]]) => `<button type="button" data-bl="design" data-k="${k}" class="${(s.design || "a4m") === k ? "on" : ""}" aria-pressed="${(s.design || "a4m") === k}"><i class="dz ${k}" aria-hidden="true"></i><b>${l}</b><small>${d}</small></button>`).join("")}</div>
+    <p class="hint">Every bill can still be printed as a receipt or as A4 from its link.</p>
+    <b class="blh">Bank details on the bill <small class="mu" style="font-weight:500">(optional)</small></b>
+    <div class="bl2 blbk" style="grid-template-columns:1.2fr 1.4fr 1fr;margin-top:0"><label>Bank<input class="in" data-blsb="name" maxlength="60" placeholder="e.g. SBI" value="${esc(s.bank.name)}"></label><label>Account no.<input class="in" data-blsb="acc" inputmode="numeric" maxlength="24" value="${esc(s.bank.acc)}"></label><label>IFSC<input class="in" data-blsb="ifsc" maxlength="11" style="text-transform:uppercase" placeholder="SBIN0001234" value="${esc(s.bank.ifsc)}"></label></div>
+    <b class="blh">Signature <small class="mu" style="font-weight:500">(optional)</small></b>
+    <div class="tg" style="align-items:center">${s.sign ? `<img src="${esc(s.sign)}" alt="Your signature" style="height:52px;max-width:180px;object-fit:contain;border:1px solid var(--line);border-radius:10px;background:#fff;padding:4px">` : ""}
+      <label class="btn g s" style="cursor:pointer">${s.sign ? "Change" : "Upload a photo of your signature"}<input type="file" id="blSign" accept="image/*" hidden></label>${s.sign ? `<button type="button" class="lnk" data-bl="nosign">Remove</button>` : ""}</div>
+    <p class="hint">Sign on white paper and take a photo. It prints above "Authorised signatory".</p>
+    <label style="display:block;margin-top:14px">Terms on the bill (optional)<input class="in" data-bls="terms" maxlength="300" placeholder="e.g. Goods once sold will be exchanged within 7 days." value="${esc(s.terms)}"></label>
     <button type="button" class="btn" style="margin-top:18px" data-bl="setsave" ${ok ? "" : "disabled"}>Save bill settings</button>
   </section>`;
 }
 
-function blNew() {
+// ---------- the counter: tap items, charge, done ----------
+function blNew(est) {
   const st = S.bl.settings;
-  return { cust: { name: "", phone: "", gstin: "", addr: "", state: st.state }, b2b: false, lines: [], q: "", inc: st.inc, pay: "cash", note: "", busy: false };
+  return { step: "items", est: !!est, cust: { name: "", phone: "", gstin: "", addr: "", ship: "", state: st.state }, b2b: false, addr: false, lines: [], q: "", inc: st.inc, pay: "cash", split: { cash: "", upi: "", card: "" }, part: { amt: "", via: "cash" }, bd: "", del: "", note: "", open: -1, busy: false };
 }
 function blCalc() {
-  const N = S.blNew, st = S.bl.settings, G = window.KSGST, c = N.cust;
+  const N = S.blNew, st = S.bl.settings, G = window.KSGST, c = N.cust, gst = blGst();
   const pos = N.b2b && G.gstinOk(c.gstin) ? c.gstin.slice(0, 2) : (N.b2b ? c.state : st.state);
-  return G.calc(N.lines.map(x => ({ n: x.n, q: +x.q, p: +x.p, r: +x.r, dp: +x.dp })), { gst: blGst(), inc: N.inc, seller: st.state, pos });
+  const lines = N.lines.map(x => ({ n: x.n, q: +x.q || 0, p: +x.p || 0, r: gst ? +x.r : 0, dp: +x.dp || 0 })).filter(x => x.q > 0);
+  if (!lines.length) return { total: 0, taxable: 0, cgst: 0, sgst: 0, igst: 0, roff: 0, tax: 0, bd: 0, intra: true };
+  const del = Math.max(0, +N.del || 0);
+  if (del) { const m = lines.slice().sort((a, b) => b.q * b.p - a.q * a.p)[0]; lines.push({ n: "Delivery", q: 1, p: del, r: m.r, dp: 0 }); }
+  return G.calc(lines, { gst, inc: N.inc, seller: st.state, pos, bd: Math.max(0, +N.bd || 0) });
 }
 function blTotHtml() {
-  const k = blCalc(), gst = blGst();
-  return `${gst ? `<div class="blt"><span>Taxable value</span><span>${rs2(k.taxable)}</span></div>${k.intra ? `<div class="blt"><span>CGST + SGST</span><span>${rs2(k.cgst)} + ${rs2(k.sgst)}</span></div>` : `<div class="blt"><span>IGST</span><span>${rs2(k.igst)}</span></div>`}` : ""}
-    ${k.roff ? `<div class="blt"><span>Round off</span><span>${k.roff > 0 ? "+" : "−"}${rs2(Math.abs(k.roff)).slice(1)}</span></div>` : ""}
-    <div class="satot"><span>Total</span><span>${inr(k.total)}</span></div>`;
+  const N = S.blNew, k = blCalc(), gst = blGst(), sub = N.lines.reduce((a, x) => a + (+x.q || 0) * (+x.p || 0) * (1 - (+x.dp || 0) / 100), 0);
+  const r = (l, v) => `<div class="blt"><span>${l}</span><span>${v}</span></div>`;
+  return (k.bd > 0 || +N.del > 0 ? r("Items", rs2(sub)) : "") + (k.bd > 0 ? r("Discount", "−" + rs2(k.bd).slice(1)) : "") + (+N.del > 0 ? r("Delivery", "+" + rs2(+N.del).slice(1)) : "")
+    + (gst ? r(N.inc ? "GST included" : "Taxable value", N.inc ? rs2(k.tax) : rs2(k.taxable)) + (N.inc ? "" : k.intra ? r("CGST + SGST", rs2(k.cgst) + " + " + rs2(k.sgst)) : r("IGST", rs2(k.igst))) : "")
+    + (k.roff ? r("Round off", (k.roff > 0 ? "+" : "−") + rs2(Math.abs(k.roff)).slice(1)) : "");
 }
 function blPick() {
-  const N = S.blNew, q = (N.q || "").toLowerCase(), have = new Set(N.lines.map(x => x.k));
-  const all = menuItems().filter(x => numP(x.p) > 0 && (!q || (x.n + " " + x.sec).toLowerCase().includes(q))).slice(0, 40);
-  if (!all.length) return `<p class="hint">${menuItems().length ? "No item matches. Type it below instead." : "Your menu has no items with prices yet. Type items below."}</p>`;
-  return all.map(x => { const k = x.si + "." + x.ii; return `<button type="button" class="blp${have.has(k) ? " on" : ""}" data-bl="add" data-k="${k}"><span>${esc(x.n)}</span><b>${inr(numP(x.p))}</b></button>`; }).join("");
+  const N = S.blNew, q = (N.q || "").toLowerCase().trim(), cnt = {};
+  N.lines.forEach(x => { cnt[x.k] = (cnt[x.k] || 0) + (+x.q || 0); });
+  const mem = Object.keys((S.bl && S.bl.mem) || {}), rank = n => { const i = mem.indexOf(String(n).toLowerCase()); return i < 0 ? -1 : i; };
+  let all = menuItems().filter(x => numP(x.p) > 0 && (!q || (x.n + " " + (x.sec || "")).toLowerCase().includes(q)));
+  if (!q) all = all.map((x, i) => ({ x, i, r: rank(x.n) })).sort((a, b) => b.r - a.r || a.i - b.i).map(o => o.x); // items you bill most recently come first
+  all = all.slice(0, 48);
+  if (!all.length) return `<p class="hint" style="grid-column:1/-1">${menuItems().length ? "No item matches. Type the amount below instead." : "Your menu has no items with prices yet. Type an amount below."}</p>`;
+  return all.map(x => { const k = x.si + "." + x.ii; return `<button type="button" class="blf${cnt[k] ? " on" : ""}" data-bl="add" data-k="${k}"><span>${esc(x.n)}</span><b>${inr(numP(x.p))}</b>${cnt[k] ? `<em>${blQn(cnt[k])}</em>` : ""}</button>`; }).join("");
 }
+const blLineAmt = x => (+x.q || 0) * (+x.p || 0) * (1 - (+x.dp || 0) / 100);
 function blLine(x, i) {
-  const gst = blGst();
-  return `<div class="bll"><div class="bl1"><b>${esc(x.n)}</b><button type="button" class="lnk" data-bl="rm" data-i="${i}">Remove</button></div>
-    <div class="bl2" style="grid-template-columns:repeat(${gst ? 3 : 2},minmax(0,1fr))">
+  const gst = blGst(), hasG = S.bl.settings.gst !== "none", open = S.blNew.open === i, need = S.bl.settings.big ? 6 : 4, bad = gst && String(x.hsn || "").replace(/\D/g, "").length < need;
+  return `<div class="blc${open ? " open" : ""}${bad ? " bad" : ""}">
+    <div class="blc1"><button type="button" class="blcn" data-bl="tog" data-i="${i}" aria-expanded="${open}"><b>${esc(x.n)}</b><small>${inr(+x.p || 0)}${+x.dp ? ` · ${x.dp}% off` : ""}${gst ? ` · GST ${x.r}%` : ""}${bad ? " · add HSN" : ""} · <u>${open ? "Done" : "Edit"}</u></small></button>
+      <div class="qst"><button type="button" data-bl="qm" data-i="${i}" aria-label="One less ${esc(x.n)}">−</button><span>${blQn(x.q)}</span><button type="button" data-bl="qp" data-i="${i}" aria-label="One more ${esc(x.n)}">+</button></div>
+      <b class="blam" data-amt="${i}">${rs2(blLineAmt(x))}</b></div>
+    ${open ? `<div class="bl2" style="grid-template-columns:repeat(3,minmax(0,1fr))">
+      <label>Name<input class="in" data-bli="n" data-i="${i}" maxlength="80" value="${esc(x.n)}"></label>
       <label>Qty<input class="in" data-bli="q" data-i="${i}" inputmode="decimal" value="${esc(x.q)}"></label>
       <label>Price ₹<input class="in" data-bli="p" data-i="${i}" inputmode="decimal" value="${esc(x.p)}"></label>
       ${gst ? `<label>GST<select class="in" data-bli="r" data-i="${i}">${BLR.map(r => `<option value="${r}"${+x.r === r ? " selected" : ""}>${r}%</option>`).join("")}</select></label>` : ""}
-    </div>
-    <div class="bl2" style="grid-template-columns:repeat(${gst ? 3 : 2},minmax(0,1fr))">
-      ${gst ? `<label>HSN/SAC<input class="in${String(x.hsn || "").replace(/\D/g, "").length >= 4 ? "" : " bad"}" data-bli="hsn" data-i="${i}" inputmode="numeric" maxlength="8" placeholder="4+ digits" value="${esc(x.hsn)}"></label>` : ""}
+      ${hasG ? `<label>HSN/SAC<input class="in${bad ? " bad" : ""}" data-bli="hsn" data-i="${i}" inputmode="numeric" maxlength="8" placeholder="${need}+ digits" value="${esc(x.hsn)}"></label>` : ""}
       <label>Unit<select class="in" data-bli="u" data-i="${i}">${Object.keys(KSGST.UQC).map(k => `<option value="${k}"${(x.u || "NOS") === k ? " selected" : ""}>${k}</option>`).join("")}</select></label>
       <label>Discount %<input class="in" data-bli="dp" data-i="${i}" inputmode="decimal" value="${esc(x.dp || "")}" placeholder="0"></label>
-    </div></div>`;
+    </div><button type="button" class="lnk" style="margin-top:10px" data-bl="rm" data-i="${i}">Remove item</button>` : ""}</div>`;
 }
-function blNewSheet() {
-  const N = S.blNew; if (!N) return "";
-  if (N.locked) return `<div class="pm" data-blbg><div class="pmb"><div class="ch"><h2 class="H" style="margin:0">Your free bills are used</h2><button class="lnk" data-bl="close">Close</button></div>
-    <p class="mu" style="margin:8px 0 0">You've made ${S.bl.free} free bills. Keepsake Pro gives you unlimited GST bills, WhatsApp sending and your bill list, plus your online store and every other Pro tool. ${proPriceLine()}</p>
-    ${proBtns()}</div></div>`;
-  const c = N.cust, gst = blGst(), G = window.KSGST;
-  return `<div class="pm" data-blbg><div class="pmb"><div class="ch"><h2 class="H" style="margin:0">New ${gst ? "GST bill" : "bill"}</h2><button class="lnk" data-bl="close">Close</button></div>
-    <div class="row2"><label>Customer name<input class="in" data-blc="name" maxlength="80" placeholder="Walk-in customer" value="${esc(c.name)}"></label><label>WhatsApp number<input class="in" data-blc="phone" inputmode="numeric" maxlength="14" placeholder="10-digit mobile" value="${esc(c.phone)}"></label></div>
-    ${N.b2b ? "" : `<label style="display:block;margin-top:10px">Customer address <small class="mu">(needed for sales of ₹50,000 or more)</small><input class="in" data-blc="addr" maxlength="200" value="${esc(c.addr)}"></label>`}
-    ${gst ? `<label class="sw" style="margin-top:12px"><input type="checkbox" data-bl="b2b"${N.b2b ? " checked" : ""}><i></i>Business customer (add their GSTIN)</label>` : ""}
-    ${gst && N.b2b ? `<div class="row2" style="margin-top:10px"><label>Their GSTIN<input class="in" data-blc="gstin" maxlength="15" style="text-transform:uppercase;font-family:'JetBrains Mono',monospace" value="${esc(c.gstin)}"></label><label>Their state${c.gstin && G.gstinOk(c.gstin) ? `<input class="in" disabled value="${esc(G.STATES[c.gstin.slice(0, 2)])}">` : `<select class="in" data-blc="state">${Object.entries(G.STATES).map(([k, n]) => `<option value="${k}"${c.state === k ? " selected" : ""}>${esc(n)}</option>`).join("")}</select>`}</label></div>
-      <label style="display:block;margin-top:10px">Their address (needed)<input class="in" data-blc="addr" maxlength="200" value="${esc(c.addr)}"></label>` : ""}
-    <b style="display:block;margin-top:18px">Add items</b>
-    <input class="in" data-bl-q placeholder="Search your menu or products" value="${esc(N.q)}">
-    <div class="blps" id="blPick">${blPick()}</div>
-    <div class="row2" style="grid-template-columns:2fr 1fr auto;align-items:end;margin-top:8px"><label>Other item<input class="in" id="blOn" placeholder="Item name"></label><label>Price ₹<input class="in" id="blOp" inputmode="decimal" placeholder="0"></label><button type="button" class="btn g s" data-bl="addo" style="margin-bottom:1px">Add</button></div>
-    <div id="blLines">${N.lines.map(blLine).join("")}</div>
-    ${gst ? `<label class="sw" style="margin-top:14px"><input type="checkbox" data-bl="inc"${N.inc ? " checked" : ""}><i></i>Prices include GST</label>` : ""}
-    <div id="blTot">${N.lines.length ? blTotHtml() : ""}</div>
-    <b style="display:block;margin-top:16px">Payment</b>
-    <div class="tabs" style="margin:8px 0 0">${Object.entries(BLMODE).filter(([k]) => k !== "bank").map(([k, l]) => `<button type="button" data-bl="pay" data-k="${k}" class="${N.pay === k ? "on" : ""}">${l}</button>`).join("")}</div>
-    <label style="display:block;margin-top:12px">Note on the bill (optional)<input class="in" data-blc="note" maxlength="200" value="${esc(N.note)}"></label>
-    <button type="button" class="btn" style="margin-top:16px;width:100%" data-bl="save" ${N.lines.length ? "" : "disabled"}>Save bill</button>
+function blFoot() {
+  const N = S.blNew, k = blCalc(), c = N.lines.reduce((a, x) => a + (+x.q || 0), 0);
+  return `<span><small>${blQn(c)} item${c === 1 ? "" : "s"}</small><b>${inr(k.total)}</b></span><button type="button" class="btn" data-bl="charge" ${N.lines.length ? "" : "disabled"}>${N.est ? "Next" : "Charge " + inr(k.total)} →</button>`;
+}
+function blItemsStep() {
+  const N = S.blNew, n = N.lines.length;
+  return `<div class="pm" data-blbg><div class="pmb blk" role="dialog" aria-label="${N.est ? "New estimate" : "New bill"}">
+    <div class="ch"><h2 class="H" style="margin:0">${N.est ? "New estimate" : "New bill"}</h2><button class="lnk" data-bl="close">Close</button></div>
+    <div class="blseg" role="group" aria-label="Bill or estimate"><button type="button" data-bl="mode" data-k="bill" class="${N.est ? "" : "on"}" aria-pressed="${!N.est}">Bill</button><button type="button" data-bl="mode" data-k="est" class="${N.est ? "on" : ""}" aria-pressed="${N.est}">Estimate / quotation</button></div>
+    <input class="in" type="search" data-bl-q placeholder="Search items" value="${esc(N.q)}" aria-label="Search items">
+    <div class="blfs" id="blPick">${blPick()}</div>
+    <div class="blq"><input class="in" id="blOp" inputmode="decimal" placeholder="₹ Amount" aria-label="Amount"><input class="in" id="blOn" maxlength="80" placeholder="Item name (optional)" aria-label="Item name"><button type="button" class="btn k s" data-bl="addo">Add</button></div>
+    <div id="blLines">${n ? N.lines.map(blLine).join("") : `<p class="hint" style="text-align:center;margin:16px 0 4px">Tap items above, or type an amount.</p>`}</div>
+    ${blGst() && n ? `<label class="sw" style="margin-top:12px"><input type="checkbox" data-bl="inc"${N.inc ? " checked" : ""}><i></i>Prices include GST</label>` : ""}
+    <div class="blft" id="blFoot">${blFoot()}</div>
   </div></div>`;
 }
+function blSplitHint() { const N = S.blNew, k = blCalc(), s = ["cash", "upi", "card"].reduce((a, m) => a + (+N.split[m] || 0), 0), left = Math.round((k.total - s) * 100) / 100; return left === 0 ? "✓ Adds up to " + inr(k.total) + "." : left > 0 ? inr(left) + " still to split." : inr(-left) + " more than the bill."; }
+function blPartHint() { const N = S.blNew, k = blCalc(), a = +N.part.amt || 0; return a > 0 && a < k.total ? "Balance " + rs2(k.total - a) + (S.bl.pro && N.cust.phone ? " goes into the udhaar khata." : " shows as due on the bill.") : "Enter what the customer paid now."; }
+function blChargeStep() {
+  const N = S.blNew, c = N.cust, gst = blGst(), G = window.KSGST, k = blCalc(), pro = S.bl.pro;
+  const P = [["cash", "Cash"], ["upi", "UPI"], ["card", "Card"], ["split", "Split"], ["part", "Part paid"], ["due", pro ? "Udhaar" : "Not paid"]];
+  const showAddr = N.addr || N.b2b || c.addr || k.total >= 50000;
+  return `<div class="pm" data-blbg><div class="pmb blk" role="dialog" aria-label="${N.est ? "Save estimate" : "Charge"}">
+    <div class="ch"><button class="lnk" data-bl="back">← Items</button><button class="lnk" data-bl="close">Close</button></div>
+    <div class="bltt"><span>${N.est ? "Estimate total" : "To pay"}</span><b id="blBig">${inr(k.total)}</b></div>
+    <div id="blTot">${blTotHtml()}</div>
+    <div class="row2" style="margin-top:12px"><label>Discount ₹<input class="in" data-blx="bd" inputmode="decimal" placeholder="0" value="${esc(N.bd)}"></label><label>Delivery ₹<input class="in" data-blx="del" inputmode="decimal" placeholder="0" value="${esc(N.del)}"></label></div>
+    <b class="blh">Customer</b>
+    <div class="row2"><label>Mobile number<input class="in" data-blc="phone" type="tel" inputmode="numeric" maxlength="14" placeholder="10-digit mobile" value="${esc(c.phone)}" autocomplete="off"></label><label>Name<input class="in" data-blc="name" maxlength="80" placeholder="Walk-in customer" value="${esc(c.name)}"></label></div>
+    <p class="hint" id="blCh">${N.found ? "✓ Returning customer. Details filled in." : "Optional. Add the number to send the bill on WhatsApp."}</p>
+    ${gst ? `<label class="sw" style="margin-top:12px"><input type="checkbox" data-bl="b2b"${N.b2b ? " checked" : ""}><i></i>Business customer (GSTIN)</label>` : ""}
+    ${gst && N.b2b ? `<div class="row2" style="margin-top:10px"><label>Their GSTIN<input class="in" data-blc="gstin" maxlength="15" style="text-transform:uppercase;font-family:'JetBrains Mono',monospace" value="${esc(c.gstin)}"></label><label>Their state${c.gstin && G.gstinOk(c.gstin) ? `<input class="in" disabled value="${esc(G.STATES[c.gstin.slice(0, 2)])}">` : `<select class="in" data-blc="state">${Object.entries(G.STATES).map(([s, n]) => `<option value="${s}"${c.state === s ? " selected" : ""}>${esc(n)}</option>`).join("")}</select>`}</label></div>` : ""}
+    ${showAddr ? `<label style="display:block;margin-top:10px">${N.b2b ? "Their address (needed)" : "Customer address"}${!N.b2b && k.total >= 50000 && gst ? ` <small class="mu">(needed for ₹50,000 or more)</small>` : ""}<input class="in" data-blc="addr" maxlength="200" value="${esc(c.addr)}"></label>
+      ${N.b2b ? `<label style="display:block;margin-top:10px">Ship to <small class="mu">(if different)</small><input class="in" data-blc="ship" maxlength="200" value="${esc(c.ship)}"></label>` : ""}` : `<button type="button" class="lnk" style="margin-top:10px" data-bl="addr">+ Add address</button>`}
+    ${N.est ? "" : `<b class="blh">Payment</b>
+    <div class="blpm" role="group" aria-label="Payment">${P.map(([m, l]) => `<button type="button" data-bl="pay" data-k="${m}" class="${N.pay === m ? "on" : ""}" aria-pressed="${N.pay === m}">${l}</button>`).join("")}</div>
+    ${N.pay === "split" ? `<div class="bl2" style="grid-template-columns:repeat(3,minmax(0,1fr))">${["cash", "upi", "card"].map(m => `<label>${BLMODE[m]} ₹<input class="in" data-bls2="${m}" inputmode="decimal" placeholder="0" value="${esc(N.split[m])}"></label>`).join("")}</div><p class="hint" id="blSp">${blSplitHint()}</p>` : ""}
+    ${N.pay === "part" ? `<div class="bl2" style="grid-template-columns:1fr"><label>Received now ₹<input class="in" data-blpa inputmode="decimal" value="${esc(N.part.amt)}"></label></div><div class="blpm sm" style="margin-top:8px">${["cash", "upi", "card"].map(m => `<button type="button" data-bl="via" data-k="${m}" class="${N.part.via === m ? "on" : ""}">${BLMODE[m]}</button>`).join("")}</div><p class="hint" id="blSp">${blPartHint()}</p>` : ""}
+    ${N.pay === "due" ? `<p class="hint">${pro ? (c.phone ? "✓ The full amount goes into this customer's udhaar khata." : "Add the mobile number to put this in the udhaar khata.") : "The bill shows as payment due."}</p>` : ""}`}
+    <label style="display:block;margin-top:14px">Note on the ${N.est ? "estimate" : "bill"} (optional)<input class="in" data-blc="note" maxlength="200" value="${esc(N.note)}"></label>
+    <button type="button" class="btn blgo" data-bl="save">${N.est ? "Save estimate" : "Save bill · " + inr(k.total)}</button>
+  </div></div>`;
+}
+const blNewSheet = () => {
+  const N = S.blNew; if (!N) return "";
+  if (N.locked) return `<div class="pm" data-blbg><div class="pmb"><div class="ch"><h2 class="H" style="margin:0">Your free bills are used</h2><button class="lnk" data-bl="close">Close</button></div>
+    <p class="mu" style="margin:8px 0 0">You've made ${S.bl.free} free bills. Keepsake Pro gives you unlimited bills, WhatsApp sending, udhaar khata and your bill list, plus your online store and every other Pro tool. ${proPriceLine()}</p>
+    ${proBtns()}</div></div>`;
+  return N.step === "charge" ? blChargeStep() : blItemsStep();
+};
+
 function blBillSheet() {
   const t = S.blOpen; if (!t) return "";
   const x = (S.bl.bills || []).find(b => b.t === t); if (!x) return "";
-  const fresh = S.blFresh === t;
-  return `<div class="pm" data-blbg><div class="pmb"><div class="ch"><h2 class="H" style="margin:0">${fresh ? "Bill saved" : esc(x.no)}</h2><button class="lnk" data-bl="close">Close</button></div>
-    <div class="blhd"><div><b>${esc(x.name || "Walk-in customer")}</b><small>${esc(x.no)} · ${new Date(x.at).toLocaleString("en-IN", { day: "numeric", month: "short", hour: "numeric", minute: "2-digit" })}</small></div><div style="text-align:right"><b style="font-size:22px">${inr(x.total)}</b>${blStatus(x)}</div></div>
-    <a class="btn w" style="width:100%;margin-top:16px" href="${esc(blWa(x))}" target="_blank" rel="noopener">${IC.wa} Send on WhatsApp${x.phone ? "" : "…"}</a>
-    <div class="row2" style="margin-top:10px"><a class="btn g" href="/bill/${esc(t)}" target="_blank" rel="noopener">Open bill</a><button type="button" class="btn g" data-bl="copy" data-t="${esc(t)}">Copy link</button></div>
-    ${x.cancel ? "" : x.paid ? `<button type="button" class="lnk" style="margin-top:16px" data-bl="unpaid" data-t="${esc(t)}">Mark as not paid</button>`
-      : `<b style="display:block;margin-top:18px">Got paid? Mark it</b><div class="tabs" style="margin:8px 0 0">${["cash", "upi", "card", "bank"].map(k => `<button type="button" data-bl="paid" data-k="${k}" data-t="${esc(t)}">${BLMODE[k]}</button>`).join("")}</div>`}
-    ${!x.cancel && !x.paid && x.phone ? `<button type="button" class="btn g" style="width:100%;margin-top:10px" data-kh="from" data-src="bill:${esc(x.no)}" data-p="${esc(x.phone)}" data-n="${esc(x.name || "")}" data-a="${x.total}">Add to udhaar khata</button>` : ""}
-    ${x.cancel ? `<p class="hint">This bill is cancelled. Its number stays used, as GST rules ask.</p>` : `<p style="margin:18px 0 0"><button type="button" class="lnk" data-bl="cancel" data-t="${esc(t)}">${S.blCx === t ? "Tap again to cancel this bill" : "Cancel this bill"}</button></p>`}
+  if (S.blRet && S.blRet.t === t) return blRetSheet(x);
+  const fresh = S.blFresh === t, est = x.kind === "est", cn = x.kind === "credit", bill = blIsBill(x), due = blDue(x);
+  const des = (S.bl.settings || {}).design || "a4m", rc = des[0] === "t" ? des : "t80", a4 = des[0] === "a" ? des : "a4m";
+  const kh = fresh && S.blKh, T = esc(t);
+  return `<div class="pm" data-blbg><div class="pmb" role="dialog" aria-label="${esc(x.no)}">
+    <div class="ch"><h2 class="H" style="margin:0">${fresh ? `<span class="okd" aria-hidden="true">✓</span> ` : ""}${fresh ? (est ? "Estimate saved" : cn ? "Return saved" : "Bill saved") : esc(x.no)}</h2><button class="lnk" data-bl="close">Close</button></div>
+    <div class="blhd"><div><b>${esc(x.name || "Walk-in customer")}</b><small>${esc(x.no)} · ${new Date(x.at).toLocaleString("en-IN", { day: "numeric", month: "short", hour: "numeric", minute: "2-digit" })}</small>${cn && x.ref ? `<small>Against ${esc(x.ref)}</small>` : ""}</div><div style="text-align:right"><b style="font-size:22px">${inr(x.total)}</b>${blStatus(x)}</div></div>
+    ${kh ? `<div class="blkh"><b>${inr(due)} added to udhaar</b><span>${esc(x.name || "This customer")} now owes ${inr(kh.bal)} in total.</span></div>` : due && x.rcv > 0 ? `<p class="hint">Received ${inr(x.rcv)} · balance ${inr(due)}</p>` : ""}
+    <a class="btn w blgo" href="${esc(blWa(x))}" target="_blank" rel="noopener">${IC.wa} Send on WhatsApp${x.phone ? "" : "…"}</a>
+    <div class="bl3"><a class="btn g" href="/bill/${T}?print=${rc}" target="_blank" rel="noopener">Print receipt</a><a class="btn g" href="/bill/${T}?print=${a4}" target="_blank" rel="noopener">A4 / PDF</a><button type="button" class="btn g" data-bl="copy" data-t="${T}">Copy link</button></div>
+    ${fresh ? `<button type="button" class="btn k blgo" data-bl="new" data-k="${est ? "est" : ""}">+ New ${est ? "estimate" : "bill"}</button>` : ""}
+    ${est && !x.cancel ? (x.conv ? `<p class="hint">Turned into bill ${esc(x.conv)}.</p>` : `<b class="blh">Turn into a bill</b><p class="hint" style="margin-top:0">Customer agreed? Make the bill from this estimate. How did they pay?</p><div class="blpm" style="margin-top:8px">${[["cash", "Cash"], ["upi", "UPI"], ["card", "Card"], ["due", S.bl.pro ? "Udhaar" : "Not paid"]].map(([k, l]) => `<button type="button" data-bl="conv" data-k="${k}" data-t="${T}">${l}</button>`).join("")}</div>`) : ""}
+    ${bill && !x.cancel ? (x.paid ? `<button type="button" class="lnk" style="margin-top:16px" data-bl="unpaid" data-t="${T}">Mark as not paid</button>`
+      : `<b class="blh">Got the ${x.rcv > 0 ? "balance" : "money"}? Mark it paid</b><div class="blpm" style="margin-top:8px">${["cash", "upi", "card", "bank"].map(k => `<button type="button" data-bl="paid" data-k="${k}" data-t="${T}">${BLMODE[k]}</button>`).join("")}</div>`) : ""}
+    ${bill && !x.cancel && due && x.phone && !kh ? `<button type="button" class="btn g" style="width:100%;margin-top:10px" data-kh="from" data-src="bill:${esc(x.no)}" data-p="${esc(x.phone)}" data-n="${esc(x.name || "")}" data-a="${due}">Add ${inr(due)} to udhaar khata</button>` : ""}
+    ${bill && !x.cancel ? `<button type="button" class="btn g" style="width:100%;margin-top:10px" data-bl="ret" data-t="${T}">Return items</button>` : ""}
+    ${x.cancel ? `<p class="hint">This ${est ? "estimate" : cn ? "credit note" : "bill"} is cancelled. Its number stays used, as GST rules ask.</p>` : `<p style="margin:18px 0 0"><button type="button" class="lnk" data-bl="cancel" data-t="${T}">${S.blCx === t ? "Tap again to cancel it" : "Cancel this " + (est ? "estimate" : cn ? "credit note" : "bill")}</button></p>`}
   </div></div>`;
+}
+// Returns: pick what came back from a bill; it makes a credit note linked to the bill.
+function blRetSheet(x) {
+  const R = S.blRet, wrap = h => `<div class="pm" data-blbg><div class="pmb" role="dialog" aria-label="Return items"><div class="ch"><button class="lnk" data-bl="retx">← Back</button><button class="lnk" data-bl="close">Close</button></div><h2 class="H" style="margin:4px 0 4px">Return items</h2><p class="mu" style="margin:0 0 12px">From ${esc(x.no)} · ${esc(x.name || "Walk-in customer")}</p>${h}</div></div>`;
+  if (R.loading) return wrap(`<p class="mu">Loading the bill…</p>`);
+  if (R.error) return wrap(`<p class="mu">${esc(R.error)}</p>`);
+  const L = R.bill.calc.lines, done = R.bill.ret || {};
+  const per = l => ((l.net != null ? l.net : l.q * l.p) - (l.bd || 0)) / l.q;
+  let tot = 0;
+  const rows = L.map((l, i) => {
+    const left = Math.round((l.q - (done[i] || 0)) * 1000) / 1000, q = +R.q[i] || 0; tot += q * per(l);
+    return `<div class="blc"><div class="blc1"><div class="blcn"><b>${esc(l.n)}</b><small>${rs2(per(l))} each · bought ${blQn(l.q)}${done[i] ? ` · ${blQn(done[i])} returned before` : ""}</small></div>
+      ${left > 0 ? `<div class="qst"><button type="button" data-bl="rqm" data-i="${i}" aria-label="One less">−</button><span>${blQn(q)}</span><button type="button" data-bl="rqp" data-i="${i}" data-max="${left}" aria-label="One more">+</button></div>` : `<span class="pl done">Returned</span>`}</div></div>`;
+  }).join("");
+  return wrap(`${rows}
+    <label style="display:block;margin-top:14px">Reason (optional)<input class="in" data-blr maxlength="120" placeholder="e.g. Damaged, wrong size" value="${esc(R.reason)}"></label>
+    <b class="blh">Refund by</b><div class="blpm">${["cash", "upi", "card", "bank"].map(k => `<button type="button" data-bl="rmode" data-k="${k}" class="${R.mode === k ? "on" : ""}">${BLMODE[k]}</button>`).join("")}</div>
+    <button type="button" class="btn blgo" data-bl="retsave" ${tot > 0 ? "" : "disabled"}>${tot > 0 ? "Make credit note · about " + inr(tot) : "Pick what came back"}</button>
+    <p class="hint">A credit note is the GST-correct way to take goods back. It reduces your sales and GST in the reports for your CA.</p>`);
 }
 
 const blMonthLabel = ym => { const [y, m] = ym.split("-").map(Number); return new Date(y, m - 1, 15).toLocaleDateString("en-IN", { month: "long", year: "numeric" }); };
@@ -1426,62 +1554,101 @@ function blReports() {
 }
 
 V.bills = () => {
-  const B = S.bl, top = s => head("GST bills", "Make a bill, send it on WhatsApp, get paid by UPI.", s || "");
+  const B = S.bl, top = r => head("Bills", "Make a bill in seconds. Print it, or send it on WhatsApp.", r || "");
   if (!B) { blLoad(); return top() + `<div class="empty">Loading your bills…</div>`; }
   if (B.error) return top() + `<div class="empty"><b>Bills couldn't load.</b>${esc(B.error)}<br><button class="btn" data-bl="reload">Try again</button></div>`;
   if (!B.settings || S.blSet) return top() + blSetupCard();
   const now = new Date(), m0 = +new Date(now.getFullYear(), now.getMonth(), 1);
-  const live = B.bills.filter(x => !x.cancel), month = live.filter(x => x.at >= m0), due = live.filter(x => !x.paid);
+  const live = B.bills.filter(x => !x.cancel), month = live.filter(x => x.at >= m0 && (blIsBill(x) || x.kind === "credit")), due = live.filter(x => blDue(x) > 0);
+  const net = month.reduce((t, x) => t + (x.kind === "credit" ? -x.total : x.total), 0), nb = month.filter(blIsBill).length;
   const f = S.blf || "all", q = (S.blq || "").toLowerCase();
-  const list = B.bills.filter(x => f === "all" ? true : f === "due" ? !x.paid && !x.cancel : f === "paid" ? x.paid && !x.cancel : x.cancel)
-    .filter(x => !q || (x.no + " " + (x.name || "") + " " + (x.phone || "")).toLowerCase().includes(q)).slice(0, 200);
+  const F = { all: () => true, due: x => blDue(x) > 0, paid: x => blIsBill(x) && x.paid && !x.cancel, est: x => x.kind === "est", ret: x => x.kind === "credit", cx: x => x.cancel };
+  const list = B.bills.filter(F[f] || F.all).filter(x => !q || (x.no + " " + (x.name || "") + " " + (x.phone || "")).toLowerCase().includes(q)).slice(0, 200);
   const left = B.pro ? null : Math.max(0, B.free - B.used);
-  return top(`<div class="tg"><button class="btn" data-bl="new">+ New bill</button><button class="btn g" data-bl="set">Bill settings</button></div>`) +
+  return top(`<div class="tg"><button class="btn" data-bl="new">+ New bill</button><button class="btn g" data-bl="new" data-k="est">Estimate</button><button class="btn g" data-bl="set">Settings</button></div>`) +
   (left != null ? `<div class="bar" style="margin-bottom:16px"><span><b>${left ? left + " of " + B.free + " free bills left." : "Your " + B.free + " free bills are used."}</b> Keepsake Pro gives you unlimited bills for ${rup(S.proPrice)} a month or ${rup(S.proYearPrice)} a year.</span><button class="btn" data-pro="year">${S.proUntil ? "Renew" : "Start Pro"} · ${rup(S.proYearPrice)} / year</button></div>` : "") +
   `<div class="g3" style="margin-bottom:16px">
-    <div class="kpi k"><span>Billed this month</span><b>${inr(month.reduce((t, x) => t + x.total, 0))}</b><small>${month.length} bill${month.length === 1 ? "" : "s"}</small></div>
-    <div class="kpi"><span>Payment due</span><b>${inr(due.reduce((t, x) => t + x.total, 0))}</b><small class="mu">${due.length} unpaid bill${due.length === 1 ? "" : "s"}</small></div>
-    <div class="kpi"><span>${blGst() ? "GST this month" : "Bills in total"}</span><b>${blGst() ? inr(month.reduce((t, x) => t + (x.tax || 0), 0)) : live.length}</b><small class="mu">${blGst() ? "CGST + SGST + IGST" : "not counting cancelled"}</small></div>
+    <div class="kpi k"><span>Sales this month</span><b>${inr(net)}</b><small>${nb} bill${nb === 1 ? "" : "s"}, after returns</small></div>
+    <div class="kpi"><span>Payment due</span><b>${inr(due.reduce((t, x) => t + blDue(x), 0))}</b><small class="mu">${due.length} bill${due.length === 1 ? "" : "s"} not fully paid</small></div>
+    <div class="kpi"><span>${blGst() ? "GST this month" : "Your bills are"}</span><b>${blGst() ? inr(month.reduce((t, x) => t + (x.kind === "credit" ? -1 : 1) * (x.tax || 0), 0)) : B.settings.gst === "composition" ? "Bill of supply" : "Cash memo"}</b><small class="mu">${blGst() ? "CGST + SGST + IGST" : B.settings.gst === "composition" ? "Composition scheme" : "No GST charged"}</small></div>
   </div>
   <section class="cd">
-    <div class="srch"><input class="in" data-bl-s placeholder="Search bill no., name or number" value="${esc(S.blq || "")}" aria-label="Search bills"><div class="tabs" style="margin:0">${[["all", "All"], ["due", "Unpaid"], ["paid", "Paid"], ["cx", "Cancelled"]].map(([k, l]) => `<button type="button" data-bl="f" data-k="${k}" class="${f === k ? "on" : ""}">${l}</button>`).join("")}</div></div>
-    ${list.length ? `<ul class="blr">${list.map(x => `<li><button type="button" data-bl="open" data-t="${esc(x.t)}"><span class="nm"><b>${esc(x.name || "Walk-in customer")}</b><small>${esc(x.no)} · ${ago(x.at)}</small></span><span class="am"><b>${inr(x.total)}</b>${blStatus(x)}</span></button></li>`).join("")}</ul>`
-      : `<div class="empty" style="margin-top:14px"><b>${B.bills.length ? "No bills match." : "No bills yet"}</b>${B.bills.length ? "Try another search or filter." : "Make your first bill in under a minute. Items come straight from your menu."}${B.bills.length ? "" : `<br><button class="btn" data-bl="new">+ New bill</button>`}</div>`}
+    <div class="srch"><input class="in" data-bl-s placeholder="Search bill no., name or number" value="${esc(S.blq || "")}" aria-label="Search bills"><div class="tabs" style="margin:0">${[["all", "All"], ["due", "Unpaid"], ["paid", "Paid"], ["est", "Estimates"], ["ret", "Returns"], ["cx", "Cancelled"]].map(([k, l]) => `<button type="button" data-bl="f" data-k="${k}" class="${f === k ? "on" : ""}">${l}</button>`).join("")}</div></div>
+    ${list.length ? `<ul class="blr">${list.map(x => `<li><button type="button" data-bl="open" data-t="${esc(x.t)}"><span class="nm"><b>${esc(x.name || "Walk-in customer")}</b><small>${esc(x.no)} · ${ago(x.at)}</small></span><span class="am"><b>${x.kind === "credit" ? "−" : ""}${inr(x.total)}</b>${blStatus(x)}</span></button></li>`).join("")}</ul>`
+      : `<div class="empty" style="margin-top:14px"><b>${B.bills.length ? "Nothing here." : "No bills yet"}</b>${B.bills.length ? "Try another search or filter." : "Tap your items, press Charge, done. Your first bill takes under a minute."}${B.bills.length ? "" : `<br><button class="btn" data-bl="new">+ New bill</button>`}</div>`}
   </section>${blReports()}${blNewSheet()}${blBillSheet()}`;
 };
 
 function blReadSet() {
-  const s = S.blSetD || {};
+  const s = S.blSetD || {}; s.bank = s.bank || { name: "", acc: "", ifsc: "" };
   $$("[data-bls]").forEach(e => { const k = e.dataset.bls; s[k] = e.type === "checkbox" ? e.checked : k === "gstin" || k === "prefix" ? e.value.toUpperCase().replace(/\s/g, "") : e.value; });
+  $$("[data-blsb]").forEach(e => { s.bank[e.dataset.blsb] = e.dataset.blsb === "ifsc" ? e.value.toUpperCase().replace(/\s/g, "") : e.value; });
   S.blSetD = s; return s;
+}
+// Totals change as you type; update just those bits so the keyboard stays open.
+function blLive() {
+  const N = S.blNew; if (!N) return;
+  const f = $("#blFoot"); if (f) f.innerHTML = blFoot();
+  const t = $("#blTot"); if (t) t.innerHTML = blTotHtml();
+  const g = $("#blBig"), k = blCalc(); if (g) g.textContent = inr(k.total);
+  const sv = $('[data-bl="save"]'); if (sv && !N.est) sv.textContent = "Save bill · " + inr(k.total);
+  const h = $("#blSp"); if (h) h.textContent = N.pay === "split" ? blSplitHint() : blPartHint();
+  N.lines.forEach((x, i) => { const a = $(`[data-amt="${i}"]`); if (a) a.textContent = rs2(blLineAmt(x)); });
+}
+async function blFindCust(p) {
+  const N = S.blNew; if (!N || N.looked === p) return; N.looked = p;
+  try {
+    const j = await blPost({ action: "bl-cust", phone: p }), c = j.cust; if (!c || S.blNew !== N || N.cust.phone.replace(/\D/g, "").slice(-10) !== p) return;
+    if (!N.cust.name) N.cust.name = c.name || ""; if (!N.cust.addr) N.cust.addr = c.addr || "";
+    if (c.gstin && blGst() && !N.cust.gstin) { N.cust.gstin = c.gstin; N.b2b = true; }
+    N.found = true; blRedraw(); const e = $('[data-blc="phone"]'); if (e) { e.focus(); e.setSelectionRange(e.value.length, e.value.length); }
+  } catch (e) { /* lookup is a nicety */ }
 }
 $("#main").addEventListener("input", ev => {
   const e = ev.target, N = S.blNew;
-  if (e.matches("[data-bls]")) {
+  if (e.matches("[data-bls]") || e.matches("[data-blsb]")) {
     const s = blReadSet();
     if (e.dataset.bls === "gstin") { const ok = window.KSGST && KSGST.gstinOk(s.gstin); $("#blGi").textContent = s.gstin ? (ok ? "✓ Valid · " + KSGST.STATES[s.gstin.slice(0, 2)] : "Check the 15 characters of your GSTIN.") : "Your 15-character GST number."; const b = $('[data-bl="setsave"]'); if (b) b.disabled = !ok; }
     return;
   }
   if (e.matches("[data-bl-s]")) { S.blq = e.value; const y = scrollY, at = e.selectionStart; go(); scrollTo(0, y); const n = $("[data-bl-s]"); if (n) { n.focus(); n.setSelectionRange(at, at); } return; }
-  if (!N) return;
+  if (e.matches("[data-blr]") && S.blRet) { S.blRet.reason = e.value; return; }
+  if (!N || N.locked) return;
   if (e.matches("[data-bl-q]")) { N.q = e.value; $("#blPick").innerHTML = blPick(); return; }
   if (e.matches("[data-blc]")) {
-    const k = e.dataset.blc; if (k === "note") N.note = e.value; else N.cust[k] = k === "gstin" ? e.value.toUpperCase().replace(/\s/g, "") : e.value;
+    const k = e.dataset.blc; if (k === "note") { N.note = e.value; return; }
+    N.cust[k] = k === "gstin" ? e.value.toUpperCase().replace(/\s/g, "") : e.value;
+    if (k === "phone") { const p = e.value.replace(/\D/g, "").slice(-10); if (p.length === 10 && /^[6-9]/.test(p)) blFindCust(p); else N.found = false; return; }
     if (k === "gstin" && window.KSGST.gstinOk(N.cust.gstin)) { blRedraw(); return; }
-    if (k === "gstin" || k === "state") $("#blTot").innerHTML = N.lines.length ? blTotHtml() : "";
+    if (k === "gstin" || k === "state") blLive();
     return;
   }
-  if (e.matches("[data-bli]")) { const x = N.lines[+e.dataset.i]; if (!x) return; x[e.dataset.bli] = e.value; if (e.dataset.bli === "hsn") e.classList.toggle("bad", e.value.replace(/\D/g, "").length < 4); $("#blTot").innerHTML = blTotHtml(); }
+  if (e.matches("[data-bli]")) { const x = N.lines[+e.dataset.i]; if (!x) return; x[e.dataset.bli] = e.value; if (e.dataset.bli === "hsn") e.classList.toggle("bad", blGst() && e.value.replace(/\D/g, "").length < (S.bl.settings.big ? 6 : 4)); blLive(); return; }
+  if (e.matches("[data-blx]")) { N[e.dataset.blx] = e.value; blLive(); return; }
+  if (e.matches("[data-bls2]")) { N.split[e.dataset.bls2] = e.value; blLive(); return; }
+  if (e.matches("[data-blpa]")) { N.part.amt = e.value; blLive(); return; }
 });
-$("#main").addEventListener("change", ev => { const e = ev.target; if (e.matches("[data-bl-ym]")) { S.blym = e.value; S.blRep = null; blRedraw(); return; } if (S.blNew && e.matches("select[data-bli], select[data-blc]")) { e.dispatchEvent(new Event("input", { bubbles: true })); } });
+$("#main").addEventListener("change", async ev => {
+  const e = ev.target;
+  if (e.matches("[data-bl-ym]")) { S.blym = e.value; S.blRep = null; blRedraw(); return; }
+  if (S.blNew && e.matches("select[data-bli], select[data-blc]")) { e.dispatchEvent(new Event("input", { bubbles: true })); if (e.dataset.bli === "r") blRedraw(); return; }
+  if (e.matches("[data-bls]") && e.type === "checkbox") { blReadSet(); return; }
+  if (e.id === "blSign") {
+    const f = e.files[0]; if (!f) return; const lab = e.closest("label"); lab.firstChild.textContent = "Uploading…";
+    try { blReadSet(); const r = await api("/api/img", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ data: await shrink(f) }) }); S.blSetD.sign = r.url; go(); }
+    catch (x) { toast(x.message); lab.firstChild.textContent = "Upload a photo of your signature"; }
+  }
+});
 $("#main").addEventListener("click", async ev => {
-  if (ev.target.matches("[data-blbg]")) { S.blNew = null; S.blOpen = null; S.blCx = null; blRedraw(); return; }
+  if (ev.target.matches("[data-blbg]")) { if (S.blNew && S.blNew.lines.length && !S.blNew.leave) { S.blNew.leave = 1; toast("Tap outside again to discard this bill."); return; } S.blNew = null; S.blOpen = null; S.blCx = null; S.blRet = null; blRedraw(); return; }
   const b = ev.target.closest("[data-bl]"); if (!b) return;
   const a = b.dataset.bl, N = S.blNew;
   if (a === "reload") { S.bl = null; go(); return; }
   if (a === "set") { S.blSet = true; S.blSetD = null; go(); return; }
   if (a === "setclose") { S.blSet = false; S.blSetD = null; go(); return; }
-  if (a === "gsttype") { blReadSet().gst = b.dataset.k; go(); return; }
+  if (a === "gsttype") { const s = blReadSet(); s.gst = b.dataset.k; if (s.gst !== "regular") s.big = false; go(); return; }
+  if (a === "design") { blReadSet().design = b.dataset.k; blRedraw(); return; }
+  if (a === "nosign") { blReadSet().sign = ""; go(); return; }
   if (a === "setsave") {
     const s = blReadSet(); b.disabled = true;
     try { const j = await blPost({ action: "bl-settings", settings: { ...s, rate: +s.rate } }); S.bl.settings = j.settings; S.blSet = false; S.blSetD = null; toast("Bill settings saved."); go(); }
@@ -1492,44 +1659,83 @@ $("#main").addEventListener("click", async ev => {
   if (a === "xlsx" || a === "csv") { const R = S.blRep; if (!R || !R.bills) return; (a === "xlsx" ? KSGSTX.downloadWorkbook : KSGSTX.downloadRegister)(R.bills, R.shop, R.ym); toast("Downloading " + blMonthLabel(R.ym) + "…"); return; }
   if (a === "ca-on" || a === "ca-off") { if (a === "ca-off" && S.blCaX !== 1) { S.blCaX = 1; b.textContent = "Tap again to turn it off"; return; } S.blCaX = 0; try { const j = await blPost({ action: "bl-ca", on: a === "ca-on" }); S.bl.ca = j.ca; toast(a === "ca-on" ? "Link created." : "Link turned off. The old link no longer works."); blRedraw(); } catch (x) { toast(x.message); } return; }
   if (a === "ca-copy") { try { await navigator.clipboard.writeText(caUrl(S.bl.ca)); toast("Link copied."); } catch (x) { toast(caUrl(S.bl.ca)); } return; }
-  if (a === "new") { S.blNew = !S.bl.pro && S.bl.used >= S.bl.free ? { locked: true } : blNew(); go(); return; }
-  if (a === "close") { S.blNew = null; S.blOpen = null; S.blCx = null; S.blFresh = null; blRedraw(); return; }
-  if (a === "open") { S.blOpen = b.dataset.t; S.blCx = null; S.blFresh = null; blRedraw(); return; }
+  if (a === "new") { const est = b.dataset.k === "est"; S.blOpen = null; S.blFresh = null; S.blKh = null; S.blRet = null; S.blNew = !est && !S.bl.pro && S.bl.used >= S.bl.free ? { locked: true } : blNew(est); go(); setTimeout(() => { const q = $("[data-bl-q]"); if (q && matchMedia("(pointer:fine)").matches) q.focus(); }, 0); return; }
+  if (a === "close") { S.blNew = null; S.blOpen = null; S.blCx = null; S.blFresh = null; S.blRet = null; blRedraw(); return; }
+  if (a === "open") { S.blOpen = b.dataset.t; S.blCx = null; S.blFresh = null; S.blRet = null; blRedraw(); return; }
   if (a === "copy") { try { await navigator.clipboard.writeText(blUrl(b.dataset.t)); toast("Link copied."); } catch (x) { toast(blUrl(b.dataset.t)); } return; }
   if (a === "paid" || a === "unpaid" || a === "cancel") {
     if (a === "cancel" && S.blCx !== b.dataset.t) { S.blCx = b.dataset.t; blRedraw(); return; }
     try {
       const j = await blPost(a === "cancel" ? { action: "bl-cancel", t: b.dataset.t } : { action: "bl-paid", t: b.dataset.t, paid: a === "paid", mode: b.dataset.k });
-      const x = S.bl.bills.find(y => y.t === b.dataset.t); if (x) { x.paid = j.bill.paid; x.cancel = j.bill.cancel; }
-      S.blCx = null; toast(a === "cancel" ? "Bill cancelled." : a === "paid" ? "Marked as paid." : "Marked as not paid."); blRedraw();
+      const x = S.bl.bills.find(y => y.t === b.dataset.t); if (x) { x.paid = j.bill.paid; x.cancel = j.bill.cancel; x.rcv = j.bill.rcv; }
+      S.blCx = null; toast(a === "cancel" ? "Cancelled." : a === "paid" ? "Marked as paid." : "Marked as not paid."); blRedraw();
     } catch (x) { toast(x.message); }
     return;
   }
+  if (a === "conv") {
+    if (b.disabled) return; b.disabled = true;
+    try {
+      const j = await blPost({ action: "bl-convert", t: b.dataset.t, pay: { mode: b.dataset.k } }), x = j.bill;
+      const e = S.bl.bills.find(y => y.t === b.dataset.t); if (e) e.conv = x.no;
+      S.bl.bills.unshift(blRowOf(x)); S.bl.used = j.used; S.blRep = null; S.blKh = j.khata || null; S.blOpen = x.t; S.blFresh = x.t; toast("Bill " + x.no + " made."); blRedraw();
+    } catch (x) { b.disabled = false; toast(x.message); }
+    return;
+  }
+  if (a === "ret") {
+    const t = b.dataset.t; S.blRet = { t, loading: true }; blRedraw();
+    try { const r = await fetch("/api/qr", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "bl-get", t }) }), j = await r.json(); if (!r.ok) throw new Error(j.error || "Couldn't load the bill."); S.blRet = { t, bill: j.bill, q: {}, reason: "", mode: "cash" }; }
+    catch (x) { S.blRet = { t, error: x.message }; }
+    blRedraw(); return;
+  }
+  if (a === "retx") { S.blRet = null; blRedraw(); return; }
+  if (a === "rqm" || a === "rqp") { const R = S.blRet, i = b.dataset.i, q = +R.q[i] || 0; R.q[i] = a === "rqp" ? Math.min(+b.dataset.max, q + 1) : Math.max(0, q - 1); blRedraw(); return; }
+  if (a === "rmode") { S.blRet.mode = b.dataset.k; blRedraw(); return; }
+  if (a === "retsave") {
+    const R = S.blRet, items = Object.entries(R.q).filter(([, q]) => q > 0).map(([k, q]) => ({ k: +k, q })); if (!items.length || b.disabled) return; b.disabled = true;
+    try {
+      const j = await blPost({ action: "bl-credit", t: R.t, items, reason: R.reason, mode: R.mode }), x = j.bill;
+      S.bl.bills.unshift(blRowOf(x)); S.blRep = null; S.blRet = null; S.blKh = null; S.blOpen = x.t; S.blFresh = x.t; toast("Credit note " + x.no + " saved."); blRedraw();
+    } catch (x) { b.disabled = false; toast(x.message); }
+    return;
+  }
   if (!N || N.locked) return;
+  N.leave = 0;
+  if (a === "mode") { N.est = b.dataset.k === "est"; blRedraw(); return; }
   if (a === "b2b") { N.b2b = b.checked; blRedraw(); return; }
-  if (a === "inc") { N.inc = b.checked; $("#blTot").innerHTML = N.lines.length ? blTotHtml() : ""; return; }
+  if (a === "addr") { N.addr = true; blRedraw(); const e = $('[data-blc="addr"]'); if (e) e.focus(); return; }
+  if (a === "inc") { N.inc = b.checked; blLive(); return; }
   if (a === "pay") { N.pay = b.dataset.k; blRedraw(); return; }
+  if (a === "via") { N.part.via = b.dataset.k; blRedraw(); return; }
+  if (a === "tog") { N.open = N.open === +b.dataset.i ? -1 : +b.dataset.i; blRedraw(); return; }
+  if (a === "qp" || a === "qm") { const x = N.lines[+b.dataset.i]; if (!x) return; const q = (+x.q || 0) + (a === "qp" ? 1 : -1); if (q <= 0) { N.lines.splice(+b.dataset.i, 1); N.open = -1; } else x.q = blQn(q); blRedraw(); return; }
   if (a === "add") {
     const k = b.dataset.k, [si, ii] = k.split(".").map(Number), x = ((S.d.menu || [])[si] || { items: [] }).items[ii]; if (!x) return;
     const have = N.lines.find(l => l.k === k);
-    if (have) have.q = (+have.q || 0) + 1; else N.lines.push(blNewLine(k, x.n, numP(x.p)));
+    if (have) have.q = blQn((+have.q || 0) + 1); else N.lines.push(blNewLine(k, x.n, numP(x.p)));
     blRedraw(); return;
   }
   if (a === "addo") {
-    const n = ($("#blOn").value || "").trim(), p = +($("#blOp").value || "");
-    if (!n || !(p >= 0) || $("#blOp").value === "") { toast("Add a name and a price."); return; }
-    N.lines.push(blNewLine("o" + Date.now(), n, p)); blRedraw(); return;
+    const raw = $("#blOp").value, p = +String(raw).replace(/[^\d.]/g, ""), n = ($("#blOn").value || "").trim() || "Item";
+    if (raw === "" || !(p > 0)) { toast("Type the amount."); $("#blOp").focus(); return; }
+    N.lines.push(blNewLine("o" + Date.now(), n, p)); blRedraw(); const o = $("#blOp"); if (o) o.focus(); return;
   }
-  if (a === "rm") { N.lines.splice(+b.dataset.i, 1); blRedraw(); return; }
+  if (a === "rm") { N.lines.splice(+b.dataset.i, 1); N.open = -1; blRedraw(); return; }
+  if (a === "back") { N.step = "items"; blRedraw(); return; }
+  if (a === "charge") {
+    if (blGst()) { const need = S.bl.settings.big ? 6 : 4, i = N.lines.findIndex(x => String(x.hsn || "").replace(/\D/g, "").length < need); if (i >= 0) { N.open = i; blRedraw(); toast(`Add the HSN/SAC code (${need} digits) for "${N.lines[i].n}". GST bills need it.`); const h = $(`[data-bli="hsn"][data-i="${i}"]`); if (h) h.focus(); return; } }
+    N.step = "charge"; blRedraw(); return;
+  }
   if (a === "save") {
     if (N.busy) return; N.busy = true; b.disabled = true;
     try {
-      if (blGst()) { const miss = N.lines.find(x => String(x.hsn || "").replace(/\D/g, "").length < 4); if (miss) { N.busy = false; b.disabled = false; toast(`Add the HSN/SAC code for "${miss.n}".`); return; } }
-      const j = await blPost({ action: "bl-create", cust: N.b2b ? N.cust : { name: N.cust.name, phone: N.cust.phone, addr: N.cust.addr }, items: N.lines.map(x => ({ n: x.n, q: +x.q, p: +x.p, r: +x.r, hsn: x.hsn, u: x.u, dp: +x.dp || 0 })), inc: N.inc, paid: N.pay !== "due", mode: N.pay, note: N.note });
+      const c = N.cust, pay = N.pay === "split" ? { mode: "split", split: { cash: +N.split.cash || 0, upi: +N.split.upi || 0, card: +N.split.card || 0 } } : N.pay === "part" ? { mode: "part", amt: +N.part.amt || 0, via: N.part.via } : { mode: N.pay };
+      const j = await blPost({ action: "bl-create", est: N.est, cust: N.b2b ? c : { name: c.name, phone: c.phone, addr: c.addr }, items: N.lines.map(x => ({ n: x.n, q: +x.q, p: +x.p, r: blGst() ? +x.r : 0, hsn: x.hsn, u: x.u, dp: +x.dp || 0 })),
+        inc: N.inc, bd: +N.bd || 0, del: +N.del || 0, pay, note: N.note });
       N.lines.forEach(x => { S.bl.mem[x.n.toLowerCase()] = { h: x.hsn, r: +x.r, u: x.u }; });
       const x = j.bill;
-      S.bl.bills.unshift({ t: x.t, no: x.no, at: x.at, name: x.cust.name, phone: x.cust.phone, total: x.calc.total, tax: x.calc.tax, paid: x.paid, cancel: x.cancel });
-      S.bl.used = j.used; S.blRep = null; const cm = (S.bl.months || []).find(m => m.ym === KSGST.ym(x.at)); if (cm) cm.n++; S.blNew = null; S.blOpen = x.t; S.blFresh = x.t; toast("Bill " + x.no + " saved."); blRedraw();
+      S.bl.bills.unshift(blRowOf(x));
+      S.bl.used = j.used; S.blRep = null; if (!N.est) { const cm = (S.bl.months || []).find(m => m.ym === KSGST.ym(x.at)); if (cm) cm.n++; else S.bl.months = [{ ym: KSGST.ym(x.at), n: 1 }, ...(S.bl.months || [])]; }
+      S.blNew = null; S.blKh = j.khata || null; S.blOpen = x.t; S.blFresh = x.t; blRedraw();
     } catch (x) { N.busy = false; b.disabled = false; toast(x.message); }
   }
 });
