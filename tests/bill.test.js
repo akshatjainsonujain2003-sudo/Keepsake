@@ -1,6 +1,6 @@
 // Run: node --test tests/*.test.js
 const test = require("node:test"), assert = require("node:assert/strict"), path = require("path");
-const G = require("../assets/gst.v1.js");
+const G = require("../assets/gst.v2.js");
 const CH = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const gstin = (st, pan = "AAPFU0939F") => [...CH].map(c => st + pan + "1Z" + c).find(G.gstinOk);
 
@@ -130,8 +130,67 @@ test("bad lines are dropped; empty bill refused", async () => {
   assert.equal(r.status, 400);
 });
 
-test("bill of supply shop: no GST, no HSN needed", async () => {
+test("shop not registered for GST: a plain bill (cash memo), no GST, no HSN needed", async () => {
   await call({ action: "bl-settings", settings: { gst: "none", state: "08", prefix: "BS" } });
   const r = await call({ action: "bl-create", items: [{ n: "Tea", q: 2, p: 15, r: 5 }] });
-  assert.equal(r.ok, true); assert.equal(r.bill.kind, "supply"); assert.equal(r.bill.calc.tax, 0); assert.equal(r.bill.calc.total, 30);
+  assert.equal(r.ok, true); assert.equal(r.bill.kind, "cash"); assert.equal(r.bill.calc.tax, 0); assert.equal(r.bill.calc.total, 30);
+});
+
+test("composition dealer: bill of supply with GSTIN, no tax charged", async () => {
+  assert.equal((await call({ action: "bl-settings", settings: { gst: "composition", gstin: "bad" } })).status, 400);
+  const s = await call({ action: "bl-settings", settings: { gst: "composition", gstin: SELLER, legal: "Maison Noor LLP" } });
+  assert.equal(s.settings.gstin, SELLER);
+  const r = await call({ action: "bl-create", items: [{ n: "Kurta", q: 1, p: 1000, r: 5 }] });
+  assert.equal(r.bill.kind, "supply"); assert.equal(r.bill.calc.tax, 0); assert.equal(r.bill.seller.gtype, "composition"); assert.equal(r.bill.seller.gstin, SELLER);
+});
+
+test("bill discount, delivery charge, split and part payments", async () => {
+  shop(true); kv.delete("blcnt:" + PID);
+  await call({ action: "bl-settings", settings: { ...SET, design: "t58" } });
+  const r = await call({ action: "bl-create", items: [item({ p: 1000 }), item({ n: "Dupatta", p: 500, r: 18 })], bd: 150, del: 50, pay: { mode: "split", split: { cash: 400, upi: 1000 } } });
+  assert.equal(r.ok, true); assert.equal(r.bill.calc.bd, 150); assert.equal(r.bill.calc.total, 1400); assert.equal(r.bill.design, "t58");
+  const dl = r.bill.calc.lines.find(l => l.x === "del"); assert.equal(dl.r, 5); assert.equal(dl.hsn, "6211");
+  assert.equal(r.bill.paid, true); assert.deepEqual(r.bill.split, { cash: 400, upi: 1000 });
+  assert.equal((await call({ action: "bl-create", items: [item()], pay: { mode: "split", split: { cash: 10 } } })).status, 400);
+  const p = await call({ action: "bl-create", cust: { name: "Riya", phone: "9829000000" }, items: [item({ p: 1000 })], pay: { mode: "part", amt: 400 } });
+  assert.equal(p.bill.paid, false); assert.equal(p.bill.rcv, 400);
+  assert.equal((await call({ action: "bl-create", items: [item()], pay: { mode: "part", amt: 0 } })).status, 400);
+  // the customer's details come back next time
+  const c = await call({ action: "bl-cust", phone: "+91 98290 00000" }); assert.equal(c.cust.name, "Riya");
+});
+
+test("estimates: own series, not in reports, converted into a bill once", async () => {
+  const e = await call({ action: "bl-create", est: true, cust: { name: "Aman" }, items: [item({ p: 2000 })], bd: 100 });
+  assert.equal(e.bill.kind, "est"); assert.match(e.bill.no, /^EST\//);
+  const ym = new Date(Date.now() + 5.5 * 3600e3).toISOString().slice(0, 7);
+  assert.ok(!(await call({ action: "bl-month", ym })).bills.some(x => x.kind === "est"));
+  const b = await call({ action: "bl-convert", t: e.bill.t, pay: { mode: "upi" } });
+  assert.equal(b.bill.kind, "tax"); assert.equal(b.bill.calc.total, 1900); assert.match(b.bill.no, /^MN\//);
+  assert.equal((await call({ action: "bl-convert", t: e.bill.t })).status, 409);
+});
+
+test("credit note: returns part of a bill at the price charged, own series, can't return more than sold", async () => {
+  const b = await call({ action: "bl-create", items: [item({ q: 2, p: 1000 }), item({ n: "Dupatta", p: 500 })], bd: 250, pay: { mode: "cash" } });
+  const c = await call({ action: "bl-credit", t: b.bill.t, items: [{ k: 0, q: 1 }], reason: "Size issue" });
+  assert.equal(c.ok, true); assert.equal(c.bill.kind, "credit"); assert.match(c.bill.no, /^CN\/\d{2}-\d{2}\/0001$/);
+  assert.equal(c.bill.ref.no, b.bill.no); assert.equal(c.bill.calc.total, 900); assert.equal(c.orig.ret[0], 1);
+  assert.equal((await call({ action: "bl-credit", t: b.bill.t, items: [{ k: 0, q: 2 }] })).status, 400);
+  const ym = new Date(Date.now() + 5.5 * 3600e3).toISOString().slice(0, 7);
+  assert.ok((await call({ action: "bl-month", ym })).bills.some(x => x.kind === "credit"));
+});
+
+test("balance goes into the udhaar khata (Pro); marking the bill paid records the payment there once", async () => {
+  shop(true); await call({ action: "bl-settings", settings: { gst: "none", state: "08" } });
+  const r = await call({ action: "bl-create", items: [{ n: "Saree", q: 1, p: 1000 }], cust: { name: "Pappu", phone: "9829011111" }, pay: { mode: "part", amt: 400 } });
+  assert.equal(r.bill.kind, "cash"); assert.equal(r.bill.rcv, 400); assert.equal(r.khata.bal, 600);
+  const kh = () => JSON.parse(kv.get("kh:" + PID + ":9829011111"));
+  const before = kh().e.length;
+  const p = await call({ action: "bl-paid", t: r.bill.t, paid: true, mode: "upi" });
+  assert.equal(p.bill.paid, true);
+  assert.equal(kh().e.length, before + 1);
+  await call({ action: "bl-paid", t: r.bill.t, paid: false });
+  await call({ action: "bl-paid", t: r.bill.t, paid: true, mode: "cash" });
+  assert.equal(kh().e.length, before + 1, "the khata payment is recorded only once");
+  const none = await call({ action: "bl-create", items: [{ n: "Blouse", q: 1, p: 300 }], cust: { phone: "9829011111" }, pay: { mode: "cash" } });
+  assert.equal(none.khata, undefined);
 });

@@ -1,6 +1,6 @@
 // Run: node --test tests/
 const test = require("node:test"), assert = require("node:assert/strict");
-const G = require("../assets/gst.v1.js");
+const G = require("../assets/gst.v2.js");
 
 test("intra-state: CGST + SGST split, exclusive prices", () => {
   const b = G.calc([{ n: "Shirt", q: 2, p: 500, r: 5 }], { seller: "08", pos: "08" });

@@ -10,84 +10,128 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js" defer></script>
-<script src="/assets/gst.v1.js" defer></script>
+<script src="/assets/gst.v2.js" defer></script>
 <style>
-:root{--bg:#F2F2EE;--card:#fff;--ink:#0B0B14;--mu:#5B5B69;--line:#DADAD3;--bl:#1F1BF2;--li:#D4FF3F;--gr:#14733f}
+:root{--bg:#EDEDE8;--card:#fff;--ink:#0B0B14;--mu:#5B5B69;--line:#DADAD3;--soft:#F4F4F0;--bl:#1F1BF2;--li:#D4FF3F;--gr:#14733f;--ac:var(--bl)}
 *{box-sizing:border-box}
-html,body{margin:0;background:var(--bg);color:var(--ink);font:500 14px/1.45 Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
-.wrap{max-width:820px;margin:0 auto;padding:20px 16px 120px}
-.inv{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:28px;overflow:hidden}
-.hd{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;padding-bottom:20px;border-bottom:1px solid var(--line)}
-.sel{display:flex;gap:14px;min-width:0;flex:1 1 300px}
-.lg{flex:none;width:56px;height:56px;border-radius:14px;background:var(--ink) center/cover no-repeat;color:#fff;display:grid;place-items:center;font:800 22px 'Inter Tight',sans-serif}
-.sel h1{margin:0;font:800 22px/1.1 'Inter Tight',sans-serif;letter-spacing:-.03em}
-.sel p{margin:4px 0 0;color:var(--mu);font-size:13px}
-.kind{text-align:right;flex:0 1 240px}
-.kind b{display:inline-block;padding:6px 12px;border-radius:999px;background:var(--ink);color:#fff;font:600 11px 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase}
-.kind dl{margin:12px 0 0;display:grid;grid-template-columns:auto auto;justify-content:end;gap:3px 12px;font-size:13px}
-.kind dt{color:var(--mu)}.kind dd{margin:0;font-weight:600;font-variant-numeric:tabular-nums}
-.to{display:grid;grid-template-columns:1fr auto;gap:16px;padding:18px 0;border-bottom:1px solid var(--line)}
-.lb{font:600 10.5px 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--mu)}
-.to b{display:block;margin-top:6px;font-size:15px}.to p{margin:2px 0 0;color:var(--mu);font-size:13px}
-.st{align-self:start;padding:8px 14px;border-radius:999px;font:700 12px Inter;white-space:nowrap}
-.st.paid{background:#d9f5e3;color:var(--gr)}.st.due{background:#fff0d6;color:#8a5300}.st.cx{background:#fde2e2;color:#a11d1d}
-table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
-.items{margin-top:8px}
-.items th{text-align:right;font:600 10.5px 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--mu);padding:12px 6px;border-bottom:1px solid var(--line)}
-.items td{text-align:right;padding:12px 6px;border-bottom:1px solid #ecece6;vertical-align:top}
-.items th:nth-child(-n+2),.items td:nth-child(-n+2){text-align:left}
-.items td small{display:block;color:var(--mu);font-size:12px}
-.sum{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:24px;margin-top:20px}
-.rt th,.rt td{padding:6px 4px;text-align:right;font-size:12.5px;border-bottom:1px solid #ecece6}
-.rt th{font:600 10px 'JetBrains Mono',monospace;letter-spacing:.08em;color:var(--mu);text-transform:uppercase}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:500 13.5px/1.45 Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:860px;margin:0 auto;padding:20px 12px 130px}
+.inv{background:var(--card);border-radius:18px;padding:34px 36px;box-shadow:0 1px 0 var(--line),0 20px 50px -30px rgba(11,11,20,.35);overflow:hidden;position:relative}
+.num{font-variant-numeric:tabular-nums}
+.lb{display:block;font:600 10px 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--mu)}
+.cx-stamp{position:absolute;top:120px;right:40px;transform:rotate(-12deg);border:3px solid #b42318;color:#b42318;padding:6px 14px;border-radius:8px;font:800 26px 'Inter Tight',sans-serif;letter-spacing:.08em;opacity:.8}
+
+/* ---------- A4 (modern + classic share the markup) ---------- */
+.top{display:flex;justify-content:space-between;gap:24px;align-items:flex-start}
+.sel{display:flex;gap:14px;min-width:0;flex:1}
+.lg{flex:none;width:58px;height:58px;border-radius:14px;background:var(--ink) center/cover no-repeat;color:#fff;display:grid;place-items:center;font:800 24px 'Inter Tight',sans-serif}
+.sel h1{margin:0;font:800 23px/1.1 'Inter Tight',sans-serif;letter-spacing:-.03em}
+.sel p{margin:3px 0 0;color:var(--mu);font-size:12.5px}
+.sel p b{color:var(--ink);font-weight:600}
+.ttl{text-align:right;flex:none}
+.ttl .orig{font:600 9.5px 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--mu)}
+.ttl h2{margin:4px 0 0;font:800 28px/1 'Inter Tight',sans-serif;letter-spacing:-.03em;color:var(--ac);text-transform:uppercase}
+.ttl .sub{margin:6px 0 0;font-size:11.5px;color:var(--mu);max-width:250px;margin-left:auto}
+.rule{height:4px;border-radius:4px;background:linear-gradient(90deg,var(--ac) 0 70%,var(--li) 70%);margin:22px 0 18px}
+.meta{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.meta div{background:var(--soft);border-radius:12px;padding:10px 12px;min-width:0}
+.meta b{display:block;margin-top:3px;font-weight:700;font-size:13.5px;overflow-wrap:anywhere}
+.parties{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin:22px 0 6px}
+.parties>div>b{display:block;margin-top:5px;font-size:15px}
+.parties p{margin:2px 0 0;color:var(--mu);font-size:12.5px}
+.st{display:inline-block;margin-top:8px;padding:4px 10px;border-radius:999px;font:700 11.5px Inter}
+.st.paid{background:#d9f5e3;color:var(--gr)}.st.due{background:#fff0d6;color:#8a5300}.st.cx{background:#fde2e2;color:#a11d1d}.st.est{background:#e9e8ff;color:#2b27c9}
+table{width:100%;border-collapse:collapse}
+.items{margin-top:18px}
+.items th{font:600 9.5px 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#fff;background:var(--ink);padding:10px 8px;text-align:right;white-space:nowrap}
+.items th:first-child{border-radius:10px 0 0 10px}.items th:last-child{border-radius:0 10px 10px 0}
+.items td{padding:11px 8px;border-bottom:1px solid #ecece6;text-align:right;vertical-align:top;font-variant-numeric:tabular-nums}
+.items th.l,.items td.l{text-align:left}
+.items td small{display:block;color:var(--mu);font-size:11.5px;margin-top:1px}
+.items tr.del td{color:var(--mu)}
+.low{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:28px;margin-top:20px;align-items:start}
+.rt{margin-top:8px}
+.rt th,.rt td{padding:6px 6px;text-align:right;font-size:12px;border-bottom:1px solid #ecece6;font-variant-numeric:tabular-nums}
+.rt th{font:600 9.5px 'JetBrains Mono',monospace;letter-spacing:.08em;color:var(--mu);text-transform:uppercase}
 .rt th:first-child,.rt td:first-child{text-align:left}
-.tot div{display:flex;justify-content:space-between;padding:5px 0;font-variant-numeric:tabular-nums}
-.tot div span:first-child{color:var(--mu)}
-.tot .g{margin-top:8px;padding:14px 16px;border-radius:14px;background:var(--ink);color:#fff;font:800 22px 'Inter Tight',sans-serif;letter-spacing:-.02em}
-.tot .g span:first-child{color:#B4B4C2;font:600 13px Inter;align-self:center;letter-spacing:0}
-.words{margin-top:10px;font-size:12.5px;color:var(--mu)}
-.ft{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-top:24px;padding-top:18px;border-top:1px solid var(--line);font-size:12.5px;color:var(--mu)}
-.ft p{margin:0 0 4px}
-.upi{display:flex;gap:14px;align-items:center}
-.upi .q{width:104px;height:104px;padding:6px;border:1px solid var(--line);border-radius:12px;background:#fff}
+.tot>div,.tot .inc>div,.tot .pay>div{display:flex;justify-content:space-between;gap:10px;padding:5px 0;font-variant-numeric:tabular-nums}
+.tot span:first-child{color:var(--mu)}
+.tot>div.g{margin:8px 0 4px;padding:13px 16px;border-radius:14px;background:var(--ac);color:#fff;font:800 22px 'Inter Tight',sans-serif;letter-spacing:-.02em;align-items:center}
+.tot .g span:first-child{color:#E4E3FF;font:600 13px Inter;letter-spacing:0}
+.tot>.inc,.tot>.pay{display:block}
+.tot>.inc{margin-top:6px;padding:8px 12px;border-radius:10px;background:var(--soft)}
+.tot .inc div{padding:2px 0;font-size:12px}
+.words{margin:8px 0 0;font-size:12px;color:var(--mu)}
+.words b{color:var(--ink);font-weight:600}
+.tot>.pay{margin-top:12px;border-top:1px dashed var(--line);padding-top:8px}
+.foot{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:24px;margin-top:26px;padding-top:18px;border-top:1px solid var(--line);font-size:12px;color:var(--mu);align-items:end}
+.foot p{margin:0 0 4px}.foot p b{color:var(--ink);font-weight:600}
+.bank{margin-top:10px}
+.upi{display:flex;gap:12px;align-items:center;margin-top:12px}
+.upi .q{width:96px;height:96px;padding:6px;border:1px solid var(--line);border-radius:12px;background:#fff;flex:none}
 .upi .q svg{width:100%;height:100%;display:block}
-.made{margin-top:18px;text-align:center;font-size:11.5px;color:var(--mu)}.made a{color:var(--ink)}
-.bar{position:fixed;left:0;right:0;bottom:0;padding:12px 16px calc(12px + env(safe-area-inset-bottom));background:#ffffffee;backdrop-filter:blur(10px);border-top:1px solid var(--line)}
-.bar div{max-width:820px;margin:0 auto;display:flex;gap:8px;flex-wrap:wrap}
-@media (max-width:640px){.bar .btn.pay{flex-basis:100%}.bar .btn{min-height:44px;padding:0 10px;font-size:13.5px}}
-.btn{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 16px;border-radius:999px;border:0;background:var(--ink);color:#fff;font:700 14px Inter;text-decoration:none;cursor:pointer}
+.sig{text-align:right;min-width:200px}
+.sig img{display:block;max-width:170px;max-height:60px;margin:0 0 4px auto;object-fit:contain}
+.sig .sp{height:52px}
+.sig b{display:block;color:var(--ink);font-weight:600;padding-top:6px;border-top:1px solid var(--ink)}
+.made{margin:16px 0 0;text-align:center;font-size:11.5px;color:var(--mu)}.made a{color:var(--ink)}
+
+/* A4 classic: black and white, boxed */
+.d-a4c{--ac:var(--ink)}
+.d-a4c .inv{border-radius:4px;border:1px solid var(--ink);box-shadow:none}
+.d-a4c .rule{background:var(--ink);height:2px}
+.d-a4c .meta div{background:none;border:1px solid var(--line);border-radius:4px}
+.d-a4c .items th{background:none;color:var(--ink);border-top:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink)}
+.d-a4c .items th:first-child,.d-a4c .items th:last-child{border-radius:0}
+.d-a4c .tot .g{background:none;color:var(--ink);border:1.5px solid var(--ink);border-radius:4px}.d-a4c .tot .g span:first-child{color:var(--mu)}
+.d-a4c .lg{border-radius:6px}.d-a4c .ttl h2{font-size:24px}
+
+/* ---------- Thermal receipts ---------- */
+.rc{background:#fff;margin:0 auto;padding:16px 12px;font:500 12px/1.4 'JetBrains Mono',ui-monospace,monospace;color:#000;box-shadow:0 20px 50px -30px rgba(11,11,20,.35)}
+.d-t80 .rc{width:80mm}.d-t58 .rc{width:58mm;font-size:10.5px}
+.rc .c{text-align:center}.rc h1{margin:0;font:800 16px/1.15 'Inter Tight',sans-serif}.d-t58 .rc h1{font-size:14px}
+.rc p{margin:1px 0}
+.rc hr{border:0;border-top:1px dashed #000;margin:7px 0}
+.rc .k{font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.rc .r{display:flex;justify-content:space-between;gap:8px}.rc .r span:last-child{text-align:right;white-space:nowrap}
+.rc .it{margin:4px 0}.rc .it b{font-weight:700;display:block}
+.rc .big{font:800 17px 'Inter Tight',sans-serif;margin:3px 0}.d-t58 .rc .big{font-size:15px}
+.rc .q{width:34mm;height:34mm;margin:6px auto 2px}.d-t58 .rc .q{width:30mm;height:30mm}.rc .q svg{width:100%;height:100%;display:block}
+.rc .sm{font-size:10px}
+
+/* ---------- action bar ---------- */
+.bar{position:fixed;left:0;right:0;bottom:0;padding:12px 16px calc(12px + env(safe-area-inset-bottom));background:#ffffffee;backdrop-filter:blur(10px);border-top:1px solid var(--line);z-index:5}
+.bar>div{max-width:860px;margin:0 auto;display:flex;gap:8px;flex-wrap:wrap}
+.btn{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 16px;border-radius:999px;border:0;background:var(--ink);color:#fff;font:700 14px Inter;text-decoration:none;cursor:pointer;touch-action:manipulation}
 .btn.pay{background:var(--bl)}.btn.g{background:#fff;color:var(--ink);border:1.5px solid var(--ink)}
+.btn:focus-visible{outline:3px solid var(--li);outline-offset:2px}
 .msg{padding:60px 20px;text-align:center;color:var(--mu)}.msg b{display:block;color:var(--ink);font:800 22px 'Inter Tight',sans-serif;margin-bottom:6px}
-@media (max-width:640px){
-  .inv{padding:20px 16px;border-radius:18px}
-  .kind{text-align:left;flex-basis:100%}.kind dl{justify-content:start}
-  .sum{grid-template-columns:1fr}
+
+@media (max-width:680px){
+  .inv{padding:22px 16px;border-radius:16px}
+  .top{flex-direction:column;gap:14px}.ttl{text-align:left}.ttl .sub{margin-left:0}
+  .ttl h2{font-size:24px}
+  .meta{grid-template-columns:1fr 1fr}
+  .parties,.low,.foot{grid-template-columns:1fr;gap:18px}
   .items thead{display:none}
   .items tr{display:grid;grid-template-columns:1fr auto;gap:2px 10px;padding:12px 0;border-bottom:1px solid #ecece6}
   .items td{padding:0;border:0;text-align:left}
-  .items td.n{grid-column:1}.items td.a{grid-column:2;grid-row:1;text-align:right;font-weight:700}
-  .items td.x{grid-column:1/-1;color:var(--mu);font-size:12.5px}
-  .items td.h{display:none}
+  .items td.sn,.items td.hx{display:none}
+  .items td.nm{grid-column:1}.items td.am{grid-column:2;grid-row:1;text-align:right;font-weight:700}
+  .items td.qx{grid-column:1/-1;color:var(--mu);font-size:12px}
+  .sig{text-align:left}.sig img{margin-left:0}
+  .bar .btn.pay{flex-basis:100%}.bar .btn{min-height:46px;padding:0 10px;font-size:13.5px}
+  .cx-stamp{top:80px;right:16px;font-size:20px}
 }
-.sig{display:flex;flex-direction:column;align-items:flex-end;gap:28px;margin-top:22px;font-size:12.5px;color:var(--mu)}.sig b{color:var(--ink);font-weight:600;padding-top:6px;border-top:1px solid var(--line);min-width:180px;text-align:right}
+@media (min-width:681px){.items td.qx{display:none}}
 @media print{
-  @page{size:A4;margin:12mm}
-  html,body{background:#fff}.wrap{max-width:none;padding:0}.inv{border:0;padding:0;border-radius:0}
-  .bar,.made{display:none}.tot .g{background:#fff;color:var(--ink);border:1.5px solid var(--ink)}.tot .g span:first-child{color:var(--mu)}
-  .items thead{display:table-header-group}
-  html.rcpt body{font-size:11px}
-  html.rcpt .wrap{width:72mm}
-  html.rcpt .hd,html.rcpt .to,html.rcpt .ft{display:block}
-  html.rcpt .sel{display:block}.rcpt .lg{display:none}
-  html.rcpt .sel h1{font-size:16px}
-  html.rcpt .kind{text-align:left;margin-top:8px}html.rcpt .kind dl{justify-content:start}
-  html.rcpt .items thead{display:none}
-  html.rcpt .items tr{display:grid;grid-template-columns:1fr auto;gap:0 6px;padding:5px 0;border-bottom:1px dashed #999}
-  html.rcpt .items td{padding:0;border:0;text-align:left}
-  html.rcpt .items td.a{grid-column:2;grid-row:1;text-align:right;font-weight:700}html.rcpt .items td.x{grid-column:1/-1}html.rcpt .items td.h{display:none}
-  html.rcpt .sum{display:block}html.rcpt .tot .g{font-size:16px;padding:6px 0;border:0;border-top:1.5px solid #000;border-radius:0}
-  html.rcpt .upi{margin-top:8px}html.rcpt .upi .q{width:30mm;height:30mm}
-  html.rcpt .sig{align-items:flex-start;gap:14px}
+  html,body{background:#fff}.bar,.made{display:none!important}
+  .wrap{max-width:none;padding:0}
+  .inv{box-shadow:none;border-radius:0;padding:0;border:0}
+  .d-a4c .inv{border:0}
+  .meta div,.items th,.tot .g,.st,.rule{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .items thead{display:table-header-group}.items tr{break-inside:avoid}
+  .rc{box-shadow:none;padding:0 1mm;width:auto!important}
 }
 </style>
 </head>
@@ -98,67 +142,155 @@ table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
 (() => {
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-const rs = n => "₹" + (+n || 0).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const rs = n => (n < 0 ? "−₹" : "₹") + Math.abs(+n || 0).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const r0 = n => "₹" + Math.round(+n || 0).toLocaleString("en-IN");
 const qn = n => (+n).toLocaleString("en-IN", { maximumFractionDigits: 3 });
-const t = (location.pathname.split("/")[2] || new URLSearchParams(location.search).get("t") || "").trim();
+const Q = new URLSearchParams(location.search);
+const t = (location.pathname.split("/")[2] || Q.get("t") || "").trim();
+const DESIGNS = ["a4m", "a4c", "t80", "t58"];
 const STATES = () => (window.KSGST && KSGST.STATES) || {};
 const stName = c => (STATES()[c] ? STATES()[c] + " (" + c + ")" : c || "");
+const dt = at => new Date(at).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
+const MODE = { cash: "Cash", upi: "UPI", card: "Card", bank: "Bank transfer", split: "Split", part: "Part paid", due: "Not paid" };
+let B = null, design = "a4m";
 
-function render(b) {
-  const s = b.seller || {}, c = b.cust || {}, k = b.calc || {}, tax = b.kind === "tax";
-  const date = new Date(b.at).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
-  document.title = (tax ? "Tax invoice " : "Bill ") + b.no + " · " + (s.name || "GetKeepsake");
-  const st = b.cancel ? `<span class="st cx">Cancelled</span>` : b.paid ? `<span class="st paid">Paid</span>` : `<span class="st due">Payment due</span>`;
-  const showDisc = (k.lines || []).some(x => x.dp > 0);
-  const rows = (k.lines || []).map((x, i) => `<tr>
-    <td class="h">${i + 1}</td>
-    <td class="n"><b>${esc(x.n)}</b>${x.hsn ? `<small>HSN/SAC ${esc(x.hsn)}</small>` : ""}</td>
-    <td class="x">${qn(x.q)}${x.u && x.u !== "NA" ? " " + esc(x.u) : ""} × ${rs(x.p)}${x.dp ? ` · ${x.dp}% off` : ""}${tax ? ` · GST ${x.r}%` : ""}</td>
-    <td class="a">${rs(x.net != null ? x.net : x.amt)}</td></tr>`).join("");
-  const rateRows = tax ? (k.rates || []).filter(r => r.r > 0 || k.rates.length > 1).map(r => `<tr><td>${r.r}%</td><td>${rs(r.tv)}</td>${k.intra ? `<td>${rs(r.c)}</td><td>${rs(r.s)}</td>` : `<td>${rs(r.i)}</td>`}</tr>`).join("") : "";
-  const upi = s.upi && !b.paid && !b.cancel ? `upi://pay?pa=${encodeURIComponent(s.upi.id)}&pn=${encodeURIComponent(s.upi.name || s.name || "")}&am=${k.total}&cu=INR&tn=${encodeURIComponent("Bill " + b.no)}` : "";
-  $("#app").innerHTML = `<article class="inv">
-    <header class="hd">
+// What kind of document this is, and how it must be headed (GST rules 46, 49 and 53).
+function head(b) {
+  const s = b.seller || {};
+  switch (b.kind) {
+    case "tax": return { h: "Tax Invoice", no: "Invoice no.", orig: "Original for recipient", gst: true };
+    case "supply": return { h: "Bill of Supply", no: "Bill no.", sub: s.gstin && s.gtype !== "regular" ? "Composition taxable person, not eligible to collect tax on supplies" : "" };
+    case "est": return { h: "Estimate", no: "Estimate no.", sub: "This is an estimate, not a tax invoice. Prices are valid for 15 days.", gst: (b.calc || {}).tax > 0 };
+    case "credit": return { h: "Credit Note", no: "Credit note no.", sub: b.ref ? "Against " + (b.ref.kind === "tax" ? "invoice " : "bill ") + b.ref.no + " dated " + dt(b.ref.at) : "", gst: (b.calc || {}).tax > 0 || (b.ref && b.ref.kind === "tax"), orig: "Original for recipient" };
+    default: return { h: "Bill / Cash Memo", no: "Bill no." };
+  }
+}
+function payInfo(b) {
+  const k = b.calc || {}, total = k.total || 0;
+  if (b.kind === "est") return { st: `<span class="st est">Estimate</span>`, rows: [] };
+  if (b.cancel) return { st: `<span class="st cx">Cancelled</span>`, rows: [] };
+  if (b.kind === "credit") return { st: `<span class="st paid">Refund given</span>`, rows: [["Refunded by", MODE[b.pmode] || "Cash"]] };
+  const rcv = +b.rcv || (b.paid ? total : 0), bal = Math.round((total - rcv) * 100) / 100;
+  const rows = [];
+  if (b.split) rows.push(["Paid by", Object.entries(b.split).map(([m, v]) => MODE[m] + " " + r0(v)).join(" + ")]);
+  else if (rcv > 0) rows.push(["Paid by", b.pmode === "part" ? MODE[b.pvia] || "Cash" : MODE[b.pmode] || "Cash"]);
+  if (bal > 0.004) { rows.push(["Received", rs(rcv)]); rows.push(["Balance due", rs(bal)]); }
+  return { st: bal > 0.004 ? `<span class="st due">${rcv > 0 ? "Part paid" : "Payment due"}</span>` : `<span class="st paid">Paid</span>`, rows, bal };
+}
+function totalsRows(b, H) {
+  const k = b.calc || {}, L = k.lines || [], out = [];
+  if (k.bd > 0) { out.push(["Items total", rs(L.reduce((a, x) => a + (x.net || 0), 0))]); out.push(["Bill discount", rs(-k.bd)]); }
+  if (H.gst && !b.inc) { out.push(["Taxable value", rs(k.taxable)]); if (k.intra) { out.push(["CGST", rs(k.cgst)], ["SGST", rs(k.sgst)]); } else out.push(["IGST", rs(k.igst)]); }
+  if (k.roff) out.push(["Round off", (k.roff > 0 ? "+" : "−") + rs(Math.abs(k.roff)).slice(1)]);
+  return out;
+}
+const upiOf = (b, amt) => { const s = b.seller || {}; return s.upi && amt > 0 && !b.cancel && b.kind !== "est" && b.kind !== "credit" ? `upi://pay?pa=${encodeURIComponent(s.upi.id)}&pn=${encodeURIComponent(s.upi.name || s.name || "")}&am=${amt}&cu=INR&tn=${encodeURIComponent("Bill " + b.no)}` : ""; };
+
+function a4(b) {
+  const s = b.seller || {}, c = b.cust || {}, k = b.calc || {}, H = head(b), P = payInfo(b), gst = H.gst;
+  const L = k.lines || [], disc = L.some(x => x.dp > 0), hsn = L.some(x => x.hsn);
+  const rows = L.map((x, i) => `<tr class="${x.x === "del" ? "del" : ""}">
+    <td class="sn l">${i + 1}</td>
+    <td class="nm l"><b>${esc(x.n)}</b>${x.hsn ? `<small>HSN/SAC ${esc(x.hsn)}</small>` : ""}</td>
+    <td class="qx">${qn(x.q)}${x.u && x.u !== "NA" && x.u !== "OTH" ? " " + esc(x.u) : ""} × ${rs(x.p)}${x.dp ? ` · ${x.dp}% off` : ""}${gst ? ` · GST ${x.r}%` : ""}</td>
+    <td class="hx">${qn(x.q)}${x.u && x.u !== "NA" && x.u !== "OTH" ? ` <small style="display:inline">${esc(x.u)}</small>` : ""}</td>
+    <td class="hx">${rs(x.p)}</td>
+    ${disc ? `<td class="hx">${x.dp ? x.dp + "%" : "–"}</td>` : ""}
+    ${gst ? `<td class="hx">${rs(x.tv)}</td><td class="hx">${x.r}%</td>` : ""}
+    <td class="am">${rs(gst ? x.amt : (x.net != null ? x.net - (x.bd || 0) : x.amt))}</td></tr>`).join("");
+  const rates = gst ? (k.rates || []).map(r => `<tr><td>${r.r}%</td><td>${rs(r.tv)}</td>${k.intra ? `<td>${rs(r.c)}</td><td>${rs(r.s)}</td>` : `<td>${rs(r.i)}</td>`}<td>${rs(r.c + r.s + r.i)}</td></tr>`).join("") : "";
+  const T = totalsRows(b, H), upi = upiOf(b, P.bal != null ? (P.bal > 0.004 ? P.bal : 0) : 0);
+  const meta = [[H.no, b.no], ["Date", dt(b.at)]];
+  if (gst) meta.push(["Place of supply", stName(k.pos)], ["Reverse charge", "No"]);
+  else if (b.kind === "est") meta.push(["Valid till", dt(b.at + 15 * 864e5)]);
+  if (meta.length < 4 && c.phone) meta.push(["Customer phone", "+91 " + c.phone]);
+  return `<article class="inv">
+    ${b.cancel ? `<div class="cx-stamp" aria-hidden="true">CANCELLED</div>` : ""}
+    <header class="top">
       <div class="sel"><span class="lg" style="${s.logo ? `background-image:url('${esc(s.logo)}')` : ""}">${s.logo ? "" : esc((s.name || "?").charAt(0))}</span>
         <div style="min-width:0"><h1>${esc(s.name)}</h1>
           ${s.legal && s.legal !== s.name ? `<p>${esc(s.legal)}</p>` : ""}
           ${s.addr ? `<p>${esc(s.addr)}</p>` : ""}
-          <p>${s.gstin ? `GSTIN <b style="color:var(--ink)">${esc(s.gstin)}</b> · ` : ""}${s.phone ? "+91 " + esc(s.phone) : ""}</p></div></div>
-      <div class="kind"><b>${tax ? "Tax invoice" : "Bill of supply"}</b>
-        <dl><dt>Invoice no.</dt><dd>${esc(b.no)}</dd><dt>Date</dt><dd>${date}</dd>${tax ? `<dt>Place of supply</dt><dd>${esc(stName(k.pos))}</dd><dt>Reverse charge</dt><dd>No</dd>` : ""}</dl></div>
+          <p>${s.gstin ? `GSTIN <b>${esc(s.gstin)}</b>` : ""}${s.gstin && s.state ? ` · ${esc(stName(s.state))}` : ""}${s.phone ? `${s.gstin ? " · " : ""}+91 ${esc(s.phone)}` : ""}</p></div></div>
+      <div class="ttl">${H.orig ? `<div class="orig">${H.orig}</div>` : ""}<h2>${H.h}</h2>${H.sub ? `<p class="sub">${esc(H.sub)}</p>` : ""}</div>
     </header>
-    <section class="to"><div><span class="lb">Billed to</span><b>${esc(c.name || "Walk-in customer")}</b>
-      ${c.phone ? `<p>+91 ${esc(c.phone)}</p>` : ""}${c.gstin ? `<p>GSTIN ${esc(c.gstin)} · ${esc(stName(c.state))}</p>` : ""}${c.addr ? `<p>${esc(c.addr)}</p>` : ""}</div>${st}</section>
-    <table class="items"><thead><tr><th>#</th><th>Item</th><th>Qty × rate${showDisc ? " · off" : ""}${tax ? " · GST" : ""}</th><th>${tax && !b.inc ? "Taxable" : "Amount"}</th></tr></thead><tbody>${rows}</tbody></table>
-    <section class="sum">
-      <div>${tax && rateRows ? `<span class="lb">Tax summary</span><table class="rt" style="margin-top:8px"><thead><tr><th>GST</th><th>Taxable</th>${k.intra ? "<th>CGST</th><th>SGST</th>" : "<th>IGST</th>"}</tr></thead><tbody>${rateRows}</tbody></table>` : ""}
-        ${b.inc && tax ? `<p class="words">Prices include GST.</p>` : ""}${!tax ? `<p class="words">Not a tax invoice. No GST is charged on this bill.</p>` : ""}</div>
+    <div class="rule"></div>
+    <section class="meta">${meta.map(([a, v]) => `<div><span class="lb">${esc(a)}</span><b>${esc(v)}</b></div>`).join("")}</section>
+    <section class="parties">
+      <div><span class="lb">${b.kind === "est" ? "Estimate for" : "Billed to"}</span><b>${esc(c.name || "Walk-in customer")}</b>
+        ${c.phone ? `<p>+91 ${esc(c.phone)}</p>` : ""}${c.gstin ? `<p>GSTIN <strong style="color:var(--ink);font-weight:700">${esc(c.gstin)}</strong> · ${esc(stName(c.state))}</p>` : ""}${c.addr ? `<p>${esc(c.addr)}</p>` : ""}${P.st}</div>
+      ${c.ship ? `<div><span class="lb">Shipped to</span><p style="color:var(--ink);margin-top:5px">${esc(c.ship)}</p></div>` : "<div></div>"}
+    </section>
+    <table class="items"><thead><tr><th class="l">#</th><th class="l">Item${hsn ? " · HSN/SAC" : ""}</th><th>Qty</th><th>Rate</th>${disc ? "<th>Disc.</th>" : ""}${gst ? "<th>Taxable</th><th>GST</th>" : ""}<th>Amount</th></tr></thead><tbody>${rows}</tbody></table>
+    <section class="low">
+      <div>
+        ${gst && rates ? `<span class="lb">GST summary</span><table class="rt"><thead><tr><th>Rate</th><th>Taxable</th>${k.intra ? "<th>CGST</th><th>SGST</th>" : "<th>IGST</th>"}<th>Total tax</th></tr></thead><tbody>${rates}</tbody></table>` : ""}
+        <p class="words"><span class="lb" style="margin-bottom:3px">Amount in words</span><b>${esc(k.words)}</b></p>
+        ${!gst && b.kind !== "est" && b.kind !== "credit" ? `<p class="words">${b.kind === "supply" ? "No GST is charged on this bill." : "This is not a GST invoice. No GST is charged."}</p>` : ""}
+      </div>
       <div class="tot">
-        ${tax ? `<div><span>Taxable value</span><span>${rs(k.taxable)}</span></div>${k.intra ? `<div><span>CGST</span><span>${rs(k.cgst)}</span></div><div><span>SGST</span><span>${rs(k.sgst)}</span></div>` : `<div><span>IGST</span><span>${rs(k.igst)}</span></div>`}` : `<div><span>Subtotal</span><span>${rs(k.taxable)}</span></div>`}
-        ${k.roff ? `<div><span>Round off</span><span>${k.roff > 0 ? "+" : "−"}${rs(Math.abs(k.roff)).slice(1)}</span></div>` : ""}
-        <div class="g"><span>Total</span><span>${r0(k.total)}</span></div>
-        <p class="words">${esc(k.words)}</p>
+        ${T.map(([a, v]) => `<div><span>${a}</span><span>${v}</span></div>`).join("")}
+        <div class="g"><span>${b.kind === "credit" ? "Credit total" : b.kind === "est" ? "Estimated total" : "Total"}</span><span>${r0(k.total)}</span></div>
+        ${gst && b.inc ? `<div class="inc"><div><span>Taxable value</span><span>${rs(k.taxable)}</span></div>${k.intra ? `<div><span>CGST incl.</span><span>${rs(k.cgst)}</span></div><div><span>SGST incl.</span><span>${rs(k.sgst)}</span></div>` : `<div><span>IGST incl.</span><span>${rs(k.igst)}</span></div>`}</div>` : ""}
+        ${P.rows.length ? `<div class="pay">${P.rows.map(([a, v]) => `<div><span>${a}</span><span${a === "Balance due" ? ' style="font-weight:700;color:#8a5300"' : ""}>${esc(v)}</span></div>`).join("")}</div>` : ""}
       </div>
     </section>
-    <footer class="ft">
-      <div style="flex:1 1 280px">${b.note ? `<p><b style="color:var(--ink)">Note:</b> ${esc(b.note)}</p>` : ""}${b.terms ? `<p>${esc(b.terms)}</p>` : ""}<p>This is a computer-generated ${tax ? "invoice" : "bill"}.</p></div>
-      ${upi ? `<div class="upi"><div class="q" id="uq" aria-label="UPI QR code to pay ${r0(k.total)}"></div><div><span class="lb">Scan to pay</span><p style="margin:4px 0 0;color:var(--ink);font-weight:700">${r0(k.total)}</p><p style="margin:0">${esc(s.upi.id)}</p></div></div>` : ""}
+    <footer class="foot">
+      <div>
+        ${b.note ? `<p><b>Note:</b> ${esc(b.note)}</p>` : ""}${b.terms ? `<p><b>Terms:</b> ${esc(b.terms)}</p>` : ""}
+        ${s.bank && b.kind !== "credit" ? `<div class="bank"><span class="lb">Bank details</span><p style="margin-top:3px">${s.bank.name ? esc(s.bank.name) + " · " : ""}${s.bank.acc ? `A/c <b>${esc(s.bank.acc)}</b>` : ""}${s.bank.ifsc ? ` · IFSC <b>${esc(s.bank.ifsc)}</b>` : ""}</p></div>` : ""}
+        ${upi ? `<div class="upi"><div class="q" id="uq" aria-label="UPI QR code to pay"></div><div><span class="lb">Scan to pay</span><p style="margin:3px 0 0;color:var(--ink);font-weight:700;font-size:15px">${r0(P.bal)}</p><p style="margin:0">${esc(s.upi.id)}</p></div></div>` : ""}
+        <p style="margin-top:10px">This is a computer-generated ${b.kind === "credit" ? "credit note" : b.kind === "est" ? "estimate" : b.kind === "tax" ? "invoice" : "bill"}.</p>
+      </div>
+      <div class="sig">${s.sign ? `<img src="${esc(s.sign)}" alt="Signature">` : `<div class="sp"></div>`}<span>For ${esc(s.legal || s.name)}</span><b>Authorised signatory</b></div>
     </footer>
-    <div class="sig"><span>For ${esc(s.legal || s.name)}</span><b>Authorised signatory</b></div>
   </article>
   <p class="made">Bill made with <a href="/">GetKeepsake</a></p>`;
-  if (upi) (function draw() { if (!window.qrcode) return setTimeout(draw, 200); const q = qrcode(0, "M"); q.addData(upi); q.make(); $("#uq").innerHTML = q.createSvgTag({ cellSize: 4, margin: 0, scalable: true }); })();
-  const wa = s.phone ? `https://wa.me/91${s.phone}?text=${encodeURIComponent("Hi, about bill " + b.no)}` : "";
-  $("#barIn").innerHTML = `${upi ? `<a class="btn pay" href="${esc(upi)}">Pay ${r0(k.total)} by UPI</a>` : ""}<button type="button" class="btn ${upi ? "g" : ""}" id="pdf">Save PDF</button><button type="button" class="btn g" id="rcpt" aria-label="Print an 80 mm receipt">Receipt</button>${wa ? `<a class="btn g" href="${esc(wa)}" target="_blank" rel="noopener" aria-label="WhatsApp the shop">WhatsApp</a>` : ""}`;
+}
+
+function receipt(b) {
+  const s = b.seller || {}, c = b.cust || {}, k = b.calc || {}, H = head(b), P = payInfo(b), gst = H.gst;
+  const T = totalsRows(b, H), upi = upiOf(b, P.bal > 0.004 ? P.bal : 0);
+  const items = (k.lines || []).map(x => `<div class="it"><b>${esc(x.n)}</b><div class="r"><span>${qn(x.q)} × ${rs(x.p).slice(1)}${x.dp ? ` -${x.dp}%` : ""}${gst ? ` @${x.r}%` : ""}</span><span>${rs(gst ? x.amt : x.net - (x.bd || 0)).slice(1)}</span></div>${gst && x.hsn ? `<div class="sm">HSN ${esc(x.hsn)}</div>` : ""}</div>`).join("");
+  return `<article class="rc">
+    <div class="c"><h1>${esc(s.name)}</h1>${s.legal && s.legal !== s.name ? `<p>${esc(s.legal)}</p>` : ""}${s.addr ? `<p>${esc(s.addr)}</p>` : ""}${s.phone ? `<p>Ph ${esc(s.phone)}</p>` : ""}${s.gstin ? `<p>GSTIN ${esc(s.gstin)}</p>` : ""}</div>
+    <hr><div class="c k">${H.h}</div>${H.sub ? `<p class="c sm">${esc(H.sub)}</p>` : ""}${b.cancel ? `<p class="c k">*** CANCELLED ***</p>` : ""}
+    <div class="r"><span>${H.no.replace(" no.", "")}: ${esc(b.no)}</span></div><div class="r"><span>${dt(b.at)} ${new Date(b.at).toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" })}</span></div>
+    ${c.name || c.phone ? `<div>To: ${esc(c.name || "")}${c.phone ? " " + esc(c.phone) : ""}</div>` : ""}${c.gstin ? `<div>GSTIN ${esc(c.gstin)}</div>` : ""}
+    <hr>${items}<hr>
+    ${T.map(([a, v]) => `<div class="r"><span>${a}</span><span>${v.replace("₹", "")}</span></div>`).join("")}
+    <div class="r big"><span>TOTAL</span><span>${r0(k.total)}</span></div>
+    ${gst && b.inc ? `<div class="r sm"><span>incl. GST</span><span>${rs(k.tax).slice(1)}</span></div>` : ""}
+    ${P.rows.map(([a, v]) => `<div class="r"><span>${a}</span><span>${esc(v)}</span></div>`).join("")}
+    ${upi ? `<hr><div class="c">Scan to pay ${r0(P.bal)}</div><div class="q" id="uq"></div><div class="c sm">${esc(s.upi.id)}</div>` : ""}
+    <hr><div class="c">Thank you, visit again!</div><div class="c sm">${b.kind === "est" ? "Estimate only, not a tax invoice" : "Computer-generated " + (b.kind === "tax" ? "invoice" : "bill")}</div>
+  </article><p class="made">Bill made with <a href="/">GetKeepsake</a></p>`;
+}
+
+function render() {
+  const b = B, k = b.calc || {}, H = head(b), P = payInfo(b);
+  document.documentElement.className = "d-" + design;
+  document.title = H.h + " " + b.no + " · " + ((b.seller || {}).name || "GetKeepsake");
+  $("#app").innerHTML = design[0] === "t" ? receipt(b) : a4(b);
+  const upi = upiOf(b, P.bal > 0.004 ? P.bal : 0);
+  const q = $("#uq");
+  if (q && upi) (function draw() { if (!window.qrcode) return setTimeout(draw, 150); const g = qrcode(0, "M"); g.addData(upi); g.make(); q.innerHTML = g.createSvgTag({ cellSize: 4, margin: 0, scalable: true }); })();
+  const s = b.seller || {}, wa = s.phone ? `https://wa.me/91${s.phone}?text=${encodeURIComponent("Hi, about " + H.h.toLowerCase() + " " + b.no)}` : "";
+  $("#barIn").innerHTML = `${upi ? `<a class="btn pay" href="${esc(upi)}">Pay ${r0(P.bal)} by UPI</a>` : ""}
+    <button type="button" class="btn ${upi ? "g" : ""}" id="pdf">${design[0] === "t" ? "Print" : "Save PDF"}</button>
+    <button type="button" class="btn g" id="sw">${design[0] === "t" ? "A4 bill" : "Receipt"}</button>
+    ${wa ? `<a class="btn g" href="${esc(wa)}" target="_blank" rel="noopener">WhatsApp</a>` : ""}`;
   $("#bar").hidden = false;
-  $("#pdf").onclick = () => window.print();
-  $("#rcpt").onclick = () => {
-    const st = document.createElement("style"); st.textContent = "@page{size:80mm auto;margin:3mm}"; document.head.appendChild(st);
-    document.documentElement.classList.add("rcpt");
-    const done = () => { document.documentElement.classList.remove("rcpt"); st.remove(); removeEventListener("afterprint", done); };
-    addEventListener("afterprint", done); window.print(); setTimeout(done, 60000);
-  };
+  $("#pdf").onclick = print;
+  $("#sw").onclick = () => { design = design[0] === "t" ? (DESIGNS.includes(b.design) && b.design[0] === "a" ? b.design : "a4m") : "t80"; render(); };
+}
+let pst = null;
+function print() {
+  if (pst) pst.remove();
+  pst = document.createElement("style");
+  pst.textContent = design[0] === "t" ? `@page{size:${design === "t58" ? "58mm" : "80mm"} auto;margin:2mm}` : "@page{size:A4;margin:10mm}";
+  document.head.appendChild(pst);
+  window.print();
 }
 
 async function load() {
@@ -167,7 +299,10 @@ async function load() {
     const r = await fetch("/api/qr", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "bl-get", t }), cache: "no-store" });
     const j = await r.json().catch(() => ({}));
     if (!r.ok) throw new Error(j.error || "This bill couldn't load.");
-    const go = () => window.KSGST ? render(j.bill) : setTimeout(go, 100); go();
+    B = j.bill;
+    const want = Q.get("d") || Q.get("print");
+    design = DESIGNS.includes(want) ? want : DESIGNS.includes(B.design) ? B.design : "a4m";
+    const go = () => window.KSGST ? (render(), Q.get("print") && setTimeout(() => { const w = () => (!$("#uq") || $("#uq svg")) ? print() : setTimeout(w, 150); w(); }, 300)) : setTimeout(go, 100); go();
   } catch (e) { $("#app").innerHTML = `<div class="msg"><b>Bill not found</b>${esc(e.message)}</div>`; }
 }
 load();
