@@ -174,7 +174,7 @@ async function credit(id, m, b) {
   const calc = G.calc(lines, { gst: bill.kind === "tax", inc: bill.inc, seller: bill.seller.state, pos: bill.calc.pos });
   const now = Date.now(), fy = G.fy(now), n = await db.cmd("INCR", "blcn:" + id + ":" + fy);
   const doc = { t: "", page: id, no: "CN/" + fy.slice(2) + "/" + String(n).padStart(4, "0"), at: now, kind: "credit", seller: bill.seller, cust: bill.cust, inc: bill.inc,
-    lines: lines.map(({ k, ...x }) => x), calc, terms: "", note: clip(b.reason, 120) || "Goods returned", design: bill.design || "a4m",
+    lines: lines.map(({ k, ...x }) => x), rk: lines.map(l => [l.k, l.q]), calc, terms: "", note: clip(b.reason, 120) || "Goods returned", design: bill.design || "a4m",
     ref: { t: bill.t, no: bill.no, at: bill.at, kind: bill.kind || "tax" }, refund: MODES.includes(b.mode) ? b.mode : "cash", paid: { at: now, mode: MODES.includes(b.mode) ? b.mode : "cash" }, cancel: null };
   if (!(await save(id, doc, true))) return E(500, "Couldn't save the credit note. Please try again.");
   for (const l of lines) ret[l.k] = r2((ret[l.k] || 0) + l.q);
@@ -258,6 +258,7 @@ async function handle(b, ctx) {
   if (a === "bl-convert") { // an estimate becomes a bill
     const t = String(b.t || ""); if (!TOK.test(t)) return E(400, "Invalid estimate.");
     const e = await db.getj("bl:" + t); if (!e || e.page !== id || e.kind !== "est") return E(404, "That estimate wasn't found.");
+    if (e.cancel) return E(400, "This estimate is cancelled.");
     if (e.conv) return E(409, "This estimate is already bill " + e.conv + ".");
     const del = e.calc.lines.find(l => l.x === "del");
     const r = await create(id, m, { items: e.lines.filter(l => !l.x), cust: e.cust, inc: e.inc, bd: e.calc.bd, del: del ? del.p : 0, pay: b.pay, note: e.note, design: e.design, khata: b.khata }, ctx, e.no);
@@ -283,7 +284,19 @@ async function handle(b, ctx) {
       try { const r = await require("./_khata").handle({ action: "kh-own-add", id, kind: "pay", phone: bill.cust.phone, name: bill.cust.name, amount: bill.kh, note: "Bill " + bill.no + " paid", src: "bill:" + bill.no, force: true }, ctx); if (!r.error) bill.khPaid = Date.now(); } catch (e) { console.error("bill khata pay", e.message); }
     }
     if (a === "bl-paid") { bill.paid = b.paid === false ? null : { at: Date.now(), mode: MODES.includes(b.mode) ? b.mode : "cash" }; bill.pay = bill.paid ? { mode: bill.paid.mode, amt: bill.calc.total } : { mode: "due", amt: 0 }; }
-    else { if (bill.kind === "credit" && b.cancel === false) return E(400, "A cancelled credit note stays cancelled. Make a new one."); bill.cancel = b.cancel === false ? null : { at: Date.now() }; } // a GST document is never deleted, only marked cancelled
+    else {
+      if (bill.kind === "credit" && b.cancel === false) return E(400, "A cancelled credit note stays cancelled. Make a new one.");
+      if (b.cancel !== false && !bill.cancel) {
+        if (bill.ret && Object.values(bill.ret).some(q => q > 0)) return E(409, "This bill has returns. Cancel its credit notes first.");
+        // A cancelled credit note frees its items to be returned again.
+        if (bill.kind === "credit" && bill.ref && bill.rk) { const o = await db.getj("bl:" + bill.ref.t); if (o && o.ret) { for (const [k, q] of bill.rk) o.ret[k] = Math.max(0, r2((o.ret[k] || 0) - q)); await db.setj("bl:" + o.t, o); } }
+        // The balance went into the udhaar khata: take it out again.
+        if (bill.kh && !bill.khPaid && !bill.paid && bill.cust.phone) {
+          try { const r = await require("./_khata").handle({ action: "kh-own-add", id, kind: "pay", phone: bill.cust.phone, name: bill.cust.name, amount: bill.kh, note: "Bill " + bill.no + " cancelled", src: "bill:" + bill.no, force: true }, ctx); if (!r.error) bill.khPaid = Date.now(); } catch (e) { console.error("bill khata cancel", e.message); }
+        }
+      }
+      bill.cancel = b.cancel === false ? null : bill.cancel || { at: Date.now() };
+    } // a GST document is never deleted, only marked cancelled
     await db.setj("bl:" + t, bill);
     return { ok: true, bill: pub(bill) };
   }

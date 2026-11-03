@@ -90,7 +90,7 @@
       unreg: Object.values(taxed.filter(x => !x.b.cust.gstin && !x.b.calc.intra).reduce((m, x) => { const g = m[x.b.calc.pos] = m[x.b.calc.pos] || { p: x.b.calc.pos, tv: 0, i: 0 }; g.tv += x.k.tv; g.i += x.k.i; return m; }, {})).map(g => ({ pos: pos(g.p), tv: r2(g.tv), i: r2(g.i) }))
     };
     return {
-      H, s3b, count: { all: bills.length, live: live.length, cancelled: bills.length - live.length, b2b: new Set(b2b.map(r => r[2])).size, b2cl: new Set(b2cl.map(r => r[0])).size, cn: cns.length },
+      H, s3b, count: { all: bills.length, live: live.length, cancelled: bills.length - live.length, b2b: new Set(b2b.map(r => r[2])).size, b2cl: new Set(b2cl.map(r => r[0])).size, cn: live.filter(b => b.kind === "credit").length },
       sheets: [
         { name: "Sales register", rows: [H.register, ...register, rTot] },
         ...(tax.length || bills.some(b => b.kind === "tax") ? [

@@ -47,7 +47,7 @@ async function pinOk(id, pin, ip) {
 }
 function addStamp(c, cfg, by) {
   if (c.s >= cfg.n) return E(409, "This card is full. Claim the " + cfg.r + " first.");
-  if (today(c)) return E(429, "Today's stamp is already on " + (by === "owner" ? (c.name || "this") + "'s" : "the") + " card. One stamp a day. Come back tomorrow!");
+  if (today(c)) return E(409, "Today's stamp is already on " + (by === "owner" ? (c.name || "this") + "'s" : "the") + " card. One stamp a day. Come back tomorrow!");
   c.s++; c.v = (c.v || 0) + 1; c.lastStamp = c.last = Date.now(); c.h = (c.h || []).concat({ t: c.last, k: "s", by }).slice(-50); return null;
 }
 function redeem(c, cfg, by) {

@@ -55,7 +55,7 @@ html,body{margin:0;background:#1f1611;min-height:100%}
   if (j.gf && !j.owner) { const s = document.createElement("script"); s.src = "/assets/geofence.v2.js"; s.onload = () => KSGeo.mount(root, m[1], j.gf, j.data.t || "this shop"); document.head.appendChild(s); }
   // "My orders & offers": this phone's orders (live status) and offer codes claimed from a pamphlet QR
   { const s = document.createElement("script"); s.src = "/assets/mypanel.v1.js"; s.onload = () => KSMine.mount(root, { pid: m[1], name: j.data.t || "the shop" }); document.head.appendChild(s); }
-  if (loy) { const s = document.createElement("script"); s.src = "/assets/loyal.v2.js"; s.onload = () => KSLoyal.mount(root, m[1], { pin: j.data.loy.pin !== false }); document.head.appendChild(s); }
+  if (loy) { const s = document.createElement("script"); s.src = "/assets/loyal.v3.js"; s.onload = () => KSLoyal.mount(root, m[1], { pin: j.data.loy.pin !== false }); document.head.appendChild(s); }
   // links like /b/ID#bz-loy (loyalty card) or #bz-menu jump to that part once the page is drawn
   if (/^#bz-[\w-]+$/.test(location.hash)) setTimeout(() => { const t = document.querySelector(location.hash); if (t) t.scrollIntoView({ block: "start" }); }, 350);
   // The server already sends the shop's title and description (api/_shopseo.js); only fill them in if they're missing.
