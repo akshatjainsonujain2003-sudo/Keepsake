@@ -194,3 +194,24 @@ test("balance goes into the udhaar khata (Pro); marking the bill paid records th
   const none = await call({ action: "bl-create", items: [{ n: "Blouse", q: 1, p: 300 }], cust: { phone: "9829011111" }, pay: { mode: "cash" } });
   assert.equal(none.khata, undefined);
 });
+
+test("cancelling: a bill with returns is blocked; a cancelled credit note frees its items; udhaar is reversed", async () => {
+  shop(true); await call({ action: "bl-settings", settings: { gst: "none", state: "08" } });
+  const r = await call({ action: "bl-create", items: [{ n: "Shirt", q: 2, p: 500 }], cust: { name: "Mohan", phone: "9829044444" }, pay: { mode: "due" } });
+  const kh = () => JSON.parse(kv.get("kh:" + PID + ":9829044444"));
+  const cn = await call({ action: "bl-credit", t: r.bill.t, items: [{ k: 0, q: 2 }] });
+  assert.ok(cn.bill.no.startsWith("CN/"));
+  const blocked = await call({ action: "bl-cancel", t: r.bill.t });
+  assert.equal(blocked.status, 409);
+  await call({ action: "bl-cancel", t: cn.bill.t });
+  const again = await call({ action: "bl-credit", t: r.bill.t, items: [{ k: 0, q: 1 }] });
+  assert.ok(again.ok, "items are free to return again");
+  await call({ action: "bl-cancel", t: again.bill.t });
+  const n0 = kh().e.length;
+  const ok = await call({ action: "bl-cancel", t: r.bill.t });
+  assert.equal(ok.bill.cancel, true);
+  assert.equal(kh().e.length, n0 + 1, "the udhaar entry is reversed");
+  const est = await call({ action: "bl-create", est: true, items: [{ n: "Shirt", q: 1, p: 500 }] });
+  await call({ action: "bl-cancel", t: est.bill.t });
+  assert.equal((await call({ action: "bl-convert", t: est.bill.t, pay: { mode: "cash" } })).status, 400);
+});

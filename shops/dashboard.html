@@ -287,6 +287,7 @@ td .btn{white-space:nowrap}
 .okd{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--grl);color:#0d5a2f;font-size:16px;vertical-align:2px}
 @media (max-width:600px){.blk .row2{grid-template-columns:1fr 1fr}.blbk{grid-template-columns:1fr 1fr!important}.blbk label:first-child{grid-column:1/-1}.blft{margin:16px -22px 0}.bltt b{font-size:26px}}
 @media (max-width:700px){.g3 .kpi b{font-size:28px}}
+@media (max-width:900px){.pgg{grid-template-columns:minmax(0,1fr)!important}.pgg .frame{justify-self:center}}
 /* ---------- Give a stamp ---------- */
 .lsb{margin-bottom:16px}.lsb .in{margin:0}
 .lsr{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}.lsr:last-child{border-bottom:0}
@@ -1252,7 +1253,7 @@ V.analytics = () => {
   <section class="g2"><div class="cd"><div class="ch"><h2 class="H">Page opens</h2><small>Scans and link opens</small></div>${bars(scanDays())}</div>
   <div class="cd"><div class="ch"><h2 class="H">Sales by day</h2><small>Orders from your page</small></div>${bars(od)}</div></section>
   <section class="g2"><div class="cd"><div class="ch"><h2 class="H">What people did</h2><small>One per person per day</small></div>
-    <div class="funnel"><div><span>Opened your page</span><i style="width:100%"></i><b>${st.week || 0}</b></div><div><span>Took an action</span><i style="width:${st.week ? Math.min(100, Math.round(acts * 100 / st.week)) : 0}%"></i><b>${acts}</b></div><div><span>Placed an order</span><i style="width:${st.week ? Math.min(100, Math.round(wkO.length * 100 / st.week)) : 0}%"></i><b>${wkO.length}</b></div></div>
+    <div class="funnel"><div><span>Opened your page</span><i style="width:${st.week ? 100 : 0}%"></i><b>${st.week || 0}</b></div><div><span>Took an action</span><i style="width:${st.week ? Math.min(100, Math.round(acts * 100 / st.week)) : 0}%"></i><b>${acts}</b></div><div><span>Placed an order</span><i style="width:${st.week ? Math.min(100, Math.round(wkO.length * 100 / st.week)) : 0}%"></i><b>${wkO.length}</b></div></div>
     <div class="rows" style="margin-top:16px">${tl.map(([k, l]) => `<div><span><b>${l}</b><i style="display:block;height:6px;margin-top:6px;border-radius:9px;background:var(--or);width:${Math.round((T[k] || 0) * 100 / mx)}%;min-width:3px"></i></span><b>${T[k] || 0}</b></div>`).join("")}</div></div>
   <div class="cd"><div class="ch"><h2 class="H">Busiest hours</h2><small>${wkO.length ? "Peak around " + fh(busy) : "From this week's orders"}</small></div>${wkO.length ? bars(hrs.map(x => ({ v: x.v, lab: x.v || "", l: x.h % 3 === 1 ? fh(x.h) : "", t: fh(x.h) + ": " + x.v + " orders" })), "sm") : `<div class="empty">Once orders come in you'll see when to keep extra staff.</div>`}
     <div class="ch" style="margin:22px 0 6px"><h2 class="H">Top items · 7 days</h2></div>${topItems(wkO, 6).length ? `<div class="rows">${topItems(wkO, 6).map(x => `<div><span><b>${esc(x.n)}</b><small>${x.q} sold</small></span><b>${inr(x.v)}</b></div>`).join("")}</div>` : `<div class="empty">No orders this week yet.</div>`}</div></section>`;
@@ -1261,7 +1262,7 @@ V.analytics = () => {
 V.page = () => {
   const d = S.d;
   return inactive() + head("My page", `<a href="/b/${S.id}" target="_blank" rel="noopener">${esc(location.host)}/b/${S.id}</a>`) +
-  `<section class="g2" style="margin-top:0;grid-template-columns:auto minmax(0,1fr)"><div class="frame"><iframe src="/b/${S.id}" title="Your page" loading="lazy"></iframe></div>
+  `<section class="g2 pgg" style="margin-top:0;grid-template-columns:auto minmax(0,1fr)"><div class="frame"><iframe src="/b/${S.id}" title="Your page" loading="lazy"></iframe></div>
   <div style="display:grid;gap:18px;align-content:start"><div class="cd"><div class="ch"><h2 class="H">Right now</h2></div>
     <div class="rows">
       <div><span><b>Shop open</b><small>Off shows "Closed today" on your page and pauses orders.</small></span><label class="sw"><input type="checkbox" data-sw="open"${d.shut ? "" : " checked"}><i></i>${d.shut ? "Closed" : "Open"}</label></div>
@@ -1541,7 +1542,7 @@ function blReports() {
     ${!R || R.loading ? `<p class="mu">Loading ${esc(blMonthLabel(ym))}…</p>` : R.error ? `<p class="mu">${esc(R.error)}</p>` : `
       ${gst ? `<div class="blrep">${kv("Taxable value", rs2(x.s3b.a.tv))}${kv("CGST", rs2(x.s3b.a.c))}${kv("SGST", rs2(x.s3b.a.s))}${kv("IGST", rs2(x.s3b.a.i))}${kv("Nil rated", rs2(x.s3b.nil))}${kv("Bills", x.count.live + (x.count.cancelled ? ` <small class="mu" style="font:600 13px Inter">+ ${x.count.cancelled} cancelled</small>` : ""))}</div>
         <p class="hint" style="margin-top:8px">GSTR-3B table 3.1(a) for ${esc(blMonthLabel(ym))}. ${x.count.b2b} B2B invoice${x.count.b2b === 1 ? "" : "s"}${x.count.b2cl ? `, ${x.count.b2cl} B2C large` : ""}.</p>`
-      : `<p class="mu">${x.count.live} bill${x.count.live === 1 ? "" : "s"} in ${esc(blMonthLabel(ym))}. Bills of supply carry no GST, so there's no GSTR-1 for them.</p>`}
+      : `<div class="blrep">${kv("Sales, net of returns", rs2(R.bills.filter(b => !b.cancel).reduce((t, b) => t + (b.kind === "credit" ? -1 : 1) * b.calc.total, 0)))}${kv("Bills", x.count.live - R.bills.filter(b => !b.cancel && b.kind === "credit").length)}${kv("Returns", R.bills.filter(b => !b.cancel && b.kind === "credit").length)}</div><p class="hint" style="margin-top:8px">${S.bl.settings.gst === "composition" ? "Composition scheme: no GST is charged to customers. Your CA uses the net sales for CMP-08." : "No GST is charged on these bills."}</p>`}
       <div class="tg" style="margin-top:14px">${gst ? `<button class="btn" data-bl="xlsx" ${R.bills.length ? "" : "disabled"}>${IC.dl} GST workbook (.xlsx)</button>` : ""}<button class="btn ${gst ? "g" : ""}" data-bl="csv" ${R.bills.length ? "" : "disabled"}>${IC.dl} Sales register (.csv)</button></div>
       ${gst ? `<p class="hint">The workbook has the GSTR-1 sheets your CA uses (b2b, b2cl, b2cs, exemp, hsn(b2b), hsn(b2c), docs), a GSTR-3B summary and every bill. Your CA should check it before filing.</p>` : ""}`}
     <div class="blca">
