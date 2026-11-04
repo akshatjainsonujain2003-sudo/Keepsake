@@ -1,0 +1,22 @@
+{
+  "name": "GetKeepsake Business",
+  "short_name": "GK Business",
+  "description": "Your shop's orders, sales, udhaar and customers in one app.",
+  "id": "/shops/dashboard",
+  "start_url": "/shops/dashboard?app=1",
+  "scope": "/shops/dashboard",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F2F2EE",
+  "theme_color": "#0B0B14",
+  "icons": [
+    { "src": "/assets/brand/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/assets/brand/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/assets/brand/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "New sale", "url": "/shops/dashboard#sales", "icons": [{ "src": "/assets/brand/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Orders", "url": "/shops/dashboard#orders", "icons": [{ "src": "/assets/brand/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Udhaar khata", "url": "/shops/dashboard#khata", "icons": [{ "src": "/assets/brand/icon-192.png", "sizes": "192x192" }] }
+  ]
+}
