@@ -92,7 +92,7 @@ module.exports = async (req, res) => {
       const memories = (await Promise.all(ids.map(async id => {
         const m = await db.getj("customer-memory:" + id);
         if (!m || m.owner !== user.id) return null;
-        return { id, title: m.title || "Our Memories", created: m.created, updated: m.updated || m.created, views: +(await db.cmd("GET", "customer-memory-views:" + id)) || 0, active: m.paid !== false, plan: m.plan || "", ship: await shipStatus(m), kind: kindOf(m.kind), locked: !!m.lock, ...(m.kind === "biz" ? { stats: await require("./_stats").week(id) } : {}) };
+        return { id, title: m.title || "Our Memories", created: m.created, updated: m.updated || m.created, views: +(await db.cmd("GET", "customer-memory-views:" + id)) || 0, active: m.paid !== false, plan: m.plan || "", ship: await shipStatus(m), kind: kindOf(m.kind), locked: !!m.lock, ...(m.kind === "biz" ? { stats: await require("./_stats").week(id), logo: /^\/api\/img\?id=|^https:\/\//.test((m.data || {}).logo || "") ? m.data.logo : "", area: String((m.data || {}).area || "").slice(0, 60), cat: String((m.data || {}).cat || "").slice(0, 30) } : {}) };
       }))).filter(Boolean).sort((a, b) => b.created - a.created);
       return db.reply(res, 200, { memories });
     }

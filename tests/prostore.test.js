@@ -12,6 +12,8 @@ const cmd = async (c, ...a) => {
     case "EXISTS": return kv.has(a[0]) ? 1 : 0;
     case "ZADD": { const z = zs.get(a[0]) || new Map(); z.set(a[2], +a[1]); zs.set(a[0], z); return 1; }
     case "ZCARD": return (zs.get(a[0]) || new Map()).size;
+    case "MGET": return a.map(k => kv.has(k) ? kv.get(k) : null);
+    case "ZRANGE": { const z = [...(zs.get(a[0]) || new Map())].sort((x, y) => x[1] - y[1]).map(x => x[0]); if (a.includes("REV")) z.reverse(); const e = +a[2] < 0 ? z.length + +a[2] : +a[2]; return z.slice(+a[1], e + 1); }
     default: throw new Error("unmocked " + c);
   }
 };
@@ -98,4 +100,13 @@ test("a new order pings the owner's phones; only the owner can sign a phone up",
   assert.equal((await B.handle({ action: "bz-own-vapid", id: PID }, ctx(owner))).key, "PUBKEY");
   assert.equal((await B.handle({ action: "bz-own-push", id: PID, sub }, ctx(owner))).ok, true);
   assert.deepEqual(subs.at(-1), [sub.endpoint, "bzp:" + PID]);
+});
+
+test("My shops: today's orders and sales for one shop, owner only", async () => {
+  shop();
+  const before = await B.handle({ action: "bz-own-today", id: PID }, ctx(owner));
+  const r = await order([["0.0", 1, "Iced Latte"]]);
+  const t = await B.handle({ action: "bz-own-today", id: PID }, ctx(owner));
+  assert.equal(t.orders, before.orders + 1); assert.equal(t.sales, before.sales + r.tot); assert.ok(t.waiting >= 1);
+  assert.equal((await B.handle({ action: "bz-own-today", id: PID }, ctx(null))).status, 401);
 });

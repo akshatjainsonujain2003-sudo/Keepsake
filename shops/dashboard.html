@@ -500,7 +500,7 @@ function shell() {
   $("#tabbar").innerHTML = TABS.map(([k, l, ic]) => `<a href="#${k}" class="${S.view === k ? "on" : ""}">${IC[ic]}${l}${k === "orders" && n ? `<em>${n}</em>` : ""}</a>`).join("") + `<button type="button" id="moreB" class="${TABS.some(t => t[0] === S.view) ? "" : "on"}" aria-label="More sections">${IC.more || "•••"}More</button>`;
   $("#moreB").onclick = () => {
     $("#moreIn").innerHTML = `<div class="mh"><b>${esc(shopName())}</b><button type="button" class="lnk" data-x="1">Close</button></div>` + NAV.slice(1).map(([g, items]) => `<small class="mg">${g}</small><div class="mgrid">${items.map(([k, l, ic]) => `<a href="#${k}" class="${S.view === k || PARENT[S.view] === k ? "on" : ""}">${IC[ic]}<span>${l}</span></a>`).join("")}</div>`).join("")
-      + `<a class="mlink" href="/b/${S.id}" target="_blank" rel="noopener">${IC.ext} Open my page</a>`;
+      + `<a class="mlink" href="/b/${S.id}" target="_blank" rel="noopener">${IC.ext} Open my page</a>` + (S.pages.filter(p => p.kind === "biz").length > 1 ? `<a class="mlink" href="/shops/my">${IC.home} All my shops</a>` : "");
     $("#more").hidden = false;
   };
   document.title = (n ? "(" + n + ") " : "") + (TITLES[S.view] || "Dashboard") + " · " + shopName();
@@ -2019,7 +2019,7 @@ V.settings = () => {
     <div><span><b>Order alerts on this phone</b><small>${pushOK() ? (S.pushOn ? "On. You'll get a notification for every new order, even when the app is closed." : "Get a notification for every new order, even when the app is closed.") : isIOS() && !standalone() ? "On iPhone, install the app first (button below), then turn this on." : "Not supported on this browser."}</small></span>${pushOK() ? (S.pushOn ? `<button class="btn g s" data-act="pushoff">Turn off</button>` : `<button class="btn s" data-act="pushon">Turn on</button>`) : ""}</div>
     <div><span><b>The GetKeepsake Business app</b><small>${standalone() ? "You're using the app. ✓" : "Put your dashboard on your home screen. It opens full screen, fast, like any app."}</small></span>${standalone() ? "" : `<button class="btn s" data-act="install">Install app</button>`}</div></div></div></section>
   <section class="g2"><div class="cd"><div class="ch"><h2 class="H">Account</h2></div><dl class="kv"><dt>Name</dt><dd>${esc(u.name || "")}</dd><dt>Email</dt><dd>${esc(u.email || "")}</dd><dt>Mobile</dt><dd>${esc(u.phone || "–")}</dd></dl>
-    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px"><a class="btn g" href="/dashboard">All my pages</a><button class="btn k" data-act="logout">Log out</button></div></div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px"><a class="btn g" href="/shops/my">My shops</a><button class="btn k" data-act="logout">Log out</button></div></div>
   <div class="cd"><div class="ch"><h2 class="H">Help</h2></div><p class="mu" style="margin-top:0">Stuck, or want us to set it up for you? We reply on WhatsApp.</p><a class="btn w" href="https://wa.me/918302791217?text=${encodeURIComponent("Hi, I need help with my shop dashboard " + pageUrl())}" target="_blank" rel="noopener">${IC.wa}WhatsApp +91 83027 91217</a></div></section>`;
 };
 
