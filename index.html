@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>QR Menu, Loyalty Card &amp; Business Page for Cafés, Salons &amp; Shops | GetKeepsake</title>
+<title>QR Menu, Loyalty Card and Shop Page | GetKeepsake</title>
 <meta name="description" content="QR menu, mobile page and loyalty card for every local business in India: WhatsApp orders, UPI and Google reviews. ₹1,000 one-time, Pro optional.">
 <link rel="canonical" href="https://getkeepsake.in/">
 <meta property="og:type" content="website"><meta property="og:site_name" content="GetKeepsake"><meta property="og:url" content="https://getkeepsake.in/">
@@ -108,7 +108,9 @@ p{margin:0}
 .h-note{margin-top:16px;font-size:14px;color:rgba(255,255,255,.78)}
 .ph{--w:250px;--s:.624;position:absolute;width:var(--w);aspect-ratio:375/752;border-radius:38px;padding:8px;background:#0B0B14;box-shadow:0 40px 80px -30px rgba(5,0,60,.8),inset 0 0 0 1.5px rgba(255,255,255,.12)}
 .ph .sc{width:100%;height:100%;border-radius:31px;overflow:hidden;position:relative;background:#fff;contain:strict}
-.ph iframe{position:absolute;left:0;top:0;width:375px;height:752px;border:0;transform:scale(var(--s));transform-origin:0 0;pointer-events:none}
+.ph iframe{position:absolute;left:0;top:0;width:375px;height:752px;border:0;transform:scale(var(--s));transform-origin:0 0;pointer-events:none;opacity:0;transition:opacity .4s}
+.ph iframe.on{opacity:1}
+.scene .pb .sc{background:#F1EBE6 url(/assets/demo/hero-boutique.v1.webp) center top/100% auto no-repeat}
 .ph .tg{position:absolute;left:50%;bottom:-16px;transform:translateX(-50%);z-index:3;padding:8px 14px;border-radius:999px;background:var(--ink);color:#fff;font:600 11px var(--fm);letter-spacing:.05em;text-transform:uppercase;white-space:nowrap}
 .pb .tg{background:var(--lime);color:var(--ink)}
 .hgrid{position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.07) 1px,transparent 1px);background-size:72px 72px;-webkit-mask-image:radial-gradient(80% 70% at 70% 40%,#000 0%,transparent 75%);mask-image:radial-gradient(80% 70% at 70% 40%,#000 0%,transparent 75%)}
@@ -813,9 +815,13 @@ p{margin:0}
 function show(d){const b=document.getElementById("b");KSBiz.render(b,d,{preview:true});document.body.style.background=getComputedStyle(b).getPropertyValue("--bg")}
 if(window.KSBizDemos&&KSBizDemos[frameElement.dataset.demo])show(KSBizDemos[frameElement.dataset.demo]);addEventListener("message",e=>{if(e.source===parent&&e.data&&e.data.ksbiz)show(e.data.ksbiz)});
 var y=0,dir=1,run=0;addEventListener("message",function(e){if(e.source===parent&&e.data&&"ksrun"in e.data)run=e.data.ksrun});if(frameElement.dataset.scroll)setInterval(function(){if(!run)return;var mx=document.body.scrollHeight-innerHeight;y+=dir*1.2;if(y>mx*0.55||y<0){dir*=-1}scrollTo(0,y)},40);<\/script></body></html>`;
-  const lazy = f => { if (f.dataset.ld) return; f.dataset.ld = "1"; f.srcdoc = DOC; };
-  let near = null; try { near = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { lazy(e.target); near.unobserve(e.target); } }), { rootMargin: "500px 300px" }); } catch (e) {}
-  const lazyAll = root => root.querySelectorAll("iframe[data-demo]").forEach(f => near ? near.observe(f) : lazy(f));
+  // The live pages start only after this page has loaded (the hero phone shows a still of the same page until then),
+  // and the others only when you scroll near them. That keeps the first load light.
+  const lazy = f => { if (f.dataset.ld) return; f.dataset.ld = "1"; f.addEventListener("load", () => setTimeout(() => f.classList.add("on"), 120), { once: true }); f.srcdoc = DOC; };
+  let near = null, ready = false, pend = [];
+  const lazyAll = root => root.querySelectorAll("iframe[data-demo]").forEach(f => !ready ? pend.push(f) : near ? near.observe(f) : lazy(f));
+  const start = () => { ready = true; try { near = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { lazy(e.target); near.unobserve(e.target); } }), { rootMargin: "250px 200px" }); } catch (e) {} pend.forEach(f => near ? near.observe(f) : lazy(f)); pend = []; };
+  { const idle = () => (window.requestIdleCallback || (fn => setTimeout(fn, 600)))(start, { timeout: 2500 }); if (document.readyState === "complete") idle(); else addEventListener("load", idle, { once: true }); }
   lazyAll(document);
   // The self-scrolling café preview runs only while it's on screen and the page itself isn't being scrolled.
   { const auto = document.querySelector("iframe[data-scroll]"); let vis = false, busy = 0, t = 0;
