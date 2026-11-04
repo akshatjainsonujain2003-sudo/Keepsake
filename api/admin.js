@@ -4,6 +4,8 @@ const ref = require("./_ref");
 const pay = require("./_pay");
 module.exports = async (req, res) => {
   if (!db.ok()) return db.reply(res, 501, { error: "Storage not configured. Add Upstash Redis in Vercel → Storage." });
+  // No door cookie: answer like an address that doesn't exist, before any key check (so the key can't even be guessed).
+  if (!require("./_door").open(req)) return db.reply(res, 404, { error: "Not found." });
   const ak = process.env.ADMIN_KEY;
   // Guessing the admin key: after 10 wrong tries an address is locked out for an hour.
   const ip = String(req.headers["x-forwarded-for"] || "").split(",")[0].trim() || "?", bad = "adm-bad:" + ip;
