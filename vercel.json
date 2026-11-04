@@ -2,6 +2,16 @@
   "cleanUrls": true,
   "redirects": [
     {
+      "source": "/api/_:file",
+      "destination": "/404",
+      "permanent": false
+    },
+    {
+      "source": "/api/_pages/:path*",
+      "destination": "/404",
+      "permanent": false
+    },
+    {
       "source": "/shops/pharmacy",
       "destination": "/shops/clinic",
       "permanent": true
@@ -23,6 +33,26 @@
     }
   ],
   "rewrites": [
+    {
+      "source": "/hq",
+      "destination": "/api/admin?page=hq"
+    },
+    {
+      "source": "/admin",
+      "destination": "/api/admin?page=admin"
+    },
+    {
+      "source": "/print-codes",
+      "destination": "/api/admin?page=print-codes"
+    },
+    {
+      "source": "/hq-sw.js",
+      "destination": "/api/admin?page=hq-sw"
+    },
+    {
+      "source": "/hq.webmanifest",
+      "destination": "/api/admin?page=hq-manifest"
+    },
     {
       "source": "/api/geofence/:action",
       "destination": "/api/qr?gf=:action"
@@ -167,6 +197,9 @@
     },
     "api/seo.js": {
       "includeFiles": "biz.html"
+    },
+    "api/admin.js": {
+      "includeFiles": "{api/_pages/**,404.html}"
     }
   }
 }

@@ -3,7 +3,7 @@ const pages = ["/", "/shops/cafe", "/shops/salon", "/shops/gym", "/shops/real-es
 // Date the public pages last changed. Bump it when page content changes; search engines trust lastmod only when it's accurate.
 const UPDATED = "2026-10-31";
 // Private or per-customer paths: crawled by nobody (they are also noindex).
-const PRIVATE = ["/admin", "/hq", "/api/", "/login", "/dashboard", "/account", "/creator", "/shops/dashboard", "/m/", "/s/", "/c/", "/k/", "/u/", "/p/", "/bill/", "/ca/"];
+const PRIVATE = ["/api/", "/login", "/dashboard", "/account", "/creator", "/shops/dashboard", "/m/", "/s/", "/c/", "/k/", "/u/", "/p/", "/bill/", "/ca/"];
 const handler = async (req, res) => {
   const q = req.query || {};
   // Shop pages (/b/<id>, rewritten here): the page with the shop's own title, description, local business data and readable copy.

@@ -3,6 +3,10 @@ const pp = require("./_prepaid");
 const ref = require("./_ref");
 const pay = require("./_pay");
 module.exports = async (req, res) => {
+  // The admin pages themselves (only through the secret door), then the API: no door cookie, no answer.
+  const door = require("./_door");
+  if (req.method === "GET" && door.serve(req, res)) return;
+  if (!door.open(req)) return db.reply(res, 404, { error: "Not found." });
   if (!db.ok()) return db.reply(res, 501, { error: "Storage not configured. Add Upstash Redis in Vercel → Storage." });
   const ak = process.env.ADMIN_KEY;
   // Guessing the admin key: after 10 wrong tries an address is locked out for an hour.
