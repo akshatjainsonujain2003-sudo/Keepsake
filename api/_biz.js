@@ -146,6 +146,15 @@ async function handle(b, ctx) {
   if (a === "bz-own-vapid") return { ok: true, key: (await require("./_hq").vapid()).pub, n: await require("./_hq").subCount("bzp:" + id) };
   if (a === "bz-own-push") { const r = await require("./_hq").subscribe(b.sub, "owner:" + id, "bzp:" + id); return r.error ? E(400, r.error) : { ok: true }; }
   if (a === "bz-own-unpush") return require("./_hq").unsubscribe(b.endpoint, "bzp:" + id);
+  // Today at a glance for the My shops screen: page orders and counter sales since midnight (India time).
+  if (a === "bz-own-today") {
+    const IST = 5.5 * 36e5, n = Date.now(), t0 = n - ((n + IST) % 864e5);
+    const refs = await db.cmd("ZRANGE", "bzoz:" + id, 0, 199, "REV"), ts = await db.cmd("ZRANGE", "blz:" + id, 0, 199, "REV");
+    const os = refs.length ? (await db.cmd("MGET", ...refs.map(r => "bzo:" + id + ":" + r))).map(parse).filter(o => o && o.at >= t0 && o.st !== "cancel") : [];
+    const bs = ts.length ? (await db.cmd("MGET", ...ts.map(t => "bl:" + t))).map(parse).filter(x => x && x.at >= t0 && !x.cancel && x.kind !== "est") : [];
+    const shop = bs.reduce((t, x) => t + (x.kind === "credit" ? -1 : 1) * ((x.calc && x.calc.total) || 0), 0);
+    return { ok: true, orders: os.length, waiting: os.filter(o => o.st === "new").length, sales: Math.round(os.reduce((t, o) => t + (o.tot || 0), 0) + shop), sold: os.length + bs.filter(x => x.kind !== "credit").length };
+  }
   if (a === "bz-own-orders") {
     // Newest first, last 30 days (at most 400): enough for today's list, the week's charts and top items.
     const refs = await db.cmd("ZRANGE", "bzoz:" + id, 0, 399, "REV"), since = Date.now() - 30 * 864e5;
