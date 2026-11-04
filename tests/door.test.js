@@ -1,28 +1,24 @@
 // Run: node --test tests/*.test.js
-const test = require("node:test"), assert = require("node:assert/strict"), fs = require("fs"), os = require("os"), path = require("path");
+const test = require("node:test"), assert = require("node:assert/strict");
 const D = require("../api/_door.js");
 const SECRET = "test-door-secret-123456";
+const res = () => { const r = { statusCode: 0, h: {}, body: "", setHeader(k, v) { this.h[k.toLowerCase()] = v; }, end(b) { this.body = String(b || ""); } }; return r; };
+const get = (page, q = {}, cookie) => { const r = res(); const done = D.serve({ query: { page, ...q }, headers: cookie ? { cookie } : {} }, r); return { done, r }; };
 
-// middleware.js is an ES module for Vercel; load a copy as .mjs here.
-let mw;
-test.before(async () => { const f = path.join(os.tmpdir(), "ks-mw-" + process.pid + ".mjs"); fs.copyFileSync(path.join(__dirname, "../middleware.js"), f); mw = await import(f); });
-const req = (u, cookie) => new Request("https://getkeepsake.in" + u, { headers: cookie ? { cookie } : {} });
-global.fetch = async () => new Response("<h1>Page not found</h1>", { status: 200 }); // the 404 page
-
-test("admin pages are hidden without the door, and the door sets a cookie", async () => {
+test("admin pages are hidden without the door; the door sets a cookie that opens them", () => {
   delete process.env.ADMIN_DOOR;
-  assert.equal((await mw.default(req("/hq"))).status, 404, "no ADMIN_DOOR set: hidden");
+  assert.equal(get("hq").r.statusCode, 404, "no ADMIN_DOOR set: hidden");
   process.env.ADMIN_DOOR = SECRET;
-  assert.equal((await mw.default(req("/hq"))).status, 404);
-  assert.equal((await mw.default(req("/admin.html"))).status, 404);
-  assert.equal((await mw.default(req("/hq?door=wrong-door-guess"))).status, 404);
-  const r = await mw.default(req("/hq?door=" + SECRET));
-  assert.equal(r.status, 302); assert.equal(r.headers.get("location"), "/hq");
-  const ck = r.headers.get("set-cookie"); assert.match(ck, /HttpOnly/); assert.match(ck, /Secure/);
-  const c = ck.split(";")[0];
-  assert.equal(c, "ks_door=" + D.token(SECRET), "edge and server tokens match");
-  const ok = await mw.default(req("/hq", c)); assert.equal(ok.headers.get("x-middleware-next"), "1");
-  assert.equal((await mw.default(req("/hq", "ks_door=" + "0".repeat(64)))).status, 404);
+  for (const p of ["hq", "admin", "print-codes", "hq-sw", "hq-manifest"]) { const { done, r } = get(p); assert.ok(done); assert.equal(r.statusCode, 404, p); assert.doesNotMatch(r.body, /x-admin-key/); }
+  assert.equal(get("hq", { door: "wrong-door-guess" }).r.statusCode, 404);
+  const { r } = get("hq", { door: SECRET });
+  assert.equal(r.statusCode, 302); assert.equal(r.h.location, "/hq");
+  assert.match(r.h["set-cookie"], /HttpOnly/); assert.match(r.h["set-cookie"], /Secure/);
+  const c = r.h["set-cookie"].split(";")[0];
+  const ok = get("hq", {}, c).r; assert.equal(ok.statusCode, 200); assert.match(ok.body, /x-admin-key/, "the real HQ page");
+  assert.equal(get("hq-sw", {}, c).r.h["content-type"].split(";")[0], "application/javascript");
+  assert.equal(get("hq", {}, "ks_door=" + "0".repeat(64)).r.statusCode, 404);
+  assert.equal(get("other").done, false, "other GETs fall through to the API");
 });
 
 test("admin API answers 404 without the door cookie", () => {
