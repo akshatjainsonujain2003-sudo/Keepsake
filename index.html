@@ -308,6 +308,30 @@ p{margin:0}
 .qx-tip svg{flex:none;margin-top:2px}
 .qx-go{display:flex;flex-wrap:wrap;gap:12px 16px;align-items:center;margin-top:24px}
 .qx-go small{color:var(--mute);font-size:13.5px;max-width:300px}
+/* The section takes the colour you pick: a deep gradient that fades from one colour to the next */
+@property --qa{syntax:"<color>";inherits:true;initial-value:#C8102E}
+@property --qb{syntax:"<color>";inherits:true;initial-value:#4A0E14}
+.qx.tint{--qa:#C8102E;--qb:#4A0E14;position:relative;overflow:hidden;isolation:isolate;border:0;color:#fff;
+  background:radial-gradient(60% 70% at 78% 42%,color-mix(in srgb,var(--qa) 70%,#fff 12%) 0%,transparent 70%),linear-gradient(155deg,var(--qa) 0%,var(--qb) 78%);
+  transition:--qa .7s ease,--qb .7s ease;box-shadow:0 40px 80px -50px var(--qb)}
+.qx.tint::before{content:"";position:absolute;inset:0;z-index:-1;opacity:.5;background-image:radial-gradient(rgba(255,255,255,.14) 1px,transparent 1.2px);background-size:22px 22px;-webkit-mask-image:linear-gradient(90deg,#000,transparent 60%);mask-image:linear-gradient(90deg,#000,transparent 60%)}
+.qx.tint .lbl,.qx.tint .qx-head p,.qx.tint .qx-sw legend,.qx.tint .qx-sw label,.qx.tint .qx-go small{color:rgba(255,255,255,.78)}
+.qx.tint .qx-head h3 .grad{background:none;-webkit-text-fill-color:currentColor;color:#fff;font-style:italic}
+.qx.tint .qx-sw input:checked+i{outline-color:#fff}
+.qx.tint .qx-sw input:checked~span{color:#fff}
+.qx.tint .qx-sw input:focus-visible+i{outline-color:#D4FF3F}
+.qx.tint .qx-tip{background:rgba(255,255,255,.12);color:#fff;backdrop-filter:blur(6px)}
+.qx.tint .btn.ink{background:#fff;color:#0B0B14}.qx.tint .btn.ink .ar{background:#D4FF3F;color:#0B0B14}
+.qx-name{display:flex;align-items:center;gap:18px;margin:26px 0 0;min-height:76px}
+.qx-name b{flex:none;font:400 66px/1 "Rozha One",serif;color:#fff;padding-top:6px;text-shadow:0 8px 30px rgba(0,0,0,.25);transition:opacity .25s,transform .35s cubic-bezier(.2,.8,.2,1)}
+.qx-name div{padding-left:18px;border-left:1.5px solid rgba(255,255,255,.28);transition:opacity .25s}
+.qx-name span{display:block;font:600 12px/1 var(--fm);letter-spacing:.2em;color:#fff}
+.qx-name span em{font-style:normal;opacity:.6}
+.qx-name p{margin:8px 0 0;font:500 15px/1.4 var(--fb);color:rgba(255,255,255,.82);max-width:280px}
+.qx-name.out b{opacity:0;transform:translateY(8px)}.qx-name.out div{opacity:0}
+.qx.tint .qx-hold::before{content:"";position:absolute;left:50%;bottom:-30px;width:130%;height:70px;transform:translateX(-50%);background:radial-gradient(closest-side,rgba(0,0,0,.45),transparent);z-index:0}
+.qx.tint .qx-board{filter:drop-shadow(0 30px 30px rgba(0,0,0,.4))}
+@media (prefers-reduced-motion:reduce){.qx.tint,.qx-name b,.qx-name div{transition:none}}
 
 /* Pricing */
 .plans{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:40px;align-items:stretch}
@@ -423,7 +447,8 @@ p{margin:0}
   .bento,.plans{grid-template-columns:1fr}.plan.p3{grid-column:auto}
   .acc summary{grid-template-columns:40px 1fr 44px}.acc .bd{padding-left:48px}
   .qx-hold{zoom:.78}
-  .qx-sw{grid-template-columns:repeat(3,minmax(0,1fr));row-gap:16px}
+  .qx-sw{grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}.qx-sw i{width:100%;max-width:48px;height:62px}
+  .qx-name b{font-size:54px}.qx-name{gap:14px}.qx-name div{padding-left:14px}
   .faq p{padding-right:0}
   .ft .cols{grid-template-columns:1fr}
   .biz{gap:10px}.biz a{border-radius:22px;padding:14px}.biz .go{width:44px;height:44px;top:10px;right:10px}
@@ -657,10 +682,11 @@ p{margin:0}
 
   <nav class="bzl rv" aria-label="Pages for each business"><span class="lbl">Made for</span><a href="/shops/cafe">Cafés</a><a href="/shops/restaurant">Restaurants</a><a href="/shops/bakery">Bakeries</a><a href="/shops/salon">Salons</a><a href="/shops/barber">Barbers</a><a href="/shops/gym">Gyms</a><a href="/shops/clinic">Clinics</a><a href="/shops/optician">Opticians</a><a href="/shops/coaching">Coaching</a><a href="/shops/boutique">Boutiques</a><a href="/shops/ethnic-wear">Ethnic wear</a><a href="/shops/jewellery">Jewellery</a><a href="/shops/general-store">Kirana</a><a href="/shops/hardware">Hardware</a><a href="/shops/mobile-repair">Mobile repair</a><a href="/shops/real-estate">Real estate</a></nav>
 
-  <div class="qx rv" id="qr">
+  <div class="qx tint rv" id="qr">
     <div class="qx-head"><p class="lbl">(Your counter QR)</p><h3 style="margin-top:12px">Your QR, <span class="grad">your colour.</span></h3><p>Every page gets its own QR, and your first printed board is included: thick card, 3.5 × 5 inches, couriered to your shop. Pick the colour that suits your counter.</p></div>
     <div class="qx-pick">
       <fieldset class="qx-sw" id="qxSw"><legend>Choose a colour</legend></fieldset>
+      <div class="qx-name" id="qxName" aria-live="polite"><b lang="hi">लाल</b><div><span>LAAL <em>· RED</em></span><p>Suits cafés, sweet shops and restaurants.</p></div></div>
       <p class="qx-tip"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg><span>Try it: point your phone camera at the board. It's a real QR and opens this page.</span></p>
       <div class="qx-go"><a class="btn ink" id="qxGo" href="/shops/studio">Create your page <span class="ar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></span></a><small>Your colour is saved for checkout. The printed board comes with your page.</small></div>
     </div>
@@ -855,14 +881,35 @@ addEventListener("DOMContentLoaded", () => {
   const S = { red: ["#8E1424", "linear-gradient(170deg,#C8102E,#4A0E14)"], blue: ["#0D3F57", "linear-gradient(170deg,#0E6A8C,#0A2238)"], marigold: ["#B4440C", "linear-gradient(170deg,#F59E0B,#C2410C)"], green: ["#0B4A35", "linear-gradient(170deg,#108A60,#0B2E24)"], jamun: ["#3E1A63", "linear-gradient(170deg,#6D2E9E,#1E0F33)"], whitegold: ["linear-gradient(160deg,#E2BF6E,#8C6118)", "linear-gradient(180deg,#FFF1D2,#FFFDF8)"] };
   let cur = "red"; try { const v = localStorage.getItem("ks-qr-tone"); if (S[v] && v !== "whitegold") cur = v; } catch (e) {}
   sw.insertAdjacentHTML("beforeend", KSQRCards.ALL.filter(k => k !== "whitegold" && S[k]).map(k => `<label><input type="radio" name="qxt" value="${k}"${k === cur ? " checked" : ""}><i style="--e:${S[k][0]};--g:${S[k][1]}"><b></b></i><span>${KSQRCards.NAMES[k]}</span></label>`).join(""));
+  // The section's own colours (deep enough for white text), its big word and who each colour suits.
+  const T = { red: ["#C8102E", "#3E0A12", "लाल", "LAAL", "cafés, sweet shops and restaurants"], blue: ["#0E6A8C", "#08192B", "नीला", "NEELA", "clinics, pharmacies and coaching centres"],
+    marigold: ["#E07A0B", "#7A2A0C", "गेंदा", "GENDA", "kirana stores, bakeries and tea stalls"], green: ["#108A60", "#072A20", "हरा", "HARA", "grocery, organic stores and gyms"],
+    jamun: ["#6D2E9E", "#1A0B2E", "जामुन", "JAMUN", "salons, boutiques and jewellers"] };
+  const sec = document.getElementById("qr"), nm = document.getElementById("qxName");
+  const label = (t, k) => `<b lang="hi">${t[2]}</b><div><span>${t[3]} <em>· ${KSQRCards.NAMES[k].toUpperCase()}</em></span><p>Suits ${t[4]}.</p></div>`;
+  let nmT = 0;
+  const tint = (k, anim) => { const t = T[k]; if (!t || !sec) return; sec.style.setProperty("--qa", t[0]); sec.style.setProperty("--qb", t[1]);
+    if (!nm) return; clearTimeout(nmT);
+    if (!anim) { nm.innerHTML = label(t, k); return; }
+    nm.classList.add("out"); nmT = setTimeout(() => { nm.innerHTML = label(t, k); nm.classList.remove("out"); }, 220); };
   const draw = (k, anim) => {
+    tint(k, anim);
     KSQRCards.mount(board, { tone: k, url: "https://getkeepsake.in/", code: "YOUR-SHOP" });
     board.setAttribute("aria-label", "Sample QR board in " + KSQRCards.NAMES[k] + ". Scanning it opens this page.");
     go.href = "/shops/studio?qr=" + k;
     if (anim) { board.classList.remove("flip"); void board.offsetWidth; board.classList.add("flip"); }
   };
-  sw.onchange = e => { cur = e.target.value; try { localStorage.setItem("ks-qr-tone", cur); } catch (x) {} draw(cur, true); };
+  // Until someone picks a colour, the board shows each one in turn while the section is on screen.
+  let auto = null, picked = false;
+  const order = Object.keys(T), stop = () => { picked = true; clearInterval(auto); auto = null; };
+  sw.onchange = e => { stop(); cur = e.target.value; try { localStorage.setItem("ks-qr-tone", cur); } catch (x) {} draw(cur, true); };
+  sw.addEventListener("pointerdown", stop); sw.addEventListener("focusin", stop);
   draw(cur, false);
+  const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!calm && "IntersectionObserver" in window) new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting && !picked && !auto) auto = setInterval(() => { if (document.hidden) return; cur = order[(order.indexOf(cur) + 1) % order.length]; const r = sw.querySelector(`input[value="${cur}"]`); if (r) r.checked = true; draw(cur, true); }, 2600);
+    else if (!e.isIntersecting && auto) { clearInterval(auto); auto = null; }
+  }), { threshold: .45 }).observe(sec);
 });
 </script>
 <script src="/assets/ks-pixel.v1.js" defer></script>
