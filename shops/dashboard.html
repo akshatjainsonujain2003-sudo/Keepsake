@@ -204,6 +204,35 @@ td .btn{white-space:nowrap}
 .pmp{flex:none;width:96px;height:96px;border-radius:16px;border:2px dashed var(--line);background:#ECECE7 center/cover;display:grid;place-items:center;font-weight:700;font-size:13px;color:var(--mu);cursor:pointer}.pmp.busy{opacity:.6}
 @media (max-width:600px){.pm{align-items:flex-end;padding:0}.pmb{border-radius:24px 24px 0 0}}
 .more>div{width:100%;max-height:85vh;overflow:auto;background:var(--side);border-radius:24px 24px 0 0;padding:18px 14px calc(18px + env(safe-area-inset-bottom))}
+/* ---------- Munshi (plain for now: the design comes later) ---------- */
+.mub{position:fixed;right:18px;bottom:22px;z-index:35;width:58px;height:58px;border-radius:50%;border:0;background:var(--or);color:#fff;font:800 19px/1 Inter,sans-serif;box-shadow:0 8px 24px #1f1bf255;cursor:pointer}
+.mub i{position:absolute;right:13px;top:13px;width:8px;height:8px;border-radius:50%;background:var(--ye)}
+.mu{position:fixed;inset:0;z-index:50;background:#0007;display:flex;justify-content:flex-end}
+.mup{width:min(440px,100%);height:100%;background:var(--bg);display:flex;flex-direction:column}
+.muh{display:flex;align-items:center;gap:10px;padding:14px 16px;background:var(--card);border-bottom:1px solid var(--line)}
+.muh .av{width:38px;height:38px;border-radius:50%;background:var(--or);color:#fff;display:grid;place-items:center;font-weight:800;flex:none}
+.muh b{display:block}.muh small{color:var(--mu);font-size:12.5px}.muh>div{flex:1;min-width:0}
+.muh select,.muh button{border:1px solid var(--line);background:#fff;border-radius:10px;padding:7px 8px;font:600 13px Inter,sans-serif;cursor:pointer}
+.mul{flex:1;overflow:auto;padding:16px;display:flex;flex-direction:column;gap:10px}
+.mum{max-width:88%;color:var(--ink);padding:11px 14px;border-radius:16px;background:var(--card);border:1px solid var(--line);font-size:15px;line-height:1.45;white-space:pre-wrap;word-break:break-word}
+.mum.me{align-self:flex-end;background:var(--or);color:#fff;border-color:var(--or)}
+.mum.err{border-color:#e5a3a3;background:#fff5f5}
+.mum.wait{color:var(--mu)}
+.muc{align-self:stretch;color:var(--ink);padding:14px;border-radius:16px;background:var(--card);border:1px solid var(--line)}
+.muc .big{font:800 30px/1.1 Inter,sans-serif}.muc .ch{font-weight:700;font-size:13px}.muc .ch.up{color:var(--gr)}.muc .ch.dn{color:#c0392b}
+.muc .t{font-weight:700;font-size:13px;color:var(--mu);margin-bottom:6px}
+.muc .r{display:flex;gap:10px;align-items:center;padding:8px 0;border-top:1px solid var(--line);font-size:14px}.muc .r:first-of-type{border-top:0}
+.muc .r span{flex:1;min-width:0}.muc .r small{display:block;color:var(--mu)}
+.muc .bars{height:150px}
+.muk{display:flex;gap:8px;margin-top:10px}.muk button,.muk a{flex:1;padding:12px;border-radius:12px;font-weight:700;font-size:15px;text-align:center;text-decoration:none;cursor:pointer;border:1.5px solid var(--line);background:#fff;color:var(--ink)}
+.muk .y{background:var(--gr);border-color:var(--gr);color:#fff}.muk .w{background:#25D366;border-color:#25D366;color:#fff}
+.muq{display:flex;gap:8px;overflow-x:auto;padding:0 16px 10px}.muq button{flex:none;padding:8px 12px;border-radius:99px;border:1px solid var(--line);background:#fff;font:600 13px Inter,sans-serif;cursor:pointer}
+.mui{display:flex;gap:8px;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:var(--card);border-top:1px solid var(--line)}
+.mui input{flex:1;min-width:0;padding:12px 14px;border-radius:99px;border:1.5px solid var(--line);font-size:16px}
+.mui button{width:46px;height:46px;flex:none;border-radius:50%;border:0;background:var(--or);color:#fff;font-size:18px;cursor:pointer}
+.mui button.mic{background:#fff;color:var(--or);border:1.5px solid var(--line)}.mui button.mic.on{background:#c0392b;color:#fff;border-color:#c0392b}
+.mui button:disabled,.mui input:disabled{opacity:.5}
+@media (max-width:900px){.mub{bottom:calc(84px + env(safe-area-inset-bottom));right:14px}.mup{width:100%}}
 @media (max-width:1180px){.g4{grid-template-columns:repeat(2,minmax(0,1fr))}.g3{grid-template-columns:1fr 1fr}.g3>:last-child{grid-column:1/-1}}
 @media (max-width:900px){
   .app{display:block}.side{display:none}
@@ -374,6 +403,8 @@ a.kpi{text-decoration:none;color:inherit;transition:transform .15s}a.kpi:active{
 </div>
 <nav class="tabbar" id="tabbar" aria-label="Dashboard"></nav>
 <div class="more" id="more" hidden><div id="moreIn"></div></div>
+<button type="button" class="mub" id="muB" hidden aria-label="Ask Munshi">मुं<i></i></button>
+<div class="mu" id="mu" hidden></div>
 <div class="toast" id="toast" role="status"></div>
 <script>
 (() => {
@@ -504,6 +535,7 @@ function shell() {
     $("#more").hidden = false;
   };
   document.title = (n ? "(" + n + ") " : "") + (TITLES[S.view] || "Dashboard") + " · " + shopName();
+  $("#muB").hidden = !S.id;
 }
 $("#more").onclick = e => { if (e.target.id === "more" || e.target.closest("a") || e.target.closest("[data-x]")) $("#more").hidden = true; };
 
@@ -2227,6 +2259,90 @@ async function pushOn() {
 async function pushOff() {
   try { const r = await swReg(), sub = r && await r.pushManager.getSubscription(); if (sub) { await post({ action: "bz-own-unpush", id: S.id, endpoint: sub.endpoint }).catch(() => {}); await sub.unsubscribe(); } S.pushOn = false; toast("Order alerts are off for this phone."); } catch (e) { toast(e.message); }
 }
+
+// ---------- Munshi: ask the shop's numbers in Hindi, Hinglish or English (api/_munshi.js) ----------
+const MU = { lang: store.get("gk-mu-lang", "hl"), log: [], busy: false, h: null };
+const MUL = {
+  hl: { ph: "Munshi se poochho…", off: "Munshi abhi set ho raha hai. Jaldi hi jawab dena shuru karega.", pro: "Munshi Keepsake Pro mein milta hai.", left: n => "Aaj " + n + " sawaal baaki", clear: "Nayi baat", think: "Soch raha hoon…", yes: "Haan", no: "Nahi" },
+  en: { ph: "Ask Munshi…", off: "Munshi is being set up. It will start answering soon.", pro: "Munshi comes with Keepsake Pro.", left: n => n + " questions left today", clear: "New chat", think: "Thinking…", yes: "Yes", no: "No" },
+  hi: { ph: "मुंशी से पूछिए…", off: "मुंशी अभी तैयार हो रहा है। जल्द ही जवाब देना शुरू करेगा।", pro: "मुंशी Keepsake Pro में मिलता है।", left: n => "आज " + n + " सवाल बाकी", clear: "नई बात", think: "सोच रहा हूँ…", yes: "हाँ", no: "नहीं" }
+};
+const muT = () => MUL[MU.lang] || MUL.hl;
+async function muPost(body) {
+  const r = await fetch("/api/qr", { method: "POST", cache: "no-store", headers: { "Content-Type": "application/json" }, body: JSON.stringify(Object.assign({ id: S.id }, body)) });
+  const j = await r.json().catch(() => ({})); if (!r.ok) { const e = new Error(j.error || "Something went wrong. Please try again."); e.j = j; throw e; } return j;
+}
+function muCard(c) {
+  if (c.k === "num") return `<div class="muc"><div class="t">${esc(c.l)}</div><div class="big">${inr(c.v)}</div>${c.ch != null ? `<div class="ch ${c.ch >= 0 ? "up" : "dn"}">${c.ch >= 0 ? "▲" : "▼"} ${Math.abs(c.ch)}%</div>` : ""}</div>`;
+  if (c.k === "bars") return `<div class="muc">${bars(c.d.map(([l, v, t]) => ({ v: Math.max(0, v), l, t, lab: v >= 1000 ? Math.round(v / 100) / 10 + "k" : String(v) })))}</div>`;
+  if (c.k === "list") return `<div class="muc"><div class="t">${esc(c.t)}</div>${c.r.map(([a, b, v]) => `<div class="r"><span><b>${esc(a)}</b><small>${esc(b)}</small></span><b>${esc(v)}</b></div>`).join("")}</div>`;
+  if (c.k === "khata") return `<div class="muc"><div class="t">${esc(c.t)}</div>${c.r.map(([n, p, v, d]) => `<div class="r"><span><b>${esc(n)}</b><small>${d} days · ${esc(p)}</small></span><b>${inr(v)}</b><button type="button" class="btn" data-mur="${esc(p)}">Remind</button></div>`).join("")}</div>`;
+  return "";
+}
+function muDraw() {
+  const box = $("#mul"); if (!box) return;
+  box.innerHTML = MU.log.map(m => m.card ? muCard(m.card) : m.confirm ? `<div class="mum">${esc(m.confirm.text)}${m.confirm.done ? "" : `<div class="muk"><button type="button" class="y" data-muy="${m.confirm.pid}">${muT().yes}</button><button type="button" data-mun="${m.confirm.pid}">${muT().no}</button></div>`}</div>`
+    : `<div class="mum${m.me ? " me" : ""}${m.err ? " err" : ""}${m.wait ? " wait" : ""}">${esc(m.t)}${m.link ? `<div class="muk"><a class="w" href="${esc(m.link.u)}" target="_blank" rel="noopener">${esc(m.link.l)}</a></div>` : ""}</div>`).join("");
+  box.scrollTop = box.scrollHeight;
+}
+function muHead() {
+  const h = MU.h || {}, t = muT(), ok = h.on && h.pro;
+  $("#muh").innerHTML = `<span class="av">मुं</span><div><b>Munshi</b><small>${h.on === false ? "" : h.pro === false ? esc(t.pro) : h.left != null ? esc(t.left(h.left)) : ""}</small></div>
+    <select id="mulang" aria-label="Language">${[["hl", "Hinglish"], ["hi", "हिंदी"], ["en", "English"]].map(([k, l]) => `<option value="${k}"${MU.lang === k ? " selected" : ""}>${l}</option>`).join("")}</select>
+    <button type="button" id="muclr" title="${esc(t.clear)}">↺</button><button type="button" id="mux" aria-label="Close">✕</button>`;
+  $("#muq").innerHTML = ok ? (h.chips || []).map(c => `<button type="button" data-muq="${esc(c)}">${esc(c)}</button>`).join("") : "";
+  $("#muin").placeholder = t.ph; $("#muin").disabled = $("#musend").disabled = $("#mumic").disabled = !ok;
+}
+async function muOpen() {
+  const el = $("#mu"); el.hidden = false; document.body.style.overflow = "hidden";
+  el.innerHTML = `<div class="mup" role="dialog" aria-label="Munshi"><div class="muh" id="muh"></div><div class="mul" id="mul" aria-live="polite"></div><div class="muq" id="muq"></div>
+    <form class="mui" id="muf"><input id="muin" autocomplete="off" enterkeyhint="send" maxlength="500"><button type="button" class="mic" id="mumic" aria-label="Speak">🎤</button><button id="musend" aria-label="Send">➤</button></form></div>`;
+  if (!("webkitSpeechRecognition" in window || "SpeechRecognition" in window)) $("#mumic").hidden = true;
+  MU.log = [{ t: muT().think, wait: true }]; muHead(); muDraw();
+  try {
+    MU.h = await muPost({ action: "mu-hello", lang: MU.lang });
+    MU.log = [{ t: MU.h.brief.join("\n") }, ...MU.h.hist.slice(-8).map(h => ({ t: h.t, me: h.r === "u" }))];
+    if (!MU.h.on) MU.log.push({ t: muT().off }); else if (!MU.h.pro) MU.log.push({ t: muT().pro, link: { u: "#pro", l: "Keepsake Pro" } });
+  } catch (e) { MU.log = [{ t: e.message, err: true }]; }
+  muHead(); muDraw(); if (MU.h && MU.h.on && MU.h.pro && matchMedia("(min-width:901px)").matches) $("#muin").focus();
+}
+function muClose() { $("#mu").hidden = true; $("#mu").innerHTML = ""; document.body.style.overflow = ""; }
+async function muAsk(q) {
+  q = String(q || "").trim(); if (!q || MU.busy) return;
+  MU.busy = true; $("#muin").value = ""; MU.log.push({ t: q, me: true }, { t: muT().think, wait: true }); muDraw();
+  try {
+    const r = await muPost({ action: "mu-ask", q }); MU.log.pop();
+    MU.log.push(...(r.confirm ? [] : [{ t: r.reply }]), ...(r.cards || []).map(c => ({ card: c })), ...(r.confirm ? [{ confirm: r.confirm }] : []));
+    if (r.left != null && MU.h) { MU.h.left = r.left; muHead(); }
+  } catch (e) { MU.log.pop(); MU.log.push({ t: e.message, err: true }); if (e.j && e.j.left != null && MU.h) { MU.h.left = e.j.left; muHead(); } }
+  MU.busy = false; muDraw();
+}
+async function muDo(pid, yes) {
+  const m = MU.log.find(x => x.confirm && x.confirm.pid === pid); if (!m || m.confirm.done) return;
+  m.confirm.done = true; muDraw();
+  try { const r = await muPost({ action: "mu-do", pid, yes }); MU.log.push(r.confirm ? { confirm: r.confirm } : { t: r.reply, link: r.link }); if (yes) { S.kh = null; S.khNew = null; } }
+  catch (e) { MU.log.push({ t: e.message, err: true }); }
+  muDraw();
+}
+$("#muB").onclick = muOpen;
+$("#mu").addEventListener("click", async e => {
+  const t = e.target;
+  if (t.id === "mu" || t.closest("#mux")) return muClose();
+  if (t.closest("#muclr")) { await muPost({ action: "mu-clear" }).catch(() => {}); MU.log = MU.log.slice(0, 1); return muDraw(); }
+  const q = t.closest("[data-muq]"); if (q) return muAsk(q.dataset.muq);
+  const y = t.closest("[data-muy]"); if (y) return muDo(y.dataset.muy, true);
+  const n = t.closest("[data-mun]"); if (n) return muDo(n.dataset.mun, false);
+  const r = t.closest("[data-mur]"); if (r) { r.disabled = true; try { const j = await muPost({ action: "kh-own-remind", phone: r.dataset.mur }); open(j.wa, "_blank"); } catch (err) { toast(err.message); } r.disabled = false; }
+  if (t.closest("#mumic")) {
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition, rec = new SR(), b = $("#mumic");
+    rec.lang = MU.lang === "en" ? "en-IN" : "hi-IN"; rec.interimResults = false; b.classList.add("on");
+    rec.onresult = ev => { const x = ev.results[0][0].transcript; $("#muin").value = x; muAsk(x); };
+    rec.onend = rec.onerror = () => b.classList.remove("on"); rec.start();
+  }
+});
+$("#mu").addEventListener("change", e => { if (e.target.id === "mulang") { MU.lang = e.target.value; store.set("gk-mu-lang", MU.lang); muOpen(); } });
+$("#mu").addEventListener("submit", e => { e.preventDefault(); muAsk($("#muin").value); });
+addEventListener("keydown", e => { if (e.key === "Escape" && !$("#mu").hidden) muClose(); });
 
 // ---------- start ----------
 // Opens instantly from this phone's last copy of the shop, then refreshes everything at once in the background.

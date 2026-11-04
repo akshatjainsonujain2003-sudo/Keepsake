@@ -256,6 +256,16 @@ function scansCard() {
     ${x.top.length ? `<div style="margin-top:12px"><small style="color:var(--mu)">Most scanned, last 30 days</small>${x.top.map((t, i) => `<button class="li" data-p="${esc(t.id)}" style="width:100%;background:none;border:0;color:inherit;text-align:left;cursor:pointer"><div><b>${i + 1}. ${esc(t.title)}</b><small>${esc(t.area)}</small></div><b class="fd">${t.n.toLocaleString("en-IN")}</b></button>`).join("")}</div>` : `<small style="color:var(--mu);display:block;margin-top:10px">No scans yet in the last 30 days.</small>`}
     <small style="display:block;color:var(--mu);margin-top:8px">A scan is one opening of a shop's page (from the QR or its link). The owner's own visits aren't counted.</small></div>`;
 }
+// Munshi (the shops' AI helper): this month's questions and what the AI cost, from api/_munshi.js usage().
+function munshiCard() {
+  const x = S.mu;
+  if (!x) { if (!S.muLoading) { S.muLoading = true; api({ action: "hq-munshi" }).then(r => { S.mu = r; S.muLoading = false; if (S.tab === "home") draw(); }).catch(() => { S.muLoading = false; }); } return ""; }
+  const per = x.questions ? Math.round(x.rupees * 10000 / x.questions) / 100 : 0;
+  return `<div class="card"><div class="lab">Munshi · ${esc(x.month)}${x.on ? " · " + esc(x.model) : ""}</div>
+    ${x.on ? `<div class="g3" style="margin:6px 0 4px"><div><small>Questions</small><b class="fd" style="display:block;font-size:26px">${x.questions.toLocaleString("en-IN")}</b></div><div><small>AI cost</small><b class="fd" style="display:block;font-size:26px">₹${x.rupees.toLocaleString("en-IN")}</b></div><div><small>Per question</small><b class="fd" style="display:block;font-size:26px">${per} p</b></div></div>
+    <small style="color:var(--mu)">Estimated from tokens: ${x.tokens_in.toLocaleString("en-IN")} in, ${x.tokens_cached.toLocaleString("en-IN")} cached, ${x.tokens_out.toLocaleString("en-IN")} out. Your AI provider's bill is the exact figure.</small>`
+    : `<small style="color:var(--mu)">Off. Add ANTHROPIC_API_KEY (or MUNSHI_GEMINI_KEY, a paid Gemini key) in Vercel to switch it on.</small>`}</div>`;
+}
 function home() {
   const s = S.sum; const h = new Date().getHours(), hi = h < 12 ? "Good morning" : h < 17 ? "Good afternoon" : "Good evening";
   if (!s) return top("HQ", hi) + loading();
@@ -270,6 +280,7 @@ function home() {
   <div class="mix"><span style="width:${M.page * 100 / tot}%;background:var(--gd)"></span><span style="width:${M.store * 100 / tot}%;background:var(--lav)"></span><span style="width:${M.pro * 100 / tot}%;background:#fff"></span><span style="width:${M.extra * 100 / tot}%;background:var(--gn)"></span></div>
   <div class="leg"><span><i style="background:var(--gd)"></i>Business pages ${rs(M.page)}</span><span><i style="background:var(--lav)"></i>Online store ${rs(M.store)}</span><span><i style="background:#fff"></i>Pro ${rs(M.pro)}</span><span><i style="background:var(--gn)"></i>Add-ons ${rs(M.extra)}</span></div></div>
   ${scansCard()}
+  ${munshiCard()}
   <div class="g3" style="grid-template-columns:1fr 1fr"><div class="card" data-go="shops"><small>New shops · 7 days</small><b class="fd">${s.newShops}</b></div><div class="card" data-go="more"><small>Phones with alerts</small><b class="fd">${s.alerts}</b></div></div>
   <div class="sec"><h2>Latest orders</h2><button data-go="orders" data-of="all">See all</button></div>${recent}`;
 }

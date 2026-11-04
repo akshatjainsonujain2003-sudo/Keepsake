@@ -171,6 +171,7 @@
       "maxDuration": 60
     },
     "api/qr.js": {
+      "maxDuration": 60,
       "includeFiles": "assets/gst.v1.js"
     },
     "api/seo.js": {
