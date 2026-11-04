@@ -2,6 +2,16 @@
   "cleanUrls": true,
   "redirects": [
     {
+      "source": "/api/_:file",
+      "destination": "/404",
+      "permanent": false
+    },
+    {
+      "source": "/api/_pages/:path*",
+      "destination": "/404",
+      "permanent": false
+    },
+    {
       "source": "/shops/pharmacy",
       "destination": "/shops/clinic",
       "permanent": true
