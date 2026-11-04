@@ -9,7 +9,10 @@
 <meta name="theme-color" content="#0B0B14">
 <link rel="icon" href="/assets/brand/favicon.ico" sizes="any"><link rel="icon" type="image/svg+xml" href="/assets/brand/favicon.svg"><link rel="icon" type="image/png" sizes="192x192" href="/assets/brand/icon-192.png"><link rel="apple-touch-icon" href="/assets/brand/icon-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@600;700;800&family=Archivo+Black&family=Rozha+One&family=JetBrains+Mono:wght@500;600&family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@600;700;800&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap">
+<link rel="manifest" href="/dash.webmanifest">
+<link rel="apple-touch-icon" href="/assets/brand/icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="GK Business"><meta name="apple-mobile-web-app-status-bar-style" content="black">
 <style>
 :root{--bg:#F2F2EE;--card:#FFFFFF;--line:#DADAD3;--ink:#0B0B14;--mu:#5B5B69;--or:#1F1BF2;--ye:#D4FF3F;--gr:#1f9d55;--grl:#c9efd6;--sand:#E6E6E0;--side:#0B0B14;--r:22px;--lav:#8C82FF}
 *{box-sizing:border-box}
@@ -286,6 +289,43 @@ td .btn{white-space:nowrap}
 .blkh{margin-top:12px;padding:12px 14px;border-radius:14px;background:#fff0d6;color:#5c3a00}.blkh b{display:block}.blkh span{font-size:13px}
 .okd{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--grl);color:#0d5a2f;font-size:16px;vertical-align:2px}
 @media (max-width:600px){.blk .row2{grid-template-columns:1fr 1fr}.blbk{grid-template-columns:1fr 1fr!important}.blbk label:first-child{grid-column:1/-1}.blft{margin:16px -22px 0}.bltt b{font-size:26px}}
+/* ---------- app shell 2026: tabs, More, Home ---------- */
+.subt{display:flex;gap:6px;margin:0 0 18px;padding:4px;border-radius:999px;background:#E9E7E0;width:max-content;max-width:100%;overflow-x:auto;scrollbar-width:none}
+.subt::-webkit-scrollbar{display:none}
+.subt a{flex:none;padding:9px 16px;border-radius:999px;text-decoration:none;color:var(--mu);font-weight:700;font-size:14px;white-space:nowrap}
+.subt a.on{background:var(--card);color:var(--ink);box-shadow:0 1px 3px #0002}
+.mh{display:flex;justify-content:space-between;align-items:center;padding:4px 6px 10px;color:#fff}.mh b{font:800 18px 'Inter Tight',sans-serif}.mh .lnk{color:#ffffffb3}
+.mg{display:block;margin:14px 6px 8px;font:800 10.5px Inter;letter-spacing:.2em;color:#ffffff80;text-transform:uppercase}
+.mgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.mgrid a{display:flex;flex-direction:column;align-items:flex-start;gap:10px;min-height:84px;padding:12px;border-radius:16px;background:#ffffff10;color:#fff;text-decoration:none;font-weight:600;font-size:13.5px;line-height:1.25}
+.mgrid a svg{width:22px;height:22px;opacity:.85}.mgrid a.on{background:var(--or)}
+.mlink{display:flex;align-items:center;justify-content:center;gap:8px;margin:16px 0 4px;padding:13px;border-radius:14px;border:1px solid #ffffff2a;color:#fff;text-decoration:none;font-weight:600}.mlink svg{width:18px;height:18px}
+.iosg{margin:6px 0 10px;padding-left:22px;color:#fff;line-height:1.9}.iosg svg{width:16px;height:16px;vertical-align:-3px}
+.hk{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+a.kpi{text-decoration:none;color:inherit;transition:transform .15s}a.kpi:active{transform:scale(.98)}
+.qa{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:14px}
+.qa a{display:flex;align-items:center;gap:10px;min-height:56px;padding:12px 16px;border-radius:18px;background:var(--card);border:1.5px solid var(--line);text-decoration:none;color:var(--ink);font-weight:700;font-size:15px;touch-action:manipulation}
+.qa a svg{width:22px;height:22px;flex:none}.qa a.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.qa a:active{transform:scale(.98)}
+.need{display:grid;gap:8px}
+.need a{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:16px;background:#F6F6F2;text-decoration:none;color:var(--ink)}
+.need a i{flex:none;width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:var(--card)}.need a i svg{width:20px;height:20px}
+.need a span{flex:1;min-width:0}.need a b{display:block}.need a small{color:var(--mu);font-size:13px}.need a>svg{width:16px;height:16px;opacity:.4;flex:none}
+.need a.o i{background:var(--or);color:#fff}.need a.y i{background:var(--ye)}
+.ok{display:flex;gap:12px;align-items:center;padding:14px;border-radius:16px;background:#EAF6EE}.ok i{flex:none;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:var(--grl);color:#0d5a2f}.ok b{display:block}.ok small{color:var(--mu)}
+.pbar{height:8px;border-radius:9px;background:var(--line);overflow:hidden;margin:2px 0 6px}.pbar i{display:block;height:100%;background:var(--gr);border-radius:9px}
+.setup{margin-top:18px}
+.rows .rk{flex:none;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:#F0EEE8;font:800 13px 'Inter Tight',sans-serif}
+.inst{display:flex;align-items:center;gap:12px;margin-top:14px;padding:14px 16px;border-radius:18px;background:var(--ink);color:#fff}
+.inst i{flex:none;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:#ffffff18}.inst i svg{width:22px;height:22px}
+.inst span{flex:1;min-width:0}.inst b{display:block}.inst small{color:#B4B4C2;font-size:13px}.inst .lnk{color:#ffffffa0}
+@media (max-width:900px){
+  .hk{grid-template-columns:1fr 1fr;gap:10px}.hk .kpi{padding:14px 16px}.hk .kpi b{font-size:26px;margin:4px 0}.hk .kpi span,.hk .kpi small{font-size:12.5px}
+  .qa{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+  .qa a{flex-direction:column;justify-content:center;gap:6px;min-height:76px;padding:10px 4px;font-size:12.5px;text-align:center;border-radius:16px}
+  .inst{flex-wrap:wrap}.inst span{flex-basis:calc(100% - 52px)}.inst .btn{flex:1}
+  .subt{width:100%}.subt a{flex:1;padding:9px 10px;font-size:13px;text-align:center}
+}
 @media (max-width:700px){.g3 .kpi b{font-size:28px}}
 @media (max-width:900px){.pgg{grid-template-columns:minmax(0,1fr)!important}.pgg .frame{justify-self:center}}
 /* ---------- Give a stamp ---------- */
@@ -318,10 +358,10 @@ td .btn{white-space:nowrap}
 @media (max-width:420px){.khk .kpi b{font-size:22px}}
 
 </style>
-<script src="/assets/gst.v2.js"></script>
-<script src="/assets/gst-export.v2.js" defer></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js" defer></script>
-<script src="/assets/qr-cards.v9.js" defer></script>
+
+
+
+
 </head>
 <body>
 <div class="app">
@@ -371,14 +411,34 @@ const IC = {
   ext: I('<path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/>'),
   dl: I('<path d="M12 4v11M7 10l5 5 5-5M5 20h14"/>'),
   bill: I('<path d="M6 2h12v20l-3-2-3 2-3-2-3 2z"/><path d="M9 7h6M9 11h6M9 15h3"/>'),
-  book: I('<path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v17H6.5A2.5 2.5 0 0 0 4 21.5z"/><path d="M4 21.5A2.5 2.5 0 0 1 6.5 19H20v3H6.5M9 7h7M9 11h5"/>')
+  book: I('<path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v17H6.5A2.5 2.5 0 0 0 4 21.5z"/><path d="M4 21.5A2.5 2.5 0 0 1 6.5 19H20v3H6.5M9 7h7M9 11h5"/>'),
+  more: I('<circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/>'),
+  plus: I('<path d="M12 5v14M5 12h14"/>'),
+  share: I('<path d="M12 3v13M7 8l5-5 5 5M5 14v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5"/>'),
+  gift: I('<rect x="3.5" y="8" width="17" height="4" rx="1"/><path d="M5 12v8h14v-8M12 8v12M12 8S10.5 3.5 8 4.5 9 8 12 8Zm0 0s1.5-4.5 4-3.5S15 8 12 8Z"/>'),
+  phone: I('<rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M10.5 18.5h3"/>')
 };
 const NAV = [
-  ["Run the shop", [["overview", "Overview", "home"], ["orders", "Orders", "orders"], ["bills", "Bills", "bill"], ["khata", "Udhaar khata", "book"], ["menu", "Menu & prices", "menu"], ["store", "Online store", "orders"], ["customers", "Customers", "people"]]],
-  ["Grow", [["pro", "Keepsake Pro", "star"], ["messages", "Messages", "wa"], ["campaigns", "Offer QRs", "qr"], ["nearby", "Walk-in offers", "pin"], ["reviews", "Reviews", "star"], ["offers", "Offers & marketing", "tag"], ["analytics", "Analytics", "chart"]]],
-  ["Set up", [["page", "My page", "page"], ["qr", "QR & cards", "qr"], ["payments", "Payments", "pay"], ["settings", "Team & settings", "gear"]]]
+  ["Today", [["overview", "Home", "home"], ["orders", "Orders", "orders"], ["sales", "Sales", "bill"], ["khata", "Udhaar khata", "book"]]],
+  ["Shop", [["menu", "Menu & prices", "menu"], ["store", "Online store", "orders"], ["page", "My page", "page"], ["qr", "QR & cards", "qr"]]],
+  ["Customers", [["customers", "Customers & loyalty", "people"], ["messages", "Messages", "wa"], ["reviews", "Reviews", "star"]]],
+  ["Grow", [["offers", "Offers", "tag"], ["analytics", "Analytics", "chart"], ["pro", "Keepsake Pro", "star"]]],
+  ["Settings", [["settings", "Settings", "gear"]]]
 ];
-const TITLES = Object.fromEntries(NAV.flatMap(g => g[1]).map(x => [x[0], x[1]]));
+// Screens that live inside another one (shown as tabs there), and old addresses that still work.
+const SUB = { offers: [["offers", "Today's offer"], ["campaigns", "Offer QRs"], ["nearby", "Walk-in offers"]], settings: [["settings", "Staff & alerts"], ["payments", "Payments & plan"]] };
+const PARENT = { campaigns: "offers", nearby: "offers", payments: "settings" }, ALIAS = { bills: "sales" };
+const TITLES = Object.assign(Object.fromEntries(NAV.flatMap(g => g[1]).map(x => [x[0], x[1]])), { campaigns: "Offer QRs", nearby: "Walk-in offers", payments: "Payments" });
+// Code only some screens need is fetched the first time you open them, so the dashboard opens fast.
+const LIB = { gst: ["/assets/gst.v2.js", "/assets/gst-export.v2.js"], qr: ["https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js", "/assets/qr-cards.v9.js", "css:https://fonts.googleapis.com/css2?family=Archivo+Black&family=Rozha+One&display=swap"] };
+const NEEDS = { sales: ["gst"], qr: ["qr"], campaigns: ["qr"] };
+const libDone = {};
+function need(name) {
+  return libDone[name] = libDone[name] || LIB[name].reduce((p, src) => p.then(() => new Promise(ok => {
+    if (src.startsWith("css:")) { const l = document.createElement("link"); l.rel = "stylesheet"; l.href = src.slice(4); document.head.appendChild(l); return ok(); }
+    const e = document.createElement("script"); e.src = src; e.onload = ok; e.onerror = ok; document.head.appendChild(e);
+  })), Promise.resolve());
+}
 
 // ---------- state ----------
 const S = { proUntil: 0, proPrice: 299, proYearPrice: 2999, storeWas: false, user: null, pages: [], id: "", page: null, d: null, stats: null, loyalty: false, active: true, orders: [], ordersAt: 0, seen: null, customers: null, loy: null, view: "overview", otab: "new", csq: "", cf: "all", menuDraft: null, tone: store.get("gk-dash-tone", "red") };
@@ -406,6 +466,13 @@ const today0 = () => { const d = new Date(); d.setHours(0, 0, 0, 0); return +d; 
 const live = o => o.st !== "cancel";
 function ordersOn(t0, t1) { return S.orders.filter(o => o.at >= t0 && o.at < t1 && live(o)); }
 function sum(os) { return os.reduce((t, o) => t + o.tot, 0); }
+// Best sellers between t0 and t1: page orders and sales made at the counter, less returns.
+function topSold(t0, t1, n) {
+  const m = {}, add = (name, q, v) => { const k = String(name).toLowerCase(); m[k] = m[k] || { n: name, q: 0, v: 0 }; m[k].q += q; m[k].v += v; };
+  ordersOn(t0, t1).forEach(o => o.items.forEach(x => add(x.n, x.q, x.q * x.p)));
+  ((S.bl && S.bl.bills) || []).forEach(b => { if (b.cancel || !b.it || b.at < t0 || b.at >= t1) return; const sg = b.kind === "credit" ? -1 : 1; b.it.forEach(([name, q, v]) => add(name, sg * q, sg * v)); });
+  return Object.values(m).filter(x => x.q > 0).map(x => ({ ...x, q: Math.round(x.q * 1000) / 1000 })).sort((a, b) => b.q - a.q || b.v - a.v).slice(0, n);
+}
 function topItems(os, n) {
   const m = {}; os.forEach(o => o.items.forEach(x => { const k = x.n; m[k] = m[k] || { n: x.n, q: 0, v: 0 }; m[k].q += x.q; m[k].v += x.q * x.p; }));
   return Object.values(m).sort((a, b) => b.q - a.q || b.v - a.v).slice(0, n);
@@ -420,7 +487,7 @@ const waNum = p => "91" + String(p || "").replace(/\D/g, "").slice(-10);
 // ---------- shell ----------
 function navHtml(mobile) {
   const n = newCount();
-  return NAV.map(([g, items]) => `<small>${g}</small>` + items.map(([k, l, ic]) => `<a href="#${k}" data-v="${k}" class="${S.view === k ? "on" : ""}">${IC[ic]}<span>${l}</span>${k === "orders" && n ? `<em>${n}</em>` : ""}</a>`).join("")).join("");
+  return NAV.map(([g, items]) => `<small>${g}</small>` + items.map(([k, l, ic]) => `<a href="#${k}" data-v="${k}" class="${S.view === k || PARENT[S.view] === k ? "on" : ""}">${IC[ic]}<span>${l}</span>${k === "orders" && n ? `<em>${n}</em>` : ""}</a>`).join("")).join("");
 }
 function shell() {
   $("#nav").innerHTML = navHtml();
@@ -429,20 +496,32 @@ function shell() {
   $("#shopc").innerHTML = `<i style="${logo ? `background-image:url('${esc(logo)}')` : ""}">${logo ? "" : esc(ini(shopName()).charAt(0))}</i><div style="min-width:0;flex:1"><b>${esc(shopName())}</b><small>${esc(location.host + "/b/" + S.id)}</small>${others.length > 1 ? `<select id="pick" aria-label="Switch shop">${others.map(p => `<option value="${p.id}"${p.id === S.id ? " selected" : ""}>${esc(p.title)}</option>`).join("")}</select>` : ""}</div>`;
   const pk = $("#pick"); if (pk) pk.onchange = () => { location.href = "/shops/dashboard?id=" + pk.value; };
   const n = newCount();
-  $("#tabbar").innerHTML = [["overview", "Home", "home"], ["orders", "Orders", "orders"], ["menu", "Menu", "menu"], ["customers", "Customers", "people"]].map(([k, l, ic]) => `<a href="#${k}" class="${S.view === k ? "on" : ""}">${IC[ic]}${l}${k === "orders" && n ? `<em>${n}</em>` : ""}</a>`).join("") + `<button type="button" id="moreB" class="${["overview", "orders", "menu", "customers"].includes(S.view) ? "" : "on"}">${IC.dots}More</button>`;
-  $("#moreB").onclick = () => { $("#moreIn").innerHTML = `<nav class="nav" style="margin:0">${navHtml(true)}</nav>`; $("#more").hidden = false; };
+  const TABS = [["overview", "Home", "home"], ["orders", "Orders", "orders"], ["sales", "Sales", "bill"], ["khata", "Udhaar", "book"]];
+  $("#tabbar").innerHTML = TABS.map(([k, l, ic]) => `<a href="#${k}" class="${S.view === k ? "on" : ""}">${IC[ic]}${l}${k === "orders" && n ? `<em>${n}</em>` : ""}</a>`).join("") + `<button type="button" id="moreB" class="${TABS.some(t => t[0] === S.view) ? "" : "on"}" aria-label="More sections">${IC.more || "•••"}More</button>`;
+  $("#moreB").onclick = () => {
+    $("#moreIn").innerHTML = `<div class="mh"><b>${esc(shopName())}</b><button type="button" class="lnk" data-x="1">Close</button></div>` + NAV.slice(1).map(([g, items]) => `<small class="mg">${g}</small><div class="mgrid">${items.map(([k, l, ic]) => `<a href="#${k}" class="${S.view === k || PARENT[S.view] === k ? "on" : ""}">${IC[ic]}<span>${l}</span></a>`).join("")}</div>`).join("")
+      + `<a class="mlink" href="/b/${S.id}" target="_blank" rel="noopener">${IC.ext} Open my page</a>`;
+    $("#more").hidden = false;
+  };
   document.title = (n ? "(" + n + ") " : "") + (TITLES[S.view] || "Dashboard") + " · " + shopName();
 }
-$("#more").onclick = e => { if (e.target.id === "more" || e.target.closest("a")) $("#more").hidden = true; };
+$("#more").onclick = e => { if (e.target.id === "more" || e.target.closest("a") || e.target.closest("[data-x]")) $("#more").hidden = true; };
 
 function go() {
-  const v = (location.hash || "#overview").slice(1);
+  let v = (location.hash || "#overview").slice(1);
+  if (ALIAS[v]) { v = ALIAS[v]; history.replaceState(null, "", "#" + v); }
   S.view = TITLES[v] ? v : "overview";
   shell();
-  const m = $("#main");
-  try { m.innerHTML = V[S.view](); } catch (e) { console.error(e); m.innerHTML = `<div class="empty"><b>This section couldn't load.</b>${esc(e.message)}</div>`; }
+  const m = $("#main"), libs = NEEDS[S.view] || [];
+  if (libs.some(x => !libDone[x] || !libDone[x].ok)) {
+    m.innerHTML = `<div class="sk" style="height:120px;margin-bottom:16px"></div><div class="sk" style="height:320px"></div>`;
+    const want = S.view; Promise.all(libs.map(x => need(x).then(() => { libDone[x].ok = 1; }))).then(() => { if (S.view === want) go(); });
+    return;
+  }
+  const sub = SUB[PARENT[S.view] || S.view];
+  try { m.innerHTML = (sub ? `<nav class="subt" aria-label="${esc(TITLES[PARENT[S.view] || S.view])}">${sub.map(([k, l]) => `<a href="#${k}" class="${S.view === k ? "on" : ""}">${l}</a>`).join("")}</nav>` : "") + V[S.view](); } catch (e) { console.error(e); m.innerHTML = `<div class="empty"><b>This section couldn't load.</b>${esc(e.message)}</div>`; }
   (A[S.view] || (() => {}))();
-  bindCommon();
+  bindCommon(); instBar();
 }
 addEventListener("hashchange", () => { if (location.hash === "#nearby") S.geo = null; if (location.hash === "#campaigns") S.cp = null; go(); scrollTo(0, 0); });
 
@@ -525,12 +604,12 @@ function proBar() {
   if (!S.proUntil || !S.active) return "";
   const l = proLeft();
   if (l > 5) return "";
-  return `<div class="bar"><span><b>${l > 0 ? `Keepsake Pro ends in ${l} day${l === 1 ? "" : "s"}.` : "Keepsake Pro has ended."}</b> Renew to keep your online store checkout, GST bills, Udhaar khata, Table QRs, Add sale, reports and win-back offers.${l > 0 ? "" : " Your products still show; customers order on WhatsApp."}</span><button class="btn" data-pro="year">Renew · ${rup(S.proYearPrice)} / year</button><button class="btn g" data-pro="buy" style="background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.4)">${rup(S.proPrice)} / month</button></div>`;
+  return `<div class="bar"><span><b>${l > 0 ? `Keepsake Pro ends in ${l} day${l === 1 ? "" : "s"}.` : "Keepsake Pro has ended."}</b> Renew to keep your online store checkout, unlimited sales and bills, Udhaar khata, Table QRs, reports and win-back offers.${l > 0 ? "" : " Your products still show; customers order on WhatsApp."}</span><button class="btn" data-pro="year">Renew · ${rup(S.proYearPrice)} / year</button><button class="btn g" data-pro="buy" style="background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.4)">${rup(S.proPrice)} / month</button></div>`;
 }
 V.pro = () => {
   const on = isPro(), l = on ? proLeft() : 0, until = new Date(S.proUntil).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
-  const items = [["Online store", "Every product with photos, search and checkout on your page. Orders come straight to your dashboard."], ["Billing", "Unlimited bills with or without GST, estimates and returns. Print a receipt or send it on WhatsApp with a UPI QR."], ["Smart Udhaar", "A khata customers confirm on WhatsApp, with one-tap reminders and a UPI link to pay. See who owes what and since when."], ["Table QRs", "A QR for each table. Customers scan, order and pay at the table."], ["Day-end report", "Sales, orders and top items for any day, with a CSV download."], ["Win-back offers", "See new, regular and lapsed customers and send a WhatsApp offer in one tap."], ["Printable order slips", "Print a slip for the kitchen or the parcel from any order."], ["Add sale", "Record sales made in the shop so your totals and customers stay complete."]];
-  return head("Keepsake Pro", "Your online store plus seven tools that bring customers back and save you time. Your page, menu, WhatsApp orders and UPI stay free.", "") +
+  const items = [["Online store", "Every product with photos, search and checkout on your page. Orders come straight to your dashboard."], ["Sales & bills", "Unlimited sales at the counter, with or without GST, plus estimates and returns. Print a receipt or send it on WhatsApp with a UPI QR."], ["Smart Udhaar", "A khata customers confirm on WhatsApp, with one-tap reminders and a UPI link to pay. See who owes what and since when."], ["Table QRs", "A QR for each table. Customers scan, order and pay at the table."], ["Day-end report", "Sales, orders and top items for any day, with a CSV download."], ["Win-back offers", "See new, regular and lapsed customers and send a WhatsApp offer in one tap."], ["Printable order slips", "Print a slip for the kitchen or the parcel from any order."]];
+  return head("Keepsake Pro", "Your online store plus six tools that bring customers back and save you time. Your page, menu, WhatsApp orders and UPI stay free.", "") +
   (!S.active ? inactive() : "") +
   `<section class="cd" style="background:var(--ink);color:#fff;border-color:var(--ink)"><div class="ch"><h2 class="H" style="margin:0">${on ? "Pro is on" : S.proUntil ? "Pro has ended" : "Go Pro"}</h2><span class="pl" style="background:var(--ye)">${rup(S.proPrice)} / month · ${rup(S.proYearPrice)} / year</span></div>
     <p style="margin:6px 0 0;color:#d6cfc4">${on ? `Active until <b>${until}</b> (${l} day${l === 1 ? "" : "s"} left).` : S.proUntil ? `It ended on ${until}. Renew to use it again.` : "Pay for a month or a year. Renew by hand whenever you like, no auto-debit."}</p>
@@ -539,41 +618,62 @@ V.pro = () => {
 };
 // A locked tool shows this instead of its screen.
 const proLock = (what) => `<section class="cd"><div class="empty"><b>${what} is part of Keepsake Pro</b>${proPriceLine()}<div style="display:flex;justify-content:center">${proBtns()}</div></div></section>`;
+// Sales = page orders + sales made at the counter (bills), less returns. Used on Home and in Sales.
+function salesOn(t0, t1) {
+  const os = ordersOn(t0, t1), bs = ((S.bl && S.bl.bills) || []).filter(x => !x.cancel && x.at >= t0 && x.at < t1 && x.kind !== "est");
+  const shop = bs.reduce((t, x) => t + (x.kind === "credit" ? -x.total : x.total), 0), nb = bs.filter(x => x.kind !== "credit").length;
+  return { v: sum(os) + shop, n: os.length + nb, online: sum(os), shop, no: os.length, nb };
+}
+const salesToday = () => { const t0 = today0(); return salesOn(t0, t0 + 864e5); };
+function salesDays(n) {
+  const t0 = today0(), out = [];
+  for (let i = n - 1; i >= 0; i--) { const a = t0 - i * 864e5, d = new Date(a), x = salesOn(a, a + 864e5); out.push({ v: Math.round(x.v), lab: x.v ? inr(x.v).replace("₹", "") : "", l: DOW[d.getDay()], t: DOWL[d.getDay()] }); }
+  return out;
+}
+// Things that need the owner now. Each: [icon, title, detail, link, tone]
+function needsYou() {
+  const L = [], nn = newCount(), kh = S.khSum, cfg = S.loy && S.loy.cfg;
+  if (nn) L.push(["orders", `${nn} new order${nn === 1 ? "" : "s"}`, "Accept so the customer knows it's coming", "#orders", "o"]);
+  const wt = S.orders.filter(o => o.st === "prep" || o.st === "ready").length; if (wt) L.push(["orders", `${wt} order${wt === 1 ? "" : "s"} in progress`, "Mark them ready or done", "#orders", ""]);
+  if (kh && kh.overdue) L.push(["book", `${kh.overdue} customer${kh.overdue === 1 ? " owes" : "s owe"} you for 30+ days`, "Send a polite WhatsApp reminder", "#khata", "y"]);
+  if (kh && kh.claims) L.push(["book", `${kh.claims} payment${kh.claims === 1 ? "" : "s"} to check`, "Customers say they've paid", "#khata", "y"]);
+  const un = ((S.bl && S.bl.bills) || []).filter(x => blDue(x) > 0); if (un.length) L.push(["bill", `${un.length} sale${un.length === 1 ? "" : "s"} not fully paid`, inr(un.reduce((t, x) => t + blDue(x), 0)) + " to collect", "#sales", "", "due"]);
+  if (cfg) { const r = (S.loy.members || []).filter(m => m.s >= cfg.n).length; if (r) L.push(["gift", `${r} loyalty reward${r === 1 ? "" : "s"} ready`, "Give them at the counter", "#customers", ""]); }
+  return L;
+}
 V.overview = () => {
-  const d = S.d, st = S.stats || {}, t0 = today0(), tod = ordersOn(t0, t0 + 864e5), sales = sum(tod);
-  const ch = st.lastSame ? Math.round((st.today - st.lastSame) * 100 / st.lastSame) : null;
-  const wk = DOW[new Date().getDay()];
-  const days = scanDays(), best = days.length && Math.max(...days.map(x => x.v)) ? days.reduce((b, x) => x.v > b.v ? x : b) : null;
+  const d = S.d, st = S.stats || {}, t0 = today0(), T = salesToday(), tod = ordersOn(t0, t0 + 864e5), kh = S.khSum, cfg = S.loy && S.loy.cfg;
   const liveO = S.orders.filter(o => o.st === "new" || o.st === "prep" || o.st === "ready").slice(0, 4);
-  const recent = liveO.length ? liveO : S.orders.slice(0, 4);
-  const top = topItems(tod, 4), topW = top.length ? top : topItems(ordersOn(t0 - 6 * 864e5, t0 + 864e5), 4);
-  const cl = checklist(), done = cl.filter(x => x[0]).length;
-  const of = d.offer || {};
-  const now = new Date();
-  return inactive() + proBar() + head(`${greet()}, ${esc(shopName().split(/\s+/)[0])}`, `${now.toLocaleDateString("en-IN", { weekday: "long", day: "numeric", month: "short" })} · here is how your shop is doing today.`) +
-  `<section class="g4" aria-label="Today">
-    <div class="kpi o"><span>QR scans today</span><b data-count="${st.today || 0}">${st.today || 0}</b><small>${ch === null ? (st.week ? st.week + " this week" : "Opens of your page") : (ch >= 0 ? "+" : "") + ch + "% vs last " + wk}</small></div>
-    <div class="kpi"><span>Orders today</span><b>${tod.length}</b><small class="gd">${waiting() ? waiting() + " waiting for you" : d.ord ? "All caught up" : "Ordering is off"}</small></div>
-    <div class="kpi y"><span>Sales today</span><b>${inr(sales)}</b><small>${tod.length ? "Avg order " + inr(sales / tod.length) : "From page orders"}</small></div>
-    <div class="kpi k"><span>Customers</span><b>${S.customersCount || 0}</b><small>${S.newCust ? S.newCust + " new this week" : "who ordered or joined your card"}</small></div>
+  const N = needsYou(), cl = checklist(), todo = cl.filter(x => !x[0]), days = salesDays(7), anyWeek = days.some(x => x.v), scans = scanDays();
+  const now = new Date(), share = "https://wa.me/?text=" + encodeURIComponent(`${shopName()}: see our menu, order and pay here 👉 ${pageUrl()}`);
+  const qa = [[`href="#sales" data-quick="sale" class="on"`, "plus", "New sale"], [`href="#khata" data-quick="udhaar"`, "book", "Add udhaar"]];
+  if (cfg) qa.push([`href="#customers" data-quick="stamp"`, "gift", "Give stamp"]);
+  qa.push([`href="${share}" target="_blank" rel="noopener"`, "share", "Share page"]);
+  return inactive() + proBar() + head(`${greet()}, ${esc(shopName().split(/\s+/)[0])}`, now.toLocaleDateString("en-IN", { weekday: "long", day: "numeric", month: "long" })) +
+  `<section class="hk" aria-label="Today">
+    <a class="kpi y" href="#sales"><span>Sales today</span><b>${inr(T.v)}</b><small>${T.n ? `${T.n} sale${T.n === 1 ? "" : "s"}${T.no && T.nb ? ` · ${T.no} online` : ""}` : "Counter + online"}</small></a>
+    <a class="kpi" href="#orders"><span>Orders today</span><b>${tod.length}</b><small class="gd">${waiting() ? waiting() + " waiting" : d.ord ? "All caught up" : "Ordering is off"}</small></a>
+    ${kh ? `<a class="kpi k" href="#khata"><span>Udhaar to collect</span><b>${inr(kh.pending)}</b><small>${kh.due} customer${kh.due === 1 ? "" : "s"}</small></a>` : `<a class="kpi k" href="#customers"><span>Customers</span><b>${S.customersCount || 0}</b><small>${S.newCust ? S.newCust + " new this week" : "who bought or joined"}</small></a>`}
+    <a class="kpi o" href="#analytics"><span>Page scans today</span><b>${st.today || 0}</b><small>${st.week ? st.week + " this week" : "Opens of your page"}</small></a>
   </section>
+  <section class="qa" aria-label="Quick actions">${qa.map(([at, ic, l]) => `<a ${at}>${IC[ic]}<span>${l}</span></a>`).join("")}</section>
+  <div id="instBar"></div>
   <section class="g2">
-    <div class="cd"><div class="ch"><h2 class="H">QR scans · last 7 days</h2><small>${best ? "Best day: " + best.t : "Opens of your page"}</small></div>${days.length ? bars(days) : `<div class="empty">No scans yet. Print your QR and place it at the counter.</div>`}</div>
-    <div class="cd"><div class="ch"><h2 class="H">${liveO.length ? "Live orders" : "Recent orders"}</h2><a class="btn g s" href="#orders">See all</a></div>
-      ${recent.length ? `<ul class="ol">${recent.map(orderRow).join("")}</ul>` : d.ord ? `<div class="empty"><b>No orders yet</b>When customers order from your page, they show up here with a sound.</div>` : `<div class="empty"><b>WhatsApp ordering is off</b>Let customers add items and send the order to your WhatsApp.<br><button class="btn" data-act="ordOn">Turn on ordering</button></div>`}
-    </div>
+    <div class="cd"><div class="ch"><h2 class="H">Needs you</h2>${N.length ? `<small>${N.length}</small>` : ""}</div>
+      ${N.length ? `<div class="need">${N.map(([ic, t, s2, href, tone, f]) => `<a href="${href}"${f ? ` data-blf="${f}"` : ""} class="${tone}"><i>${IC[ic]}</i><span><b>${esc(t)}</b><small>${esc(s2)}</small></span>${IC.ext}</a>`).join("")}</div>`
+        : `<div class="ok"><i>${IC.check}</i><span><b>All caught up</b><small>New orders, overdue udhaar and rewards show up here.</small></span></div>`}</div>
+    ${liveO.length ? `<div class="cd"><div class="ch"><h2 class="H">Live orders</h2><a class="btn g s" href="#orders">See all</a></div><ul class="ol">${liveO.map(orderRow).join("")}</ul></div>`
+      : anyWeek ? `<div class="cd"><div class="ch"><h2 class="H">Sales · last 7 days</h2><small>${inr(days.reduce((t, x) => t + x.v, 0))}</small></div>${bars(days)}</div>`
+      : scans.some(x => x.v) ? `<div class="cd"><div class="ch"><h2 class="H">Page scans · last 7 days</h2></div>${bars(scans)}</div>`
+      : `<div class="cd"><div class="ch"><h2 class="H">Your page</h2></div><p class="mu" style="margin-top:0">Share it on WhatsApp and put your QR at the counter. Scans and sales show here.</p><div class="tg"><a class="btn w" href="${share}" target="_blank" rel="noopener">${IC.wa}Share on WhatsApp</a><a class="btn g" href="#qr">My QR</a></div></div>`}
   </section>
-  <section class="g3">
-    <div class="cd"><div class="ch"><h2 class="H">Offer of the day</h2></div>
-      ${of.title ? `<div class="ofr${of.on ? "" : " off"}"><small>${of.on ? "Live on your page" : "Hidden from your page"}</small><b>${esc(of.title)}</b>${of.text ? `<p>${esc(of.text)}</p>` : ""}</div>
-      <label class="sw wide"><input type="checkbox" data-act="offerOn"${of.on ? " checked" : ""}><i></i>Offer is live</label>` : `<div class="empty"><b>No offer yet</b>A simple deal at the top of your page gets people ordering.<br><a class="btn" href="#offers">Create an offer</a></div>`}
-      <p class="hint">Offers get more taps than a plain menu. <a href="#offers">Edit offer</a></p></div>
-    <div class="cd"><div class="ch"><h2 class="H">Top items ${top.length ? "today" : "this week"}</h2></div>
-      ${topW.length ? `<div class="rows">${topW.map(x => `<div><span><b>${esc(x.n)}</b><small>${x.q} sold</small></span><b>${inr(x.v)}</b></div>`).join("")}</div>` : `<div class="empty">Your best sellers will show here once orders come in.</div>`}</div>
-    ${googleCard()}
-    <div class="cd"><div class="ch"><h2 class="H">Grow faster</h2><small>${done} of ${cl.length} done</small></div>
-      <div class="rows">${cl.map(([ok, t, s, href]) => `<div><i class="ck${ok ? " on" : ""}">${ok ? IC.check : ""}</i><span><b>${esc(t)}</b>${ok ? "" : `<small>${esc(s)}</small>`}</span>${ok ? "" : `<a class="go" href="${href}">Do it →</a>`}</div>`).join("")}</div></div>
-  </section>`;
+  ${(() => { const top = topSold(t0 - 6 * 864e5, t0 + 864e5, 5), chart = liveO.length && anyWeek; if (!top.length && !chart) return "";
+    return `<section class="g2">${chart ? `<div class="cd"><div class="ch"><h2 class="H">Sales · last 7 days</h2><small>${inr(days.reduce((t, x) => t + x.v, 0))}</small></div>${bars(days)}</div>` : ""}
+      ${top.length ? `<div class="cd"><div class="ch"><h2 class="H">Top sellers · 7 days</h2><small>Online + counter</small></div><div class="rows">${top.map((x, i) => `<div><span class="rk">${i + 1}</span><span><b>${esc(x.n)}</b><small>${x.q} sold</small></span><b>${inr(x.v)}</b></div>`).join("")}</div></div>` : ""}</section>`; })()}
+  ${todo.length ? `<section class="cd setup"><div class="ch"><h2 class="H">Finish setting up</h2><small>${cl.length - todo.length} of ${cl.length} done</small></div>
+    <div class="pbar"><i style="width:${Math.round((cl.length - todo.length) * 100 / cl.length)}%"></i></div>
+    <div class="rows">${todo.slice(0, S.clAll ? 99 : 3).map(([, t, s2, href]) => `<div><i class="ck"></i><span><b>${esc(t)}</b><small>${esc(s2)}</small></span><a class="go" href="${href}">Do it →</a></div>`).join("")}</div>
+    ${todo.length > 3 ? `<button type="button" class="lnk" style="margin-top:10px" data-act="clAll">${S.clAll ? "Show less" : "Show all " + todo.length}</button>` : ""}</section>` : ""}`;
 };
 
 V.orders = () => {
@@ -583,7 +683,7 @@ V.orders = () => {
   const tod = ordersOn(t0, t0 + 864e5);
   return inactive() + head("Orders", `${tod.length} today · ${inr(sum(tod))} in sales · ${waiting()} waiting`) +
   (S.d.ord ? "" : `<div class="bar"><span><b>WhatsApp ordering is off.</b> Customers can only see your menu.</span><button class="btn" data-act="ordOn">Turn on ordering</button></div>`) +
-  `<div class="tg" style="margin-bottom:14px"><button class="btn" data-sale="open">+ Add sale${isPro() ? "" : `<span class="ofl" style="background:var(--ye);color:var(--ink)">Pro</span>`}</button><span class="hint" style="align-self:center;margin:0">Sold something in the shop? Record it so your sales and customers stay complete.</span></div>
+  `<div class="tg" style="margin-bottom:14px"><a class="btn g" href="#sales" data-quick="sale">${IC.plus} New sale</a><span class="hint" style="align-self:center;margin:0">Sold something in the shop? Record it in Sales so your totals stay complete.</span></div>
   <div class="tabs" role="tablist">${tabs.map(([k, l]) => `<button type="button" data-otab="${k}" class="${S.otab === k ? "on" : ""}">${l}${(k === "new" || k === "prep" || k === "ready") && counts[k] ? `<em>${counts[k]}</em>` : ""}</button>`).join("")}</div>
   ${list.length ? `<div class="oc">${list.slice(0, 120).map(orderCard).join("")}</div>` : `<div class="empty"><b>${S.otab === "new" ? "No new orders" : "Nothing here"}</b>${S.otab === "new" ? "New orders appear here on their own. Keep this page open and you'll hear a ding." : ""}</div>`}
   <p class="hint">Every order sent from your page appears here, even if the customer didn't press send in WhatsApp. If one never reached you, mark it Cancelled.</p>${saleSheet()}`;
@@ -922,6 +1022,7 @@ function custRows() {
   const map = {};
   (S.customers || []).forEach(c => map[c.phone] = { name: c.name, phone: c.phone, n: c.n, spend: c.spend, last: c.last, first: c.first });
   ((S.geo && S.geo.phones) || []).forEach(w => { const p = String(w.phone).slice(-10), c = map[p] || (map[p] = { name: "", phone: p, n: 0, spend: 0, last: 0, first: w.first }); c.walk = w; c.last = Math.max(c.last || 0, w.at || 0); c.first = Math.min(c.first || w.first, w.first || c.first); });
+  ((S.bl && S.bl.bills) || []).forEach(x => { if (!x.phone || x.cancel || x.kind === "est" || x.kind === "credit") return; const c = map[x.phone] || (map[x.phone] = { name: x.name || "", phone: x.phone, n: 0, spend: 0, last: 0, first: x.at }); c.n++; c.spend += x.total; c.last = Math.max(c.last || 0, x.at); c.first = Math.min(c.first || x.at, x.at); if (!c.name) c.name = x.name || ""; });
   ((S.loy && S.loy.members) || []).forEach(m => { const c = map[m.phone] || (map[m.phone] = { name: m.name, phone: m.phone, n: 0, spend: 0, last: 0, first: m.at }); c.loy = m; c.last = Math.max(c.last || 0, m.last || 0); if (!c.name || c.name === "Customer") c.name = m.name; });
   return Object.values(map).sort((a, b) => b.last - a.last);
 }
@@ -1256,7 +1357,7 @@ V.analytics = () => {
     <div class="funnel"><div><span>Opened your page</span><i style="width:${st.week ? 100 : 0}%"></i><b>${st.week || 0}</b></div><div><span>Took an action</span><i style="width:${st.week ? Math.min(100, Math.round(acts * 100 / st.week)) : 0}%"></i><b>${acts}</b></div><div><span>Placed an order</span><i style="width:${st.week ? Math.min(100, Math.round(wkO.length * 100 / st.week)) : 0}%"></i><b>${wkO.length}</b></div></div>
     <div class="rows" style="margin-top:16px">${tl.map(([k, l]) => `<div><span><b>${l}</b><i style="display:block;height:6px;margin-top:6px;border-radius:9px;background:var(--or);width:${Math.round((T[k] || 0) * 100 / mx)}%;min-width:3px"></i></span><b>${T[k] || 0}</b></div>`).join("")}</div></div>
   <div class="cd"><div class="ch"><h2 class="H">Busiest hours</h2><small>${wkO.length ? "Peak around " + fh(busy) : "From this week's orders"}</small></div>${wkO.length ? bars(hrs.map(x => ({ v: x.v, lab: x.v || "", l: x.h % 3 === 1 ? fh(x.h) : "", t: fh(x.h) + ": " + x.v + " orders" })), "sm") : `<div class="empty">Once orders come in you'll see when to keep extra staff.</div>`}
-    <div class="ch" style="margin:22px 0 6px"><h2 class="H">Top items · 7 days</h2></div>${topItems(wkO, 6).length ? `<div class="rows">${topItems(wkO, 6).map(x => `<div><span><b>${esc(x.n)}</b><small>${x.q} sold</small></span><b>${inr(x.v)}</b></div>`).join("")}</div>` : `<div class="empty">No orders this week yet.</div>`}</div></section>`;
+    <div class="ch" style="margin:22px 0 6px"><h2 class="H">Top items · 7 days</h2><small>Online + counter</small></div>${topSold(today0() - 6 * 864e5, today0() + 864e5, 6).length ? `<div class="rows">${topSold(today0() - 6 * 864e5, today0() + 864e5, 6).map(x => `<div><span><b>${esc(x.n)}</b><small>${x.q} sold</small></span><b>${inr(x.v)}</b></div>`).join("")}</div>` : `<div class="empty">No sales this week yet.</div>`}</div></section>`;
 };
 
 V.page = () => {
@@ -1271,7 +1372,7 @@ V.page = () => {
     </div></div>
     <div class="cd"><div class="ch"><h2 class="H">Edit your page</h2></div><p class="mu" style="margin-top:0">Change your photos, menu, timings, colours and layout.</p>
       <div style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn" href="/shops/studio?edit=${S.id}">Open the editor</a><button class="btn g" data-copytext="${esc(pageUrl())}">Copy link</button><a class="btn w" href="https://wa.me/?text=${encodeURIComponent(pageUrl())}" target="_blank" rel="noopener">${IC.wa}Share</a></div></div>
-  </div></section>`;
+  </div></section>` + googleCard();
 };
 
 V.qr = () => {
@@ -1322,7 +1423,7 @@ const blDefHsn = () => /cafe|restaurant|cloud|fastfood|foodtruck|tea|juice|icecr
 const blMem = n => (S.bl && S.bl.mem && S.bl.mem[String(n || "").toLowerCase()]) || null;
 const blNewLine = (k, n, p) => { const m = blMem(n), st = S.bl.settings; return { k, n, q: 1, p, r: blGst() ? (m ? m.r : st.rate) : 0, hsn: blGst() ? (m ? m.h : st.hsn || "") : "", u: m ? m.u : st.u || "NOS", dp: "" }; };
 const blUpi = () => !!(S.d.upi && /^[\w.\-]{2,64}@[A-Za-z]{2,64}$/.test(S.d.upi.id || ""));
-async function blLoad() { try { S.bl = await blPost({ action: "bl-home" }); } catch (e) { S.bl = { error: e.message }; } if (S.view === "bills") blRedraw(); }
+async function blLoad() { try { S.bl = await blPost({ action: "bl-home" }); } catch (e) { S.bl = { error: e.message }; } if (S.view === "sales") blRedraw(); }
 function blRedraw() { const y = scrollY, sc = $(".pmb") ? $(".pmb").scrollTop : 0; go(); scrollTo(0, y); if ($(".pmb")) $(".pmb").scrollTop = sc; }
 function blWa(x) {
   const txt = `Namaste${x.name ? " " + x.name : ""}! Here is your bill ${x.no} from ${shopName()} for ${inr(x.total)}.\n${blUrl(x.t)}` + (!x.paid && !x.cancel && blUpi() ? "\nYou can pay by UPI from the link." : "") + "\nThank you!";
@@ -1433,9 +1534,9 @@ function blFoot() {
 }
 function blItemsStep() {
   const N = S.blNew, n = N.lines.length;
-  return `<div class="pm" data-blbg><div class="pmb blk" role="dialog" aria-label="${N.est ? "New estimate" : "New bill"}">
-    <div class="ch"><h2 class="H" style="margin:0">${N.est ? "New estimate" : "New bill"}</h2><button class="lnk" data-bl="close">Close</button></div>
-    <div class="blseg" role="group" aria-label="Bill or estimate"><button type="button" data-bl="mode" data-k="bill" class="${N.est ? "" : "on"}" aria-pressed="${!N.est}">Bill</button><button type="button" data-bl="mode" data-k="est" class="${N.est ? "on" : ""}" aria-pressed="${N.est}">Estimate / quotation</button></div>
+  return `<div class="pm" data-blbg><div class="pmb blk" role="dialog" aria-label="${N.est ? "New estimate" : "New sale"}">
+    <div class="ch"><h2 class="H" style="margin:0">${N.est ? "New estimate" : "New sale"}</h2><button class="lnk" data-bl="close">Close</button></div>
+    <div class="blseg" role="group" aria-label="Bill or estimate"><button type="button" data-bl="mode" data-k="bill" class="${N.est ? "" : "on"}" aria-pressed="${!N.est}">Sale</button><button type="button" data-bl="mode" data-k="est" class="${N.est ? "on" : ""}" aria-pressed="${N.est}">Estimate / quotation</button></div>
     <input class="in" type="search" data-bl-q placeholder="Search items" value="${esc(N.q)}" aria-label="Search items">
     <div class="blfs" id="blPick">${blPick()}</div>
     <div class="blq"><input class="in" id="blOp" inputmode="decimal" placeholder="₹ Amount" aria-label="Amount"><input class="in" id="blOn" maxlength="80" placeholder="Item name (optional)" aria-label="Item name"><button type="button" class="btn k s" data-bl="addo">Add</button></div>
@@ -1468,7 +1569,7 @@ function blChargeStep() {
     ${N.pay === "part" ? `<div class="bl2" style="grid-template-columns:1fr"><label>Received now ₹<input class="in" data-blpa inputmode="decimal" value="${esc(N.part.amt)}"></label></div><div class="blpm sm" style="margin-top:8px">${["cash", "upi", "card"].map(m => `<button type="button" data-bl="via" data-k="${m}" class="${N.part.via === m ? "on" : ""}">${BLMODE[m]}</button>`).join("")}</div><p class="hint" id="blSp">${blPartHint()}</p>` : ""}
     ${N.pay === "due" ? `<p class="hint">${pro ? (c.phone ? "✓ The full amount goes into this customer's udhaar khata." : "Add the mobile number to put this in the udhaar khata.") : "The bill shows as payment due."}</p>` : ""}`}
     <label style="display:block;margin-top:14px">Note on the ${N.est ? "estimate" : "bill"} (optional)<input class="in" data-blc="note" maxlength="200" value="${esc(N.note)}"></label>
-    <button type="button" class="btn blgo" data-bl="save">${N.est ? "Save estimate" : "Save bill · " + inr(k.total)}</button>
+    <button type="button" class="btn blgo" data-bl="save">${N.est ? "Save estimate" : "Save sale · " + inr(k.total)}</button>
   </div></div>`;
 }
 const blNewSheet = () => {
@@ -1487,12 +1588,12 @@ function blBillSheet() {
   const des = (S.bl.settings || {}).design || "a4m", rc = des[0] === "t" ? des : "t80", a4 = des[0] === "a" ? des : "a4m";
   const kh = fresh && S.blKh, T = esc(t);
   return `<div class="pm" data-blbg><div class="pmb" role="dialog" aria-label="${esc(x.no)}">
-    <div class="ch"><h2 class="H" style="margin:0">${fresh ? `<span class="okd" aria-hidden="true">✓</span> ` : ""}${fresh ? (est ? "Estimate saved" : cn ? "Return saved" : "Bill saved") : esc(x.no)}</h2><button class="lnk" data-bl="close">Close</button></div>
+    <div class="ch"><h2 class="H" style="margin:0">${fresh ? `<span class="okd" aria-hidden="true">✓</span> ` : ""}${fresh ? (est ? "Estimate saved" : cn ? "Return saved" : "Sale saved") : esc(x.no)}</h2><button class="lnk" data-bl="close">Close</button></div>
     <div class="blhd"><div><b>${esc(x.name || "Walk-in customer")}</b><small>${esc(x.no)} · ${new Date(x.at).toLocaleString("en-IN", { day: "numeric", month: "short", hour: "numeric", minute: "2-digit" })}</small>${cn && x.ref ? `<small>Against ${esc(x.ref)}</small>` : ""}</div><div style="text-align:right"><b style="font-size:22px">${inr(x.total)}</b>${blStatus(x)}</div></div>
     ${kh ? `<div class="blkh"><b>${inr(due)} added to udhaar</b><span>${esc(x.name || "This customer")} now owes ${inr(kh.bal)} in total.</span></div>` : due && x.rcv > 0 ? `<p class="hint">Received ${inr(x.rcv)} · balance ${inr(due)}</p>` : ""}
     <a class="btn w blgo" href="${esc(blWa(x))}" target="_blank" rel="noopener">${IC.wa} Send on WhatsApp${x.phone ? "" : "…"}</a>
     <div class="bl3"><a class="btn g" href="/bill/${T}?print=${rc}" target="_blank" rel="noopener">Print receipt</a><a class="btn g" href="/bill/${T}?print=${a4}" target="_blank" rel="noopener">A4 / PDF</a><button type="button" class="btn g" data-bl="copy" data-t="${T}">Copy link</button></div>
-    ${fresh ? `<button type="button" class="btn k blgo" data-bl="new" data-k="${est ? "est" : ""}">+ New ${est ? "estimate" : "bill"}</button>` : ""}
+    ${fresh ? `<button type="button" class="btn k blgo" data-bl="new" data-k="${est ? "est" : ""}">+ New ${est ? "estimate" : "sale"}</button>` : ""}
     ${est && !x.cancel ? (x.conv ? `<p class="hint">Turned into bill ${esc(x.conv)}.</p>` : `<b class="blh">Turn into a bill</b><p class="hint" style="margin-top:0">Customer agreed? Make the bill from this estimate. How did they pay?</p><div class="blpm" style="margin-top:8px">${[["cash", "Cash"], ["upi", "UPI"], ["card", "Card"], ["due", S.bl.pro ? "Udhaar" : "Not paid"]].map(([k, l]) => `<button type="button" data-bl="conv" data-k="${k}" data-t="${T}">${l}</button>`).join("")}</div>`) : ""}
     ${bill && !x.cancel ? (x.paid ? `<button type="button" class="lnk" style="margin-top:16px" data-bl="unpaid" data-t="${T}">Mark as not paid</button>`
       : `<b class="blh">Got the ${x.rcv > 0 ? "balance" : "money"}? Mark it paid</b><div class="blpm" style="margin-top:8px">${["cash", "upi", "card", "bank"].map(k => `<button type="button" data-bl="paid" data-k="${k}" data-t="${T}">${BLMODE[k]}</button>`).join("")}</div>`) : ""}
@@ -1527,7 +1628,7 @@ async function blMonth(ym) {
   S.blRep = { ym, loading: true };
   try { for (let i = 0; !window.KSGSTX && i < 50; i++) await new Promise(r => setTimeout(r, 100)); const j = await blPost({ action: "bl-month", ym }); S.blRep = { ym, bills: j.bills, shop: j.shop, r: KSGSTX.build(j.bills, j.shop) }; }
   catch (e) { S.blRep = { ym, error: e.message }; }
-  if (S.view === "bills") blRedraw();
+  if (S.view === "sales") blRedraw();
 }
 function blReports() {
   const B = S.bl, ms = B.months || [], ym = S.blym || (ms[0] && ms[0].ym);
@@ -1554,11 +1655,12 @@ function blReports() {
   </section>`;
 }
 
-V.bills = () => {
-  const B = S.bl, top = r => head("Bills", "Make a bill in seconds. Print it, or send it on WhatsApp.", r || "");
+V.sales = () => {
+  const B = S.bl, top = r => head("Sales", "Every sale in your shop. Print the bill, send it on WhatsApp, or just tap Done.", r || "");
   if (!B) { blLoad(); return top() + `<div class="empty">Loading your bills…</div>`; }
   if (B.error) return top() + `<div class="empty"><b>Bills couldn't load.</b>${esc(B.error)}<br><button class="btn" data-bl="reload">Try again</button></div>`;
   if (!B.settings || S.blSet) return top() + blSetupCard();
+  if (S.wantSale) { S.wantSale = 0; if (!S.blNew) { S.blNew = !S.bl.pro && S.bl.used >= S.bl.free ? { locked: true } : blNew(false); } }
   const now = new Date(), m0 = +new Date(now.getFullYear(), now.getMonth(), 1);
   const live = B.bills.filter(x => !x.cancel), month = live.filter(x => x.at >= m0 && (blIsBill(x) || x.kind === "credit")), due = live.filter(x => blDue(x) > 0);
   const net = month.reduce((t, x) => t + (x.kind === "credit" ? -x.total : x.total), 0), nb = month.filter(blIsBill).length;
@@ -1566,17 +1668,18 @@ V.bills = () => {
   const F = { all: () => true, due: x => blDue(x) > 0, paid: x => blIsBill(x) && x.paid && !x.cancel, est: x => x.kind === "est", ret: x => x.kind === "credit", cx: x => x.cancel };
   const list = B.bills.filter(F[f] || F.all).filter(x => !q || (x.no + " " + (x.name || "") + " " + (x.phone || "")).toLowerCase().includes(q)).slice(0, 200);
   const left = B.pro ? null : Math.max(0, B.free - B.used);
-  return top(`<div class="tg"><button class="btn" data-bl="new">+ New bill</button><button class="btn g" data-bl="new" data-k="est">Estimate</button><button class="btn g" data-bl="set">Settings</button></div>`) +
+  const tSales = salesToday();
+  return top(`<div class="tg"><button class="btn" data-bl="new">${IC.plus} New sale</button><button class="btn g" data-bl="new" data-k="est">Estimate</button><button class="btn g" data-bl="set">Bill settings</button></div>`) +
   (left != null ? `<div class="bar" style="margin-bottom:16px"><span><b>${left ? left + " of " + B.free + " free bills left." : "Your " + B.free + " free bills are used."}</b> Keepsake Pro gives you unlimited bills for ${rup(S.proPrice)} a month or ${rup(S.proYearPrice)} a year.</span><button class="btn" data-pro="year">${S.proUntil ? "Renew" : "Start Pro"} · ${rup(S.proYearPrice)} / year</button></div>` : "") +
   `<div class="g3" style="margin-bottom:16px">
-    <div class="kpi k"><span>Sales this month</span><b>${inr(net)}</b><small>${nb} bill${nb === 1 ? "" : "s"}, after returns</small></div>
+    <div class="kpi k"><span>Sales today</span><b>${inr(tSales.v)}</b><small>${tSales.n} sale${tSales.n === 1 ? "" : "s"} · ${inr(net)} this month</small></div>
     <div class="kpi"><span>Payment due</span><b>${inr(due.reduce((t, x) => t + blDue(x), 0))}</b><small class="mu">${due.length} bill${due.length === 1 ? "" : "s"} not fully paid</small></div>
     <div class="kpi"><span>${blGst() ? "GST this month" : "Your bills are"}</span><b>${blGst() ? inr(month.reduce((t, x) => t + (x.kind === "credit" ? -1 : 1) * (x.tax || 0), 0)) : B.settings.gst === "composition" ? "Bill of supply" : "Cash memo"}</b><small class="mu">${blGst() ? "CGST + SGST + IGST" : B.settings.gst === "composition" ? "Composition scheme" : "No GST charged"}</small></div>
   </div>
   <section class="cd">
     <div class="srch"><input class="in" data-bl-s placeholder="Search bill no., name or number" value="${esc(S.blq || "")}" aria-label="Search bills"><div class="tabs" style="margin:0">${[["all", "All"], ["due", "Unpaid"], ["paid", "Paid"], ["est", "Estimates"], ["ret", "Returns"], ["cx", "Cancelled"]].map(([k, l]) => `<button type="button" data-bl="f" data-k="${k}" class="${f === k ? "on" : ""}">${l}</button>`).join("")}</div></div>
     ${list.length ? `<ul class="blr">${list.map(x => `<li><button type="button" data-bl="open" data-t="${esc(x.t)}"><span class="nm"><b>${esc(x.name || "Walk-in customer")}</b><small>${esc(x.no)} · ${ago(x.at)}</small></span><span class="am"><b>${x.kind === "credit" ? "−" : ""}${inr(x.total)}</b>${blStatus(x)}</span></button></li>`).join("")}</ul>`
-      : `<div class="empty" style="margin-top:14px"><b>${B.bills.length ? "Nothing here." : "No bills yet"}</b>${B.bills.length ? "Try another search or filter." : "Tap your items, press Charge, done. Your first bill takes under a minute."}${B.bills.length ? "" : `<br><button class="btn" data-bl="new">+ New bill</button>`}</div>`}
+      : `<div class="empty" style="margin-top:14px"><b>${B.bills.length ? "Nothing here." : "No bills yet"}</b>${B.bills.length ? "Try another search or filter." : "Tap your items, press Charge, done. Your first sale takes under a minute."}${B.bills.length ? "" : `<br><button class="btn" data-bl="new">+ New sale</button>`}</div>`}
   </section>${blReports()}${blNewSheet()}${blBillSheet()}`;
 };
 
@@ -1592,7 +1695,7 @@ function blLive() {
   const f = $("#blFoot"); if (f) f.innerHTML = blFoot();
   const t = $("#blTot"); if (t) t.innerHTML = blTotHtml();
   const g = $("#blBig"), k = blCalc(); if (g) g.textContent = inr(k.total);
-  const sv = $('[data-bl="save"]'); if (sv && !N.est) sv.textContent = "Save bill · " + inr(k.total);
+  const sv = $('[data-bl="save"]'); if (sv && !N.est) sv.textContent = "Save sale · " + inr(k.total);
   const h = $("#blSp"); if (h) h.textContent = N.pay === "split" ? blSplitHint() : blPartHint();
   N.lines.forEach((x, i) => { const a = $(`[data-amt="${i}"]`); if (a) a.textContent = rs2(blLineAmt(x)); });
 }
@@ -1745,7 +1848,7 @@ $("#main").addEventListener("click", async ev => {
 const khPost = b => post({ id: S.id, ...b });
 const khUrl = c => location.origin + "/u/" + c.tok;
 const khDays = n => n <= 0 ? "today" : n === 1 ? "1 day" : n + " days";
-async function khLoad() { try { S.kh = await khPost({ action: "kh-own-list" }); } catch (e) { S.kh = { error: e.message }; } if (S.view === "khata") khRedraw(); }
+async function khLoad() { try { S.kh = await khPost({ action: "kh-own-list" }); S.khSum = S.kh.sum; } catch (e) { S.kh = { error: e.message }; } if (S.view === "khata") khRedraw(); }
 function khRedraw() { const y = scrollY, sc = $(".pmb") ? $(".pmb").scrollTop : 0; go(); scrollTo(0, y); if ($(".pmb")) $(".pmb").scrollTop = sc; }
 const khState = c => c.bal <= 0 ? ["clr", "Cleared"] : c.age > 30 ? ["od", khDays(c.age) + " due"] : c.lim && c.bal > c.lim ? ["od", "Over limit"] : ["due", "Due"];
 // Open WhatsApp in a tab first (so phones don't block it), then point it at the message once the server answers.
@@ -1913,8 +2016,8 @@ V.settings = () => {
     : `<div class="empty"><b>Loyalty card not added</b>Give regulars a stamp card on their phone. Staff add stamps with a PIN.<br><a class="btn" href="/shops/studio?edit=${S.id}#publish">${S.active ? "Add for ₹300" : "Included · go live"}</a></div>`}</div>
   <div class="cd"><div class="ch"><h2 class="H">Order alerts</h2></div>
     <div class="rows"><div><span><b>Ding on new orders</b><small>While this dashboard is open.</small></span><label class="sw"><input type="checkbox" data-act="sound"${snd ? " checked" : ""}><i></i>${snd ? "On" : "Off"}</label></div>
-    <div><span><b>Phone notifications</b><small>${"Notification" in window ? (Notification.permission === "granted" ? "Allowed on this device." : "Get a pop-up when an order comes in.") : "Not supported on this browser."}</small></span>${"Notification" in window && Notification.permission !== "granted" ? `<button class="btn g s" data-act="notif">Allow</button>` : ""}</div>
-    <div><span><b>Add to home screen</b><small>Open this page in Chrome, tap ⋮ and "Add to Home screen" to open it like an app.</small></span></div></div></div></section>
+    <div><span><b>Order alerts on this phone</b><small>${pushOK() ? (S.pushOn ? "On. You'll get a notification for every new order, even when the app is closed." : "Get a notification for every new order, even when the app is closed.") : isIOS() && !standalone() ? "On iPhone, install the app first (button below), then turn this on." : "Not supported on this browser."}</small></span>${pushOK() ? (S.pushOn ? `<button class="btn g s" data-act="pushoff">Turn off</button>` : `<button class="btn s" data-act="pushon">Turn on</button>`) : ""}</div>
+    <div><span><b>The GetKeepsake Business app</b><small>${standalone() ? "You're using the app. ✓" : "Put your dashboard on your home screen. It opens full screen, fast, like any app."}</small></span>${standalone() ? "" : `<button class="btn s" data-act="install">Install app</button>`}</div></div></div></section>
   <section class="g2"><div class="cd"><div class="ch"><h2 class="H">Account</h2></div><dl class="kv"><dt>Name</dt><dd>${esc(u.name || "")}</dd><dt>Email</dt><dd>${esc(u.email || "")}</dd><dt>Mobile</dt><dd>${esc(u.phone || "–")}</dd></dl>
     <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px"><a class="btn g" href="/dashboard">All my pages</a><button class="btn k" data-act="logout">Log out</button></div></div>
   <div class="cd"><div class="ch"><h2 class="H">Help</h2></div><p class="mu" style="margin-top:0">Stuck, or want us to set it up for you? We reply on WhatsApp.</p><a class="btn w" href="https://wa.me/918302791217?text=${encodeURIComponent("Hi, I need help with my shop dashboard " + pageUrl())}" target="_blank" rel="noopener">${IC.wa}WhatsApp +91 83027 91217</a></div></section>`;
@@ -1972,6 +2075,8 @@ $("#main").addEventListener("click", async e => {
   if (t.closest("#bcst")) { t.closest("#bcst").href = "https://wa.me/?text=" + encodeURIComponent($("#bc").value); return; }
   const a = t.closest("[data-act]"); if (!a || a.tagName === "INPUT") return;
   const act = a.dataset.act;
+  if (act === "clAll") { S.clAll = !S.clAll; const y = scrollY; go(); scrollTo(0, y); return; }
+  if (act === "install") { installApp(); return; }
   if (act === "gCopy") { try { await navigator.clipboard.writeText(a.dataset.u); toast("Page link copied. Paste it in your Google profile's Website field."); } catch (x) { prompt("Copy your page link", a.dataset.u); } return; }
   if (act === "ordOn") { a.disabled = true; if (await patch(d => { d.ord = true; d.pause = false; }, "Ordering is on. Customers can now order on WhatsApp.")) go(); return; }
   if (act === "mReset") { S.menuDraft = null; go(); return; }
@@ -2006,8 +2111,9 @@ $("#main").addEventListener("click", async e => {
   if (act === "geoBlast") { const G = S.geo, tpl = S.geoTpl || (G.templates.find(t => t.ready) || {}).key, md = S.geoMax || 0, n = G.dists.filter(x => !md || x <= md).length; if (!confirm(`Send this SMS to ${n} customer${n === 1 ? "" : "s"}? It uses ${n} credit${n === 1 ? "" : "s"}.`)) return; a.disabled = true; try { const r = await geoApi("blast", { tpl, note: S.geoNote || "", maxDist: md }); toast(r.log.n + " SMS sent"); } catch (x) { toast(x.message); } await geoLoad(); return; }
   if (act === "mreset") { store.set(sentKey(), []); go(); return; }
   if (act === "mnums") { const nums = recipients().map(c => "+" + waNum(c.phone)).join("\n"); try { await navigator.clipboard.writeText(nums); toast("Numbers copied"); } catch (x) { prompt("Copy these numbers:", nums); } return; }
-  if (act === "notif") { try { await Notification.requestPermission(); } catch (x) {} go(); return; }
-  if (act === "logout") { try { await api("/api/customer-auth", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "logout" }) }); } catch (x) {} location.href = "/shops"; return; }
+  if (act === "notif" || act === "pushon") { a.disabled = true; await pushOn(); go(); return; }
+  if (act === "pushoff") { a.disabled = true; await pushOff(); go(); return; }
+  if (act === "logout") { try { Object.keys(localStorage).filter(k => k.startsWith("gk-dash-c:")).forEach(k => localStorage.removeItem(k)); } catch (x) {} try { await api("/api/customer-auth", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "logout" }) }); } catch (x) {} location.href = "/shops"; return; }
 });
 $("#main").addEventListener("change", async e => {
   const t = e.target, act = t.dataset && t.dataset.act;
@@ -2064,27 +2170,100 @@ async function loadOrders(quiet) {
 function poll() { setTimeout(async () => { if (!document.hidden) await loadOrders(true); poll(); }, 20000); }
 document.addEventListener("visibilitychange", () => { if (!document.hidden && Date.now() - S.ordersAt > 15000) loadOrders(true); });
 
+// ---------- install as an app ----------
+let instEv = null;
+const standalone = () => matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+const isIOS = () => /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+function instBar() {
+  const el = $("#instBar"); if (!el) return;
+  if (standalone() || store.get("gk-inst-x", 0) > Date.now() || (!instEv && !isIOS())) {
+    // Installed (or install not offered): offer order alerts once.
+    el.innerHTML = pushOK() && S.pushOn === false && store.get("gk-push-x", 0) < Date.now() ? `<div class="inst"><i>${IC.orders}</i><span><b>Get a ping for every new order</b><small>A notification and sound on this phone, even when the app is closed.</small></span><button class="btn s" data-act="pushon">Turn on</button><button class="lnk" data-act="pushx" aria-label="Not now">Not now</button></div>` : "";
+    return;
+  }
+  el.innerHTML = `<div class="inst"><i>${IC.phone}</i><span><b>Get the GetKeepsake Business app</b><small>Opens full screen from your home screen. Faster, and no browser bars.</small></span><button class="btn s" data-act="install">Install</button><button class="lnk" data-act="instx" aria-label="Not now">Not now</button></div>`;
+}
+async function installApp() {
+  if (instEv) { instEv.prompt(); const r = await instEv.userChoice.catch(() => null); instEv = null; if (r && r.outcome === "accepted") toast("Installing… find GK Business on your home screen."); instBar(); return; }
+  if (isIOS()) { $("#moreIn").innerHTML = `<div class="mh"><b>Install on iPhone</b><button type="button" class="lnk" data-x="1">Close</button></div><ol class="iosg"><li>Open this page in <b>Safari</b>.</li><li>Tap the <b>Share</b> button ${IC.share} at the bottom.</li><li>Tap <b>Add to Home Screen</b>, then <b>Add</b>.</li></ol>`; $("#more").hidden = false; return; }
+  toast("In Chrome, tap ⋮ and then “Install app” or “Add to Home screen”.");
+}
+addEventListener("beforeinstallprompt", e => { e.preventDefault(); instEv = e; instBar(); });
+addEventListener("appinstalled", () => { instEv = null; instBar(); });
+$("#main").addEventListener("click", e => {
+  const x = e.target.closest('[data-act="instx"]'); if (x) { store.set("gk-inst-x", Date.now() + 14 * 864e5); instBar(); return; }
+  const px = e.target.closest('[data-act="pushx"]'); if (px) { store.set("gk-push-x", Date.now() + 14 * 864e5); instBar(); return; }
+  const q = e.target.closest("[data-quick]"); if (q) {
+    const k = q.dataset.quick;
+    if (k === "sale") { e.preventDefault(); S.wantSale = 1; if (S.view === "sales") go(); else location.hash = "#sales"; }
+    else if (k === "udhaar") { e.preventDefault(); khStart({}); }
+    else if (k === "stamp") { e.preventDefault(); S.lsq = ""; location.hash = "#customers"; setTimeout(() => { const l = $("#lsq"); if (l) { l.focus(); l.scrollIntoView({ block: "center" }); } }, 350); }
+    return;
+  }
+  const f = e.target.closest("[data-blf]"); if (f) S.blf = f.dataset.blf;
+});
+if ("serviceWorker" in navigator) addEventListener("load", () => navigator.serviceWorker.register("/dash-sw.js", { scope: "/shops/dashboard" }).then(pushState).catch(() => {}));
+// ---------- order alerts (Web Push) ----------
+// The push carries no data: the app's service worker asks for this shop's newest order and shows it.
+const pushOK = () => "serviceWorker" in navigator && "PushManager" in window && "Notification" in window && (!isIOS() || standalone());
+const swReg = () => navigator.serviceWorker.getRegistration("/shops/dashboard");
+const toKey = b64 => { const s = atob((b64 + "=".repeat((4 - b64.length % 4) % 4)).replace(/-/g, "+").replace(/_/g, "/")); return Uint8Array.from(s, c => c.charCodeAt(0)); };
+async function tellSW(r) { try { const c = await caches.open("gkd-id"); await c.put("/__gkd-id", new Response(S.id)); } catch (e) {} }
+async function pushState() {
+  if (!pushOK()) { S.pushOn = null; return; }
+  try { const r = await swReg(), sub = r && await r.pushManager.getSubscription(); S.pushOn = !!sub && Notification.permission === "granted"; if (sub) { tellSW(r); post({ action: "bz-own-push", id: S.id, sub: sub.toJSON() }).catch(() => {}); } } catch (e) { S.pushOn = false; }
+  instBar();
+}
+async function pushOn() {
+  try {
+    if ((await Notification.requestPermission()) !== "granted") { toast("Notifications are blocked. Allow them for this site in your phone's settings."); return; }
+    const r = (await swReg()) || await navigator.serviceWorker.register("/dash-sw.js", { scope: "/shops/dashboard" }); await navigator.serviceWorker.ready;
+    const k = await post({ action: "bz-own-vapid", id: S.id });
+    const sub = (await r.pushManager.getSubscription()) || await r.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: toKey(k.key) });
+    await post({ action: "bz-own-push", id: S.id, sub: sub.toJSON() }); await tellSW(r);
+    S.pushOn = true; toast("Order alerts are on for this phone.");
+  } catch (e) { toast("Couldn't turn on alerts: " + (e.message || "try again")); }
+}
+async function pushOff() {
+  try { const r = await swReg(), sub = r && await r.pushManager.getSubscription(); if (sub) { await post({ action: "bz-own-unpush", id: S.id, endpoint: sub.endpoint }).catch(() => {}); await sub.unsubscribe(); } S.pushOn = false; toast("Order alerts are off for this phone."); } catch (e) { toast(e.message); }
+}
+
 // ---------- start ----------
+// Opens instantly from this phone's last copy of the shop, then refreshes everything at once in the background.
+const CK = id => "gk-dash-c:" + id;
+function saveCache() { try { localStorage.setItem(CK(S.id), JSON.stringify({ at: Date.now(), pages: S.pages, d: S.d, stats: S.stats, loyalty: S.loyalty, store: S.store, proUntil: S.proUntil, proPrice: S.proPrice, proYearPrice: S.proYearPrice, storeWas: S.storeWas, active: S.active, ship: S.ship, orders: S.orders.slice(0, 80), khSum: S.khSum || null })); } catch (e) {} }
+function readCache(id) { try { const c = JSON.parse(localStorage.getItem(CK(id)) || "null"); return c && Date.now() - c.at < 14 * 864e5 ? c : null; } catch (e) { return null; } }
+function applyPage(j, pg) {
+  S.d = j.data; S.stats = j.stats || (pg && pg.stats) || null; S.loyalty = !!j.loyalty; S.store = !!j.store; S.proUntil = j.proUntil || 0; S.proPrice = j.proPrice || 299; S.proYearPrice = j.proYearPrice || 2999; S.storeWas = !!j.storeWas; S.active = j.active !== false;
+}
 (async () => {
   try {
-    const a = await api("/api/customer-auth"); S.user = a.user;
-    if (!S.user) { location.replace("/shops/login?next=" + encodeURIComponent(location.pathname + location.search + location.hash)); return; }
-    const L = await api("/api/customer-memories"); S.pages = L.memories || [];
-    const biz = S.pages.filter(p => p.kind === "biz");
-    if (!biz.length) { $("#main").innerHTML = `<div class="load"><div class="empty" style="max-width:460px"><b>You don't have a shop page yet</b>Make one in 5 minutes. Your dashboard fills up as soon as customers start scanning.<br><a class="btn" href="/shops/studio">Create my shop page</a></div></div>`; $("#nav").innerHTML = ""; return; }
     const want = new URLSearchParams(location.search).get("id") || store.get("gk-dash-id", "");
+    const pAuth = api("/api/customer-auth"), pList = api("/api/customer-memories");
+    const pData = want ? api("/api/customer-memories?id=" + want).catch(() => null) : null, pOrd = want ? post({ action: "bz-own-orders", id: want }).catch(() => null) : null;
+    const C = want && readCache(want);
+    if (C) { S.id = want; Object.assign(S, { pages: C.pages || [], d: C.d, stats: C.stats, loyalty: C.loyalty, store: C.store, proUntil: C.proUntil, proPrice: C.proPrice, proYearPrice: C.proYearPrice, storeWas: C.storeWas, active: C.active, ship: C.ship, orders: C.orders || [], khSum: C.khSum }); S.seen = new Set(S.orders.map(o => o.ref)); go(); }
+    const a = await pAuth; S.user = a.user;
+    if (!S.user) { location.replace("/shops/login?next=" + encodeURIComponent(location.pathname + location.search + location.hash)); return; }
+    const L = await pList; S.pages = L.memories || [];
+    const biz = S.pages.filter(p => p.kind === "biz");
+    if (!biz.length) { $("#main").innerHTML = `<div class="load"><div class="empty" style="max-width:460px"><b>You don't have a shop page yet</b>Make one in 5 minutes. Your dashboard fills up as soon as customers start scanning.<br><a class="btn" href="/shops/studio">Create my shop page</a></div></div>`; return; }
     const pg = biz.find(p => p.id === want) || biz[0]; S.id = pg.id; store.set("gk-dash-id", S.id);
     const sh = String(pg.ship || "").split("|"); S.ship = sh[0] === "shipped" ? "Printed QR shipped" + (sh[1] ? " · tracking " + sh[1] : "") : sh[0] ? "Printed QR is being prepared" : "";
-    const j = await api("/api/customer-memories?id=" + S.id);
-    S.d = j.data; S.stats = j.stats || pg.stats || null; S.loyalty = !!j.loyalty; S.store = !!j.store; S.proUntil = j.proUntil || 0; S.proPrice = j.proPrice || 299; S.proYearPrice = j.proYearPrice || 2999; S.storeWas = !!j.storeWas; S.active = j.active !== false;
-    await loadOrders(true);
-    go(); poll();
-    // Customers and loyalty members load in the background (used by several sections).
-    const [c, l] = await Promise.all([post({ action: "bz-own-customers", id: S.id }).catch(() => ({ customers: [] })), S.loyalty ? post({ action: "loy-own-list", id: S.id }).catch(() => null) : null]);
-    S.customers = c.customers || []; S.loy = l;
-    try { S.geo = await geoApi("status"); } catch (e) {} { const cr = custRows(); S.customersCount = cr.length; S.newCust = cr.filter(x => x.first >= Date.now() - 7 * 864e5).length; }
-    if (["customers", "messages", "reviews", "offers", "analytics", "settings", "overview"].includes(S.view)) { const y = scrollY; go(); scrollTo(0, y); }
-  } catch (e) { $("#main").innerHTML = `<div class="load"><div class="empty"><b>Couldn't load your dashboard</b>${esc(e.message)}<br><button class="btn" onclick="location.reload()">Try again</button></div></div>`; }
+    const same = pg.id === want;
+    const [j, oj] = await Promise.all([(same && pData) || Promise.resolve(null), (same && pOrd) || Promise.resolve(null)]);
+    applyPage(j && j.data ? j : await api("/api/customer-memories?id=" + S.id), pg);
+    if (oj && oj.orders) { S.orders = oj.orders; S.seen = new Set(oj.orders.map(o => o.ref)); S.ordersAt = Date.now(); } else await loadOrders(true);
+    { const y = scrollY; go(); if (C) scrollTo(0, y); } poll(); saveCache();
+    // Everything else loads together in the background (customers, loyalty, walk-ins, sales, udhaar).
+    const [c, l, geo, bl, kh] = await Promise.all([post({ action: "bz-own-customers", id: S.id }).catch(() => ({ customers: [] })), S.loyalty ? post({ action: "loy-own-list", id: S.id }).catch(() => null) : null,
+      geoApi("status").catch(() => null), S.bl ? null : blPost({ action: "bl-home" }).catch(() => null), isPro() ? khPost({ action: "kh-own-list" }).catch(() => null) : null]);
+    S.customers = c.customers || []; S.loy = l; if (geo) S.geo = geo; if (bl && !S.bl) S.bl = bl; if (kh) { if (!S.kh) S.kh = kh; S.khSum = kh.sum; }
+    { const cr = custRows(); S.customersCount = cr.length; S.newCust = cr.filter(x => x.first >= Date.now() - 7 * 864e5).length; }
+    saveCache();
+    const typing = document.activeElement && /INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName);
+    if (!typing && !S.blNew && !S.khNew && !S.khOpen && ["customers", "messages", "reviews", "offers", "analytics", "settings", "overview", "sales"].includes(S.view)) { const y = scrollY; go(); scrollTo(0, y); }
+  } catch (e) { if (!S.d) $("#main").innerHTML = `<div class="load"><div class="empty"><b>Couldn't load your dashboard</b>${esc(e.message)}<br><button class="btn" onclick="location.reload()">Try again</button></div></div>`; else toast("You're offline. Showing your last saved copy."); }
 })();
 })();
 </script>

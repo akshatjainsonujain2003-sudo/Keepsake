@@ -65,6 +65,8 @@ async function placeOrder(b, ip) {
   await db.cmd("ZADD", "bzoz:" + b.id, now, ref);
   await db.cmd("ZREMRANGEBYRANK", "bzoz:" + b.id, 0, -(MAXO + 1));
   await touchCustomer(b.id, o, now);
+  // Ping the owner's phones (the dashboard app). No data travels in the push; the app fetches the order itself.
+  try { await require("./_hq").notify("bzp:" + b.id); } catch (e) { console.error("order push", e.message); }
   return { ok: true, ref, tot };
 }
 
@@ -140,6 +142,10 @@ async function handle(b, ctx) {
   const u = await ctx.user();
   if (!u || u.id !== m.owner) return E(401, "Please log in as the owner of this page.");
   const id = String(b.id);
+  // Order alerts on the owner's phones (Web Push): the app's public key, then subscribe / unsubscribe this phone.
+  if (a === "bz-own-vapid") return { ok: true, key: (await require("./_hq").vapid()).pub, n: await require("./_hq").subCount("bzp:" + id) };
+  if (a === "bz-own-push") { const r = await require("./_hq").subscribe(b.sub, "owner:" + id, "bzp:" + id); return r.error ? E(400, r.error) : { ok: true }; }
+  if (a === "bz-own-unpush") return require("./_hq").unsubscribe(b.endpoint, "bzp:" + id);
   if (a === "bz-own-orders") {
     // Newest first, last 30 days (at most 400): enough for today's list, the week's charts and top items.
     const refs = await db.cmd("ZRANGE", "bzoz:" + id, 0, 399, "REV"), since = Date.now() - 30 * 864e5;
