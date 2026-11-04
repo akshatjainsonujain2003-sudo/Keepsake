@@ -17,7 +17,9 @@ const cmd = async (c, ...a) => {
 };
 const fake = { ok: () => true, cmd, getj: async k => { const v = await cmd("GET", k); return v ? JSON.parse(v) : null; }, setj: (k, v) => cmd("SET", k, JSON.stringify(v)) };
 require.cache[path.resolve(__dirname, "../api/_db.js")] = { id: "db", filename: "db", loaded: true, exports: fake };
-require.cache[path.resolve(__dirname, "../api/_hq.js")] = { id: "hq", filename: "hq", loaded: true, exports: { notify: async () => {} } };
+const pushed = [], subs = [];
+require.cache[path.resolve(__dirname, "../api/_hq.js")] = { id: "hq", filename: "hq", loaded: true, exports: { notify: async set => { pushed.push(set); return { sent: 1 }; },
+  vapid: async () => ({ pub: "PUBKEY" }), subCount: async () => subs.length, subscribe: async (sub, label, set) => { subs.push([sub.endpoint, set]); return { ok: true }; }, unsubscribe: async () => ({ ok: true }) } };
 const B = require("../api/_biz.js");
 const PID = "shop12345", owner = { id: "u1" };
 const ctx = (u = null, ip = "1.1.1.1") => ({ ip, user: async () => u });
@@ -85,4 +87,15 @@ test("the shop can switch order stamps off", async () => {
   const r = await order([["0.0", 1, "Iced Latte", { v: 0 }]]);
   const d = await B.handle({ action: "bz-own-order", id: PID, ref: r.ref, st: "done" }, ctx(owner));
   assert.equal(d.order.loy, undefined); assert.equal(kv.has("loy:" + PID + ":9829012345"), false);
+});
+
+test("a new order pings the owner's phones; only the owner can sign a phone up", async () => {
+  shop(); pushed.length = 0;
+  const r = await order([["0.0", 1, "Iced Latte"]]);
+  assert.equal(r.ok, true); assert.ok(pushed.includes("bzp:" + PID), "owner alert sent for the shop");
+  const sub = { endpoint: "https://fcm.googleapis.com/fcm/send/abc123", keys: {} };
+  assert.equal((await B.handle({ action: "bz-own-push", id: PID, sub }, ctx(null))).status, 401);
+  assert.equal((await B.handle({ action: "bz-own-vapid", id: PID }, ctx(owner))).key, "PUBKEY");
+  assert.equal((await B.handle({ action: "bz-own-push", id: PID, sub }, ctx(owner))).ok, true);
+  assert.deepEqual(subs.at(-1), [sub.endpoint, "bzp:" + PID]);
 });

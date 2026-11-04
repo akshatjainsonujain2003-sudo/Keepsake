@@ -215,3 +215,12 @@ test("cancelling: a bill with returns is blocked; a cancelled credit note frees 
   await call({ action: "bl-cancel", t: est.bill.t });
   assert.equal((await call({ action: "bl-convert", t: est.bill.t, pay: { mode: "cash" } })).status, 400);
 });
+
+test("the bill list carries what was sold (for top items), not for estimates", async () => {
+  shop(true); await call({ action: "bl-settings", settings: { gst: "none", state: "08" } });
+  await call({ action: "bl-create", items: [{ n: "Chai", q: 3, p: 15 }, { n: "Samosa", q: 2, p: 20 }], pay: { mode: "cash" } });
+  await call({ action: "bl-create", est: true, items: [{ n: "Party order", q: 1, p: 900 }] });
+  const h = await call({ action: "bl-home" }), [est, sale] = h.bills;
+  assert.equal(est.it, undefined);
+  assert.deepEqual(sale.it, [["Chai", 3, 45], ["Samosa", 2, 40]]);
+});

@@ -315,6 +315,7 @@ a.kpi{text-decoration:none;color:inherit;transition:transform .15s}a.kpi:active{
 .ok{display:flex;gap:12px;align-items:center;padding:14px;border-radius:16px;background:#EAF6EE}.ok i{flex:none;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:var(--grl);color:#0d5a2f}.ok b{display:block}.ok small{color:var(--mu)}
 .pbar{height:8px;border-radius:9px;background:var(--line);overflow:hidden;margin:2px 0 6px}.pbar i{display:block;height:100%;background:var(--gr);border-radius:9px}
 .setup{margin-top:18px}
+.rows .rk{flex:none;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:#F0EEE8;font:800 13px 'Inter Tight',sans-serif}
 .inst{display:flex;align-items:center;gap:12px;margin-top:14px;padding:14px 16px;border-radius:18px;background:var(--ink);color:#fff}
 .inst i{flex:none;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:#ffffff18}.inst i svg{width:22px;height:22px}
 .inst span{flex:1;min-width:0}.inst b{display:block}.inst small{color:#B4B4C2;font-size:13px}.inst .lnk{color:#ffffffa0}
@@ -465,6 +466,13 @@ const today0 = () => { const d = new Date(); d.setHours(0, 0, 0, 0); return +d; 
 const live = o => o.st !== "cancel";
 function ordersOn(t0, t1) { return S.orders.filter(o => o.at >= t0 && o.at < t1 && live(o)); }
 function sum(os) { return os.reduce((t, o) => t + o.tot, 0); }
+// Best sellers between t0 and t1: page orders and sales made at the counter, less returns.
+function topSold(t0, t1, n) {
+  const m = {}, add = (name, q, v) => { const k = String(name).toLowerCase(); m[k] = m[k] || { n: name, q: 0, v: 0 }; m[k].q += q; m[k].v += v; };
+  ordersOn(t0, t1).forEach(o => o.items.forEach(x => add(x.n, x.q, x.q * x.p)));
+  ((S.bl && S.bl.bills) || []).forEach(b => { if (b.cancel || !b.it || b.at < t0 || b.at >= t1) return; const sg = b.kind === "credit" ? -1 : 1; b.it.forEach(([name, q, v]) => add(name, sg * q, sg * v)); });
+  return Object.values(m).filter(x => x.q > 0).map(x => ({ ...x, q: Math.round(x.q * 1000) / 1000 })).sort((a, b) => b.q - a.q || b.v - a.v).slice(0, n);
+}
 function topItems(os, n) {
   const m = {}; os.forEach(o => o.items.forEach(x => { const k = x.n; m[k] = m[k] || { n: x.n, q: 0, v: 0 }; m[k].q += x.q; m[k].v += x.q * x.p; }));
   return Object.values(m).sort((a, b) => b.q - a.q || b.v - a.v).slice(0, n);
@@ -659,6 +667,9 @@ V.overview = () => {
       : scans.some(x => x.v) ? `<div class="cd"><div class="ch"><h2 class="H">Page scans · last 7 days</h2></div>${bars(scans)}</div>`
       : `<div class="cd"><div class="ch"><h2 class="H">Your page</h2></div><p class="mu" style="margin-top:0">Share it on WhatsApp and put your QR at the counter. Scans and sales show here.</p><div class="tg"><a class="btn w" href="${share}" target="_blank" rel="noopener">${IC.wa}Share on WhatsApp</a><a class="btn g" href="#qr">My QR</a></div></div>`}
   </section>
+  ${(() => { const top = topSold(t0 - 6 * 864e5, t0 + 864e5, 5), chart = liveO.length && anyWeek; if (!top.length && !chart) return "";
+    return `<section class="g2">${chart ? `<div class="cd"><div class="ch"><h2 class="H">Sales · last 7 days</h2><small>${inr(days.reduce((t, x) => t + x.v, 0))}</small></div>${bars(days)}</div>` : ""}
+      ${top.length ? `<div class="cd"><div class="ch"><h2 class="H">Top sellers · 7 days</h2><small>Online + counter</small></div><div class="rows">${top.map((x, i) => `<div><span class="rk">${i + 1}</span><span><b>${esc(x.n)}</b><small>${x.q} sold</small></span><b>${inr(x.v)}</b></div>`).join("")}</div></div>` : ""}</section>`; })()}
   ${todo.length ? `<section class="cd setup"><div class="ch"><h2 class="H">Finish setting up</h2><small>${cl.length - todo.length} of ${cl.length} done</small></div>
     <div class="pbar"><i style="width:${Math.round((cl.length - todo.length) * 100 / cl.length)}%"></i></div>
     <div class="rows">${todo.slice(0, S.clAll ? 99 : 3).map(([, t, s2, href]) => `<div><i class="ck"></i><span><b>${esc(t)}</b><small>${esc(s2)}</small></span><a class="go" href="${href}">Do it →</a></div>`).join("")}</div>
@@ -1346,7 +1357,7 @@ V.analytics = () => {
     <div class="funnel"><div><span>Opened your page</span><i style="width:${st.week ? 100 : 0}%"></i><b>${st.week || 0}</b></div><div><span>Took an action</span><i style="width:${st.week ? Math.min(100, Math.round(acts * 100 / st.week)) : 0}%"></i><b>${acts}</b></div><div><span>Placed an order</span><i style="width:${st.week ? Math.min(100, Math.round(wkO.length * 100 / st.week)) : 0}%"></i><b>${wkO.length}</b></div></div>
     <div class="rows" style="margin-top:16px">${tl.map(([k, l]) => `<div><span><b>${l}</b><i style="display:block;height:6px;margin-top:6px;border-radius:9px;background:var(--or);width:${Math.round((T[k] || 0) * 100 / mx)}%;min-width:3px"></i></span><b>${T[k] || 0}</b></div>`).join("")}</div></div>
   <div class="cd"><div class="ch"><h2 class="H">Busiest hours</h2><small>${wkO.length ? "Peak around " + fh(busy) : "From this week's orders"}</small></div>${wkO.length ? bars(hrs.map(x => ({ v: x.v, lab: x.v || "", l: x.h % 3 === 1 ? fh(x.h) : "", t: fh(x.h) + ": " + x.v + " orders" })), "sm") : `<div class="empty">Once orders come in you'll see when to keep extra staff.</div>`}
-    <div class="ch" style="margin:22px 0 6px"><h2 class="H">Top items · 7 days</h2></div>${topItems(wkO, 6).length ? `<div class="rows">${topItems(wkO, 6).map(x => `<div><span><b>${esc(x.n)}</b><small>${x.q} sold</small></span><b>${inr(x.v)}</b></div>`).join("")}</div>` : `<div class="empty">No orders this week yet.</div>`}</div></section>`;
+    <div class="ch" style="margin:22px 0 6px"><h2 class="H">Top items · 7 days</h2><small>Online + counter</small></div>${topSold(today0() - 6 * 864e5, today0() + 864e5, 6).length ? `<div class="rows">${topSold(today0() - 6 * 864e5, today0() + 864e5, 6).map(x => `<div><span><b>${esc(x.n)}</b><small>${x.q} sold</small></span><b>${inr(x.v)}</b></div>`).join("")}</div>` : `<div class="empty">No sales this week yet.</div>`}</div></section>`;
 };
 
 V.page = () => {
@@ -2005,7 +2016,7 @@ V.settings = () => {
     : `<div class="empty"><b>Loyalty card not added</b>Give regulars a stamp card on their phone. Staff add stamps with a PIN.<br><a class="btn" href="/shops/studio?edit=${S.id}#publish">${S.active ? "Add for ₹300" : "Included · go live"}</a></div>`}</div>
   <div class="cd"><div class="ch"><h2 class="H">Order alerts</h2></div>
     <div class="rows"><div><span><b>Ding on new orders</b><small>While this dashboard is open.</small></span><label class="sw"><input type="checkbox" data-act="sound"${snd ? " checked" : ""}><i></i>${snd ? "On" : "Off"}</label></div>
-    <div><span><b>Phone notifications</b><small>${"Notification" in window ? (Notification.permission === "granted" ? "Allowed on this device." : "Get a pop-up when an order comes in.") : "Not supported on this browser."}</small></span>${"Notification" in window && Notification.permission !== "granted" ? `<button class="btn g s" data-act="notif">Allow</button>` : ""}</div>
+    <div><span><b>Order alerts on this phone</b><small>${pushOK() ? (S.pushOn ? "On. You'll get a notification for every new order, even when the app is closed." : "Get a notification for every new order, even when the app is closed.") : isIOS() && !standalone() ? "On iPhone, install the app first (button below), then turn this on." : "Not supported on this browser."}</small></span>${pushOK() ? (S.pushOn ? `<button class="btn g s" data-act="pushoff">Turn off</button>` : `<button class="btn s" data-act="pushon">Turn on</button>`) : ""}</div>
     <div><span><b>The GetKeepsake Business app</b><small>${standalone() ? "You're using the app. ✓" : "Put your dashboard on your home screen. It opens full screen, fast, like any app."}</small></span>${standalone() ? "" : `<button class="btn s" data-act="install">Install app</button>`}</div></div></div></section>
   <section class="g2"><div class="cd"><div class="ch"><h2 class="H">Account</h2></div><dl class="kv"><dt>Name</dt><dd>${esc(u.name || "")}</dd><dt>Email</dt><dd>${esc(u.email || "")}</dd><dt>Mobile</dt><dd>${esc(u.phone || "–")}</dd></dl>
     <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px"><a class="btn g" href="/dashboard">All my pages</a><button class="btn k" data-act="logout">Log out</button></div></div>
@@ -2100,7 +2111,8 @@ $("#main").addEventListener("click", async e => {
   if (act === "geoBlast") { const G = S.geo, tpl = S.geoTpl || (G.templates.find(t => t.ready) || {}).key, md = S.geoMax || 0, n = G.dists.filter(x => !md || x <= md).length; if (!confirm(`Send this SMS to ${n} customer${n === 1 ? "" : "s"}? It uses ${n} credit${n === 1 ? "" : "s"}.`)) return; a.disabled = true; try { const r = await geoApi("blast", { tpl, note: S.geoNote || "", maxDist: md }); toast(r.log.n + " SMS sent"); } catch (x) { toast(x.message); } await geoLoad(); return; }
   if (act === "mreset") { store.set(sentKey(), []); go(); return; }
   if (act === "mnums") { const nums = recipients().map(c => "+" + waNum(c.phone)).join("\n"); try { await navigator.clipboard.writeText(nums); toast("Numbers copied"); } catch (x) { prompt("Copy these numbers:", nums); } return; }
-  if (act === "notif") { try { await Notification.requestPermission(); } catch (x) {} go(); return; }
+  if (act === "notif" || act === "pushon") { a.disabled = true; await pushOn(); go(); return; }
+  if (act === "pushoff") { a.disabled = true; await pushOff(); go(); return; }
   if (act === "logout") { try { Object.keys(localStorage).filter(k => k.startsWith("gk-dash-c:")).forEach(k => localStorage.removeItem(k)); } catch (x) {} try { await api("/api/customer-auth", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "logout" }) }); } catch (x) {} location.href = "/shops"; return; }
 });
 $("#main").addEventListener("change", async e => {
@@ -2164,7 +2176,11 @@ const standalone = () => matchMedia("(display-mode: standalone)").matches || nav
 const isIOS = () => /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 function instBar() {
   const el = $("#instBar"); if (!el) return;
-  if (standalone() || store.get("gk-inst-x", 0) > Date.now() || (!instEv && !isIOS())) { el.innerHTML = ""; return; }
+  if (standalone() || store.get("gk-inst-x", 0) > Date.now() || (!instEv && !isIOS())) {
+    // Installed (or install not offered): offer order alerts once.
+    el.innerHTML = pushOK() && S.pushOn === false && store.get("gk-push-x", 0) < Date.now() ? `<div class="inst"><i>${IC.orders}</i><span><b>Get a ping for every new order</b><small>A notification and sound on this phone, even when the app is closed.</small></span><button class="btn s" data-act="pushon">Turn on</button><button class="lnk" data-act="pushx" aria-label="Not now">Not now</button></div>` : "";
+    return;
+  }
   el.innerHTML = `<div class="inst"><i>${IC.phone}</i><span><b>Get the GetKeepsake Business app</b><small>Opens full screen from your home screen. Faster, and no browser bars.</small></span><button class="btn s" data-act="install">Install</button><button class="lnk" data-act="instx" aria-label="Not now">Not now</button></div>`;
 }
 async function installApp() {
@@ -2176,6 +2192,7 @@ addEventListener("beforeinstallprompt", e => { e.preventDefault(); instEv = e; i
 addEventListener("appinstalled", () => { instEv = null; instBar(); });
 $("#main").addEventListener("click", e => {
   const x = e.target.closest('[data-act="instx"]'); if (x) { store.set("gk-inst-x", Date.now() + 14 * 864e5); instBar(); return; }
+  const px = e.target.closest('[data-act="pushx"]'); if (px) { store.set("gk-push-x", Date.now() + 14 * 864e5); instBar(); return; }
   const q = e.target.closest("[data-quick]"); if (q) {
     const k = q.dataset.quick;
     if (k === "sale") { e.preventDefault(); S.wantSale = 1; if (S.view === "sales") go(); else location.hash = "#sales"; }
@@ -2185,7 +2202,31 @@ $("#main").addEventListener("click", e => {
   }
   const f = e.target.closest("[data-blf]"); if (f) S.blf = f.dataset.blf;
 });
-if ("serviceWorker" in navigator) addEventListener("load", () => navigator.serviceWorker.register("/dash-sw.js", { scope: "/shops/dashboard" }).catch(() => {}));
+if ("serviceWorker" in navigator) addEventListener("load", () => navigator.serviceWorker.register("/dash-sw.js", { scope: "/shops/dashboard" }).then(pushState).catch(() => {}));
+// ---------- order alerts (Web Push) ----------
+// The push carries no data: the app's service worker asks for this shop's newest order and shows it.
+const pushOK = () => "serviceWorker" in navigator && "PushManager" in window && "Notification" in window && (!isIOS() || standalone());
+const swReg = () => navigator.serviceWorker.getRegistration("/shops/dashboard");
+const toKey = b64 => { const s = atob((b64 + "=".repeat((4 - b64.length % 4) % 4)).replace(/-/g, "+").replace(/_/g, "/")); return Uint8Array.from(s, c => c.charCodeAt(0)); };
+async function tellSW(r) { try { const c = await caches.open("gkd-id"); await c.put("/__gkd-id", new Response(S.id)); } catch (e) {} }
+async function pushState() {
+  if (!pushOK()) { S.pushOn = null; return; }
+  try { const r = await swReg(), sub = r && await r.pushManager.getSubscription(); S.pushOn = !!sub && Notification.permission === "granted"; if (sub) { tellSW(r); post({ action: "bz-own-push", id: S.id, sub: sub.toJSON() }).catch(() => {}); } } catch (e) { S.pushOn = false; }
+  instBar();
+}
+async function pushOn() {
+  try {
+    if ((await Notification.requestPermission()) !== "granted") { toast("Notifications are blocked. Allow them for this site in your phone's settings."); return; }
+    const r = (await swReg()) || await navigator.serviceWorker.register("/dash-sw.js", { scope: "/shops/dashboard" }); await navigator.serviceWorker.ready;
+    const k = await post({ action: "bz-own-vapid", id: S.id });
+    const sub = (await r.pushManager.getSubscription()) || await r.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: toKey(k.key) });
+    await post({ action: "bz-own-push", id: S.id, sub: sub.toJSON() }); await tellSW(r);
+    S.pushOn = true; toast("Order alerts are on for this phone.");
+  } catch (e) { toast("Couldn't turn on alerts: " + (e.message || "try again")); }
+}
+async function pushOff() {
+  try { const r = await swReg(), sub = r && await r.pushManager.getSubscription(); if (sub) { await post({ action: "bz-own-unpush", id: S.id, endpoint: sub.endpoint }).catch(() => {}); await sub.unsubscribe(); } S.pushOn = false; toast("Order alerts are off for this phone."); } catch (e) { toast(e.message); }
+}
 
 // ---------- start ----------
 // Opens instantly from this phone's last copy of the shop, then refreshes everything at once in the background.

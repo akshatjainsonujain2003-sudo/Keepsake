@@ -68,7 +68,9 @@ function cleanLines(items) {
 const pub = b => ({ t: b.t, no: b.no, at: b.at, kind: b.kind, seller: b.seller, cust: b.cust, inc: b.inc, calc: b.calc, terms: b.terms, note: b.note,
   paid: !!b.paid, pmode: b.paid ? b.paid.mode : b.pay ? b.pay.mode : "", rcv: b.pay ? b.pay.amt : b.paid ? b.calc.total : 0, split: b.pay && b.pay.split || null, pvia: b.pay && b.pay.via || "",
   cancel: !!b.cancel, cancelAt: b.cancel ? b.cancel.at : 0, ref: b.ref || null, design: b.design || "a4m", conv: b.conv || "", ret: b.ret || null });
-const row = x => ({ t: x.t, no: x.no, at: x.at, kind: x.kind || "tax", name: x.cust.name, phone: x.cust.phone, total: x.calc.total, tax: x.calc.tax, paid: !!x.paid,
+// it: what was sold, for top items (bills from the last 35 days): [name, qty, amount]
+const recentItems = x => x.at >= Date.now() - 35 * 864e5 && x.kind !== "est" ? (x.calc.lines || []).filter(l => !l.x).map(l => [l.n, l.q, l.amt]) : undefined;
+const row = x => ({ t: x.t, no: x.no, at: x.at, kind: x.kind || "tax", it: recentItems(x), name: x.cust.name, phone: x.cust.phone, total: x.calc.total, tax: x.calc.tax, paid: !!x.paid,
   rcv: x.pay ? x.pay.amt : x.paid ? x.calc.total : 0, cancel: !!x.cancel, ref: x.ref ? x.ref.no : "", conv: x.conv || "" });
 
 function sellerOf(m, set) {
