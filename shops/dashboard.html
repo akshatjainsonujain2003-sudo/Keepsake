@@ -230,6 +230,12 @@ td .btn{white-space:nowrap}
 @media (max-width:420px){.g4{grid-template-columns:1fr 1fr}.kpi b{font-size:24px}.sw{padding:7px 12px 7px 8px;font-size:14px}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 .lg .vf{width:24px;height:24px;flex:none;margin-right:2px;align-self:center}
+/* ---------- Cost prices and profit ---------- */
+.neg{color:#c0392b;font-weight:700}.pos{color:var(--gr);font-weight:700}
+.prk{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.prk div{padding:12px 14px;border-radius:14px;background:var(--bg)}.prk small{display:block;color:var(--mu);font-size:12.5px}.prk b{font:800 24px/1.2 Inter,sans-serif;font-variant-numeric:tabular-nums}
+.prl{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:16px}.prl h3{font-size:13px;color:var(--mu);margin:0 0 4px;font-weight:700}
+.prl .sl span{font-weight:600}
+@media (max-width:700px){.prl{grid-template-columns:1fr}.prk b{font-size:19px}.prk div{padding:10px}}
 /* ---------- GST bills ---------- */
 .blr{list-style:none;margin:0;padding:0}
 .blr li{border-bottom:1px solid var(--line)}
@@ -705,6 +711,55 @@ function orderCard(o) {
 const stItems = () => { const out = []; (S.d.menu || []).forEach((s, si) => (s.items || []).forEach((x, ii) => { if (x && x.n) out.push({ ...x, si, ii, sec: s.n || "Products" }); })); return out; };
 const stCats = () => (S.d.menu || []).map(s => s.n || "Products");
 const numP = p => { const x = /(\d[\d,]*(?:\.\d+)?)/.exec(String(p || "")); return x ? +x[1].replace(/,/g, "") : 0; };
+// ---------- Cost prices and profit (Pro). Kept by api/_cost.js, never in the page data customers load. ----------
+const ckey = n => String(n || "").toLowerCase().replace(/\s+/g, " ").trim().slice(0, 90);
+const costOf = n => S.cost && S.cost.costs ? S.cost.costs[ckey(n)] : undefined;
+const gstReg = () => !!(S.cost && S.cost.gst === "regular");
+// Price without GST for GST-registered shops (cost prices are entered without GST there too).
+const netP = (n, p) => gstReg() ? p / (1 + (((S.cost.rates || {})[ckey(n)] != null ? S.cost.rates[ckey(n)] : S.cost.rate) || 0) / 100) : p;
+const marginOf = (n, p, c) => { const v = netP(n, p); return v > 0 ? Math.round((v - c) * 1000 / v) / 10 : null; };
+function mgText(n, p, c) {
+  if (!(p > 0) || c === "" || c == null || isNaN(+c)) return "Add what this item costs you. Profit shows in Online store.";
+  const v = netP(n, p), pr = v - +c, m = marginOf(n, p, +c);
+  return `<span class="${pr < 0 ? "neg" : "pos"}">${pr < 0 ? "Loss" : "Profit"} ₹${Math.abs(Math.round(pr * 100) / 100).toLocaleString("en-IN")} per item · ${m}% margin</span>${gstReg() ? " (without GST)" : ""}`;
+}
+const PRP = [["today", "Today"], ["7d", "7 days"], ["month", "This month"], ["last_month", "Last month"]];
+function csLoad(force) {
+  const want = S.profP || "today";
+  if (!isPro() || S.csBusy || (!force && S.cost && S.prof && S.prof.want === want && Date.now() - S.prof.at < 60000)) return;
+  S.csBusy = true;
+  Promise.all([force || !S.cost ? post({ action: "cs-get", id: S.id }) : Promise.resolve(S.cost), post({ action: "cs-profit", id: S.id, period: want })])
+    .then(([c, p]) => { S.cost = c; S.prof = { ...p, want, at: Date.now() }; }).catch(e => { S.prof = { error: e.message, want, at: Date.now() }; })
+    .finally(() => { S.csBusy = false; if (S.view === "store" && !S.stEdit && !S.csEdit) stRedraw(); });
+}
+function prPanel() {
+  if (!isPro()) return "";
+  csLoad();
+  const P = S.prof, per = S.profP || "today", has = S.cost && Object.keys(S.cost.costs || {}).length;
+  const row = (y, low) => `<div class="sl"><span>${esc(y.name)}<small>${y.qty} sold · ${inr(y.sales)} sales</small></span><b class="${y.profit < 0 || low ? "neg" : "pos"}">${y.profit < 0 ? "−" : ""}${inr(Math.abs(y.profit))}<small style="display:block;font-weight:500;text-align:right">${y.margin}%</small></b></div>`;
+  let body;
+  if (!P || P.want !== per) body = `<div class="sk" style="height:96px"></div>`;
+  else if (P.error) body = `<p class="mu">${esc(P.error)}</p>`;
+  else if (!has) body = `<p class="mu" style="margin:0 0 12px">Add what each product costs you, and your profit shows here: today, this week, this month, and item by item. Customers never see your cost prices.</p><button class="btn" data-sx="costs">Add cost prices</button>`;
+  else {
+    const low = P.items.filter(y => y.margin != null && y.margin < 10).sort((a, b) => a.margin - b.margin).slice(0, 5), top = P.items.filter(y => !low.includes(y)).slice(0, 5);
+    body = `<div class="prk"><div><small>Profit</small><b class="${P.profit < 0 ? "neg" : ""}">${P.profit < 0 ? "−" : ""}${inr(Math.abs(P.profit))}</b></div><div><small>Margin</small><b>${P.margin != null ? P.margin + "%" : "–"}</b></div><div><small>Sales counted</small><b>${inr(P.counted)}</b><small>of ${inr(P.sales)}</small></div></div>
+      ${P.missing.length ? `<div class="bar" style="margin:14px 0 0"><span><b>${P.missing.length} item${P.missing.length === 1 ? "" : "s"} sold without a cost price.</b> ${inr(P.missing.reduce((t, y) => t + y.sales, 0))} of sales isn't in the profit yet.</span><button class="btn" data-sx="costs">Add cost prices</button></div>` : ""}
+      ${top.length || low.length ? `<div class="prl">${top.length ? `<div><h3>Most profit</h3>${top.map(y => row(y)).join("")}</div>` : ""}${low.length ? `<div><h3>Low margin (under 10%)</h3>${low.map(y => row(y, true)).join("")}</div>` : ""}</div>` : `<p class="mu" style="margin:14px 0 0">No sales with a cost price in this period yet.</p>`}
+      <p class="hint">${gstReg() ? "Without GST: sales are counted before GST and cost prices are what you pay before GST. " : ""}Includes page orders, sales you add in the shop and bills, less returns.${has ? ` <button type="button" class="lnk" data-sx="costs">Edit cost prices</button>` : ""}</p>`;
+  }
+  return `<section class="cd" style="margin-bottom:16px"><div class="ch"><h2 class="H" style="margin:0">Profit</h2><small class="mu">🔒 Only you see this</small></div>
+    <div class="tabs" style="margin:10px 0 14px">${PRP.map(([k, l]) => `<button type="button" data-prp="${k}" class="${per === k ? "on" : ""}">${l}</button>`).join("")}</div>${body}</section>`;
+}
+// Cost prices for many items at once: what sold without one first, then every product without one.
+function csSheet() {
+  const E = S.csEdit; if (!E) return "";
+  return `<div class="pm" data-csbg><div class="pmb"><div class="ch"><h2 class="H" style="margin:0">Cost prices</h2><button class="lnk" data-sx="csclose">Close</button></div>
+    <p class="mu" style="margin:6px 0 12px">What you pay for one of each${gstReg() ? ", before GST" : ""}. Only you see these. Leave a box empty if you don't know yet.</p>
+    <input class="in" id="csQ" placeholder="Search items">
+    <div class="salist" id="csList" style="max-height:52vh">${E.rows.map(r => `<div class="sl" data-csr="${esc(r.n.toLowerCase())}"><span>${esc(r.n)}<small>${r.p ? "Sells at " + inr(r.p) : ""}${r.sold ? (r.p ? " · " : "") + r.sold : ""}</small></span><input class="in" style="width:112px;margin:0" data-csn="${esc(r.n)}" inputmode="decimal" maxlength="10" placeholder="₹ cost" value="${esc(E.v[r.n] != null ? E.v[r.n] : r.c != null ? String(r.c) : "")}" aria-label="Cost of ${esc(r.n)}"></div>`).join("") || `<p class="hint">Every item has a cost price.</p>`}</div>
+    <button class="btn" data-sx="cssave" style="margin-top:14px;width:100%">Save cost prices</button></div></div>`;
+}
 V.store = () => {
   // The online store comes with Keepsake Pro. A page that had it keeps its products when Pro ends (catalogue mode).
   if (!S.store && !S.storeWas) return head("Online store", "Put every product you sell online. Customers search, add to cart and order on your page.", "") +
@@ -714,12 +769,12 @@ V.store = () => {
   const all = stItems(), q = (S.stq || "").toLowerCase(), cat = S.stc == null ? -1 : S.stc;
   const list = all.filter(x => (cat < 0 || x.si === cat) && (!q || (x.n + " " + (x.d || "") + " " + x.sec).toLowerCase().includes(q)));
   return head("Online store", `${all.length} product${all.length === 1 ? "" : "s"} on your page. Customers tap "Shop all products" to search and order.`, `<div class="tg"><button class="btn" data-sx="add">+ Add product</button><button class="btn g" data-sx="bulk">Add many</button></div>`) +
-  stSettings() + `${!S.store ? `<div class="bar"><span><b>Catalogue mode.</b> Keepsake Pro has ended, so your products still show but customers order on WhatsApp. Renew to switch checkout on your page back on.</span><button class="btn" data-pro="year">Renew · ${rup(S.proYearPrice)} / year</button><button class="btn g" data-pro="buy" style="background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.4)">${rup(S.proPrice)} / month</button></div>` : ""}${S.d.ord ? "" : `<div class="bar"><span><b>Orders are off.</b> Customers can browse but not order.</span><button class="btn" data-sx="ordon">Turn on orders</button></div>`}
+  stSettings() + prPanel() + `${!S.store ? `<div class="bar"><span><b>Catalogue mode.</b> Keepsake Pro has ended, so your products still show but customers order on WhatsApp. Renew to switch checkout on your page back on.</span><button class="btn" data-pro="year">Renew · ${rup(S.proYearPrice)} / year</button><button class="btn g" data-pro="buy" style="background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.4)">${rup(S.proPrice)} / month</button></div>` : ""}${S.d.ord ? "" : `<div class="bar"><span><b>Orders are off.</b> Customers can browse but not order.</span><button class="btn" data-sx="ordon">Turn on orders</button></div>`}
   <div class="srch"><input class="in" id="stq" placeholder="Search products" value="${esc(S.stq || "")}"><a class="btn g" href="/b/${S.id}" target="_blank" rel="noopener">View store</a></div>
   ${stCats().length > 1 ? `<div class="tabs"><button type="button" data-stc="-1" class="${cat < 0 ? "on" : ""}">All · ${all.length}</button>${stCats().map((c, i) => `<button type="button" data-stc="${i}" class="${cat === i ? "on" : ""}">${esc(c)} · ${all.filter(x => x.si === i).length}</button>`).join("")}</div>` : ""}
-  ${list.length ? `<div class="tw"><table><thead><tr><th>Product</th><th>Price</th><th>MRP</th><th>In stock</th><th></th></tr></thead><tbody>${list.slice(0, 300).map(x => `<tr><td><div style="display:flex;gap:12px;align-items:center"><span class="ph" style="flex:none;width:46px;height:46px;border-radius:12px;background:#E6E6E0 center/cover${x.i ? ` url('${esc(x.i)}')` : ""}"></span><span><b>${esc(x.n)}</b><br><small class="mu">${esc(x.sec)}${x.b ? " · ★ Bestseller" : ""}</small></span></div></td><td data-l="Price">${x.p ? "₹" + esc(x.p) : "–"}</td><td data-l="MRP">${x.w ? "<s>₹" + esc(x.w) + "</s>" : "–"}</td><td data-l="In stock"><label class="sw"><input type="checkbox" data-sxso="${x.si}.${x.ii}"${x.so ? "" : " checked"}><i></i></label></td><td style="text-align:right;white-space:nowrap"><button class="btn g s" data-sx="edit" data-k="${x.si}.${x.ii}">Edit</button></td></tr>`).join("")}</tbody></table></div>${list.length > 300 ? `<p class="hint">Showing 300 of ${list.length}. Search to find the rest.</p>` : ""}`
+  ${list.length ? `<div class="tw"><table><thead><tr><th>Product</th><th>Price</th><th>MRP</th>${isPro() ? "<th>Cost · margin</th>" : ""}<th>In stock</th><th></th></tr></thead><tbody>${list.slice(0, 300).map(x => `<tr><td><div style="display:flex;gap:12px;align-items:center"><span class="ph" style="flex:none;width:46px;height:46px;border-radius:12px;background:#E6E6E0 center/cover${x.i ? ` url('${esc(x.i)}')` : ""}"></span><span><b>${esc(x.n)}</b><br><small class="mu">${esc(x.sec)}${x.b ? " · ★ Bestseller" : ""}</small></span></div></td><td data-l="Price">${x.p ? "₹" + esc(x.p) : "–"}</td><td data-l="MRP">${x.w ? "<s>₹" + esc(x.w) + "</s>" : "–"}</td>${isPro() ? (c => c != null ? `<td data-l="Cost">₹${esc(String(c))} <small class="${(marginOf(x.n, numP(x.p), c) ?? 0) < 10 ? "neg" : "mu"}">· ${marginOf(x.n, numP(x.p), c) ?? "–"}%</small></td>` : `<td data-l="Cost"><button class="lnk" data-sx="edit" data-k="${x.si}.${x.ii}">Add cost</button></td>`)(costOf(x.n)) : ""}<td data-l="In stock"><label class="sw"><input type="checkbox" data-sxso="${x.si}.${x.ii}"${x.so ? "" : " checked"}><i></i></label></td><td style="text-align:right;white-space:nowrap"><button class="btn g s" data-sx="edit" data-k="${x.si}.${x.ii}">Edit</button></td></tr>`).join("")}</tbody></table></div>${list.length > 300 ? `<p class="hint">Showing 300 of ${list.length}. Search to find the rest.</p>` : ""}`
     : `<div class="empty"><b>${all.length ? "No products match" : "Add your first product"}</b>${all.length ? "Try another search." : "Add them one by one with a photo, or paste a whole list at once."}<br>${all.length ? "" : `<button class="btn" data-sx="add">+ Add product</button>`}</div>`}
-  ${stSheet()}`;
+  ${stSheet()}${csSheet()}`;
 };
 // Store settings: look, free delivery, delivery charge, loyalty stamps for online orders.
 function stSettings() {
@@ -778,6 +833,7 @@ function stSheet() {
     <div style="display:flex;gap:14px;align-items:flex-start"><label class="pmp" style="${x.i ? `background-image:url('${esc(x.i)}')` : ""}">${x.i ? "" : "+ Photo"}<input type="file" accept="image/*" id="stPic" hidden></label>
     <div style="flex:1;min-width:0"><label class="f">Name<input class="in" id="stN" maxlength="50" value="${esc(x.n || "")}" placeholder="Basmati Rice 5kg"></label></div></div>
     <div class="row2"><label class="f">Price (₹)<input class="in" id="stP" inputmode="decimal" maxlength="12" value="${esc(x.p || "")}" placeholder="640"></label><label class="f">MRP (₹) <em>(optional)</em><input class="in" id="stW" inputmode="decimal" maxlength="12" value="${esc(x.w || "")}" placeholder="720"></label></div>
+    ${isPro() ? (c => `<label class="f">Cost price (₹) <em>🔒 only you see this${gstReg() ? ", before GST" : ""}</em><input class="in" id="stCost" inputmode="decimal" maxlength="10" value="${esc(c)}" placeholder="What you pay for one"></label><p class="hint" id="stMg" style="margin:-6px 0 14px">${mgText(x.n, numP(x.p), c)}</p>`)(E.cost != null ? E.cost : costOf(E.x0n || x.n) != null ? String(costOf(E.x0n || x.n)) : "") : ""}
     <label class="f">Category<input class="in" id="stC" list="stCl" maxlength="24" value="${esc(E.sec || cats[0] || "Products")}"><datalist id="stCl">${cats.map(c => `<option value="${esc(c)}">`).join("")}</datalist></label>
     <label class="f">Description <em>(optional)</em><textarea class="in" id="stD" maxlength="140" rows="2">${esc(x.d || "")}</textarea></label>
     <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:16px"><label class="sw"><input type="checkbox" id="stS"${x.so ? "" : " checked"}><i></i>In stock</label><label class="sw"><input type="checkbox" id="stB"${x.b ? " checked" : ""}><i></i>Bestseller</label><label class="sw"><input type="checkbox" id="stNw"${x.nw ? " checked" : ""}><i></i>New</label></div>
@@ -803,6 +859,7 @@ function stMore(x) {
 // Reads the product form into S.stEdit.x (before redrawing it, and on save).
 function stCollect() {
   const E = S.stEdit; if (!E || E.bulk) return; const x = E.x, v = id => { const e = $("#" + id); return e ? e.value.trim() : undefined; };
+  if ($("#stCost")) E.cost = v("stCost");
   if ($("#stN")) { x.n = v("stN"); x.p = v("stP"); x.w = v("stW"); x.d = v("stD"); x.so = !$("#stS").checked; x.b = $("#stB").checked; x.nw = !!($("#stNw") && $("#stNw").checked); E.sec = v("stC"); }
   if (!$("#stU")) return;
   x.u = v("stU"); const k = v("stK"); x.k = k === "" ? null : Math.max(0, Math.round(+k.replace(/\D/g, "") || 0)); x.vt = v("stVt");
@@ -923,8 +980,26 @@ $("#main").addEventListener("click", async ev => {
   }
   const pb = ev.target.closest("[data-pro]");
   if (pb) { payPlan(pb, pb.dataset.pro === "year" ? "proYear" : "pro", async () => { const j = await api("/api/customer-memories?id=" + S.id); S.proUntil = j.proUntil || 0; S.store = !!j.store; S.storeWas = !!j.storeWas; S.d = j.data || S.d; S.sale = null; S.bl = null; S.blNew = null; S.kh = null; S.khNew = null; toast("Keepsake Pro is on until " + new Date(S.proUntil).toLocaleDateString("en-IN", { day: "numeric", month: "short" }) + "."); go(); }); return; }
+  const pp = ev.target.closest("[data-prp]"); if (pp) { S.profP = pp.dataset.prp; stRedraw(); return; }
+  if (ev.target.matches("[data-csbg]")) { S.csEdit = null; stRedraw(); return; }
   const b = ev.target.closest("[data-sx]"); if (!b) return;
   const a = b.dataset.sx;
+  if (a === "costs") {
+    const seen = new Set(), rows = [];
+    ((S.prof && S.prof.missing) || []).forEach(y => { const k = ckey(y.name); if (seen.has(k)) return; seen.add(k); const it = stItems().find(z => ckey(z.n) === k); rows.push({ n: y.name, p: it ? numP(it.p) : 0, sold: y.qty + " sold", c: costOf(y.name) }); });
+    stItems().forEach(z => { const k = ckey(z.n); if (seen.has(k)) return; seen.add(k); rows.push({ n: z.n, p: numP(z.p), c: costOf(z.n) }); });
+    rows.sort((x, y) => (x.c != null) - (y.c != null)); // the ones still without a cost first
+    S.csEdit = { rows, v: {} }; stRedraw(); return;
+  }
+  if (a === "csclose") { S.csEdit = null; stRedraw(); return; }
+  if (a === "cssave") {
+    const E = S.csEdit, items = Object.entries(E.v).map(([n, c]) => ({ n, c: String(c).replace(/[₹,\s]/g, "") }));
+    const bad = items.find(i => i.c !== "" && !/^\d+(\.\d+)?$/.test(i.c)); if (bad) { toast("Write the cost of " + bad.n + " as a number"); return; }
+    if (!items.length) { S.csEdit = null; stRedraw(); return; }
+    b.disabled = true;
+    try { const r = await post({ action: "cs-set", id: S.id, items }); S.cost = { ...(S.cost || {}), costs: r.costs }; S.csEdit = null; S.prof = null; toast(items.length + " cost price" + (items.length === 1 ? "" : "s") + " saved"); } catch (e) { toast(e.message); b.disabled = false; return; }
+    stRedraw(); return;
+  }
   if (a === "ordon") { b.disabled = true; if (await stWrite(d => { d.ord = true; d.pause = false; }, "Orders are on")) go(); return; }
   if (a === "add") { S.stEdit = { k: "", x: { n: "", p: "", w: "", d: "", i: "", b: false, so: false }, sec: S.stc >= 0 ? stCats()[S.stc] : "" }; stRedraw(); setTimeout(() => $("#stN") && $("#stN").focus(), 50); return; }
   if (a === "bulk") { S.stEdit = { bulk: true }; stRedraw(); return; }
@@ -949,6 +1024,7 @@ $("#main").addEventListener("click", async ev => {
     if (a === "save" && !x.n) { toast("Write the product name"); $("#stN").focus(); return; }
     if (a === "save" && !numP(x.p)) { toast("Add the price"); $("#stP").focus(); return; }
     if (a === "save" && x.w && numP(x.w) <= numP(x.p)) x.w = "";
+    if (a === "save" && E.cost != null && E.cost !== "" && !/^₹?\s*\d+(\.\d+)?$/.test(E.cost.replace(/,/g, ""))) { toast("Write the cost price as a number, like 240"); $("#stCost").focus(); return; }
     if (a === "del" && !confirm("Delete " + x.n + "?")) return;
     const sec = (a === "save" ? E.sec || "" : "") || "Products", vs = (x.v || []).filter(o => o.n), as = (x.a || []).filter(o => o.n);
     const item = { n: x.n, p: x.p, d: x.d || "", i: x.i || "", b: !!x.b, ...(x.so ? { so: true } : {}), ...(x.w ? { w: x.w } : {}), ...(x.nw ? { nw: true } : {}),
@@ -961,6 +1037,12 @@ $("#main").addEventListener("click", async ev => {
       if (a === "save") { let s = d.menu.find(y => (y.n || "").toLowerCase() === sec.toLowerCase()); if (!s) { s = { n: sec, items: [] }; d.menu.push(s); } s.items.push(item); }
       d.menu = d.menu.filter(s => (s.items || []).some(y => y && y.n));
     }, a === "save" ? "Saved. It's on your page." : "Deleted");
+    if (ok && a === "save" && E.cost != null && isPro()) {
+      const old = costOf(E.x0n || x.n), nc = E.cost.replace(/[₹,\s]/g, "");
+      if (String(old ?? "") !== nc || (E.x0n && ckey(E.x0n) !== ckey(x.n) && old != null)) {
+        try { const r = await post({ action: "cs-set", id: S.id, items: [{ n: x.n, c: nc, from: E.x0n || "" }] }); S.cost = { ...(S.cost || {}), costs: r.costs }; S.prof = null; } catch (e) { toast("Product saved, but the cost price wasn't: " + e.message); }
+      }
+    }
     if (ok) { S.stEdit = null; S.stMoreOpen = false; } else b.disabled = false; stRedraw(); return;
   }
   if (a === "sset") {
@@ -1006,6 +1088,9 @@ $("#main").addEventListener("input", ev => {
     const f = { saQ: "q", saCn: "cn", saCp: "cp", saCq: "cq", saD: "disc", saCph: "phone", saN: "name", saNote: "note" }[id];
     if (f) { A[f] = ev.target.value; if (id === "saQ") $("#saList").innerHTML = saList(); if (id === "saD") $("#saTot").textContent = inr(saTotal()); return; }
   }
+  if (ev.target.dataset && ev.target.dataset.csn != null && S.csEdit) { S.csEdit.v[ev.target.dataset.csn] = ev.target.value; return; }
+  if (ev.target.id === "csQ") { const q = ev.target.value.toLowerCase().trim(); document.querySelectorAll("[data-csr]").forEach(r => { r.hidden = !!q && !r.dataset.csr.includes(q); }); return; }
+  if ((ev.target.id === "stCost" || ev.target.id === "stP") && $("#stMg")) { $("#stMg").innerHTML = mgText($("#stN").value, numP($("#stP").value), $("#stCost").value.replace(/[₹,\s]/g, "")); return; }
   if (ev.target.id === "stq") { S.stq = ev.target.value; const p = ev.target.selectionStart; go(); const n = $("#stq"); n.focus(); n.setSelectionRange(p, p); } });
 
 V.menu = () => {
