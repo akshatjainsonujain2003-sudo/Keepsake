@@ -60,6 +60,7 @@ async function placeOrder(b, ip) {
   const dfee = Math.max(0, Math.min(num(d.dfee) || 0, 2000)), fd = Math.max(0, num(d.fd) || 0);
   const fee = direct && mode0 === "delivery" && dfee && !(fd && sub >= fd) ? dfee : 0, tot = sub + fee;
   if (direct && !phone) return E(400, "Please add your 10-digit mobile number.");
+  await require("./_cost").attach(b.id, items); // what each item cost the shop right now (owner only, for profit)
   const o = { ref, at: now, items, tot, name: clip(b.name, 40), phone, mode: mode0, addr: clip(b.addr, 160), note: clip(b.note, 160), st: "new", ts: {}, ...(fee ? { fee } : {}), ...(direct ? { direct: true, pay: b.pay === "upi" ? "upi" : "cod" } : {}) };
   if ((await db.cmd("SET", "bzo:" + b.id + ":" + ref, JSON.stringify(o), "NX", "EX", KEEP)) !== "OK") return { ok: true, ref, dup: true };
   await db.cmd("ZADD", "bzoz:" + b.id, now, ref);
@@ -114,6 +115,7 @@ async function ownerSale(id, m, b) {
     if (n && qty >= 1 && qty <= 999 && p >= 0 && p <= 1e6) items.push({ n, q: qty, p });
   }
   if (!items.length) return E(400, "Add at least one item.");
+  await require("./_cost").attach(id, items);
   const sub = items.reduce((t, x) => t + x.q * x.p, 0), disc = Math.min(sub, Math.max(0, Math.round(+b.disc || 0))), tot = sub - disc, now = Date.now();
   const o = { at: now, items, tot, name: clip(b.name, 40), phone: ph10(b.phone), mode: "walkin", addr: "", note: clip(b.note, 160), st: "done", ts: { done: now }, offline: true, pay: ["cash", "upi", "card"].includes(b.pay) ? b.pay : "cash", ...(disc ? { disc } : {}) };
   for (let k = 0; k < 6; k++) {

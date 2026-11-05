@@ -144,6 +144,7 @@ async function create(id, m, b, ctx, from) {
   const no = (est ? "EST" : set.prefix) + "/" + fy.slice(2) + "/" + String(n).padStart(4, "0"); // ≤ 16 characters, as GST rules ask
   const doc = { t: "", page: id, no, at: now, kind, seller: sellerOf(m, set), cust: x.cust, inc: x.inc, lines: x.lines, calc: x.calc, terms: set.terms, note: clip(b.note, 200),
     design: DESIGNS.includes(b.design) ? b.design : set.design || "a4m", pay, paid: pay && pay.amt >= x.calc.total ? { at: now, mode: pay.mode === "split" ? "split" : pay.mode } : null, cancel: null, ...(from ? { from } : {}) };
+  if (!est) { const cs = await require("./_cost").lineCosts(id, x.calc.lines); if (cs) doc.cs = cs; } // cost of each line at the time of sale (owner only, never in the bill link)
   if (!(await save(id, doc, !est))) return E(500, "Couldn't save the bill. Please try again.");
   if (!est) await db.cmd("INCR", "blcnt:" + id);
   await remember(id, x.lines.filter(l => !l.x));
@@ -178,6 +179,7 @@ async function credit(id, m, b) {
   const doc = { t: "", page: id, no: "CN/" + fy.slice(2) + "/" + String(n).padStart(4, "0"), at: now, kind: "credit", seller: bill.seller, cust: bill.cust, inc: bill.inc,
     lines: lines.map(({ k, ...x }) => x), rk: lines.map(l => [l.k, l.q]), calc, terms: "", note: clip(b.reason, 120) || "Goods returned", design: bill.design || "a4m",
     ref: { t: bill.t, no: bill.no, at: bill.at, kind: bill.kind || "tax" }, refund: MODES.includes(b.mode) ? b.mode : "cash", paid: { at: now, mode: MODES.includes(b.mode) ? b.mode : "cash" }, cancel: null };
+  if (bill.cs) doc.cs = lines.map(l => bill.cs[l.k] != null ? bill.cs[l.k] : null); // returned goods carry the cost they were sold at
   if (!(await save(id, doc, true))) return E(500, "Couldn't save the credit note. Please try again.");
   for (const l of lines) ret[l.k] = r2((ret[l.k] || 0) + l.q);
   bill.ret = ret; await db.setj("bl:" + t, bill);
