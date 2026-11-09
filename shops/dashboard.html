@@ -63,7 +63,7 @@ main{min-width:0;padding:30px 34px 60px}
 .g3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:18px}
 .kpi{padding:22px 24px;border-radius:var(--r);background:var(--card);border:1.5px solid var(--line);min-width:0}
 .kpi span{display:block;font-weight:600;font-size:14px}
-.kpi b{display:block;margin:6px 0 6px;font:800 clamp(30px,3.1vw,42px)/1 'Inter Tight',sans-serif;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kpi b{display:block;margin:6px 0 6px;font:800 clamp(30px,3.1vw,42px)/1 'Inter Tight',sans-serif;letter-spacing:-.01em;line-height:1.3}
 .kpi small{display:block;font-weight:700;font-size:13.5px}
 .kpi.o{background:var(--or);border-color:var(--or);color:#fff}
 .kpi.y{background:var(--ye);border-color:var(--ye)}
@@ -204,35 +204,46 @@ td .btn{white-space:nowrap}
 .pmp{flex:none;width:96px;height:96px;border-radius:16px;border:2px dashed var(--line);background:#ECECE7 center/cover;display:grid;place-items:center;font-weight:700;font-size:13px;color:var(--mu);cursor:pointer}.pmp.busy{opacity:.6}
 @media (max-width:600px){.pm{align-items:flex-end;padding:0}.pmb{border-radius:24px 24px 0 0}}
 .more>div{width:100%;max-height:85vh;overflow:auto;background:var(--side);border-radius:24px 24px 0 0;padding:18px 14px calc(18px + env(safe-area-inset-bottom))}
-/* ---------- Munshi (plain for now: the design comes later) ---------- */
-.mub{position:fixed;right:18px;bottom:22px;z-index:35;width:58px;height:58px;border-radius:50%;border:0;background:var(--or);color:#fff;font:800 19px/1 Inter,sans-serif;box-shadow:0 8px 24px #1f1bf255;cursor:pointer}
-.mub i{position:absolute;right:13px;top:13px;width:8px;height:8px;border-radius:50%;background:var(--ye)}
-.mu{position:fixed;inset:0;z-index:50;background:#0007;display:flex;justify-content:flex-end}
-.mup{width:min(440px,100%);height:100%;background:var(--bg);display:flex;flex-direction:column}
-.muh{display:flex;align-items:center;gap:10px;padding:14px 16px;background:var(--card);border-bottom:1px solid var(--line)}
-.muh .av{width:38px;height:38px;border-radius:50%;background:var(--or);color:#fff;display:grid;place-items:center;font-weight:800;flex:none}
-.muh b{display:block}.muh small{color:var(--mu);font-size:12.5px}.muh>div{flex:1;min-width:0}
-.muh select,.muh button{border:1px solid var(--line);background:#fff;border-radius:10px;padding:7px 8px;font:600 13px Inter,sans-serif;cursor:pointer}
-.mul{flex:1;overflow:auto;padding:16px;display:flex;flex-direction:column;gap:10px}
-.mum{max-width:88%;color:var(--ink);padding:11px 14px;border-radius:16px;background:var(--card);border:1px solid var(--line);font-size:15px;line-height:1.45;white-space:pre-wrap;word-break:break-word}
-.mum.me{align-self:flex-end;background:var(--or);color:#fff;border-color:var(--or)}
-.mum.err{border-color:#e5a3a3;background:#fff5f5}
-.mum.wait{color:var(--mu)}
-.muc{align-self:stretch;color:var(--ink);padding:14px;border-radius:16px;background:var(--card);border:1px solid var(--line)}
-.muc .big{font:800 30px/1.1 Inter,sans-serif}.muc .ch{font-weight:700;font-size:13px}.muc .ch.up{color:var(--gr)}.muc .ch.dn{color:#c0392b}
-.muc .t{font-weight:700;font-size:13px;color:var(--mu);margin-bottom:6px}
-.muc .r{display:flex;gap:10px;align-items:center;padding:8px 0;border-top:1px solid var(--line);font-size:14px}.muc .r:first-of-type{border-top:0}
-.muc .r span{flex:1;min-width:0}.muc .r small{display:block;color:var(--mu)}
-.muc .bars{height:150px}
-.muk{display:flex;gap:8px;margin-top:10px}.muk button,.muk a{flex:1;padding:12px;border-radius:12px;font-weight:700;font-size:15px;text-align:center;text-decoration:none;cursor:pointer;border:1.5px solid var(--line);background:#fff;color:var(--ink)}
-.muk .y{background:var(--gr);border-color:var(--gr);color:#fff}.muk .w{background:#25D366;border-color:#25D366;color:#fff}
-.muq{display:flex;gap:8px;overflow-x:auto;padding:0 16px 10px}.muq button{flex:none;padding:8px 12px;border-radius:99px;border:1px solid var(--line);background:#fff;font:600 13px Inter,sans-serif;cursor:pointer}
-.mui{display:flex;gap:8px;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:var(--card);border-top:1px solid var(--line)}
-.mui input{flex:1;min-width:0;padding:12px 14px;border-radius:99px;border:1.5px solid var(--line);font-size:16px}
-.mui button{width:46px;height:46px;flex:none;border-radius:50%;border:0;background:var(--or);color:#fff;font-size:18px;cursor:pointer}
-.mui button.mic{background:#fff;color:var(--or);border:1.5px solid var(--line)}.mui button.mic.on{background:#c0392b;color:#fff;border-color:#c0392b}
-.mui button:disabled,.mui input:disabled{opacity:.5}
-@media (max-width:900px){.mub{bottom:calc(84px + env(safe-area-inset-bottom));right:14px}.mup{width:100%}}
+/* ---------- Munshi: the shop's AI helper (mascot states from /assets/munshi/) ---------- */
+.mzb{position:fixed;right:18px;bottom:22px;z-index:35;width:68px;height:68px;border-radius:50%;border:3px solid var(--or);background:#fff;padding:0;box-shadow:0 10px 28px #1f1bf244;cursor:pointer;transition:transform .18s}
+.mzb:hover{transform:translateY(-2px) scale(1.04)}.mzb img{width:100%;height:100%;border-radius:50%;object-fit:cover;object-position:50% 20%}
+.mzb i{position:absolute;right:2px;top:4px;width:14px;height:14px;border-radius:50%;background:var(--ye);border:2px solid #fff}
+.mz{position:fixed;inset:0;z-index:50;display:flex;justify-content:flex-end;background:#0b0b1466}
+.mzp{position:relative;width:min(440px,100%);height:100%;background:var(--bg);display:flex;flex-direction:column;box-shadow:-12px 0 40px #0b0b1426}
+.mzh{display:flex;align-items:center;gap:10px;padding:12px 14px;background:linear-gradient(135deg,#140FD6,#3B35FF);color:#fff}
+.mzh img{width:52px;height:52px;flex:none;filter:drop-shadow(0 4px 8px #0004);transition:transform .2s}.mzh img.bob{animation:mzbob 1.1s ease-in-out infinite}
+.mzh>div{flex:1;min-width:0}.mzh b{display:block;font:800 18px/1.1 Inter,sans-serif}.mzh small{display:block;color:#ffffffcc;font-size:12.5px;margin-top:2px;line-height:1.3}
+.mzh button{height:38px;min-width:38px;border:1px solid #ffffff55;background:#ffffff1f;color:#fff;border-radius:10px;padding:0 8px;font:600 13px Inter,sans-serif;cursor:pointer}.mzh select option{color:#0b0b14}
+.mzl{flex:1;overflow:auto;padding:16px 14px;display:flex;flex-direction:column;gap:10px}
+.mzr{display:flex;gap:8px;align-items:flex-end;max-width:94%}.mzr>img{width:36px;height:36px;flex:none}
+.mzm{padding:11px 14px;border-radius:16px 16px 16px 4px;background:var(--card);border:1px solid var(--line);color:var(--ink);font-size:15px;line-height:1.45;white-space:pre-wrap;word-break:break-word}
+.mzm.me{align-self:flex-end;border-radius:16px 16px 4px 16px;background:var(--or);border-color:var(--or);color:#fff;max-width:85%}
+.mzm.err{border-color:#e5a3a3;background:#fff5f5}.mzm.wait{color:var(--mu)}
+.mzm.brief{background:linear-gradient(135deg,#140FD6,#3B35FF);border:0;color:#fff}.mzm.brief em{display:block;font:600 11px/1 Inter,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#ffffffb3;font-style:normal;margin-bottom:6px}
+.mzc{align-self:stretch;margin-left:44px;padding:14px;border-radius:16px;background:var(--card);border:1px solid var(--line);color:var(--ink)}
+.mzc .big{font:800 30px/1.1 Inter,sans-serif;font-variant-numeric:tabular-nums}.mzc .ch{font-weight:700;font-size:13px}.mzc .ch.up{color:var(--gr)}.mzc .ch.dn{color:#c0392b}
+.mzc .t{display:flex;justify-content:space-between;gap:8px;font-weight:700;font-size:12.5px;color:var(--mu);margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em}.mzc .t a{color:var(--or);text-transform:none;letter-spacing:0;cursor:pointer}
+.mzc .r{display:flex;gap:10px;align-items:center;padding:8px 0;border-top:1px solid var(--line);font-size:14px}.mzc .r:first-of-type{border-top:0}
+.mzc .r span{flex:1;min-width:0}.mzc .r small{display:block;color:var(--mu)}.mzc .r>b{font-variant-numeric:tabular-nums;white-space:nowrap}
+.mzk{display:flex;gap:8px;margin-top:12px}.mzk button,.mzk a{flex:1;min-height:48px;padding:12px;border-radius:14px;font-weight:800;font-size:16px;text-align:center;text-decoration:none;cursor:pointer;border:1.5px solid var(--line);background:#fff;color:var(--ink)}
+.mzk .y{background:var(--gr);border-color:var(--gr);color:#fff}.mzk .w{background:#25D366;border-color:#25D366;color:#fff}.mzk .b{background:var(--or);border-color:var(--or);color:#fff}
+.mzq{display:flex;gap:8px;overflow-x:auto;padding:0 14px 10px;scrollbar-width:none}.mzq button{flex:none;padding:9px 13px;border-radius:99px;border:1px solid var(--line);background:#fff;color:var(--ink);font:600 13px Inter,sans-serif;cursor:pointer}
+.mzi{display:flex;gap:8px;align-items:center;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:var(--card);border-top:1px solid var(--line)}
+.mzi input{flex:1;min-width:0;height:48px;padding:0 16px;border-radius:99px;border:1.5px solid var(--line);font-size:16px;background:#fff;color:var(--ink)}
+.mzi button{flex:none;border:0;border-radius:50%;cursor:pointer}.mzgo{width:44px;height:44px;background:var(--ink);color:#fff;font-size:17px}
+.mzmic{width:58px;height:58px;background:var(--or);color:#fff;box-shadow:0 6px 18px #1f1bf255;display:grid;place-items:center}.mzmic svg{width:26px;height:26px}
+.mzi button:disabled,.mzi input:disabled{opacity:.45;cursor:default}
+.mzlisten{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:24px;text-align:center;background:linear-gradient(180deg,#140FD6,#3B35FF);color:#fff}
+.mzlisten img{width:170px;height:170px;animation:mzbob 1.4s ease-in-out infinite}.mzlisten b{font:800 22px Inter,sans-serif}.mzlisten p{min-height:3em;max-width:30ch;margin:0;font-size:17px;color:#ffffffe0}
+.mzlisten .wave{display:flex;gap:5px;height:28px;align-items:center}.mzlisten .wave i{width:5px;border-radius:3px;background:var(--ye);animation:mzw 1s ease-in-out infinite}.mzlisten .wave i:nth-child(2){animation-delay:.15s}.mzlisten .wave i:nth-child(3){animation-delay:.3s}.mzlisten .wave i:nth-child(4){animation-delay:.45s}.mzlisten .wave i:nth-child(5){animation-delay:.6s}
+.mzlisten .row2{display:flex;gap:10px;margin-top:8px}.mzlisten button{min-height:52px;padding:0 22px;border-radius:99px;border:0;font:800 16px Inter,sans-serif;cursor:pointer;background:var(--ye);color:#0b0b14}.mzlisten button+button{background:#ffffff26;color:#fff}
+.mzmini{position:fixed;left:12px;right:12px;bottom:calc(84px + env(safe-area-inset-bottom));z-index:45;display:flex;align-items:center;gap:10px;padding:8px 10px 8px 8px;border-radius:18px;background:#0b0b14;color:#fff;box-shadow:0 12px 30px #0006;font-size:14.5px}
+.mzmini img{width:44px;height:44px}.mzmini span{flex:1;min-width:0}.mzmini button{border:0;border-radius:99px;padding:10px 14px;background:var(--ye);color:#0b0b14;font-weight:800;cursor:pointer}
+.mzflash{outline:3px solid var(--ye)!important;outline-offset:2px;border-radius:10px;animation:mzfl 1.2s ease-in-out 2}
+@keyframes mzbob{50%{transform:translateY(-6px)}}@keyframes mzw{0%,100%{height:6px}50%{height:28px}}@keyframes mzfl{50%{box-shadow:0 0 0 8px #d4ff3f66}}
+@media (min-width:901px){.mz{background:transparent;pointer-events:none}.mzp{pointer-events:auto}.mzmini{left:auto;right:470px;bottom:24px;width:360px}}
+@media (max-width:900px){.mzb{bottom:calc(84px + env(safe-area-inset-bottom));right:12px;width:62px;height:62px}}
+@media (prefers-reduced-motion:reduce){.mzh img.bob,.mzlisten img,.mzlisten .wave i,.mzflash{animation:none}}
 @media (max-width:1180px){.g4{grid-template-columns:repeat(2,minmax(0,1fr))}.g3{grid-template-columns:1fr 1fr}.g3>:last-child{grid-column:1/-1}}
 @media (max-width:900px){
   .app{display:block}.side{display:none}
@@ -409,8 +420,9 @@ a.kpi{text-decoration:none;color:inherit;transition:transform .15s}a.kpi:active{
 </div>
 <nav class="tabbar" id="tabbar" aria-label="Dashboard"></nav>
 <div class="more" id="more" hidden><div id="moreIn"></div></div>
-<button type="button" class="mub" id="muB" hidden aria-label="Ask Munshi">मुं<i></i></button>
-<div class="mu" id="mu" hidden></div>
+<button type="button" class="mzb" id="mzB" hidden aria-label="Ask Munshi"><img src="/assets/munshi/namaste.v1.webp" alt="" width="68" height="68" loading="lazy"><i></i></button>
+<div class="mz" id="mz" hidden></div>
+<div class="mzmini" id="mzMini" hidden role="status"><img src="/assets/munshi/order.v1.webp" alt="" id="mzMiniI"><span id="mzMiniT"></span><button type="button" id="mzMiniB">Munshi</button></div>
 <div class="toast" id="toast" role="status"></div>
 <script>
 (() => {
@@ -488,6 +500,8 @@ async function api(url, opt) {
 }
 const post = (body) => api("/api/qr", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
 
+// Sales and bills change stock counts on the server: pick up the latest page in the background so the lists show them.
+function freshStock() { api("/api/customer-memories?id=" + S.id).then(j => { if (j && j.data && !S.stEdit) { S.d = j.data; if (S.view === "store" || S.view === "menu") go(); } }).catch(() => {}); }
 // Save a change to the page: fetch the latest copy first so edits made in the studio aren't lost.
 async function patch(fn, okMsg) {
   try {
@@ -541,7 +555,7 @@ function shell() {
     $("#more").hidden = false;
   };
   document.title = (n ? "(" + n + ") " : "") + (TITLES[S.view] || "Dashboard") + " · " + shopName();
-  $("#muB").hidden = !S.id;
+  $("#mzB").hidden = !S.id || !$("#mz").hidden;
 }
 $("#more").onclick = e => { if (e.target.id === "more" || e.target.closest("a") || e.target.closest("[data-x]")) $("#more").hidden = true; };
 
@@ -866,7 +880,9 @@ function stSheet() {
     <div style="flex:1;min-width:0"><label class="f">Name<input class="in" id="stN" maxlength="50" value="${esc(x.n || "")}" placeholder="Basmati Rice 5kg"></label></div></div>
     <div class="row2"><label class="f">Price (₹)<input class="in" id="stP" inputmode="decimal" maxlength="12" value="${esc(x.p || "")}" placeholder="640"></label><label class="f">MRP (₹) <em>(optional)</em><input class="in" id="stW" inputmode="decimal" maxlength="12" value="${esc(x.w || "")}" placeholder="720"></label></div>
     ${isPro() ? (c => `<label class="f">Cost price (₹) <em>🔒 only you see this${gstReg() ? ", before GST" : ""}</em><input class="in" id="stCost" inputmode="decimal" maxlength="10" value="${esc(c)}" placeholder="What you pay for one"></label><p class="hint" id="stMg" style="margin:-6px 0 14px">${mgText(x.n, numP(x.p), c)}</p>`)(E.cost != null ? E.cost : costOf(E.x0n || x.n) != null ? String(costOf(E.x0n || x.n)) : "") : ""}
-    <label class="f">Category<input class="in" id="stC" list="stCl" maxlength="24" value="${esc(E.sec || cats[0] || "Products")}"><datalist id="stCl">${cats.map(c => `<option value="${esc(c)}">`).join("")}</datalist></label>
+    ${(sel => `<div class="row2"><label class="f">Category<select class="in" id="stC">${cats.map(c => `<option value="${esc(c)}"${c === sel ? " selected" : ""}>${esc(c)}</option>`).join("")}<option value="__new"${!cats.includes(sel) ? " selected" : ""}>+ New category…</option></select></label>
+      <label class="f">Stock count <em>(optional)</em><input class="in" id="stK" inputmode="numeric" maxlength="5" value="${esc(x.k != null ? String(x.k) : "")}" placeholder="Leave empty if you don't count"></label></div>
+      <label class="f" id="stCnL"${!cats.includes(sel) ? "" : " hidden"}>New category name<input class="in" id="stCn" maxlength="24" value="${esc(cats.includes(sel) ? "" : sel)}" placeholder="e.g. Sweets, Dairy, Kurtis"></label>`)(E.sec || cats[0] || "Products")}
     <label class="f">Description <em>(optional)</em><textarea class="in" id="stD" maxlength="140" rows="2">${esc(x.d || "")}</textarea></label>
     <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:16px"><label class="sw"><input type="checkbox" id="stS"${x.so ? "" : " checked"}><i></i>In stock</label><label class="sw"><input type="checkbox" id="stB"${x.b ? " checked" : ""}><i></i>Bestseller</label><label class="sw"><input type="checkbox" id="stNw"${x.nw ? " checked" : ""}><i></i>New</label></div>
     ${stMore(x)}
@@ -878,7 +894,7 @@ function stMore(x) {
   const n = g.length + v.length + a.length + (x.u ? 1 : 0) + (x.k != null && x.k !== "" ? 1 : 0) + ((x.c || []).length ? 1 : 0) + (x.vg ? 1 : 0);
   return `<details class="pmx"${S.stMoreOpen || n ? " open" : ""}><summary>More details <small>${n ? n + " added" : "photos, sizes, colours, add-ons"}</small></summary>
     <div class="pmg">${g.map((u, i) => `<span style="background-image:url('${esc(u)}')"><button type="button" data-sx="gdel" data-i="${i}" aria-label="Remove photo">×</button></span>`).join("")}${g.length < 4 ? `<label>+ Photo<input type="file" accept="image/*" id="stPic2" hidden></label>` : ""}</div>
-    <div class="row2"><label class="f">Unit <em>(optional)</em><input class="in" id="stU" maxlength="16" value="${esc(x.u || "")}" placeholder="1 kg, 500 ml, Pack of 6"></label><label class="f">Stock count <em>(optional)</em><input class="in" id="stK" inputmode="numeric" maxlength="5" value="${esc(x.k != null ? String(x.k) : "")}" placeholder="Shows “Only 3 left”"></label></div>
+    <div><label class="f">Unit <em>(optional)</em><input class="in" id="stU" maxlength="16" value="${esc(x.u || "")}" placeholder="1 kg, 500 ml, Pack of 6"></label></div>
     <label class="f">Option name <em>(optional)</em><input class="in" id="stVt" maxlength="16" value="${esc(x.vt || "")}" placeholder="Size, Weight, Pack"></label>
     ${v.map((o, i) => `<div class="pmr"><input class="in" data-sv="${i}" data-k="n" maxlength="20" value="${esc(o.n || "")}" placeholder="M, Large, 1 kg"><input class="in" data-sv="${i}" data-k="p" inputmode="decimal" maxlength="8" value="${esc(o.p ? String(o.p) : "")}" placeholder="+ ₹0"><label><input type="checkbox" data-sv="${i}" data-k="so"${o.so ? " checked" : ""}> Sold out</label><button type="button" data-sx="vdel" data-i="${i}" aria-label="Remove option">×</button></div>`).join("")}
     <button type="button" class="btn g s" data-sx="vadd" style="margin-bottom:14px">+ Add option</button><p class="hint" style="margin:-6px 0 14px">Customers must pick one. Put an extra price if it costs more (Large + ₹40), or leave it empty.</p>
@@ -892,9 +908,10 @@ function stMore(x) {
 function stCollect() {
   const E = S.stEdit; if (!E || E.bulk) return; const x = E.x, v = id => { const e = $("#" + id); return e ? e.value.trim() : undefined; };
   if ($("#stCost")) E.cost = v("stCost");
-  if ($("#stN")) { x.n = v("stN"); x.p = v("stP"); x.w = v("stW"); x.d = v("stD"); x.so = !$("#stS").checked; x.b = $("#stB").checked; x.nw = !!($("#stNw") && $("#stNw").checked); E.sec = v("stC"); }
+  if ($("#stN")) { x.n = v("stN"); x.p = v("stP"); x.w = v("stW"); x.d = v("stD"); x.so = !$("#stS").checked; x.b = $("#stB").checked; x.nw = !!($("#stNw") && $("#stNw").checked); E.sec = $("#stC").value === "__new" || !$("#stC").options.length ? v("stCn") : v("stC");
+    const k = v("stK"); x.k = k === "" || k == null ? null : Math.max(0, Math.round(+k.replace(/\D/g, "") || 0)); if (x.k === 0) x.so = true; } // no stock left = sold out, so customers can't order it
   if (!$("#stU")) return;
-  x.u = v("stU"); const k = v("stK"); x.k = k === "" ? null : Math.max(0, Math.round(+k.replace(/\D/g, "") || 0)); x.vt = v("stVt");
+  x.u = v("stU"); x.vt = v("stVt");
   x.c = v("stCo").split(",").map(c => c.trim()).filter(Boolean).slice(0, 8); x.vg = v("stVg");
   x.v = (x.v || []).map((o, i) => ({ n: (($(`[data-sv="${i}"][data-k="n"]`) || {}).value || "").trim(), p: numP(($(`[data-sv="${i}"][data-k="p"]`) || {}).value) || 0, so: !!($(`[data-sv="${i}"][data-k="so"]`) || {}).checked }));
   x.a = (x.a || []).map((o, i) => ({ n: (($(`[data-sa="${i}"][data-k="n"]`) || {}).value || "").trim(), p: numP(($(`[data-sa="${i}"][data-k="p"]`) || {}).value) || 0 }));
@@ -1004,6 +1021,7 @@ $("#main").addEventListener("click", async ev => {
       if (A.busy) return; A.busy = true; sb.disabled = true;
       try {
         const j = await post({ action: "bz-own-sale", id: S.id, items: saKeys().map(k => [k, A.lines[k]]), custom: A.custom, disc: A.disc, pay: A.pay, name: A.name, phone: A.phone, note: A.note });
+        freshStock();
         S.sale = null; S.orders = [j.order, ...S.orders]; S.seen && S.seen.add(j.order.ref); toast("Sale saved · " + inr(j.order.tot)); go();
       } catch (x) { A.busy = false; sb.disabled = false; toast(x.message); }
       return;
@@ -1049,13 +1067,14 @@ $("#main").addEventListener("click", async ev => {
     if (a === "gdel") x.g.splice(i, 1);
     stRedraw(); return;
   }
-  if (a === "edit") { const [si, ii] = b.dataset.k.split(".").map(Number), s = S.d.menu[si]; S.stEdit = { k: b.dataset.k, x: JSON.parse(JSON.stringify(s.items[ii])), x0n: s.items[ii].n, sec: s.n }; stRedraw(); return; }
+  if (a === "edit") { const [si, ii] = b.dataset.k.split(".").map(Number), s = S.d.menu[si]; S.stEdit = { k: b.dataset.k, x: JSON.parse(JSON.stringify(s.items[ii])), x0n: s.items[ii].n, k0: s.items[ii].k == null ? "" : String(s.items[ii].k), so0: !!s.items[ii].so, sec: s.n }; stRedraw(); return; }
   if (a === "save" || a === "del") {
     const E = S.stEdit, x = E.x;
     if (a === "save") stCollect();
     if (a === "save" && !x.n) { toast("Write the product name"); $("#stN").focus(); return; }
     if (a === "save" && !numP(x.p)) { toast("Add the price"); $("#stP").focus(); return; }
     if (a === "save" && x.w && numP(x.w) <= numP(x.p)) x.w = "";
+    if (a === "save" && !String(E.sec || "").trim()) { toast("Write a name for the new category"); $("#stCn") && ($("#stCnL").hidden = false, $("#stCn").focus()); return; }
     if (a === "save" && E.cost != null && E.cost !== "" && !/^₹?\s*\d+(\.\d+)?$/.test(E.cost.replace(/,/g, ""))) { toast("Write the cost price as a number, like 240"); $("#stCost").focus(); return; }
     if (a === "del" && !confirm("Delete " + x.n + "?")) return;
     const sec = (a === "save" ? E.sec || "" : "") || "Products", vs = (x.v || []).filter(o => o.n), as = (x.a || []).filter(o => o.n);
@@ -1065,7 +1084,9 @@ $("#main").addEventListener("click", async ev => {
     b.disabled = true;
     const ok = await stWrite(d => {
       d.menu = Array.isArray(d.menu) ? d.menu : [];
-      if (E.k) { const [si, ii] = E.k.split(".").map(Number), s = d.menu[si]; if (s && s.items[ii] && s.items[ii].n === E.x0n) s.items.splice(ii, 1); else if (s) { const j = s.items.findIndex(y => y && y.n === (E.x0n || x.n)); if (j >= 0) s.items.splice(j, 1); } }
+      if (E.k) { const [si, ii] = E.k.split(".").map(Number), s = d.menu[si]; let cur = null; if (s && s.items[ii] && s.items[ii].n === E.x0n) cur = s.items.splice(ii, 1)[0]; else if (s) { const j = s.items.findIndex(y => y && y.n === (E.x0n || x.n)); if (j >= 0) cur = s.items.splice(j, 1)[0]; }
+        // Sales may have changed the stock since this editor opened: keep the latest count unless the owner changed it here.
+        if (cur && String(x.k == null ? "" : x.k) === E.k0) { if (cur.k != null && cur.k !== "") item.k = cur.k; else delete item.k; if (!!x.so === E.so0) { if (cur.so) item.so = true; else delete item.so; if (cur.sok) item.sok = 1; } } }
       if (a === "save") { let s = d.menu.find(y => (y.n || "").toLowerCase() === sec.toLowerCase()); if (!s) { s = { n: sec, items: [] }; d.menu.push(s); } s.items.push(item); }
       d.menu = d.menu.filter(s => (s.items || []).some(y => y && y.n));
     }, a === "save" ? "Saved. It's on your page." : "Deleted");
@@ -1122,6 +1143,8 @@ $("#main").addEventListener("input", ev => {
   }
   if (ev.target.dataset && ev.target.dataset.csn != null && S.csEdit) { S.csEdit.v[ev.target.dataset.csn] = ev.target.value; return; }
   if (ev.target.id === "csQ") { const q = ev.target.value.toLowerCase().trim(); document.querySelectorAll("[data-csr]").forEach(r => { r.hidden = !!q && !r.dataset.csr.includes(q); }); return; }
+  if (ev.target.id === "stK" && $("#stS")) { const k = ev.target.value.replace(/\D/g, ""); if (k !== "") $("#stS").checked = +k > 0; return; } // stock count and "In stock" agree
+  if (ev.target.id === "stC" && $("#stCnL")) { $("#stCnL").hidden = ev.target.value !== "__new"; if (ev.target.value === "__new") $("#stCn").focus(); return; }
   if ((ev.target.id === "stCost" || ev.target.id === "stP") && $("#stMg")) { $("#stMg").innerHTML = mgText($("#stN").value, numP($("#stP").value), $("#stCost").value.replace(/[₹,\s]/g, "")); return; }
   if (ev.target.id === "stq") { S.stq = ev.target.value; const p = ev.target.selectionStart; go(); const n = $("#stq"); n.focus(); n.setSelectionRange(p, p); } });
 
@@ -1626,7 +1649,7 @@ function blPick() {
   if (!q) all = all.map((x, i) => ({ x, i, r: rank(x.n) })).sort((a, b) => b.r - a.r || a.i - b.i).map(o => o.x); // items you bill most recently come first
   all = all.slice(0, 48);
   if (!all.length) return `<p class="hint" style="grid-column:1/-1">${menuItems().length ? "No item matches. Type the amount below instead." : "Your menu has no items with prices yet. Type an amount below."}</p>`;
-  return all.map(x => { const k = x.si + "." + x.ii; return `<button type="button" class="blf${cnt[k] ? " on" : ""}" data-bl="add" data-k="${k}"><span>${esc(x.n)}</span><b>${inr(numP(x.p))}</b>${cnt[k] ? `<em>${blQn(cnt[k])}</em>` : ""}</button>`; }).join("");
+  return all.map(x => { const k = x.si + "." + x.ii; return `<button type="button" class="blf${cnt[k] ? " on" : ""}" data-bl="add" data-k="${k}"><span>${esc(x.n)}${x.so ? `<small style="display:block;color:#c0392b;font-weight:600">Sold out</small>` : x.k != null && x.k !== "" ? `<small style="display:block;color:var(--mu)">Stock ${esc(String(x.k))}</small>` : ""}</span><b>${inr(numP(x.p))}</b>${cnt[k] ? `<em>${blQn(cnt[k])}</em>` : ""}</button>`; }).join("");
 }
 const blLineAmt = x => (+x.q || 0) * (+x.p || 0) * (1 - (+x.dp || 0) / 100);
 function blLine(x, i) {
@@ -1888,6 +1911,7 @@ $("#main").addEventListener("click", async ev => {
     if (a === "cancel" && S.blCx !== b.dataset.t) { S.blCx = b.dataset.t; blRedraw(); return; }
     try {
       const j = await blPost(a === "cancel" ? { action: "bl-cancel", t: b.dataset.t } : { action: "bl-paid", t: b.dataset.t, paid: a === "paid", mode: b.dataset.k });
+      freshStock();
       const x = S.bl.bills.find(y => y.t === b.dataset.t); if (x) { x.paid = j.bill.paid; x.cancel = j.bill.cancel; x.rcv = j.bill.rcv; }
       S.blCx = null; toast(a === "cancel" ? "Cancelled." : a === "paid" ? "Marked as paid." : "Marked as not paid."); blRedraw();
     } catch (x) { toast(x.message); }
@@ -1915,6 +1939,7 @@ $("#main").addEventListener("click", async ev => {
     const R = S.blRet, items = Object.entries(R.q).filter(([, q]) => q > 0).map(([k, q]) => ({ k: +k, q })); if (!items.length || b.disabled) return; b.disabled = true;
     try {
       const j = await blPost({ action: "bl-credit", t: R.t, items, reason: R.reason, mode: R.mode }), x = j.bill;
+      freshStock();
       S.bl.bills.unshift(blRowOf(x)); S.blRep = null; S.blRet = null; S.blKh = null; S.blOpen = x.t; S.blFresh = x.t; toast("Credit note " + x.no + " saved."); blRedraw();
     } catch (x) { b.disabled = false; toast(x.message); }
     return;
@@ -1952,6 +1977,7 @@ $("#main").addEventListener("click", async ev => {
       const c = N.cust, pay = N.pay === "split" ? { mode: "split", split: { cash: +N.split.cash || 0, upi: +N.split.upi || 0, card: +N.split.card || 0 } } : N.pay === "part" ? { mode: "part", amt: +N.part.amt || 0, via: N.part.via } : { mode: N.pay };
       const j = await blPost({ action: "bl-create", est: N.est, cust: N.b2b ? c : { name: c.name, phone: c.phone, addr: c.addr }, items: N.lines.map(x => ({ n: x.n, q: +x.q, p: +x.p, r: blGst() ? +x.r : 0, hsn: x.hsn, u: x.u, dp: +x.dp || 0 })),
         inc: N.inc, bd: +N.bd || 0, del: +N.del || 0, pay, note: N.note });
+      freshStock();
       N.lines.forEach(x => { S.bl.mem[x.n.toLowerCase()] = { h: x.hsn, r: +x.r, u: x.u }; });
       const x = j.bill;
       S.bl.bills.unshift(blRowOf(x));
@@ -2345,89 +2371,200 @@ async function pushOff() {
   try { const r = await swReg(), sub = r && await r.pushManager.getSubscription(); if (sub) { await post({ action: "bz-own-unpush", id: S.id, endpoint: sub.endpoint }).catch(() => {}); await sub.unsubscribe(); } S.pushOn = false; toast("Order alerts are off for this phone."); } catch (e) { toast(e.message); }
 }
 
-// ---------- Munshi: ask the shop's numbers in Hindi, Hinglish or English (api/_munshi.js) ----------
-const MU = { lang: store.get("gk-mu-lang", "hl"), log: [], busy: false, h: null };
-const MUL = {
-  hl: { ph: "Munshi se poochho…", off: "Munshi abhi set ho raha hai. Jaldi hi jawab dena shuru karega.", pro: "Munshi Keepsake Pro mein milta hai.", left: n => "Aaj " + n + " sawaal baaki", clear: "Nayi baat", think: "Soch raha hoon…", yes: "Haan", no: "Nahi" },
-  en: { ph: "Ask Munshi…", off: "Munshi is being set up. It will start answering soon.", pro: "Munshi comes with Keepsake Pro.", left: n => n + " questions left today", clear: "New chat", think: "Thinking…", yes: "Yes", no: "No" },
-  hi: { ph: "मुंशी से पूछिए…", off: "मुंशी अभी तैयार हो रहा है। जल्द ही जवाब देना शुरू करेगा।", pro: "मुंशी Keepsake Pro में मिलता है।", left: n => "आज " + n + " सवाल बाकी", clear: "नई बात", think: "सोच रहा हूँ…", yes: "हाँ", no: "नहीं" }
+// ---------- Munshi: the owner's AI helper (api/_munshi.js). Chat or voice in Hindi, Hinglish or English. ----------
+// The mascot shows what Munshi is doing (listening, writing, speaking) and what an answer is about (cash, udhaar, bill…).
+// Changes wait for Haan; then the dashboard moves to the screen that changed and highlights it, so the owner sees it happen.
+const MZ = { lang: store.get("gk-mu-lang", "hl"), say: store.get("gk-mu-say", "auto"), log: [], busy: false, h: null, mood: "namaste", last: "namaste", rec: null, built: false };
+const MZF = ["namaste", "speak", "listen", "khata", "cash", "profit", "down", "order", "bill", "confirm", "lowstock", "sleepy", "locked", "cant", "offline", "festival"];
+const mzImg = m => "/assets/munshi/" + (MZF.includes(m) ? m : m === "think" ? "khata" : "namaste") + ".v1.webp";
+const MZL = {
+  hl: { ph: "Munshi se poochho ya bolo…", off: "Munshi abhi set ho raha hai. Jaldi hi jawab dega.", pro: "Munshi Keepsake Pro mein milta hai.", left: n => "Aaj " + n + " sawaal baaki", think: "Likh raha hoon…", listen: "Sun raha hoon…", speak: "Bol raha hoon…", tap: "Bolke \"Bas\" dabaiye", send: "Bas, bhejo", cancel: "Rehne do", yes: "Haan", no: "Nahi", open: "Kholo", chat: "Chat", hear: "Mic ki permission dijiye, ya type karke poochhiye.", brief: "Aaj ki report · free", sayA: "Awaaz: jab aap bolein", sayOn: "Awaaz: hamesha", sayOff: "Awaaz: band" },
+  en: { ph: "Ask or tell Munshi…", off: "Munshi is being set up. It will start answering soon.", pro: "Munshi comes with Keepsake Pro.", left: n => n + " questions left today", think: "Writing…", listen: "Listening…", speak: "Speaking…", tap: "Speak, then tap Done", send: "Done", cancel: "Cancel", yes: "Yes", no: "No", open: "Open", chat: "Chat", hear: "Allow the microphone, or type your question.", brief: "Today's report · free", sayA: "Voice: when you speak", sayOn: "Voice: always", sayOff: "Voice: off" },
+  hi: { ph: "मुंशी से पूछिए या बोलिए…", off: "मुंशी अभी तैयार हो रहा है। जल्द ही जवाब देगा।", pro: "मुंशी Keepsake Pro में मिलता है।", left: n => "आज " + n + " सवाल बाकी", think: "लिख रहा हूँ…", listen: "सुन रहा हूँ…", speak: "बोल रहा हूँ…", tap: "बोलकर \"बस\" दबाइए", send: "बस, भेजो", cancel: "रहने दो", yes: "हाँ", no: "नहीं", open: "खोलें", chat: "चैट", hear: "माइक की अनुमति दीजिए, या टाइप करके पूछिए।", brief: "आज की रिपोर्ट · मुफ़्त", sayA: "आवाज़: जब आप बोलें", sayOn: "आवाज़: हमेशा", sayOff: "आवाज़: बंद" }
 };
-const muT = () => MUL[MU.lang] || MUL.hl;
-async function muPost(body) {
-  const r = await fetch("/api/qr", { method: "POST", cache: "no-store", headers: { "Content-Type": "application/json" }, body: JSON.stringify(Object.assign({ id: S.id }, body)) });
-  const j = await r.json().catch(() => ({})); if (!r.ok) { const e = new Error(j.error || "Something went wrong. Please try again."); e.j = j; throw e; } return j;
+const mzT = () => MZL[MZ.lang] || MZL.hl;
+const MZV = { overview: "Home", orders: "Orders", sales: "Sales", khata: "Udhaar", store: "Online store", menu: "Menu" };
+async function mzPost(body) {
+  let r;
+  try { r = await fetch("/api/qr", { method: "POST", cache: "no-store", headers: { "Content-Type": "application/json" }, body: JSON.stringify(Object.assign({ id: S.id }, body)) }); }
+  catch (e) { const x = new Error(MZ.lang === "en" ? "No internet. Check your connection and try again." : "Internet nahi mil raha. Connection check karke dobara try karein."); x.mood = "offline"; throw x; }
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) { const e = new Error(j.error || "Something went wrong. Please try again."); e.j = j; e.mood = r.status === 429 && j.left === 0 ? "sleepy" : r.status === 402 ? "locked" : r.status === 501 ? "namaste" : "cant"; throw e; }
+  return j;
 }
-function muCard(c) {
-  if (c.k === "num") return `<div class="muc"><div class="t">${esc(c.l)}</div><div class="big">${inr(c.v)}</div>${c.ch != null ? `<div class="ch ${c.ch >= 0 ? "up" : "dn"}">${c.ch >= 0 ? "▲" : "▼"} ${Math.abs(c.ch)}%</div>` : ""}</div>`;
-  if (c.k === "bars") return `<div class="muc">${bars(c.d.map(([l, v, t]) => ({ v: Math.max(0, v), l, t, lab: v >= 1000 ? Math.round(v / 100) / 10 + "k" : String(v) })))}</div>`;
-  if (c.k === "list") return `<div class="muc"><div class="t">${esc(c.t)}</div>${c.r.map(([a, b, v]) => `<div class="r"><span><b>${esc(a)}</b><small>${esc(b)}</small></span><b>${esc(v)}</b></div>`).join("")}</div>`;
-  if (c.k === "khata") return `<div class="muc"><div class="t">${esc(c.t)}</div>${c.r.map(([n, p, v, d]) => `<div class="r"><span><b>${esc(n)}</b><small>${d} days · ${esc(p)}</small></span><b>${inr(v)}</b><button type="button" class="btn" data-mur="${esc(p)}">Remind</button></div>`).join("")}</div>`;
+function mzMood(m, busy) {
+  MZ.mood = m; const a = $("#mzAv"); if (!a) return;
+  a.src = mzImg(m); a.classList.toggle("bob", !!busy || m === "listen" || m === "speak");
+  const t = mzT(), st = $("#mzSt");
+  if (st) st.textContent = m === "think" ? t.think : m === "listen" ? t.listen : m === "speak" ? t.speak : MZ.h && MZ.h.on === false ? "" : MZ.h && MZ.h.pro === false ? t.pro : MZ.h && MZ.h.left != null ? t.left(MZ.h.left) : "";
+}
+function mzCard(c) {
+  const head = (t, o) => `<div class="t"><span>${esc(t)}</span>${o && MZV[o] ? `<a data-mzo="${o}">${esc(mzT().open)} ${esc(MZV[o])} →</a>` : ""}</div>`;
+  if (c.k === "num") return `<div class="mzc">${head(c.l, c.o)}<div class="big">${c.v < 0 ? "−" : ""}${inr(Math.abs(c.v))}</div>${c.ch != null ? `<div class="ch ${c.ch >= 0 ? "up" : "dn"}">${c.ch >= 0 ? "▲" : "▼"} ${Math.abs(c.ch)}%</div>` : ""}</div>`;
+  if (c.k === "bars") return `<div class="mzc">${head("Daily sales", "sales")}${bars(c.d.map(([l, v, t]) => ({ v: Math.max(0, v), l, t, lab: v >= 1000 ? Math.round(v / 100) / 10 + "k" : String(v) })))}</div>`;
+  if (c.k === "list") return `<div class="mzc">${head(c.t, c.o)}${c.r.map(([a, b, v]) => `<div class="r"><span><b>${esc(a)}</b>${b ? `<small>${esc(b)}</small>` : ""}</span><b>${esc(v)}</b></div>`).join("")}</div>`;
+  if (c.k === "khata") return `<div class="mzc">${head(c.t, "khata")}${c.r.map(([n, p, v, d]) => `<div class="r"><span><b>${esc(n)}</b><small>${d} days · ${esc(p)}</small></span><b>${inr(v)}</b><button type="button" class="btn" data-mzr="${esc(p)}">Remind</button></div>`).join("")}</div>`;
   return "";
 }
-function muDraw() {
-  const box = $("#mul"); if (!box) return;
-  box.innerHTML = MU.log.map(m => m.card ? muCard(m.card) : m.confirm ? `<div class="mum">${esc(m.confirm.text)}${m.confirm.done ? "" : `<div class="muk"><button type="button" class="y" data-muy="${m.confirm.pid}">${muT().yes}</button><button type="button" data-mun="${m.confirm.pid}">${muT().no}</button></div>`}</div>`
-    : `<div class="mum${m.me ? " me" : ""}${m.err ? " err" : ""}${m.wait ? " wait" : ""}">${esc(m.t)}${m.link ? `<div class="muk"><a class="w" href="${esc(m.link.u)}" target="_blank" rel="noopener">${esc(m.link.l)}</a></div>` : ""}</div>`).join("");
+function mzDraw() {
+  const box = $("#mzl"); if (!box) return; const t = mzT();
+  box.innerHTML = MZ.log.map(m => m.card ? mzCard(m.card)
+    : m.confirm ? `<div class="mzr"><img src="${mzImg("confirm")}" alt=""><div class="mzm">${esc(m.confirm.text)}${m.confirm.done ? `<div class="mu" style="margin-top:8px;font-size:13px">✓ ${esc(m.confirm.done)}</div>` : `<div class="mzk"><button type="button" class="y" data-mzy="${m.confirm.pid}">${t.yes}</button><button type="button" data-mzn="${m.confirm.pid}">${t.no}</button></div>`}</div></div>`
+    : m.me ? `<div class="mzm me">${esc(m.t)}</div>`
+    : `<div class="mzr"><img src="${mzImg(m.mood)}" alt=""><div class="mzm${m.err ? " err" : ""}${m.wait ? " wait" : ""}${m.brief ? " brief" : ""}">${m.brief ? `<em>${esc(t.brief)}</em>` : ""}${esc(m.t)}${m.link ? `<div class="mzk"><a class="${/wa\.me/.test(m.link.u) ? "w" : "b"}" href="${esc(m.link.u)}" target="_blank" rel="noopener">${esc(m.link.l)}</a></div>` : ""}</div></div>`).join("");
   box.scrollTop = box.scrollHeight;
 }
-function muHead() {
-  const h = MU.h || {}, t = muT(), ok = h.on && h.pro;
-  $("#muh").innerHTML = `<span class="av">मुं</span><div><b>Munshi</b><small>${h.on === false ? "" : h.pro === false ? esc(t.pro) : h.left != null ? esc(t.left(h.left)) : ""}</small></div>
-    <select id="mulang" aria-label="Language">${[["hl", "Hinglish"], ["hi", "हिंदी"], ["en", "English"]].map(([k, l]) => `<option value="${k}"${MU.lang === k ? " selected" : ""}>${l}</option>`).join("")}</select>
-    <button type="button" id="muclr" title="${esc(t.clear)}">↺</button><button type="button" id="mux" aria-label="Close">✕</button>`;
-  $("#muq").innerHTML = ok ? (h.chips || []).map(c => `<button type="button" data-muq="${esc(c)}">${esc(c)}</button>`).join("") : "";
-  $("#muin").placeholder = t.ph; $("#muin").disabled = $("#musend").disabled = $("#mumic").disabled = !ok;
+function mzHead() {
+  const h = MZ.h || {}, t = mzT(), ok = h.on && h.pro;
+  $("#mzq").innerHTML = ok ? (h.chips || []).map(c => `<button type="button" data-mzq="${esc(c)}">${esc(c)}</button>`).join("") : "";
+  $("#mzin").placeholder = t.ph; $("#mzin").disabled = $("#mzSend").disabled = $("#mzMic").disabled = !ok;
+  const lb = $("#mzLang"); lb.textContent = { hl: "HL", hi: "हि", en: "EN" }[MZ.lang] || "HL"; lb.title = "Language: " + { hl: "Hinglish", hi: "हिंदी", en: "English" }[MZ.lang] + " (tap to change)"; lb.setAttribute("aria-label", lb.title);
+  const sb = $("#mzSay"); sb.textContent = MZ.say === "off" ? "🔇" : MZ.say === "on" ? "🔊" : "🔉"; sb.title = MZ.say === "off" ? t.sayOff : MZ.say === "on" ? t.sayOn : t.sayA; sb.setAttribute("aria-label", sb.title);
+  mzMood(MZ.mood, MZ.busy);
 }
-async function muOpen() {
-  const el = $("#mu"); el.hidden = false; document.body.style.overflow = "hidden";
-  el.innerHTML = `<div class="mup" role="dialog" aria-label="Munshi"><div class="muh" id="muh"></div><div class="mul" id="mul" aria-live="polite"></div><div class="muq" id="muq"></div>
-    <form class="mui" id="muf"><input id="muin" autocomplete="off" enterkeyhint="send" maxlength="500"><button type="button" class="mic" id="mumic" aria-label="Speak">🎤</button><button id="musend" aria-label="Send">➤</button></form></div>`;
-  if (!("webkitSpeechRecognition" in window || "SpeechRecognition" in window)) $("#mumic").hidden = true;
-  MU.log = [{ t: muT().think, wait: true }]; muHead(); muDraw();
-  try {
-    MU.h = await muPost({ action: "mu-hello", lang: MU.lang });
-    MU.log = [{ t: MU.h.brief.join("\n") }, ...MU.h.hist.slice(-8).map(h => ({ t: h.t, me: h.r === "u" }))];
-    if (!MU.h.on) MU.log.push({ t: muT().off }); else if (!MU.h.pro) MU.log.push({ t: muT().pro, link: { u: "#pro", l: "Keepsake Pro" } });
-  } catch (e) { MU.log = [{ t: e.message, err: true }]; }
-  muHead(); muDraw(); if (MU.h && MU.h.on && MU.h.pro && matchMedia("(min-width:901px)").matches) $("#muin").focus();
+function mzBuild() {
+  $("#mz").innerHTML = `<div class="mzp" role="dialog" aria-label="Munshi">
+    <header class="mzh"><img id="mzAv" src="${mzImg("namaste")}" alt="" width="56" height="56"><div><b>Munshi</b><small id="mzSt"></small></div>
+      <button type="button" id="mzSay"></button><button type="button" id="mzLang"></button>
+      <button type="button" id="mzNew" title="New chat" aria-label="New chat">↺</button><button type="button" id="mzX" aria-label="Close">✕</button></header>
+    <div class="mzl" id="mzl" aria-live="polite"></div><div class="mzq" id="mzq"></div>
+    <form class="mzi" id="mzf"><input id="mzin" autocomplete="off" enterkeyhint="send" maxlength="500"><button type="button" class="mzmic" id="mzMic" aria-label="Speak to Munshi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button><button class="mzgo" id="mzSend" aria-label="Send">➤</button></form>
+    <div class="mzlisten" id="mzListen" hidden><img src="${mzImg("listen")}" alt=""><b id="mzLT"></b><div class="wave"><i></i><i></i><i></i><i></i><i></i></div><p id="mzHeard"></p><div class="row2"><button type="button" id="mzStop"></button><button type="button" id="mzCancel"></button></div></div></div>`;
+  MZ.built = true;
 }
-function muClose() { $("#mu").hidden = true; $("#mu").innerHTML = ""; document.body.style.overflow = ""; }
-async function muAsk(q) {
-  q = String(q || "").trim(); if (!q || MU.busy) return;
-  MU.busy = true; $("#muin").value = ""; MU.log.push({ t: q, me: true }, { t: muT().think, wait: true }); muDraw();
-  try {
-    const r = await muPost({ action: "mu-ask", q }); MU.log.pop();
-    MU.log.push(...(r.confirm ? [] : [{ t: r.reply }]), ...(r.cards || []).map(c => ({ card: c })), ...(r.confirm ? [{ confirm: r.confirm }] : []));
-    if (r.left != null && MU.h) { MU.h.left = r.left; muHead(); }
-  } catch (e) { MU.log.pop(); MU.log.push({ t: e.message, err: true }); if (e.j && e.j.left != null && MU.h) { MU.h.left = e.j.left; muHead(); } }
-  MU.busy = false; muDraw();
-}
-async function muDo(pid, yes) {
-  const m = MU.log.find(x => x.confirm && x.confirm.pid === pid); if (!m || m.confirm.done) return;
-  m.confirm.done = true; muDraw();
-  try { const r = await muPost({ action: "mu-do", pid, yes }); MU.log.push(r.confirm ? { confirm: r.confirm } : { t: r.reply, link: r.link }); if (yes) { S.kh = null; S.khNew = null; } }
-  catch (e) { MU.log.push({ t: e.message, err: true }); }
-  muDraw();
-}
-$("#muB").onclick = muOpen;
-$("#mu").addEventListener("click", async e => {
-  const t = e.target;
-  if (t.id === "mu" || t.closest("#mux")) return muClose();
-  if (t.closest("#muclr")) { await muPost({ action: "mu-clear" }).catch(() => {}); MU.log = MU.log.slice(0, 1); return muDraw(); }
-  const q = t.closest("[data-muq]"); if (q) return muAsk(q.dataset.muq);
-  const y = t.closest("[data-muy]"); if (y) return muDo(y.dataset.muy, true);
-  const n = t.closest("[data-mun]"); if (n) return muDo(n.dataset.mun, false);
-  const r = t.closest("[data-mur]"); if (r) { r.disabled = true; try { const j = await muPost({ action: "kh-own-remind", phone: r.dataset.mur }); open(j.wa, "_blank"); } catch (err) { toast(err.message); } r.disabled = false; }
-  if (t.closest("#mumic")) {
-    const SR = window.SpeechRecognition || window.webkitSpeechRecognition, rec = new SR(), b = $("#mumic");
-    rec.lang = MU.lang === "en" ? "en-IN" : "hi-IN"; rec.interimResults = false; b.classList.add("on");
-    rec.onresult = ev => { const x = ev.results[0][0].transcript; $("#muin").value = x; muAsk(x); };
-    rec.onend = rec.onerror = () => b.classList.remove("on"); rec.start();
+async function mzOpen(fresh) {
+  $("#mzMini").hidden = true; const el = $("#mz"); el.hidden = false; $("#mzB").hidden = true;
+  if (!MZ.built) mzBuild();
+  if (fresh || !MZ.h) {
+    MZ.log = [{ t: mzT().think, wait: true, mood: "think" }]; mzHead(); mzDraw();
+    try {
+      MZ.h = await mzPost({ action: "mu-hello", lang: MZ.lang });
+      const fest = /^2026-11-(0[6-9]|1[01])$/.test(new Date(Date.now() + 19800000).toISOString().slice(0, 10));
+      MZ.last = fest ? "festival" : "namaste";
+      MZ.log = [{ t: MZ.h.brief.join("\n"), brief: true, mood: MZ.last }, ...MZ.h.hist.slice(-8).map(h => h.r === "u" ? { t: h.t, me: true } : { t: h.t, mood: "speak" })];
+      if (!MZ.h.on) MZ.log.push({ t: mzT().off, mood: "namaste" }); else if (!MZ.h.pro) { MZ.last = "locked"; MZ.log.push({ t: mzT().pro, mood: "locked", link: { u: "#pro", l: "Keepsake Pro" } }); }
+    } catch (e) { MZ.last = e.mood || "cant"; MZ.log = [{ t: e.message, err: true, mood: MZ.last }]; }
+    MZ.mood = MZ.last;
   }
+  mzHead(); mzDraw();
+  if (MZ.h && MZ.h.on && MZ.h.pro && matchMedia("(min-width:901px)").matches) $("#mzin").focus();
+}
+function mzClose() { mzStopRec(false); try { speechSynthesis.cancel(); } catch (e) {} $("#mz").hidden = true; $("#mzB").hidden = !S.id; }
+async function mzAsk(q, voice) {
+  q = String(q || "").trim(); if (!q || MZ.busy) return;
+  MZ.busy = true; $("#mzin").value = ""; MZ.log.push({ t: q, me: true }, { t: mzT().think, wait: true, mood: "think" }); mzMood("think", true); mzDraw();
+  try {
+    const r = await mzPost({ action: "mu-ask", q, voice: !!voice, lang: MZ.lang }); MZ.log.pop();
+    MZ.last = r.mood || "speak";
+    MZ.log.push(...(r.confirm ? [] : [{ t: r.reply, mood: MZ.last }]), ...(r.cards || []).map(c => ({ card: c })), ...(r.confirm ? [{ confirm: r.confirm }] : []));
+    if (r.left != null && MZ.h) MZ.h.left = r.left;
+    mzSpeakMaybe(r.reply, voice);
+  } catch (e) { MZ.log.pop(); MZ.last = e.mood || "cant"; MZ.log.push({ t: e.message, err: true, mood: MZ.last }); if (e.j && e.j.left != null && MZ.h) MZ.h.left = e.j.left; }
+  MZ.busy = false; MZ.mood = MZ.last; mzHead(); mzDraw();
+}
+async function mzDo(pid, yes) {
+  const m = MZ.log.find(x => x.confirm && x.confirm.pid === pid); if (!m || m.confirm.done) return;
+  m.confirm.done = yes ? mzT().yes : mzT().no; MZ.busy = true; mzMood("think", true); mzDraw();
+  try {
+    const r = await mzPost({ action: "mu-do", pid, yes }); MZ.last = r.mood || "speak";
+    MZ.log.push(r.confirm ? { confirm: r.confirm } : { t: r.reply, link: r.link, mood: MZ.last });
+    mzSpeakMaybe(r.reply, MZ.voiced);
+    if (r.go) mzLive(r.go, r.reply);
+  } catch (e) { MZ.last = e.mood || "cant"; MZ.log.push({ t: e.message, err: true, mood: MZ.last }); }
+  MZ.busy = false; MZ.mood = MZ.last; mzHead(); mzDraw();
+}
+// After a change: fresh data, then the screen that changed, with the changed row highlighted.
+async function mzLive(g, text) {
+  if (g.reload) { try { const j = await api("/api/customer-memories?id=" + S.id); if (j && j.data) S.d = j.data; } catch (e) {} S.stEdit = null; S.menuDraft = null; }
+  S.prof = null; if (g.v === "khata") { S.kh = null; S.khNew = null; } if (g.v === "sales") { S.bl = null; S.blNew = null; S.sale = null; }
+  if (g.v === "orders" && typeof loadOrders === "function") { try { await loadOrders(true); } catch (e) {} }
+  if (matchMedia("(max-width:900px)").matches) { mzClose(); $("#mzMiniI").src = mzImg(MZ.last); $("#mzMiniT").textContent = text; $("#mzMini").hidden = false; clearTimeout(MZ.mt); MZ.mt = setTimeout(() => { $("#mzMini").hidden = true; }, 9000); }
+  if (S.view === g.v) go(); else location.hash = "#" + g.v;
+  if (g.hi) setTimeout(() => mzFlash(g.hi), 450);
+}
+function mzFlash(t) {
+  const want = String(t).toLowerCase(), el = [...document.querySelectorAll("#main tr, #main .sl, #main li, #main .row, #main .oc, #main .cd")].filter(e => e.textContent.toLowerCase().includes(want)).sort((a, b) => a.textContent.length - b.textContent.length)[0];
+  if (el) { el.classList.add("mzflash"); el.scrollIntoView({ block: "center", behavior: "smooth" }); setTimeout(() => el.classList.remove("mzflash"), 2800); }
+}
+// ---------- voice ----------
+function mzSpeakMaybe(t, voiced) {
+  if (!t || !("speechSynthesis" in window) || MZ.say === "off" || (MZ.say === "auto" && !voiced)) return;
+  try {
+    speechSynthesis.cancel();
+    const L = MZ.lang === "en" ? "en-IN" : "hi-IN";
+    // Amounts are read as plain numbers ("1920 rupaye"); the Hindi voice says them the Indian way (lakh, hazaar).
+    const say = String(t).replace(/₹\s?([\d,]+(?:\.\d+)?)/g, (x, n) => n.replace(/,/g, "") + (MZ.lang === "en" ? " rupees" : " rupaye")).replace(/(\d),(?=\d)/g, "$1").replace(/[*_#>•·→]/g, " ").split(/(?<=[.!?।])\s+/).slice(0, 2).join(" ");
+    const u = new SpeechSynthesisUtterance(say), v = speechSynthesis.getVoices().find(v => String(v.lang).replace("_", "-").toLowerCase() === L.toLowerCase());
+    u.lang = L; if (v) u.voice = v; u.rate = 1.02;
+    u.onstart = () => mzMood("speak"); u.onend = u.onerror = () => mzMood(MZ.last);
+    speechSynthesis.speak(u);
+  } catch (e) {}
+}
+function mzListenUI(on) {
+  const L = $("#mzListen"); if (!L) return; const t = mzT();
+  L.hidden = !on; if (on) { $("#mzLT").textContent = t.listen; $("#mzHeard").textContent = t.tap; $("#mzStop").textContent = t.send; $("#mzCancel").textContent = t.cancel; }
+  mzMood(on ? "listen" : MZ.last, on);
+}
+function mzStopRec(send) { const r = MZ.rec; if (!r) return; MZ.rec = null; r.send = send; try { r.stop(); } catch (e) {} mzListenUI(false); }
+async function mzMic() {
+  if (MZ.rec) return mzStopRec(true);
+  try { speechSynthesis.cancel(); } catch (e) {}
+  if (MZ.h && MZ.h.voice && navigator.mediaDevices && window.MediaRecorder) return mzRecord();
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (SR) return mzRecognize(SR);
+  toast(mzT().hear);
+}
+// The phone's own speech recognition (free). Hindi mode hears Hindi words best; Munshi still replies in the chosen language.
+function mzRecognize(SR) {
+  const rec = new SR(); let text = "";
+  rec.lang = MZ.lang === "en" ? "en-IN" : "hi-IN"; rec.interimResults = true; rec.continuous = false;
+  rec.onresult = e => { text = [...e.results].map(r => r[0].transcript).join(" "); $("#mzHeard").textContent = text; };
+  rec.onerror = e => { if (e.error === "not-allowed" || e.error === "service-not-allowed") toast(mzT().hear); };
+  rec.onend = () => { const send = rec.send !== false; MZ.rec = null; mzListenUI(false); if (send && text.trim()) { MZ.voiced = true; mzAsk(text, true); } };
+  MZ.rec = { stop: () => rec.stop(), set send(v) { rec.send = v; if (!v) { try { rec.abort(); } catch (e) {} } } };
+  mzListenUI(true); try { rec.start(); } catch (e) { MZ.rec = null; mzListenUI(false); }
+}
+// Recorded clip → Sarvam (api/_munshi.js mu-stt). Stops by itself after a pause, or at 20 seconds.
+async function mzRecord() {
+  let stream; try { stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } }); } catch (e) { toast(mzT().hear); return; }
+  const type = ["audio/webm;codecs=opus", "audio/ogg;codecs=opus", "audio/webm", "audio/mp4"].find(t => MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(t)) || "";
+  const mr = new MediaRecorder(stream, type ? { mimeType: type } : {}), parts = [], t0 = Date.now();
+  let ac, timer;
+  try { ac = new (window.AudioContext || window.webkitAudioContext)(); const an = ac.createAnalyser(), buf = new Uint8Array(512); ac.createMediaStreamSource(stream).connect(an); let spoke = false, quiet = 0;
+    timer = setInterval(() => { an.getByteTimeDomainData(buf); let s = 0; for (const v of buf) s += (v - 128) * (v - 128); const rms = Math.sqrt(s / buf.length) / 128;
+      if (rms > 0.04) { spoke = true; quiet = 0; } else if (spoke && (quiet += 100) > 1400) mzStopRec(true); if (Date.now() - t0 > 20000) mzStopRec(true); }, 100); } catch (e) {}
+  mr.ondataavailable = e => { if (e.data && e.data.size) parts.push(e.data); };
+  mr.onstop = async () => {
+    clearInterval(timer); try { ac && ac.close(); } catch (e) {} stream.getTracks().forEach(t => t.stop());
+    if (mr.send === false || !parts.length) return;
+    const blob = new Blob(parts, { type: mr.mimeType || type || "audio/webm" }), secs = Math.round((Date.now() - t0) / 1000);
+    const b64 = await new Promise(ok => { const fr = new FileReader(); fr.onload = () => ok(String(fr.result).split(",")[1] || ""); fr.readAsDataURL(blob); });
+    MZ.busy = true; mzMood("think", true);
+    try { const r = await mzPost({ action: "mu-stt", audio: b64, mime: blob.type, secs, lang: MZ.lang }); MZ.busy = false; if (r.text) { MZ.voiced = true; mzAsk(r.text, true); } else mzHead(); }
+    catch (e) { MZ.busy = false; if (e.j && e.j.off) { MZ.h.voice = false; const SR = window.SpeechRecognition || window.webkitSpeechRecognition; if (SR) return mzRecognize(SR); } MZ.log.push({ t: e.message, err: true, mood: e.mood || "cant" }); mzHead(); mzDraw(); }
+  };
+  MZ.rec = mr; mzListenUI(true); mr.start();
+}
+$("#mzB").onclick = () => mzOpen(false);
+$("#mzMiniB").onclick = () => mzOpen(false);
+$("#mz").addEventListener("click", async e => {
+  const t = e.target;
+  if (t.id === "mz" || t.closest("#mzX")) return mzClose();
+  if (t.closest("#mzNew")) { await mzPost({ action: "mu-clear" }).catch(() => {}); MZ.log = MZ.log.slice(0, 1); return mzDraw(); }
+  if (t.closest("#mzSay")) { MZ.say = MZ.say === "auto" ? "on" : MZ.say === "on" ? "off" : "auto"; store.set("gk-mu-say", MZ.say); if (MZ.say === "off") try { speechSynthesis.cancel(); } catch (x) {} return mzHead(); }
+  if (t.closest("#mzLang")) { MZ.lang = MZ.lang === "hl" ? "hi" : MZ.lang === "hi" ? "en" : "hl"; store.set("gk-mu-lang", MZ.lang); return mzOpen(true); }
+  if (t.closest("#mzMic")) return mzMic();
+  if (t.closest("#mzStop")) return mzStopRec(true);
+  if (t.closest("#mzCancel")) return mzStopRec(false);
+  const q = t.closest("[data-mzq]"); if (q) { MZ.voiced = false; return mzAsk(q.dataset.mzq, false); }
+  const y = t.closest("[data-mzy]"); if (y) return mzDo(y.dataset.mzy, true);
+  const n = t.closest("[data-mzn]"); if (n) return mzDo(n.dataset.mzn, false);
+  const o = t.closest("[data-mzo]"); if (o) { if (matchMedia("(max-width:900px)").matches) mzClose(); location.hash = "#" + o.dataset.mzo; return; }
+  const r = t.closest("[data-mzr]"); if (r) { r.disabled = true; try { const j = await mzPost({ action: "kh-own-remind", phone: r.dataset.mzr }); open(j.wa, "_blank"); } catch (err) { toast(err.message); } r.disabled = false; }
 });
-$("#mu").addEventListener("change", e => { if (e.target.id === "mulang") { MU.lang = e.target.value; store.set("gk-mu-lang", MU.lang); muOpen(); } });
-$("#mu").addEventListener("submit", e => { e.preventDefault(); muAsk($("#muin").value); });
-addEventListener("keydown", e => { if (e.key === "Escape" && !$("#mu").hidden) muClose(); });
+
+$("#mz").addEventListener("submit", e => { e.preventDefault(); MZ.voiced = false; mzAsk($("#mzin").value, false); });
+addEventListener("keydown", e => { if (e.key === "Escape" && !$("#mz").hidden) { if (MZ.rec) mzStopRec(false); else mzClose(); } });
 
 // ---------- start ----------
 // Opens instantly from this phone's last copy of the shop, then refreshes everything at once in the background.

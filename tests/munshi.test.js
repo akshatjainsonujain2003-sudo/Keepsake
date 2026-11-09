@@ -7,6 +7,7 @@ const cmd = async (c, ...a) => {
     case "GET": return kv.has(a[0]) ? kv.get(a[0]) : null;
     case "SET": if (a.includes("NX") && kv.has(a[0])) return null; kv.set(a[0], a[1]); return "OK";
     case "DEL": return kv.delete(a[0]) ? 1 : 0;
+    case "GETDEL": { const v = kv.has(a[0]) ? kv.get(a[0]) : null; kv.delete(a[0]); return v; }
     case "INCR": case "DECR": { const n = (+kv.get(a[0]) || 0) + (c === "INCR" ? 1 : -1); kv.set(a[0], String(n)); return n; }
     case "EXPIRE": case "ZREMRANGEBYRANK": return 1;
     case "EXISTS": return kv.has(a[0]) ? 1 : 0;
@@ -202,4 +203,96 @@ test("the AI gets at most 5 rounds, the last one without tools", async () => {
   queue = [0, 1, 2, 3].map(() => claudeTool("get_udhaar", {})).concat([claudeText("Udhaar ₹0.")]);
   const r = await ask("udhaar?");
   assert.equal(r.reply, "Udhaar ₹0."); assert.equal(sent.length, 5); assert.deepEqual(sent[4].body.tool_choice, { type: "none" });
+});
+
+// ---------- shop skills: products, categories, stock, bills, profit ----------
+const G = require("../assets/gst.v2.js"), B = require("../api/_bill.js");
+const SELLER = [..."0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"].map(c => "08AAPFU0939F1Z" + c).find(G.gstinOk);
+const pageData = () => JSON.parse(kv.get("customer-memory:" + PID)).data;
+const yes = async r => M.handle({ action: "mu-do", id: PID, pid: r.confirm.pid, yes: true }, ctx());
+
+test("the clock goes in the message, not the instructions, and spoken amounts are passed as numbers", async () => {
+  reset();
+  queue = [claudeText("ok"), claudeText("ok")];
+  await ask("Ramesh ko dhai sau udhaar likho");
+  await ask("saadhe teen hazaar ka bill");
+  assert.equal(sent[0].body.system[0].text, sent[1].body.system[0].text);
+  assert.ok(!/India time\]/.test(sent[0].body.system[0].text));
+  assert.match(sent[0].body.messages.at(-1).content, /^\[\w{3} \d{4}-\d\d-\d\d \d\d:\d\d India time; reply in Hinglish; numbers heard: 250\]\nRamesh ko dhai sau udhaar likho$/);
+  assert.match(sent[1].body.messages.at(-1).content, /numbers heard: 3500\]/);
+  assert.equal(sent[0].body.tools[0].input_schema.additionalProperties, false);
+});
+
+test("add a product: an existing category is reused, a new one is made only when asked, the page updates live", async () => {
+  reset();
+  queue = [claudeTool("add_product", { name: "Sona Masoori Rice 10kg", price: 590, category: "staples", stock: 6 })];
+  const r = await ask("Sona masoori 10 kilo 590 ka add karo");
+  assert.match(r.confirm.text, /"Sona Masoori Rice 10kg" ₹590 menu mein jodun\? Category: Staples · stock 6/);
+  assert.equal(r.mood, "confirm");
+  const d = await yes(r);
+  assert.equal(d.mood, "order"); assert.equal(d.go.reload, true); assert.equal(d.go.hi, "Sona Masoori Rice 10kg");
+  assert.deepEqual(pageData().menu[0].items.at(-1), { n: "Sona Masoori Rice 10kg", p: "590", k: 6 });
+  queue = [claudeTool("add_product", { name: "Surf Excel 1kg", price: 140, category: "Home care" })];
+  const r2 = await ask("surf excel 140 ka jodo");
+  assert.match(r2.confirm.text, /Category: Home care \(nayi\)/);
+  await yes(r2);
+  assert.equal(pageData().menu[1].n, "Home care");
+  // the same item again is refused and sent back to the AI
+  queue = [claudeTool("add_product", { name: "basmati rice 5kg", price: 600, category: "Staples" }), claudeText("Ye pehle se hai.")];
+  const r3 = await ask("basmati add karo");
+  assert.equal(r3.confirm, undefined); assert.match(JSON.parse(sent.at(-1).body.messages.at(-1).content[0].content).error, /already on the menu at ₹650/);
+});
+
+test("update stock, price and category; ambiguous names are asked back", async () => {
+  reset();
+  queue = [claudeTool("update_product", { name: "basmati", add_stock: 20, price: 675 })];
+  const r = await ask("basmati 20 aur aaye, rate 675");
+  assert.match(r.confirm.text, /price ₹650 → ₹675, stock 12 → 32/);
+  await yes(r);
+  const it = pageData().menu[0].items[0]; assert.equal(it.p, "675"); assert.equal(it.k, 32);
+  queue = [claudeTool("update_product", { name: "Toor Dal 1kg", stock: 15, category: "Dal" })];
+  const r2 = await ask("toor dal 15 aa gayi, dal category mein daalo");
+  assert.match(r2.confirm.text, /stock not tracked → 15, back in stock, category Staples → Dal \(new\)/);
+  await yes(r2);
+  const m = pageData().menu; assert.equal(m[1].n, "Dal"); assert.equal(m[1].items[0].so, false); assert.equal(m[0].items.length, 1);
+  queue = [claudeTool("remove_product", { name: "rice" }), claudeText("Kaunsa?")];
+  const m2 = JSON.parse(kv.get("customer-memory:" + PID)); m2.data.menu[0].items.push({ n: "Brown Rice 1kg", p: "120" }); kv.set("customer-memory:" + PID, JSON.stringify(m2));
+  await ask("rice hata do");
+  assert.match(JSON.parse(sent.at(-1).body.messages.at(-1).content[0].content).error, /More than one item matches/);
+});
+
+test("stock and profit tools", async () => {
+  reset();
+  queue = [claudeTool("get_stock", { filter: "low", below: 5 }), claudeText("Toor dal khatam.")];
+  const r = await ask("kya khatam ho raha hai?");
+  assert.equal(r.mood, "lowstock"); assert.equal(r.cards[0].r[0][0], "Toor Dal 1kg");
+  await require("../api/_cost.js").handle({ action: "cs-set", id: PID, items: [{ n: "Basmati Rice 5kg", c: 600 }] }, ctx());
+  order(Date.now() - 60e3, 650, { item: "Basmati Rice 5kg", offline: true });
+  queue = [claudeTool("get_profit", { period: "today" }), claudeText("Aaj ₹50 profit.")];
+  const p = await ask("aaj kitna profit hua?");
+  assert.equal(p.mood, "profit"); assert.equal(p.cards[0].v, 50);
+});
+
+test("GST bill from speech: menu price and remembered HSN, udhaar bill goes to the khata", async () => {
+  reset();
+  queue = [claudeTool("create_bill", { items: [{ name: "basmati", qty: 2 }], paid_by: "upi" })];
+  assert.match(JSON.stringify(await ask("bill banao")), /Bills aren't set up yet/.source ? /./ : /x/);
+  await B.handle({ action: "bl-settings", id: PID, settings: { gst: "regular", gstin: SELLER, legal: "Sharma Kirana", prefix: "SK", inc: true, rate: 5, hsn: "1006" } }, ctx());
+  queue = [claudeTool("create_bill", { items: [{ name: "बासमती", qty: 2 }, { name: "Ghee 1L", qty: 1, price: 620 }], customer_name: "Anita", customer_phone: "9829033333", paid_by: "due" })];
+  const r = await ask("Anita ke liye 2 basmati aur ek ghee 620 ka, udhaar mein");
+  assert.match(r.confirm.text, /Anita ka bill banaun\? 2× Basmati Rice 5kg, 1× Ghee 1L\. Total ₹1,920 · Udhaar/);
+  assert.equal(r.cards.at(-1).r.at(-1)[2], "₹1,920");
+  const d = await yes(r);
+  assert.equal(d.mood, "bill"); assert.match(d.link.u, /^\/bill\/\w+/); assert.match(d.reply, /Bill SK\/\d\d-\d\d\/0001 ban gaya: ₹1,920\. Udhaar mein likh diya, ab ₹1,920 baaki\./);
+  assert.equal((await fake.getj("kh:" + PID + ":9829033333")).e[0].a, 1920);
+  // a second tap on Haan does nothing
+  assert.equal((await M.handle({ action: "mu-do", id: PID, pid: r.confirm.pid, yes: true }, ctx())).status, 410);
+});
+
+test("udhaar names in Devanagari find the customer", async () => {
+  reset();
+  await require("../api/_khata.js").handle({ action: "kh-own-add", id: PID, phone: "9876543210", name: "Ramesh Kumar", amount: 500, kind: "give" }, ctx());
+  queue = [claudeTool("send_udhaar_reminder", { customer: "रमेश" })];
+  const r = await ask("रमेश को याद दिलाओ");
+  assert.match(r.confirm.text, /Ramesh Kumar \(9876543210\)/);
 });

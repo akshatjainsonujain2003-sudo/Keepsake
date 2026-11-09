@@ -61,10 +61,11 @@ async function placeOrder(b, ip) {
   const fee = direct && mode0 === "delivery" && dfee && !(fd && sub >= fd) ? dfee : 0, tot = sub + fee;
   if (direct && !phone) return E(400, "Please add your 10-digit mobile number.");
   await require("./_cost").attach(b.id, items); // what each item cost the shop right now (owner only, for profit)
-  const o = { ref, at: now, items, tot, name: clip(b.name, 40), phone, mode: mode0, addr: clip(b.addr, 160), note: clip(b.note, 160), st: "new", ts: {}, ...(fee ? { fee } : {}), ...(direct ? { direct: true, pay: b.pay === "upi" ? "upi" : "cod" } : {}) };
+  const o = { ref, at: now, items, tot, name: clip(b.name, 40), phone, mode: mode0, addr: clip(b.addr, 160), note: clip(b.note, 160), st: "new", ts: {}, stk: 1, ...(fee ? { fee } : {}), ...(direct ? { direct: true, pay: b.pay === "upi" ? "upi" : "cod" } : {}) };
   if ((await db.cmd("SET", "bzo:" + b.id + ":" + ref, JSON.stringify(o), "NX", "EX", KEEP)) !== "OK") return { ok: true, ref, dup: true };
   await db.cmd("ZADD", "bzoz:" + b.id, now, ref);
   await db.cmd("ZREMRANGEBYRANK", "bzoz:" + b.id, 0, -(MAXO + 1));
+  await require("./_stock").move(b.id, items, -1); // counted stock goes down (stk: put back if the order is cancelled)
   await touchCustomer(b.id, o, now);
   // Ping the owner's phones (the dashboard app). No data travels in the push; the app fetches the order itself.
   try { await require("./_hq").notify("bzp:" + b.id); } catch (e) { console.error("order push", e.message); }
@@ -117,12 +118,13 @@ async function ownerSale(id, m, b) {
   if (!items.length) return E(400, "Add at least one item.");
   await require("./_cost").attach(id, items);
   const sub = items.reduce((t, x) => t + x.q * x.p, 0), disc = Math.min(sub, Math.max(0, Math.round(+b.disc || 0))), tot = sub - disc, now = Date.now();
-  const o = { at: now, items, tot, name: clip(b.name, 40), phone: ph10(b.phone), mode: "walkin", addr: "", note: clip(b.note, 160), st: "done", ts: { done: now }, offline: true, pay: ["cash", "upi", "card"].includes(b.pay) ? b.pay : "cash", ...(disc ? { disc } : {}) };
+  const o = { at: now, items, tot, name: clip(b.name, 40), phone: ph10(b.phone), mode: "walkin", addr: "", note: clip(b.note, 160), st: "done", ts: { done: now }, offline: true, stk: 1, pay: ["cash", "upi", "card"].includes(b.pay) ? b.pay : "cash", ...(disc ? { disc } : {}) };
   for (let k = 0; k < 6; k++) {
     o.ref = mkRef();
     if ((await db.cmd("SET", "bzo:" + id + ":" + o.ref, JSON.stringify(o), "NX", "EX", KEEP)) !== "OK") continue;
     await db.cmd("ZADD", "bzoz:" + id, now, o.ref);
     await db.cmd("ZREMRANGEBYRANK", "bzoz:" + id, 0, -(MAXO + 1));
+    await require("./_stock").move(id, items, -1);
     await touchCustomer(id, o, now);
     return { ok: true, order: o };
   }
@@ -168,6 +170,9 @@ async function handle(b, ctx) {
     if (!REF.test(ref) || !ST.includes(st)) return E(400, "Invalid order.");
     const k = "bzo:" + id + ":" + ref, o = await db.getj(k);
     if (!o) return E(404, "That order wasn't found.");
+    // A cancelled order puts its items back in stock; taking it up again takes them out again.
+    if (st === "cancel" && o.st !== "cancel" && o.stk) { await require("./_stock").move(id, o.items, 1); o.stk = 0; }
+    else if (st !== "cancel" && o.st === "cancel" && o.stk === 0) { await require("./_stock").move(id, o.items, -1); o.stk = 1; }
     o.st = st; o.ts = o.ts || {}; o.ts[st] = Date.now();
     if (st === "done" && o.direct && o.phone && !o.loy && !(m.data && m.data.loy && m.data.loy.ord === false)) {
       try { const r = await require("./_loyal").orderStamp(id, o.phone, o.name); if (r) o.loy = r; } catch (e) {}
