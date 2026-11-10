@@ -7,7 +7,7 @@
 <meta name="description" content="Run your shop from one place: orders, menu, customers, offers and stats.">
 <meta name="robots" content="noindex,nofollow">
 <meta name="theme-color" content="#0B0B14">
-<script>try{var t=localStorage.getItem("gk-theme");if(t==="dark"||(!t&&matchMedia("(prefers-color-scheme: dark)").matches))document.documentElement.classList.add("dk")}catch(e){}</script>
+<script>try{if(localStorage.getItem("gk-lang")==="hi")document.documentElement.classList.add("hi");var t=localStorage.getItem("gk-theme");if(t==="dark"||(!t&&matchMedia("(prefers-color-scheme: dark)").matches))document.documentElement.classList.add("dk")}catch(e){}</script>
 <link rel="icon" href="/assets/brand/favicon.ico" sizes="any"><link rel="icon" type="image/svg+xml" href="/assets/brand/favicon.svg"><link rel="icon" type="image/png" sizes="192x192" href="/assets/brand/icon-192.png"><link rel="apple-touch-icon" href="/assets/brand/icon-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@600;700;800&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap">
@@ -464,6 +464,21 @@ html.dk .trio,html.dk .trio a+a{border-color:#0B0B1426}
 @media (min-width:901px){.sc4{display:flex;gap:10px;margin:16px 0 0}.sc4 a{flex-direction:row;gap:10px;padding:8px 18px 8px 8px;border-radius:99px;background:var(--card);border:1.5px solid var(--line);font-size:14.5px}.sc4 i{width:40px;height:40px;border-radius:50%;border:0;background:var(--soft)}.sc4 a.on{background:var(--ye);border-color:var(--ye);color:#0B0B14}.sc4 a.on i{background:#0B0B1414}
   .hero2{padding:30px 34px}.spk{height:84px}.spk u{width:14px}}
 @media (max-width:900px){.hero2{padding:20px}.trio a{padding:0 10px}}
+
+/* ---------- dashboard v4: Hindi switch, side panel on laptops ---------- */
+.lgb b{font:800 17px/1 system-ui,sans-serif}
+@media (max-width:900px){.hh{gap:10px}.hh .thm{width:40px;height:40px;border-radius:12px}.hn h1{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;font-size:22px}}
+.thm.wl.lgb b{width:20px;text-align:center}
+html.hi .H,html.hi h1,html.hi h2{letter-spacing:0}
+html.hi .nav small,html.hi .mg{letter-spacing:.04em}
+@media (min-width:1100px){
+  /* a bill, a customer's khata or a form opens as a panel on the right; the list stays in view on the left */
+  .pm{justify-content:flex-end;align-items:stretch;padding:0;background:#0B0B1438}
+  .pmb,.pmb.blk{width:min(560px,46vw);max-height:none;height:100vh;border-radius:28px 0 0 28px;padding:28px;box-shadow:-24px 0 60px -30px #000a;animation:pin .2s ease-out}
+  .pmb.blk{width:min(680px,52vw)}
+  @keyframes pin{from{transform:translateX(40px);opacity:0}to{transform:none;opacity:1}}
+}
+@media (min-width:1100px) and (prefers-reduced-motion:reduce){.pmb{animation:none}}
 </style>
 
 
@@ -529,15 +544,15 @@ const IC = {
 };
 const NAV = [
   ["Today", [["overview", "Home", "home"], ["orders", "Orders", "orders"], ["sales", "Sales", "bill"], ["khata", "Udhaar khata", "book"]]],
-  ["Shop", [["menu", "Menu & prices", "menu"], ["store", "Online store", "orders"], ["page", "My page", "page"], ["qr", "QR & cards", "qr"]]],
+  ["Shop", [["menu", "Products", "menu"], ["page", "My page", "page"], ["qr", "QR & cards", "qr"]]],
   ["Customers", [["customers", "Customers & loyalty", "people"], ["messages", "Messages", "wa"], ["reviews", "Reviews", "star"]]],
   ["Grow", [["offers", "Offers", "tag"], ["analytics", "Analytics", "chart"], ["pro", "Keepsake Pro", "star"]]],
   ["Settings", [["settings", "Settings", "gear"]]]
 ];
 // Screens that live inside another one (shown as tabs there), and old addresses that still work.
-const SUB = { offers: [["offers", "Today's offer"], ["campaigns", "Offer QRs"], ["nearby", "Walk-in offers"]], settings: [["settings", "Staff & alerts"], ["payments", "Payments & plan"]] };
-const PARENT = { campaigns: "offers", nearby: "offers", payments: "settings" }, ALIAS = { bills: "sales" };
-const TITLES = Object.assign(Object.fromEntries(NAV.flatMap(g => g[1]).map(x => [x[0], x[1]])), { campaigns: "Offer QRs", nearby: "Walk-in offers", payments: "Payments" });
+const SUB = { menu: [["menu", "Prices & stock"], ["store", "Online store"]], offers: [["offers", "Today's offer"], ["campaigns", "Offer QRs"], ["nearby", "Walk-in offers"]], settings: [["settings", "Staff & alerts"], ["payments", "Payments & plan"]] };
+const PARENT = { store: "menu", campaigns: "offers", nearby: "offers", payments: "settings" }, ALIAS = { bills: "sales" };
+const TITLES = Object.assign(Object.fromEntries(NAV.flatMap(g => g[1]).map(x => [x[0], x[1]])), { store: "Online store", campaigns: "Offer QRs", nearby: "Walk-in offers", payments: "Payments" });
 // Code only some screens need is fetched the first time you open them, so the dashboard opens fast.
 const LIB = { gst: ["/assets/gst.v2.js", "/assets/gst-export.v2.js"], qr: ["https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js", "/assets/qr-cards.v9.js", "css:https://fonts.googleapis.com/css2?family=Archivo+Black&family=Rozha+One&display=swap"] };
 const NEEDS = { sales: ["gst"], qr: ["qr"], campaigns: ["qr"] };
@@ -603,7 +618,7 @@ function shell() {
   const d = S.d || {}, logo = /^\/api\/img\?id=|^https:\/\//.test(d.logo || "") ? d.logo : "";
   const others = S.pages.filter(p => p.kind === "biz");
   $("#shopc").innerHTML = `<i style="${logo ? `background-image:url('${esc(logo)}')` : ""}">${logo ? "" : esc(ini(shopName()).charAt(0))}</i><div style="min-width:0;flex:1"><b>${esc(shopName())}</b><small>${esc(location.host + "/b/" + S.id)}</small>${others.length > 1 ? `<select id="pick" aria-label="Switch shop">${others.map(p => `<option value="${p.id}"${p.id === S.id ? " selected" : ""}>${esc(p.title)}</option>`).join("")}</select>` : ""}</div>`;
-  $("#thmS").innerHTML = themeBtn(true);
+  $("#thmS").innerHTML = langBtn(true) + themeBtn(true);
   const pk = $("#pick"); if (pk) pk.onchange = () => { location.href = "/shops/dashboard?id=" + pk.value; };
   const n = newCount();
   const TABS = [["overview", "Home", "home"], ["orders", "Orders", "orders"], ["sales", "Sales", "bill"], ["khata", "Udhaar", "book"]];
@@ -617,9 +632,9 @@ function shell() {
     $("#more").hidden = false;
   };
   $("#moreB").onclick = () => {
-    const DESC = { menu: "Change a price, mark sold out", store: "Products, photos, stock and profit", page: "Edit how your page looks", qr: "Download and print your QR", settings: "Staff PIN, alerts, payments, plan", customers: "Who ordered, loyalty stamps", messages: "Send an offer on WhatsApp", reviews: "Your Google review link", offers: "Today's offer and offer QRs", analytics: "Scans, taps and orders", pro: "Online store, bills, udhaar" };
+    const DESC = { menu: "Prices, stock, photos, online store", page: "Edit how your page looks", qr: "Download and print your QR", settings: "Staff PIN, alerts, payments, plan", customers: "Who ordered, loyalty stamps", messages: "Send an offer on WhatsApp", reviews: "Your Google review link", offers: "Today's offer and offer QRs", analytics: "Scans, taps and orders", pro: "Online store, bills, udhaar" };
     const G = [["Shop", NAV[1][1].concat(NAV[4][1])], ["Customers", NAV[2][1]], ["Grow", NAV[3][1]]];
-    $("#moreIn").innerHTML = `<div class="mh"><b>${esc(shopName())}</b><span class="mhr">${themeBtn()}<button type="button" class="lnk" data-x="1">Close</button></span></div>
+    $("#moreIn").innerHTML = `<div class="mh"><b>${esc(shopName())}</b><span class="mhr">${langBtn()}${themeBtn()}<button type="button" class="lnk" data-x="1">Close</button></span></div>
       <label class="msr"><span class="vh">Search the dashboard</span><input id="mq" type="search" placeholder="Search: price, QR, staff PIN…" autocomplete="off"></label>`
       + G.map(([g, items]) => `<div class="mgp"><small class="mg">${g}</small><div class="mrows">${items.map(([k, l, ic]) => `<a href="#${k}" data-q="${esc((l + " " + (DESC[k] || "")).toLowerCase())}" class="${S.view === k || PARENT[S.view] === k ? "on" : ""}"><i>${IC[ic]}</i><span><b>${l}</b><small>${DESC[k] || ""}</small></span></a>`).join("")}</div></div>`).join("")
       + `<p class="mnone" id="mnone" hidden>Nothing matches. Try another word.</p><a class="mlink" href="/b/${S.id}" target="_blank" rel="noopener">${IC.ext} Open my page</a>` + (S.pages.filter(p => p.kind === "biz").length > 1 ? `<a class="mlink" href="/shops/my">${IC.home} All my shops</a>` : "");
@@ -674,6 +689,46 @@ document.addEventListener("click", e => { const b = e.target.closest("[data-thm]
   const dk = !isDark(); document.documentElement.classList.toggle("dk", dk); try { localStorage.setItem("gk-theme", dk ? "dark" : "light"); } catch (er) {}
   const mt = document.querySelector('meta[name="theme-color"]'); if (mt) mt.content = dk ? "#12121F" : "#0B0B14";
   document.querySelectorAll("[data-thm]").forEach(x => { x.outerHTML = themeBtn(x.classList.contains("wl")); }); });
+// ---------- Hindi switch ----------
+// Exact-phrase dictionary applied to what is on screen (and to anything drawn later). Names, numbers and messages to customers are never changed.
+const HI = { "Home": "होम", "Orders": "ऑर्डर", "Sales": "बिक्री", "Udhaar khata": "उधार खाता", "Udhaar": "उधार", "Products": "प्रोडक्ट", "My page": "मेरा पेज", "QR & cards": "QR और कार्ड",
+  "Customers & loyalty": "ग्राहक और लॉयल्टी", "Customers": "ग्राहक", "Messages": "मैसेज", "Reviews": "रिव्यू", "Offers": "ऑफ़र", "Analytics": "आँकड़े", "Settings": "सेटिंग", "More": "और",
+  "Today": "आज", "Shop": "दुकान", "Grow": "बढ़ाएँ", "Add": "जोड़ें", "Close": "बंद करें", "Cancel": "रद्द करें", "Save": "सेव करें", "Done": "पूरा", "All": "सब",
+  "New sale": "नई बिक्री", "Add udhaar": "उधार जोड़ें", "Got payment": "पेमेंट मिला", "Add product": "प्रोडक्ट जोड़ें", "Give stamp": "स्टैम्प दें", "Share page": "पेज शेयर करें", "Product": "प्रोडक्ट", "Stamp": "स्टैम्प",
+  "Bill it at the counter, with GST if you use it": "काउंटर पर बिल बनाएँ, GST के साथ भी", "Write down what a customer owes you": "ग्राहक का उधार लिखें", "A customer paid back their udhaar": "ग्राहक ने उधार चुकाया",
+  "A new item with its price and photo": "नया सामान, दाम और फ़ोटो के साथ", "Add a loyalty stamp for a customer": "ग्राहक को लॉयल्टी स्टैम्प दें",
+  "Prices, stock, photos, online store": "दाम, स्टॉक, फ़ोटो, ऑनलाइन स्टोर", "Edit how your page looks": "अपने पेज का रूप बदलें", "Download and print your QR": "QR डाउनलोड और प्रिंट करें",
+  "Staff PIN, alerts, payments, plan": "स्टाफ़ PIN, अलर्ट, पेमेंट, प्लान", "Who ordered, loyalty stamps": "किसने ऑर्डर किया, लॉयल्टी स्टैम्प", "Send an offer on WhatsApp": "WhatsApp पर ऑफ़र भेजें",
+  "Your Google review link": "आपका Google रिव्यू लिंक", "Today's offer and offer QRs": "आज का ऑफ़र और ऑफ़र QR", "Scans, taps and orders": "स्कैन, टैप और ऑर्डर", "Online store, bills, udhaar": "ऑनलाइन स्टोर, बिल, उधार",
+  "Open my page": "मेरा पेज खोलें", "Dark mode": "डार्क मोड", "Light mode": "लाइट मोड",
+  "Open": "खुला", "Closed": "बंद", "Taking orders": "ऑर्डर चालू", "Orders paused": "ऑर्डर रुके हैं", "Shop open": "दुकान खुली", "View my page": "मेरा पेज देखें",
+  "Needs you": "आपका ध्यान चाहिए", "Live orders": "चालू ऑर्डर", "See all": "सब देखें", "Sales today": "आज की बिक्री", "Orders today": "आज के ऑर्डर", "Ordering is off": "ऑर्डर बंद हैं",
+  "All caught up.": "सब काम पूरा.", "Sales · last 7 days": "बिक्री · पिछले 7 दिन", "Top sellers · 7 days": "सबसे ज़्यादा बिके · 7 दिन", "Finish setting up": "सेटअप पूरा करें", "Page scans · last 7 days": "पेज स्कैन · पिछले 7 दिन",
+  "New": "नया", "Preparing": "तैयार हो रहा है", "Ready": "तैयार", "Cancelled": "रद्द", "Accept & prepare": "स्वीकार करें", "Mark ready": "तैयार हो गया", "Mark done": "पूरा हुआ", "Add to udhaar": "उधार में जोड़ें", "Cancel order": "ऑर्डर रद्द करें",
+  "Total": "कुल", "Pickup": "पिकअप", "Delivery": "डिलीवरी", "No new orders": "कोई नया ऑर्डर नहीं", "Nothing here": "यहाँ कुछ नहीं",
+  "Estimate": "एस्टीमेट", "Bill settings": "बिल सेटिंग", "Payment due": "बाक़ी पेमेंट", "GST this month": "इस महीने का GST", "Unpaid": "बाक़ी", "Paid": "चुकाया", "Estimates": "एस्टीमेट", "Returns": "वापसी",
+  "+ Udhaar": "+ उधार", "To collect": "वसूलना है", "Came back this month": "इस महीने वापस आया", "Over 30 days": "30 दिन से ज़्यादा", "Say they've paid": "कहते हैं चुका दिया", "Remind all": "सबको याद दिलाएँ",
+  "Due": "बाक़ी", "Cleared": "चुकता", "Udhaar given": "उधार दिया", "Payment received": "पेमेंट मिला", "Save payment": "पेमेंट सेव करें", "Save udhaar": "उधार सेव करें", "Record a payment": "पेमेंट दर्ज करें",
+  "Customer's mobile": "ग्राहक का मोबाइल", "Name": "नाम", "Amount (₹)": "रकम (₹)", "Price (₹)": "दाम (₹)", "Category": "कैटेगरी",
+  "Menu & prices": "मेन्यू और दाम", "Prices & stock": "दाम और स्टॉक", "Online store": "ऑनलाइन स्टोर", "Full editor": "पूरा एडिटर", "In stock": "स्टॉक में", "Sold out": "ख़त्म", "★ Bestseller": "★ बेस्टसेलर",
+  "+ Add product": "+ प्रोडक्ट जोड़ें", "Add many": "कई जोड़ें", "Store settings": "स्टोर सेटिंग", "Profit": "मुनाफ़ा", "7 days": "7 दिन", "This month": "इस महीने", "Last month": "पिछले महीने",
+  "Add cost prices": "ख़रीद दाम जोड़ें", "View store": "स्टोर देखें", "Margin": "मार्जिन", "Edit product": "प्रोडक्ट बदलें", "Download list": "लिस्ट डाउनलोड करें", "Regulars": "पुराने ग्राहक",
+  "Staff & alerts": "स्टाफ़ और अलर्ट", "Payments & plan": "पेमेंट और प्लान", "Today's offer": "आज का ऑफ़र", "Offer QRs": "ऑफ़र QR", "Walk-in offers": "वॉक-इन ऑफ़र",
+  "Team & settings": "टीम और सेटिंग", "Payments": "पेमेंट", "Offers & marketing": "ऑफ़र और मार्केटिंग", "Share on WhatsApp": "WhatsApp पर शेयर करें", "Share my page on WhatsApp": "मेरा पेज WhatsApp पर शेयर करें" };
+const HIP = { "Search name or number": "नाम या नंबर खोजें", "Search bill no., name or number": "बिल नं., नाम या नंबर खोजें", "Search items": "सामान खोजें", "Search products": "प्रोडक्ट खोजें", "Customer's name": "ग्राहक का नाम", "Mobile number": "मोबाइल नंबर", "Search: price, QR, staff PIN…": "खोजें: दाम, QR, स्टाफ़ PIN…" };
+const EN = {}, ENP = {}; Object.keys(HI).forEach(k => EN[HI[k]] = k); Object.keys(HIP).forEach(k => ENP[HIP[k]] = k);
+const isHi = () => document.documentElement.classList.contains("hi");
+function trNode(root, hi) {
+  const D = hi ? HI : EN, P = hi ? HIP : ENP;
+  const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT); let n;
+  while ((n = w.nextNode())) { const t = n.nodeValue, k = t.trim(); if (k && D[k] && !(n.parentNode && n.parentNode.closest && n.parentNode.closest("[data-notr],input,textarea,select,script,style"))) n.nodeValue = t.replace(k, D[k]); }
+  if (root.querySelectorAll) root.querySelectorAll("[placeholder]").forEach(e => { const p = P[e.getAttribute("placeholder")]; if (p) e.setAttribute("placeholder", p); });
+}
+function langBtn(label) { return `<button type="button" class="thm lgb${label ? " wl" : ""}" data-lang data-notr aria-label="${isHi() ? "Switch to English" : "हिंदी में देखें"}"><b>${isHi() ? "A" : "अ"}</b>${label ? `<span>${isHi() ? "English" : "हिंदी"}</span>` : ""}</button>`; }
+document.addEventListener("click", e => { const b = e.target.closest("[data-lang]"); if (!b) return;
+  const hi = !isHi(); document.documentElement.classList.toggle("hi", hi); try { localStorage.setItem("gk-lang", hi ? "hi" : "en"); } catch (er) {}
+  document.querySelectorAll("[data-lang]").forEach(x => { x.outerHTML = langBtn(x.classList.contains("wl")); }); if (hi) trNode(document.body, true); else { $("#more").hidden = true; go(); } });
+new MutationObserver(ms => { if (!isHi()) return; ms.forEach(m => m.addedNodes.forEach(n => { if (n.nodeType === 1) trNode(n, true); else if (n.nodeType === 3 && n.parentNode) { const k = n.nodeValue.trim(); if (HI[k] && !n.parentNode.closest("[data-notr],input,textarea,select")) n.nodeValue = n.nodeValue.replace(k, HI[k]); } })); }).observe(document.body, { childList: true, subtree: true });
 function head(title, sub, right) { return `<div class="top"><div><h1 class="H">${title}</h1>${sub ? `<p>${sub}</p>` : ""}</div>${right == null ? switches() : right}</div>`; }
 function inactive() { return S.active ? "" : `<div class="bar"><span><b>Your page isn't live yet.</b> Customers can't open it until it's activated.</span><a class="btn" href="/shops/studio?edit=${S.id}#publish">Activate my page</a></div>`; }
 function bars(days, cls) {
@@ -807,7 +862,7 @@ ${N.length ? `    <div class="cd"><div class="ch"><h2 class="H">Needs you</h2>${
   sc.push([`href="${share}" target="_blank" rel="noopener"`, "share", "Share page"]);
   return inactive() + proBar() +
   `<header class="hh"><i class="av" style="${logo ? `background-image:url('${esc(logo)}')` : ""}">${logo ? "" : esc(ini(shopName()).charAt(0))}</i>
-    <div class="hn"><small>${greet()} · ${now.toLocaleDateString("en-IN", { weekday: "short", day: "numeric", month: "short" })}</small><h1 class="H">${esc(shopName())}</h1></div>${themeBtn()}</header>
+    <div class="hn"><small>${greet()} · ${now.toLocaleDateString("en-IN", { weekday: "short", day: "numeric", month: "short" })}</small><h1 class="H" data-notr>${esc(shopName())}</h1></div>${langBtn()}${themeBtn()}</header>
   <div class="hc"><label class="cp${d.shut ? " off" : ""}"><input type="checkbox" data-sw="open"${d.shut ? "" : " checked"}><i></i>${d.shut ? "Closed" : "Open"}</label>
     ${d.ord ? `<label class="cp${d.pause || d.shut ? " off" : ""}"><input type="checkbox" data-sw="take"${d.pause || d.shut ? "" : " checked"}${d.shut ? " disabled" : ""}><i></i>${d.pause || d.shut ? "Orders paused" : "Taking orders"}</label>` : ""}
     <a class="cp ln" href="/b/${S.id}" target="_blank" rel="noopener">My page ${IC.ext}</a></div>
