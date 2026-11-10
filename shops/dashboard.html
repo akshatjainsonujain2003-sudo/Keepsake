@@ -363,6 +363,43 @@ a.kpi{text-decoration:none;color:inherit;transition:transform .15s}a.kpi:active{
 .khpitch .H{margin:10px 0 6px;font-size:clamp(24px,3vw,32px)}.khf{margin-top:18px}.khf p{margin:4px 0 0;font-size:14px}
 @media (max-width:420px){.khk .kpi b{font-size:22px}}
 
+
+/* ---------- dashboard v2 (part 1): Add button, grouped More menu with search, home order, screen fade ---------- */
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.mrows{display:grid;gap:6px}
+.mrows a,.mrows button{display:grid;grid-template-columns:44px minmax(0,1fr);gap:12px;align-items:center;min-height:60px;padding:8px 12px 8px 8px;border:0;border-radius:16px;background:#ffffff10;color:#fff;text-decoration:none;text-align:left;font:inherit;cursor:pointer;touch-action:manipulation}
+.mrows a[hidden]{display:none}
+.mrows i{display:grid;place-items:center;width:44px;height:44px;border-radius:12px;background:#ffffff14}
+.mrows i svg{width:22px;height:22px}
+.mrows b{display:block;font-weight:700;font-size:15px;line-height:1.25}
+.mrows small{display:block;margin-top:2px;color:#ffffffa6;font-size:12.5px;line-height:1.3}
+.mrows a.on{background:var(--or)}.mrows a.on small{color:#ffffffd9}
+.mrows a:active,.mrows button:active{transform:scale(.985)}
+.mrows a:focus-visible,.mrows button:focus-visible,.msr input:focus-visible,.tabbar .add:focus-visible{outline:2px solid var(--ye);outline-offset:2px}
+.mrows button[data-add="sale"]{background:var(--ye);color:var(--ink)}.mrows button[data-add="sale"] i{background:#0b0b1414}.mrows button[data-add="sale"] small{color:#0b0b14b3}
+.msr{display:block;margin:2px 0 4px}
+.msr input{width:100%;height:48px;padding:0 16px;border-radius:14px;border:1.5px solid #ffffff2a;background:#ffffff0d;color:#fff;font:500 16px Inter,sans-serif}
+.msr input::placeholder{color:#ffffff80}
+.mnone{margin:18px 6px;color:#ffffffb3;text-align:center}
+.mi .ph{font:800 18px 'Inter Tight',sans-serif;color:#8d8778}
+.g2.first{margin-bottom:14px}
+.sws{display:none}
+@keyframes vin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+#main.vin{animation:vin .22s ease-out}
+@media (prefers-reduced-motion:reduce){#main.vin{animation:none}}
+@media (max-width:900px){
+  .tabbar .add{flex:none;width:64px;padding:0;gap:3px;color:#fff}
+  .tabbar .add i{display:grid;place-items:center;width:52px;height:52px;margin-top:-26px;border-radius:50%;background:var(--ye);color:var(--ink);box-shadow:0 0 0 5px var(--side),0 10px 22px -8px #000a}
+  .tabbar .add i svg{width:26px;height:26px}
+  .tabbar .add:active i{transform:scale(.94)}
+  .qa{display:none}
+  .sws{display:inline}.swl{display:none}
+  .top{margin-bottom:16px;gap:12px}
+  .top .tg{flex-wrap:nowrap;gap:6px}
+  .top .tg .sw{flex:1 1 0;min-width:0;gap:7px;padding:6px 10px 6px 7px;font-size:13px;overflow:hidden;text-overflow:ellipsis}
+  .top .tg .sw i{width:36px;height:22px}.top .tg .sw i::after{width:16px;height:16px}.top .tg .sw input:checked+i::after{left:17px}
+  .top .tg .sw~.btn{flex:none;padding-left:14px;padding-right:14px;font-size:13px}
+}
 </style>
 
 
@@ -503,15 +540,40 @@ function shell() {
   const pk = $("#pick"); if (pk) pk.onchange = () => { location.href = "/shops/dashboard?id=" + pk.value; };
   const n = newCount();
   const TABS = [["overview", "Home", "home"], ["orders", "Orders", "orders"], ["sales", "Sales", "bill"], ["khata", "Udhaar", "book"]];
-  $("#tabbar").innerHTML = TABS.map(([k, l, ic]) => `<a href="#${k}" class="${S.view === k ? "on" : ""}">${IC[ic]}${l}${k === "orders" && n ? `<em>${n}</em>` : ""}</a>`).join("") + `<button type="button" id="moreB" class="${TABS.some(t => t[0] === S.view) ? "" : "on"}" aria-label="More sections">${IC.more || "•••"}More</button>`;
+  const tb = ([k, l, ic]) => `<a href="#${k}" class="${S.view === k ? "on" : ""}"${S.view === k ? ' aria-current="page"' : ""}>${IC[ic]}${l}${k === "orders" && n ? `<em>${n}</em>` : ""}</a>`;
+  $("#tabbar").innerHTML = TABS.slice(0, 2).map(tb).join("") + `<button type="button" id="addB" class="add" aria-label="Add a sale, udhaar or product"><i>${IC.plus}</i>Add</button>` + TABS.slice(2).map(tb).join("") + `<button type="button" id="moreB" class="${TABS.some(t => t[0] === S.view) ? "" : "on"}" aria-label="More sections">${IC.more || "•••"}More</button>`;
+  $("#addB").onclick = () => {
+    const cfg = S.loy && S.loy.cfg, rows = [["sale", "plus", "New sale", "Bill it at the counter, with GST if you use it"], ["udhaar", "book", "Add udhaar", "Write down what a customer owes you"], ["paid", "check", "Got payment", "A customer paid back their udhaar"], ["product", "menu", "Add product", "A new item with its price and photo"]];
+    if (cfg) rows.push(["stamp", "gift", "Give stamp", "Add a loyalty stamp for a customer"]);
+    $("#moreIn").innerHTML = `<div class="mh"><b>Add</b><button type="button" class="lnk" data-x="1">Close</button></div><div class="mrows">${rows.map(([k, ic, l, d2]) => `<button type="button" data-add="${k}"><i>${IC[ic]}</i><span><b>${l}</b><small>${d2}</small></span></button>`).join("")}</div>`;
+    $("#more").hidden = false;
+  };
   $("#moreB").onclick = () => {
-    $("#moreIn").innerHTML = `<div class="mh"><b>${esc(shopName())}</b><button type="button" class="lnk" data-x="1">Close</button></div>` + NAV.slice(1).map(([g, items]) => `<small class="mg">${g}</small><div class="mgrid">${items.map(([k, l, ic]) => `<a href="#${k}" class="${S.view === k || PARENT[S.view] === k ? "on" : ""}">${IC[ic]}<span>${l}</span></a>`).join("")}</div>`).join("")
-      + `<a class="mlink" href="/b/${S.id}" target="_blank" rel="noopener">${IC.ext} Open my page</a>` + (S.pages.filter(p => p.kind === "biz").length > 1 ? `<a class="mlink" href="/shops/my">${IC.home} All my shops</a>` : "");
+    const DESC = { menu: "Change a price, mark sold out", store: "Products, photos, stock and profit", page: "Edit how your page looks", qr: "Download and print your QR", settings: "Staff PIN, alerts, payments, plan", customers: "Who ordered, loyalty stamps", messages: "Send an offer on WhatsApp", reviews: "Your Google review link", offers: "Today's offer and offer QRs", analytics: "Scans, taps and orders", pro: "Online store, bills, udhaar" };
+    const G = [["Shop", NAV[1][1].concat(NAV[4][1])], ["Customers", NAV[2][1]], ["Grow", NAV[3][1]]];
+    $("#moreIn").innerHTML = `<div class="mh"><b>${esc(shopName())}</b><button type="button" class="lnk" data-x="1">Close</button></div>
+      <label class="msr"><span class="vh">Search the dashboard</span><input id="mq" type="search" placeholder="Search: price, QR, staff PIN…" autocomplete="off"></label>`
+      + G.map(([g, items]) => `<div class="mgp"><small class="mg">${g}</small><div class="mrows">${items.map(([k, l, ic]) => `<a href="#${k}" data-q="${esc((l + " " + (DESC[k] || "")).toLowerCase())}" class="${S.view === k || PARENT[S.view] === k ? "on" : ""}"><i>${IC[ic]}</i><span><b>${l}</b><small>${DESC[k] || ""}</small></span></a>`).join("")}</div></div>`).join("")
+      + `<p class="mnone" id="mnone" hidden>Nothing matches. Try another word.</p><a class="mlink" href="/b/${S.id}" target="_blank" rel="noopener">${IC.ext} Open my page</a>` + (S.pages.filter(p => p.kind === "biz").length > 1 ? `<a class="mlink" href="/shops/my">${IC.home} All my shops</a>` : "");
+    $("#mq").oninput = e => { const q = e.target.value.trim().toLowerCase(); let any = 0;
+      document.querySelectorAll("#moreIn .mgp").forEach(g => { let n2 = 0; g.querySelectorAll("a").forEach(x => { const ok = !q || x.dataset.q.includes(q); x.hidden = !ok; if (ok) n2++; }); g.hidden = !n2; any += n2; });
+      $("#mnone").hidden = !!any; };
     $("#more").hidden = false;
   };
   document.title = (n ? "(" + n + ") " : "") + (TITLES[S.view] || "Dashboard") + " · " + shopName();
 }
-$("#more").onclick = e => { if (e.target.id === "more" || e.target.closest("a") || e.target.closest("[data-x]")) $("#more").hidden = true; };
+$("#more").onclick = e => {
+  const ad = e.target.closest("[data-add]");
+  if (ad) { const k = ad.dataset.add; $("#more").hidden = true;
+    if (k === "sale") { S.wantSale = 1; if (S.view === "sales") go(); else location.hash = "#sales"; }
+    else if (k === "udhaar") khStart({});
+    else if (k === "paid") khStart({ kind: "pay" });
+    else if (k === "product") { if (S.store) { S.stEdit = { k: "", x: { n: "", p: "", w: "", d: "", i: "", b: false, so: false }, sec: "" }; if (S.view === "store") go(); else location.hash = "#store"; } else location.hash = "#menu"; }
+    else if (k === "stamp") { S.lsq = ""; location.hash = "#customers"; setTimeout(() => { const l = $("#lsq"); if (l) { l.focus(); l.scrollIntoView({ block: "center" }); } }, 350); }
+    return; }
+  if (e.target.id === "more" || e.target.closest("a") || e.target.closest("[data-x]")) $("#more").hidden = true;
+};
+addEventListener("keydown", e => { if (e.key === "Escape" && !$("#more").hidden) $("#more").hidden = true; });
 
 function go() {
   let v = (location.hash || "#overview").slice(1);
@@ -529,13 +591,13 @@ function go() {
   (A[S.view] || (() => {}))();
   bindCommon(); instBar();
 }
-addEventListener("hashchange", () => { if (location.hash === "#nearby") S.geo = null; if (location.hash === "#campaigns") S.cp = null; go(); scrollTo(0, 0); });
+addEventListener("hashchange", () => { if (location.hash === "#nearby") S.geo = null; if (location.hash === "#campaigns") S.cp = null; go(); scrollTo(0, 0); const m = $("#main"); m.classList.remove("vin"); void m.offsetWidth; m.classList.add("vin"); });
 
 // ---------- shared pieces ----------
 const greet = () => { const h = new Date().getHours(); return h < 12 ? "Good morning" : h < 17 ? "Good afternoon" : "Good evening"; };
 function switches() {
   const d = S.d;
-  return `<div class="tg"><label class="sw"><input type="checkbox" data-sw="open"${d.shut ? "" : " checked"}><i></i>Shop open</label>${d.ord ? `<label class="sw"><input type="checkbox" data-sw="take"${d.pause || d.shut ? "" : " checked"}${d.shut ? " disabled" : ""}><i></i>Taking orders</label>` : ""}<a class="btn" href="/b/${S.id}" target="_blank" rel="noopener">View my page</a></div>`;
+  return `<div class="tg"><label class="sw"><input type="checkbox" data-sw="open"${d.shut ? "" : " checked"}><i></i><span class="swl">Shop open</span><span class="sws">Open</span></label>${d.ord ? `<label class="sw"><input type="checkbox" data-sw="take"${d.pause || d.shut ? "" : " checked"}${d.shut ? " disabled" : ""}><i></i><span class="swl">Taking orders</span><span class="sws">Orders</span></label>` : ""}<a class="btn" href="/b/${S.id}" target="_blank" rel="noopener"><span class="swl">View my page</span><span class="sws">My page</span></a></div>`;
 }
 function head(title, sub, right) { return `<div class="top"><div><h1 class="H">${title}</h1>${sub ? `<p>${sub}</p>` : ""}</div>${right == null ? switches() : right}</div>`; }
 function inactive() { return S.active ? "" : `<div class="bar"><span><b>Your page isn't live yet.</b> Customers can't open it until it's activated.</span><a class="btn" href="/shops/studio?edit=${S.id}#publish">Activate my page</a></div>`; }
@@ -655,16 +717,7 @@ V.overview = () => {
   const qa = [[`href="#sales" data-quick="sale" class="on"`, "plus", "New sale"], [`href="#khata" data-quick="udhaar"`, "book", "Add udhaar"]];
   if (cfg) qa.push([`href="#customers" data-quick="stamp"`, "gift", "Give stamp"]);
   qa.push([`href="${share}" target="_blank" rel="noopener"`, "share", "Share page"]);
-  return inactive() + proBar() + head(`${greet()}, ${esc(shopName().split(/\s+/)[0])}`, now.toLocaleDateString("en-IN", { weekday: "long", day: "numeric", month: "long" })) +
-  `<section class="hk" aria-label="Today">
-    <a class="kpi y" href="#sales"><span>Sales today</span><b>${inr(T.v)}</b><small>${T.n ? `${T.n} sale${T.n === 1 ? "" : "s"}${T.no && T.nb ? ` · ${T.no} online` : ""}` : "Counter + online"}</small></a>
-    <a class="kpi" href="#orders"><span>Orders today</span><b>${tod.length}</b><small class="gd">${waiting() ? waiting() + " waiting" : d.ord ? "All caught up" : "Ordering is off"}</small></a>
-    ${kh ? `<a class="kpi k" href="#khata"><span>Udhaar to collect</span><b>${inr(kh.pending)}</b><small>${kh.due} customer${kh.due === 1 ? "" : "s"}</small></a>` : `<a class="kpi k" href="#customers"><span>Customers</span><b>${S.customersCount || 0}</b><small>${S.newCust ? S.newCust + " new this week" : "who bought or joined"}</small></a>`}
-    <a class="kpi o" href="#analytics"><span>Page scans today</span><b>${st.today || 0}</b><small>${st.week ? st.week + " this week" : "Opens of your page"}</small></a>
-  </section>
-  <section class="qa" aria-label="Quick actions">${qa.map(([at, ic, l]) => `<a ${at}>${IC[ic]}<span>${l}</span></a>`).join("")}</section>
-  <div id="instBar"></div>
-  <section class="g2">
+  const G2 = `  <section class="g2">
     <div class="cd"><div class="ch"><h2 class="H">Needs you</h2>${N.length ? `<small>${N.length}</small>` : ""}</div>
       ${N.length ? `<div class="need">${N.map(([ic, t, s2, href, tone, f]) => `<a href="${href}"${f ? ` data-blf="${f}"` : ""} class="${tone}"><i>${IC[ic]}</i><span><b>${esc(t)}</b><small>${esc(s2)}</small></span>${IC.ext}</a>`).join("")}</div>`
         : `<div class="ok"><i>${IC.check}</i><span><b>All caught up</b><small>New orders, overdue udhaar and rewards show up here.</small></span></div>`}</div>
@@ -672,7 +725,17 @@ V.overview = () => {
       : anyWeek ? `<div class="cd"><div class="ch"><h2 class="H">Sales · last 7 days</h2><small>${inr(days.reduce((t, x) => t + x.v, 0))}</small></div>${bars(days)}</div>`
       : scans.some(x => x.v) ? `<div class="cd"><div class="ch"><h2 class="H">Page scans · last 7 days</h2></div>${bars(scans)}</div>`
       : `<div class="cd"><div class="ch"><h2 class="H">Your page</h2></div><p class="mu" style="margin-top:0">Share it on WhatsApp and put your QR at the counter. Scans and sales show here.</p><div class="tg"><a class="btn w" href="${share}" target="_blank" rel="noopener">${IC.wa}Share on WhatsApp</a><a class="btn g" href="#qr">My QR</a></div></div>`}
+  </section>`;
+  return inactive() + proBar() + head(`${greet()}, ${esc(shopName().split(/\s+/)[0])}`, now.toLocaleDateString("en-IN", { weekday: "long", day: "numeric", month: "long" })) +
+  `${N.length ? G2.replace('<section class="g2">', '<section class="g2 first">') : ""}<section class="hk" aria-label="Today">
+    <a class="kpi y" href="#sales"><span>Sales today</span><b>${inr(T.v)}</b><small>${T.n ? `${T.n} sale${T.n === 1 ? "" : "s"}${T.no && T.nb ? ` · ${T.no} online` : ""}` : "Counter + online"}</small></a>
+    <a class="kpi" href="#orders"><span>Orders today</span><b>${tod.length}</b><small class="gd">${waiting() ? waiting() + " waiting" : d.ord ? "All caught up" : "Ordering is off"}</small></a>
+    ${kh ? `<a class="kpi k" href="#khata"><span>Udhaar to collect</span><b>${inr(kh.pending)}</b><small>${kh.due} customer${kh.due === 1 ? "" : "s"}</small></a>` : `<a class="kpi k" href="#customers"><span>Customers</span><b>${S.customersCount || 0}</b><small>${S.newCust ? S.newCust + " new this week" : "who bought or joined"}</small></a>`}
+    <a class="kpi o" href="#analytics"><span>Page scans today</span><b>${st.today || 0}</b><small>${st.week ? st.week + " this week" : "Opens of your page"}</small></a>
   </section>
+  <section class="qa" aria-label="Quick actions">${qa.map(([at, ic, l]) => `<a ${at}>${IC[ic]}<span>${l}</span></a>`).join("")}</section>
+  <div id="instBar"></div>
+${N.length ? "" : G2}
   ${(() => { const top = topSold(t0 - 6 * 864e5, t0 + 864e5, 5), chart = liveO.length && anyWeek; if (!top.length && !chart) return "";
     return `<section class="g2">${chart ? `<div class="cd"><div class="ch"><h2 class="H">Sales · last 7 days</h2><small>${inr(days.reduce((t, x) => t + x.v, 0))}</small></div>${bars(days)}</div>` : ""}
       ${top.length ? `<div class="cd"><div class="ch"><h2 class="H">Top sellers · 7 days</h2><small>Online + counter</small></div><div class="rows">${top.map((x, i) => `<div><span class="rk">${i + 1}</span><span><b>${esc(x.n)}</b><small>${x.q} sold</small></span><b>${inr(x.v)}</b></div>`).join("")}</div></div>` : ""}</section>`; })()}
@@ -691,7 +754,7 @@ V.orders = () => {
   (S.d.ord ? "" : `<div class="bar"><span><b>WhatsApp ordering is off.</b> Customers can only see your menu.</span><button class="btn" data-act="ordOn">Turn on ordering</button></div>`) +
   `<div class="tg" style="margin-bottom:14px"><a class="btn g" href="#sales" data-quick="sale">${IC.plus} New sale</a><span class="hint" style="align-self:center;margin:0">Sold something in the shop? Record it in Sales so your totals stay complete.</span></div>
   <div class="tabs" role="tablist">${tabs.map(([k, l]) => `<button type="button" data-otab="${k}" class="${S.otab === k ? "on" : ""}">${l}${(k === "new" || k === "prep" || k === "ready") && counts[k] ? `<em>${counts[k]}</em>` : ""}</button>`).join("")}</div>
-  ${list.length ? `<div class="oc">${list.slice(0, 120).map(orderCard).join("")}</div>` : `<div class="empty"><b>${S.otab === "new" ? "No new orders" : "Nothing here"}</b>${S.otab === "new" ? "New orders appear here on their own. Keep this page open and you'll hear a ding." : ""}</div>`}
+  ${list.length ? `<div class="oc">${list.slice(0, 120).map(orderCard).join("")}</div>` : `<div class="empty"><b>${S.otab === "new" ? "No new orders" : "Nothing here"}</b>${S.otab === "new" ? "New orders appear here on their own. Keep this page open and you'll hear a ding." : ""}${S.otab === "new" && !S.orders.length ? `<br><a class="btn w" href="https://wa.me/?text=${encodeURIComponent(shopName() + ": see our menu, order and pay here 👉 " + pageUrl())}" target="_blank" rel="noopener">${IC.wa}Share my page on WhatsApp</a>` : ""}</div>`}
   <p class="hint">Every order sent from your page appears here, even if the customer didn't press send in WhatsApp. If one never reached you, mark it Cancelled.</p>${saleSheet()}`;
 };
 function orderCard(o) {
@@ -1099,7 +1162,7 @@ V.menu = () => {
   const prop = /real/.test(S.d.cat || "");
   const secs = d.map((s, si) => ({ s, si, items: (s.items || []).map((x, ii) => ({ x, ii })).filter(r => r.x && r.x.n) })).filter(r => r.items.length);
   return head("Menu & prices", "Change a price or mark something sold out in one tap. It updates your page straight away.", `<div class="tg"><a class="btn g" href="/shops/studio?edit=${S.id}">Full editor</a></div>`) +
-  (secs.length ? `<div class="cd">${secs.map(({ s, si, items }) => `<div class="ms"><h3>${esc(s.n)} <span class="mu" style="font-weight:500">· ${items.length}</span></h3>${items.map(({ x, ii }) => `<div class="mi${x.so ? " isso" : ""}" data-k="${si}.${ii}"><span class="ph" style="${x.i ? `background-image:url('${esc(x.i)}')` : ""}">${x.i ? "" : "No photo"}</span><span style="min-width:0"><b>${esc(x.n)}</b><small>${sold[x.n] ? sold[x.n] + " sold this week" : x.d ? esc(String(x.d).slice(0, 60)) : "&nbsp;"}</small></span><input class="in" data-mp="${si}.${ii}" value="${esc(x.p || "")}" inputmode="decimal" aria-label="Price of ${esc(x.n)}" placeholder="Price"><span class="tw2">${prop ? "" : `<button type="button" class="chip so${x.so ? " on" : ""}" data-mso="${si}.${ii}">${x.so ? "Sold out" : "In stock"}</button>`}<button type="button" class="chip${x.b ? " on" : ""}" data-mb="${si}.${ii}">★ Bestseller</button></span></div>`).join("")}</div>`).join("")}</div>
+  (secs.length ? `<div class="cd">${secs.map(({ s, si, items }) => `<div class="ms"><h3>${esc(s.n)} <span class="mu" style="font-weight:500">· ${items.length}</span></h3>${items.map(({ x, ii }) => `<div class="mi${x.so ? " isso" : ""}" data-k="${si}.${ii}"><span class="ph" style="${x.i ? `background-image:url('${esc(x.i)}')` : ""}">${x.i ? "" : esc(String(x.n || "").trim().charAt(0).toUpperCase())}</span><span style="min-width:0"><b>${esc(x.n)}</b><small>${sold[x.n] ? sold[x.n] + " sold this week" : x.d ? esc(String(x.d).slice(0, 60)) : "&nbsp;"}</small></span><input class="in" data-mp="${si}.${ii}" value="${esc(x.p || "")}" inputmode="decimal" aria-label="Price of ${esc(x.n)}" placeholder="Price"><span class="tw2">${prop ? "" : `<button type="button" class="chip so${x.so ? " on" : ""}" data-mso="${si}.${ii}">${x.so ? "Sold out" : "In stock"}</button>`}<button type="button" class="chip${x.b ? " on" : ""}" data-mb="${si}.${ii}">★ Bestseller</button></span></div>`).join("")}</div>`).join("")}</div>
   <div class="dock" id="mdock" hidden><span>You have unsaved changes</span><button class="btn g s" style="border-color:#fff;color:#fff" data-act="mReset">Undo</button><button class="btn s" data-act="mSave">Save changes</button></div>` : `<div class="empty"><b>Your menu is empty</b>Add your items with prices, or snap a photo of your menu card and we'll read it for you.<br><a class="btn" href="/shops/studio?edit=${S.id}">Add my menu</a></div>`);
 };
 
