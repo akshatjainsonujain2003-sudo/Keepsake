@@ -95,7 +95,7 @@ test("Start plan: 5 free bills, then Pro is needed", async () => {
 test("only the owner can list or change bills; anyone can open a bill link", async () => {
   assert.equal((await call({ action: "bl-home" }, stranger)).status, 401);
   const h = await call({ action: "bl-home" });
-  assert.equal(h.bills.length, 6); assert.ok(h.bills[0].no.endsWith("/006")); assert.equal(h.used, 6);
+  assert.equal(h.bills.length, 6); assert.ok(h.bills[0].no.endsWith("/0006")); assert.equal(h.used, 6);
   assert.equal(h.months[0].n, 6);
   const t = h.bills[h.bills.length - 1].t;
   const pubBill = await B.handle({ action: "bl-get", t }, ctx(null));
@@ -108,7 +108,7 @@ test("only the owner can list or change bills; anyone can open a bill link", asy
 test("month report has every bill of the month, cancelled ones flagged", async () => {
   const ym = G.ym(Date.now()), r = await call({ action: "bl-month", ym });
   assert.equal(r.bills.length, 6); assert.equal(r.bills.filter(b => b.cancel).length, 1);
-  assert.ok(r.bills[0].at <= r.bills[10].at); assert.equal(r.shop.gstin, SELLER);
+  assert.ok(r.bills[0].at <= r.bills[5].at); assert.equal(r.shop.gstin, SELLER);
   assert.equal((await call({ action: "bl-month", ym: "2026-13" })).status, 400);
 });
 
