@@ -190,6 +190,58 @@
       .wa-float{width:52px;height:52px;padding:0;justify-content:center;bottom:16px;right:14px}
       .wa-float .wa-txt,.wa-float .wa-dot{display:none}
     }
+
+    /* ---------- gift home v2: shorter, one clear action, live demo, sticky bar ---------- */
+    .demo{display:grid;grid-template-columns:auto minmax(0,1fr);gap:clamp(24px,5vw,72px);align-items:center;margin-top:28px}
+    .demo-ph{--w:300px;--s:calc((300 - 20) / 390);width:var(--w);height:calc(var(--w)*2);padding:10px;border-radius:44px;background:#1c0a0e;box-shadow:0 30px 60px -28px #2a0d12cc,inset 0 0 0 1.5px #ffffff22;margin:0 auto}
+    .demo-sc{position:relative;width:100%;height:100%;border-radius:34px;overflow:hidden;background:#f6ecdc}
+    .demo-sc iframe{position:absolute;left:0;top:0;width:390px;height:calc(100% / var(--s));border:0;transform:scale(var(--s));transform-origin:0 0;background:#f6ecdc}
+    .demo-go{position:absolute;inset:0;display:grid;place-items:center;border:0;background:#f6ecdc;color:var(--wine,#6b1a24);font:500 17px/1.3 "Cormorant Garamond",Georgia,serif;cursor:pointer}
+    .demo-go[hidden]{display:none}
+    .demo-side h3{font:500 clamp(28px,3.4vw,40px)/1.1 "Cormorant Garamond",Georgia,serif;margin:20px 0 10px}
+    .demo-side p{max-width:520px}
+    .demo-side .web-cta{margin-top:18px;display:flex;flex-wrap:wrap;gap:10px}
+    .demo-tabs{display:flex;flex-wrap:wrap;gap:8px}
+    .demo-tabs button{min-height:44px;padding:0 18px;border-radius:999px;border:1px solid #6b1a2455;background:transparent;color:var(--wine,#6b1a24);font:500 15px/1 Inter,system-ui,sans-serif;cursor:pointer;touch-action:manipulation;transition:background .2s,color .2s}
+    .demo-tabs button[aria-selected=true]{background:var(--wine,#6b1a24);border-color:var(--wine,#6b1a24);color:#f6ecdc}
+    .demo-tabs button:focus-visible,.demo-go:focus-visible{outline:2px solid #c9a24b;outline-offset:3px}
+    .jump.occ{justify-content:flex-start}
+    .jump.occ a{border-color:#6b1a2455;color:var(--wine,#6b1a24);min-height:44px;display:inline-flex;align-items:center}
+    .swipe-hint{display:none}
+    .partner-line{margin:22px 4px 0;text-align:center;font-size:14.5px;color:#6b5a52}
+    .partner-line a{color:var(--wine,#6b1a24);font-weight:600}
+    .gbar{display:none}
+    @media (max-width:820px){
+      .demo{grid-template-columns:1fr;gap:18px;margin-top:20px}
+      .demo-side{display:contents}
+      .demo-tabs{order:-1}
+      .demo-side h3{margin:4px 0 0}
+      .demo-side p,.demo-side .web-cta{margin-top:0}
+      .demo-ph{--w:270px;--s:calc((270 - 20) / 390)}
+    }
+    @media (max-width:640px){
+      .sec{padding-top:48px!important;padding-bottom:8px}
+      .how .stage,.how .how-stage,.how-grid>div:last-child{display:none}
+      #designs .grid{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x proximity;scroll-padding-left:20px;margin:0 calc(50% - 50vw);padding:4px 20px 14px;scrollbar-width:none}
+      #designs .grid::-webkit-scrollbar{display:none}
+      #designs .gcard{flex:0 0 44%;scroll-snap-align:start}
+      .swipe-hint{display:inline;white-space:nowrap;color:var(--wine,#6b1a24);font-weight:600}
+      .jump.occ{flex-wrap:nowrap;overflow-x:auto;margin:0 calc(50% - 50vw);padding:4px 20px 10px;scrollbar-width:none}
+      .hero .hero-top{padding-top:22px}
+      .hero .tagline{font-size:17px;margin-bottom:10px}
+      .hero h1.d{font-size:clamp(38px,11vw,46px)}
+      .hero .lead{font-size:15.5px;margin-top:10px}
+      .hero .cta-row{margin-top:16px}
+      .how{padding-bottom:0}
+      .jump.occ::-webkit-scrollbar{display:none}
+      .jump.occ a{flex:none;white-space:nowrap}
+      .gbar{display:block;position:fixed;left:0;right:0;bottom:0;z-index:40;padding:10px 14px calc(10px + env(safe-area-inset-bottom));background:#2a0d12f0;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);transform:translateY(110%);transition:transform .25s ease-out}
+      .gbar.show{transform:none}
+      .gbar .btn{display:flex;justify-content:center;width:100%;min-height:50px}
+      body.has-gbar .wa-float{bottom:84px}
+      footer{padding-bottom:84px}
+    }
+    @media (prefers-reduced-motion:reduce){.gbar{transition:none}}
   </style>
   <link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
   <link rel="icon" type="image/svg+xml" href="/assets/icon.svg">
@@ -200,19 +252,19 @@
 
 <header class="nav">
   <div class="nav-in">
-    <a class="brand" href="/">Keepsake</a>
-    <a class="btn gold sm nav-cta" href="/builder">Make a website</a>
+    <a class="brand" href="/gifts">Keepsake</a>
+    <a class="btn gold sm nav-cta" href="#designs">Make yours</a>
     <button class="menu-btn" aria-expanded="false" aria-controls="menu" aria-label="Menu">
       <span></span><span></span>
     </button>
     <nav id="menu" class="nav-links" aria-label="Main">
       <a href="/designs#websites">Websites</a>
       <a href="/designs#cards">Cards</a>
-      <a href="/#pricing">Pricing</a>
+      <a href="#pricing">Pricing</a>
       <a href="/contact">Contact</a>
       <a href="/shops">For businesses</a>
       <a href="/account">My account</a>
-      <a class="btn gold sm" href="/builder">Make a website</a>
+      <a class="btn gold sm" href="#designs">Make yours</a>
     </nav>
   </div>
 </header>
@@ -223,13 +275,13 @@
     <div class="wrap hero-top">
       <span class="tagline">digital gifts for the people you love</span>
       <h1 class="d">Turn a moment into a <em>keepsake.</em></h1>
-      <p class="lead">Make a love-story website or a memory card in minutes, with your photos, your song and your words. Share it instantly by link, QR code or a tap on an NFC tag.</p>
+      <p class="lead">A memory card or a love-story website with your photos, your song and your words. Ready in 10 minutes, shared by a link or a QR code.</p>
       <div class="cta-row">
-        <a class="btn gold" href="/builder">Make a website</a>
-        <a class="btn line" href="/studio">Make a card</a>
+        <a class="btn gold" href="#designs">Make yours</a>
+        <a class="btn line" href="#demo">See one open</a>
       </div>
       <p class="hero-price" aria-label="Prices"><span>Website <b data-price="site">₹299</b></span><span>Card <b data-price="card">₹99</b></span></p>
-      <p class="hero-alt">Free to design · pay once, no subscription · <a href="#websites">see the live demos</a></p>
+      <p class="hero-alt">Free to design · pay once, no subscription</p>
     </div>
 
     <!-- CARD MARQUEE -->
@@ -258,93 +310,6 @@
         <a class="card mcard" href="/studio?design=greenVinyl" tabindex="-1" aria-hidden="true"><img src="/assets/greenVinyl.webp" alt="Green Vinyl memory card design" width="360" height="640" decoding="async"><div class="cap"><span class="to">Our song</span><span class="big">Play it again</span><div class="player"><i></i><b></b><span>3:42</span></div></div></a>
       </div>
     </div>
-  </section>
-
-  <!-- LOVE-STORY WEBSITES SECTION -->
-  <section class="sec wrap" id="websites" style="padding-top:72px">
-    <div class="sec-head">
-      <div>
-        <div class="eyebrow">Interactive love-story websites · <span data-price="site">₹299</span></div>
-        <h2 class="d">A whole page for <em>your story</em></h2>
-      </div>
-      <p>Pick a design, add your photos, your song and a letter. Ready to share tonight. Tap any template to play with the live demo first.</p>
-    </div>
-
-    <div class="webs">
-      <article class="web">
-        <a class="web-art wf" href="/templates/wildflower" target="_blank" rel="noopener" aria-label="Open the Wildflower demo">
-          <span class="pol"><img class="ph" src="/assets/wildflower/lakedance.webp" alt=""><img class="edge" src="/assets/wildflower/polaroid.webp" alt=""></span>
-          <img class="fl" src="/assets/wildflower/pressed.webp" alt="">
-          <img class="st" src="/assets/wildflower/stamp.webp" alt="">
-        </a>
-        <div class="web-txt">
-          <h3>Wildflower</h3>
-          <p>A pressed-flower scrapbook of your story: the day you met on a ticket stub, a live “together for” counter, sticky notes of little things you love, your someday list and a letter in a flower envelope.</p>
-          <div class="web-cta">
-            <a class="btn gold sm" href="/builder?tpl=wildflower">Use this design</a>
-            <a class="btn line-wine sm" href="/templates/wildflower" target="_blank" rel="noopener">See live demo ↗</a>
-          </div>
-        </div>
-      </article>
-
-      <article class="web">
-        <a class="web-art cl" href="/templates/candlelit" target="_blank" rel="noopener" aria-label="Open the Red Letter demo" style="background:radial-gradient(70% 60% at 50% 45%,#8e1b2c66,#0000 70%),url(/assets/redletter/velvet.webp) center/cover">
-          <img src="/assets/redletter/envelope.webp" alt="" style="position:absolute;width:62%;filter:drop-shadow(0 14px 20px #000a)">
-          <img class="seal" src="/assets/redletter/seal-heart.webp" alt="" style="width:20%;margin-top:6%">
-          <span class="nm">with love</span>
-        </a>
-        <div class="web-txt">
-          <h3>Red Letter</h3>
-          <p>A wine-red love letter. They open the envelope to find your letter, a calendar with a heart round your date, “reasons I love you” on playing cards, photos as stamps and polaroids, and “open when…” envelopes.</p>
-          <div class="web-cta">
-            <a class="btn gold sm" href="/builder?tpl=candlelit">Use this design</a>
-            <a class="btn line-wine sm" href="/templates/candlelit" target="_blank" rel="noopener">See live demo ↗</a>
-          </div>
-        </div>
-      </article>
-
-      <article class="web">
-        <a class="web-art mx" href="/templates/mixtape" target="_blank" rel="noopener" aria-label="Open the Mixtape demo">
-          <img class="tp" src="/assets/mixtape/cassette.webp" alt="">
-          <img class="pn" src="/assets/mixtape/heartpin.webp" alt="">
-          <img class="ft" src="/assets/mixtape/film.webp" alt="">
-        </a>
-        <div class="web-txt">
-          <h3>Mixtape</h3>
-          <p>A retro red-gingham scrapbook for your favourite person: a camera that snaps a photo, your pictures on film strips, a cassette that plays your song, and a broken heart they can mend.</p>
-          <div class="web-cta">
-            <a class="btn gold sm" href="/builder?tpl=mixtape">Use this design</a>
-            <a class="btn line-wine sm" href="/templates/mixtape" target="_blank" rel="noopener">See live demo ↗</a>
-          </div>
-        </div>
-      </article>
-    </div>
-    <p class="quick">Want something simpler for a birthday, parent, or friend? <a href="/studio">Make a <span data-price="card">₹99</span> memory card →</a></p>
-  </section>
-
-  <!-- GIFT IDEAS / SEO PILLS -->
-  <section class="sec wrap" id="gift-ideas" style="padding-top:20px">
-    <div class="sec-head">
-      <div>
-        <div class="eyebrow">Gift ideas</div>
-        <h2 class="d">A thoughtful gift for <em>every occasion</em></h2>
-      </div>
-      <p>Ready in 10 minutes—even for last-minute midnight surprises.</p>
-    </div>
-    <nav class="jump" style="justify-content:flex-start" aria-label="Gift ideas">
-      <a href="/gifts/girlfriend" style="border-color:#6b1a2455;color:var(--wine)">For girlfriend</a>
-      <a href="/gifts/boyfriend" style="border-color:#6b1a2455;color:var(--wine)">For boyfriend</a>
-      <a href="/gifts/anniversary" style="border-color:#6b1a2455;color:var(--wine)">Anniversary</a>
-      <a href="/gifts/birthday" style="border-color:#6b1a2455;color:var(--wine)">Birthday</a>
-      <a href="/gifts/karva-chauth" style="border-color:#6b1a2455;color:var(--wine)">Karva Chauth</a>
-      <a href="/gifts/long-distance" style="border-color:#6b1a2455;color:var(--wine)">Long-distance</a>
-      <a href="/digital-gifts" style="border-color:#6b1a2455;color:var(--wine)">All digital gifts</a>
-    </nav>
-  </section>
-
-  <!-- STATEMENT -->
-  <section class="statement wrap">
-    <p class="d">A keepsake for the <img class="in" src="/assets/fullMoon.webp" alt="" loading="lazy">people you love, the <img class="in" src="/assets/mistForest.webp" alt="" loading="lazy">places you have been and the <img class="in" src="/assets/greenVinyl.webp" alt="" loading="lazy">songs you keep playing.</p>
   </section>
 
   <!-- HOW IT WORKS -->
@@ -417,6 +382,34 @@
     </div>
   </section>
 
+  <!-- SEE ONE OPEN: a live love-story website inside a phone -->
+  <section class="sec wrap" id="demo">
+    <div class="sec-head">
+      <div>
+        <div class="eyebrow">Love-story websites · <span data-price="site">₹299</span></div>
+        <h2 class="d">This is what <em>they will open.</em></h2>
+      </div>
+      <p>A real page with sample photos. Scroll and tap inside the phone, then make it yours.</p>
+    </div>
+    <div class="demo" id="websites">
+      <div class="demo-ph"><div class="demo-sc"><iframe id="demoF" title="Live demo of the Wildflower love-story website" data-src="/templates/wildflower" loading="lazy"></iframe><button type="button" class="demo-go" id="demoGo">Tap to open the demo</button></div></div>
+      <div class="demo-side">
+        <div class="demo-tabs" role="tablist" aria-label="Website designs">
+          <button type="button" role="tab" aria-selected="true" data-demo="wildflower">Wildflower</button>
+          <button type="button" role="tab" aria-selected="false" tabindex="-1" data-demo="candlelit">Red Letter</button>
+          <button type="button" role="tab" aria-selected="false" tabindex="-1" data-demo="mixtape">Mixtape</button>
+        </div>
+        <h3 id="demoN">Wildflower</h3>
+        <p id="demoP">A pressed-flower scrapbook of your story: the day you met on a ticket stub, a live “together for” counter, sticky notes of little things you love, your someday list and a letter in a flower envelope.</p>
+        <div class="web-cta">
+          <a class="btn gold sm" id="demoUse" href="/builder?tpl=wildflower">Use this design</a>
+          <a class="btn line-wine sm" id="demoOpen" href="/templates/wildflower" target="_blank" rel="noopener">Open full screen ↗</a>
+        </div>
+        <p class="quick">Want something simpler for a birthday, parent or friend? <a href="#designs">Make a <span data-price="card">₹99</span> memory card →</a></p>
+      </div>
+    </div>
+  </section>
+
   <!-- MEMORY CARDS GRID -->
   <section class="sec wrap" id="designs">
     <div class="sec-head">
@@ -424,7 +417,7 @@
         <div class="eyebrow">Memory cards · <span data-price="card">₹99</span></div>
         <h2 class="d">Cards for anyone, <em>in minutes.</em></h2>
       </div>
-      <p>Sixteen handcrafted card themes, from soft stationery to dreamy photo backgrounds. Tap any card to customize it free in the Studio.</p>
+      <p>Sixteen card designs, from soft stationery to dreamy photo backgrounds. Tap one to start it free. <span class="swipe-hint">Swipe to see more →</span></p>
     </div>
 
     <div class="grid">
@@ -464,23 +457,28 @@
     <div class="more"><a class="btn line-wine" href="/designs">See all 16 card designs</a></div>
   </section>
 
-  <!-- OCCASIONS -->
-  <section class="sec wrap">
+  <!-- OCCASIONS: one compact row -->
+  <section class="sec wrap" id="gift-ideas">
     <div class="sec-head">
       <div>
         <div class="eyebrow">Occasions</div>
         <h2 class="d">Not just for <em>couples.</em></h2>
       </div>
-      <p>Make a card for a father, mother, brother, sister, friend or a birthday. Start from an occasion, then change every colour, word and button.</p>
+      <p>Start from an occasion, then change every colour, word and photo.</p>
     </div>
-    <div class="occ-list">
-      <a class="occ-row" href="/studio?occasion=mother"><h3>Mo<em>ther</em></h3><img src="/assets/pinkPalace.webp" alt="" loading="lazy"></a>
-      <a class="occ-row" href="/studio?occasion=father"><h3>Fa<em>ther</em></h3><img src="/assets/rugGarden.webp" alt="" loading="lazy"></a>
-      <a class="occ-row" href="/studio?occasion=friend"><h3>Fri<em>end</em></h3><img src="/assets/goldenHaze.webp" alt="" loading="lazy"></a>
-      <a class="occ-row" href="/studio?occasion=birthday"><h3>Birth<em>day</em></h3><img src="/assets/floralClip.webp" alt="" loading="lazy"></a>
-      <a class="occ-row" href="/studio?occasion=thanks"><h3>Thank <em>you</em></h3><img src="/assets/meadowLight.webp" alt="" loading="lazy"></a>
-    </div>
-    <div class="more"><a class="btn line-wine" href="/designs#occasions">Browse all occasions</a></div>
+    <nav class="jump occ" aria-label="Gift ideas by occasion">
+      <a href="/gifts/girlfriend">For girlfriend</a>
+      <a href="/gifts/boyfriend">For boyfriend</a>
+      <a href="/gifts/anniversary">Anniversary</a>
+      <a href="/gifts/birthday">Birthday</a>
+      <a href="/studio?occasion=mother">Mother</a>
+      <a href="/studio?occasion=father">Father</a>
+      <a href="/studio?occasion=friend">Friend</a>
+      <a href="/studio?occasion=thanks">Thank you</a>
+      <a href="/gifts/karva-chauth">Karva Chauth</a>
+      <a href="/gifts/long-distance">Long-distance</a>
+      <a href="/digital-gifts">All digital gifts</a>
+    </nav>
   </section>
 
   <!-- PRICING SECTION -->
@@ -523,17 +521,7 @@
       </div>
     </div>
 
-    <!-- B2B / RETAIL PARTNER CALLOUT -->
-    <div class="partner-strip">
-      <div>
-        <div class="eyebrow" style="color:var(--wine)">For Businesses, Cafes &amp; Gift Shops</div>
-        <h3>Want smart NFC standees for your business or bulk cards for your gift shop?</h3>
-        <p>Get one-tap Google Review &amp; Menu cards for your cafe, showroom or brand—or partner with us to sell custom Keepsake QR/NFC tags with your bouquets, cakes and hampers.</p>
-      </div>
-      <div class="cta-row" style="margin:0">
-        <a class="btn line-wine sm" href="https://wa.me/918302791217?text=Hi%20Keepsake%2C%20I%20am%20interested%20in%20Keepsake%20for%20Business%20%2F%20Shop%20Partnership" target="_blank" rel="noopener">Partner on WhatsApp →</a>
-      </div>
-    </div>
+    <p class="partner-line">Florist, bakery or gift shop? <a href="https://wa.me/918302791217?text=Hi%20Keepsake%2C%20I%20am%20interested%20in%20a%20shop%20partnership" target="_blank" rel="noopener">Partner with us on WhatsApp →</a></p>
   </section>
 
   <!-- FAQ SECTION -->
@@ -547,7 +535,7 @@
       </details>
       <details>
         <summary>Does the person need an app to open it?</summary>
-        <p>No. Clicking your link, scanning the QR code or tapping an NFC tag opens the Keepsake directly in their phone's browser on both iPhone and Android.</p>
+        <p>No. Clicking your link or scanning the QR code opens the Keepsake directly in their phone's browser on both iPhone and Android.</p>
       </details>
       <details>
         <summary>Can I change my photos or message after paying?</summary>
@@ -568,26 +556,28 @@
         <h2 class="d">Someone is waiting for <em>this.</em></h2>
         <p>Design it tonight in 10 minutes. You don't pay a rupee until you love how it looks.</p>
         <div class="cta-row">
-          <a class="btn gold" href="/builder">Make a website</a>
-          <a class="btn line" href="/studio">Make a card</a>
+          <a class="btn gold" href="/studio">Make a card · <span data-price="card">₹99</span></a>
+          <a class="btn line" href="/builder">Make a website · <span data-price="site">₹299</span></a>
         </div>
       </div>
     </div>
   </section>
 </main>
 
+<div class="gbar" id="gbar"><a class="btn gold" href="#designs">Make yours · from <span data-price="card">₹99</span></a></div>
+
 <footer>
   <div class="wrap">
     <div class="foot">
       <div>
-        <a class="brand" href="/">Keepsake</a>
-        <p>Love-story websites and memory cards for the people you love, shared by link, QR or NFC.</p><a href="https://www.instagram.com/getkeepsake.in/" target="_blank" rel="noopener" aria-label="GetKeepsake on Instagram" style="display:inline-flex;align-items:center;gap:7px;margin-top:8px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1" fill="currentColor" stroke="none"/></svg><span>@getkeepsake.in</span></a>
+        <a class="brand" href="/gifts">Keepsake</a>
+        <p>Love-story websites and memory cards for the people you love, shared by link or QR.</p><a href="https://www.instagram.com/getkeepsake.in/" target="_blank" rel="noopener" aria-label="GetKeepsake on Instagram" style="display:inline-flex;align-items:center;gap:7px;margin-top:8px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1" fill="currentColor" stroke="none"/></svg><span>@getkeepsake.in</span></a>
       </div>
       <nav aria-label="Footer">
         <a href="/digital-gifts">Digital gifts</a>
         <a href="/designs">Designs</a>
         <a href="/designs#websites">Websites</a>
-        <a href="/#pricing">Pricing</a>
+        <a href="#pricing">Pricing</a>
         <a href="/contact">Contact</a>
         <a href="/shops">For businesses</a>
         <a href="/account">My account</a>
@@ -606,6 +596,22 @@
 </a>
 <script>(function(){var b=document.querySelector(".wa-float");function f(){b.classList.toggle("show",scrollY>innerHeight*0.8)}addEventListener("scroll",f,{passive:true});f()})();</script>
 
+<script>(function(){
+  var D={wildflower:["Wildflower","A pressed-flower scrapbook of your story: the day you met on a ticket stub, a live “together for” counter, sticky notes of little things you love, your someday list and a letter in a flower envelope."],
+    candlelit:["Red Letter","A wine-red love letter. They open the envelope to find your letter, a calendar with a heart round your date, “reasons I love you” on playing cards, photos as stamps and polaroids, and “open when…” envelopes."],
+    mixtape:["Mixtape","A retro red-gingham scrapbook for your favourite person: a camera that snaps a photo, your pictures on film strips, a cassette that plays your song, and a broken heart they can mend."]};
+  var f=document.getElementById("demoF"),go=document.getElementById("demoGo"),tabs=[].slice.call(document.querySelectorAll("[data-demo]")),on=false;
+  function load(k){f.src="/templates/"+k;f.title="Live demo of the "+D[k][0]+" love-story website";go.hidden=true;on=true}
+  function pick(t,focus){var k=t.dataset.demo;tabs.forEach(function(x){var s=x===t;x.setAttribute("aria-selected",s);x.tabIndex=s?0:-1});
+    document.getElementById("demoN").textContent=D[k][0];document.getElementById("demoP").textContent=D[k][1];
+    document.getElementById("demoUse").href="/builder?tpl="+k;document.getElementById("demoOpen").href="/templates/"+k;f.dataset.src="/templates/"+k;load(k);if(focus)t.focus()}
+  tabs.forEach(function(t,i){t.onclick=function(){pick(t)};t.onkeydown=function(e){var d=e.key==="ArrowRight"?1:e.key==="ArrowLeft"?-1:0;if(d){e.preventDefault();pick(tabs[(i+d+tabs.length)%tabs.length],true)}}});
+  go.onclick=function(){load(f.dataset.src.split("/").pop())};
+  if("IntersectionObserver" in window){var io=new IntersectionObserver(function(es){if(es[0].isIntersecting&&!on){load(f.dataset.src.split("/").pop());io.disconnect()}},{rootMargin:"200px"});io.observe(f)}
+  var bar=document.getElementById("gbar"),hero=document.querySelector(".hero"),fin=document.getElementById("finale");
+  function sb(){var y=scrollY,show=y>hero.offsetHeight-120&&fin.getBoundingClientRect().top>innerHeight*0.7;bar.classList.toggle("show",show);document.body.classList.toggle("has-gbar",show)}
+  addEventListener("scroll",sb,{passive:true});sb();
+})();</script>
 <script src="/assets/ks2.js" defer></script>
 <script src="/assets/ks-sale.v1.js" defer></script>
 </body>
