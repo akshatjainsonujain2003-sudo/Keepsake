@@ -1,5 +1,5 @@
 // Keepsake Billing: GST bills, bills of supply, cash memos, estimates and credit notes for business pages
-// (Keepsake Pro; 10 free bills on Start). Not a route: api/qr.js passes bl-* actions here.
+// (Keepsake Pro; 5 free bills on Start). Not a route: api/qr.js passes bl-* actions here.
 //   blset:<page>          = { gst: "regular"|"composition"|"none", gstin, legal, addr, state, prefix, inc, rate, hsn, u, terms,
 //                             big: turnover over ₹5 crore (6-digit HSN), design: "a4m"|"a4c"|"t58"|"t80", bank: { name, acc, ifsc }, sign }
 //   blno:<page>:<fy>      = last bill number issued in that financial year (INCR, so numbers never repeat)
@@ -21,7 +21,7 @@ const G = require("../assets/gst.v2.js");
 const { ph10 } = require("./_loyal");
 
 const ID = /^[a-z0-9]{8,16}$/i, TOK = /^[a-z0-9]{12,20}$/, YM = /^\d{4}-(0[1-9]|1[0-2])$/;
-const FREE = 10, MAXB = 50000, MAXMEM = 3000, B2C_ADDR = 50000;
+const FREE = 5, MAXB = 50000, MAXMEM = 3000, B2C_ADDR = 50000;
 const KIND = { regular: "tax", composition: "supply", none: "cash" };
 const MODES = ["cash", "upi", "card", "bank"];
 const DESIGNS = ["a4m", "a4c", "t58", "t80"];

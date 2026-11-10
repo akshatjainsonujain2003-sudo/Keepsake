@@ -85,7 +85,7 @@ test("unregistered sale of ₹50,000 or more needs name and address", async () =
   assert.equal((await call({ action: "bl-create", cust: { name: "Riya", addr: "C-Scheme, Jaipur" }, items: big })).ok, true);
 });
 
-test("Start plan: 10 free bills, then Pro is needed", async () => {
+test("Start plan: 5 free bills, then Pro is needed", async () => {
   for (let i = (+kv.get("blcnt:" + PID)); i < B.FREE; i++) assert.equal((await call({ action: "bl-create", items: [item({ p: 10 })] })).ok, true);
   assert.equal((await call({ action: "bl-create", items: [item({ p: 10 })] })).status, 402);
   shop(true);
@@ -95,8 +95,8 @@ test("Start plan: 10 free bills, then Pro is needed", async () => {
 test("only the owner can list or change bills; anyone can open a bill link", async () => {
   assert.equal((await call({ action: "bl-home" }, stranger)).status, 401);
   const h = await call({ action: "bl-home" });
-  assert.equal(h.bills.length, 11); assert.ok(h.bills[0].no.endsWith("/0011")); assert.equal(h.used, 11);
-  assert.equal(h.months[0].n, 11);
+  assert.equal(h.bills.length, 6); assert.ok(h.bills[0].no.endsWith("/006")); assert.equal(h.used, 6);
+  assert.equal(h.months[0].n, 6);
   const t = h.bills[h.bills.length - 1].t;
   const pubBill = await B.handle({ action: "bl-get", t }, ctx(null));
   assert.equal(pubBill.ok, true); assert.equal(pubBill.bill.page, undefined);
@@ -107,7 +107,7 @@ test("only the owner can list or change bills; anyone can open a bill link", asy
 
 test("month report has every bill of the month, cancelled ones flagged", async () => {
   const ym = G.ym(Date.now()), r = await call({ action: "bl-month", ym });
-  assert.equal(r.bills.length, 11); assert.equal(r.bills.filter(b => b.cancel).length, 1);
+  assert.equal(r.bills.length, 6); assert.equal(r.bills.filter(b => b.cancel).length, 1);
   assert.ok(r.bills[0].at <= r.bills[10].at); assert.equal(r.shop.gstin, SELLER);
   assert.equal((await call({ action: "bl-month", ym: "2026-13" })).status, 400);
 });
@@ -116,9 +116,9 @@ test("CA link: read-only reports, can be turned off", async () => {
   const on = await call({ action: "bl-ca" });
   assert.ok(on.ca.length >= 12);
   const home = await B.handle({ action: "bl-ca-home", k: on.ca }, ctx(null));
-  assert.equal(home.ok, true); assert.equal(home.shop.name, "Maison Noor"); assert.equal(home.months[0].n, 11);
+  assert.equal(home.ok, true); assert.equal(home.shop.name, "Maison Noor"); assert.equal(home.months[0].n, 6);
   const mo = await B.handle({ action: "bl-ca-month", k: on.ca, ym: G.ym(Date.now()) }, ctx(null));
-  assert.equal(mo.bills.length, 11);
+  assert.equal(mo.bills.length, 6);
   // the CA can't change anything: owner actions with the CA token still need the owner's login
   assert.equal((await B.handle({ action: "bl-cancel", id: PID, k: on.ca, t: mo.bills[0].t }, ctx(null))).status, 401);
   await call({ action: "bl-ca", on: false });
