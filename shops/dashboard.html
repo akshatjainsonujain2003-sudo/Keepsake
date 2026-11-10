@@ -479,6 +479,8 @@ html.hi .nav small,html.hi .mg{letter-spacing:.04em}
   @keyframes pin{from{transform:translateX(40px);opacity:0}to{transform:none;opacity:1}}
 }
 @media (min-width:1100px) and (prefers-reduced-motion:reduce){.pmb{animation:none}}
+.qlk{display:flex;gap:10px;flex-wrap:wrap}.qlk .in{flex:1 1 200px;min-width:0;font-weight:600;letter-spacing:.06em;text-transform:uppercase}.qlk .in::placeholder{letter-spacing:.06em;font-weight:500}
+.cd.hl{box-shadow:0 0 0 2px var(--or)}
 </style>
 
 
@@ -1667,6 +1669,29 @@ V.page = () => {
   </div></section>` + googleCard();
 };
 
+// ---------- Link a printed blank QR board to this page ----------
+// Scanning a blank board while logged in lands here with ?link=CODE; the code can also be typed.
+const qbPost = b => api("/api/qr", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id: S.id, ...b }) });
+function qrBoards() {
+  if (S.qrLink === undefined) { const u = new URL(location.href); S.qrLink = (u.searchParams.get("link") || "").toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 12);
+    if (S.qrLink) { u.searchParams.delete("link"); history.replaceState(null, "", u.pathname + u.search + u.hash); setTimeout(() => { const c = $("#qrLinkCd"); if (c) c.scrollIntoView({ block: "center" }); }, 400); } }
+  if (S.qrb === undefined) { S.qrb = null; qbPost({ action: "qr-boards" }).then(j => { S.qrb = j.boards || []; }).catch(() => { S.qrb = []; }).finally(() => { if (S.view === "qr") { const y = scrollY; go(); scrollTo(0, y); } }); }
+  const B = S.qrb || [];
+  return `<section class="cd${S.qrLink ? " hl" : ""}" id="qrLinkCd" style="margin-top:18px"><div class="ch"><h2 class="H">Link a printed QR board</h2><small>Blank board</small></div>
+    <p class="mu" style="margin-top:0">Have a blank GetKeepsake QR board? Link it and it will open <b data-notr>${esc(shopName())}</b>. Scan the board with this phone's camera, or type the code printed under its QR.</p>
+    ${S.active === false ? `<div class="bar"><span><b>Your page isn't live yet.</b> Finish the payment first, then link the board.</span></div>` : `<div class="qlk"><label class="vh" for="qbIn">Code under the QR</label><input class="in" id="qbIn" placeholder="KSAB12CD34" value="${esc(S.qrLink || "")}" maxlength="60" autocapitalize="characters" autocomplete="off" spellcheck="false"><button class="btn k" data-qb="link">Link this QR</button></div>`}
+    <p class="hint" id="qbOut" role="status">${S.qrLink ? "Check the code matches the one on your board, then tap Link this QR." : ""}</p>
+    ${B.length ? `<div class="rows" style="margin-top:6px">${B.map(x => `<div><i class="ck on">${IC.check}</i><span><b data-notr>${esc(x.code)}</b><small>Linked${x.at ? " " + ago(x.at) : ""} · opens this page</small></span><button class="btn g s" data-qb="unlink" data-c="${esc(x.code)}">Remove</button></div>`).join("")}</div>` : ""}</section>`;
+}
+document.addEventListener("click", async e => { const b = e.target.closest("[data-qb]"); if (!b) return;
+  const out = $("#qbOut"), a = b.dataset.qb;
+  if (a === "unlink" && !confirm("Remove this QR board from your page? The board will be blank again.")) return;
+  const qr = a === "link" ? ($("#qbIn").value || "").trim() : b.dataset.c;
+  if (a === "link" && qr.length < 6) { out.textContent = "Type the code printed under the QR on the board."; $("#qbIn").focus(); return; }
+  b.disabled = true;
+  try { const j = await qbPost({ action: a === "link" ? "qr-link" : "qr-unlink", qr }); S.qrb = j.boards || []; S.qrLink = ""; toast(a === "link" ? (j.already ? "That board is already linked to this page." : "Linked. The board now opens your page.") : "Removed. The board is blank again."); const y = scrollY; go(); scrollTo(0, y); }
+  catch (x) { b.disabled = false; if (out) out.textContent = x.message; else toast(x.message); } });
+
 V.qr = () => {
   const tones = ((window.KSQRCards && KSQRCards.TONES) || ["red", "blue", "marigold", "green", "jamun"]).filter(t => t !== "whitegold");
   const names = (window.KSQRCards && KSQRCards.NAMES) || {};
@@ -1679,6 +1704,7 @@ V.qr = () => {
     <div class="tones" id="tones">${tones.map(t => `<button type="button" data-tone="${t}" class="${S.tone === t ? "on" : ""}" title="${esc(names[t] || t)}" aria-label="${esc(names[t] || t)}" style="background:${{ red: "#c8102e", blue: "#1d4ed8", marigold: "#f59e0b", green: "#15803d", jamun: "#6b21a8", whitegold: "#e9dcc0" }[t] || "#999"}"></button>`).join("")}</div>
     <div style="display:flex;gap:18px;flex-wrap:wrap;align-items:flex-start"><div id="stampWrap" style="width:220px;overflow:hidden;border-radius:10px"><div id="stamp" class="stamp"></div></div>
     <div style="flex:1;min-width:200px"><p style="margin-top:0"><b>${S.active ? "Order another printed board" : "Your printed board is included"}</b></p><p class="mu">Thick board in your colour, couriered to your shop anywhere in India in 5–7 days.</p><a class="btn" href="/shops/studio?edit=${S.id}#publish">Order printed QR</a>${S.ship ? `<p class="note" style="margin-top:14px">${esc(S.ship)}</p>` : ""}</div></div></div></section>
+  ${qrBoards()}
   <section class="cd" style="margin-top:18px"><div class="ch"><h2 class="H">Table QRs</h2><small>Dine-in ordering</small></div>
     <p class="mu" style="margin-top:0">One QR for each table. Guests scan it, their table number is filled in for them, and the order arrives in Orders as <b>Table 5</b>. No waiting for staff.</p>
     ${S.d.ord ? "" : `<div class="bar"><span><b>Orders are off.</b> Turn them on so guests can order from the table.</span><button class="btn" data-sx="ordon">Turn on orders</button></div>`}
