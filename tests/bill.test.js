@@ -17,6 +17,8 @@ const cmd = async (c, ...a) => {
     case "ZADD": { const z = zs.get(a[0]) || []; z.push([+a[1], a[2]]); zs.set(a[0], z); return 1; }
     case "ZCARD": return (zs.get(a[0]) || []).length;
     case "ZREMRANGEBYRANK": return 0;
+    case "ZCOUNT": { const lo = a[1] === "-inf" ? -Infinity : +String(a[1]).replace("(", ""), hiS = String(a[2]), hi = hiS === "+inf" ? Infinity : +hiS.replace("(", ""), ex = hiS.startsWith("(");
+      return [...(zs.get(a[0]) || [])].filter(x => x[0] >= lo && (ex ? x[0] < hi : x[0] <= hi)).length; }
     case "ZRANGE": { const z = [...(zs.get(a[0]) || [])].sort((x, y) => x[0] - y[0]).map(x => x[1]); if (a.includes("REV")) z.reverse(); const e = +a[2] < 0 ? z.length + +a[2] : +a[2]; return z.slice(+a[1], e + 1); }
     default: throw new Error("unmocked " + c);
   }
@@ -90,6 +92,13 @@ test("Start plan: 5 free bills, then Pro is needed", async () => {
   assert.equal((await call({ action: "bl-create", items: [item({ p: 10 })] })).status, 402);
   shop(true);
   assert.equal((await call({ action: "bl-create", items: [item({ p: 10 })] })).ok, true);
+});
+
+test("shops that billed before 10 Nov 2026 keep 10 free bills", async () => {
+  const old = "old" + PID, z = zs.get("blz:" + old) || [];
+  z.push([Date.parse("2026-11-01T10:00:00Z"), "x"]); zs.set("blz:" + old, z);
+  assert.equal(await B.freeOf(old), 10);
+  assert.equal(await B.freeOf("new" + PID), 5);
 });
 
 test("only the owner can list or change bills; anyone can open a bill link", async () => {
