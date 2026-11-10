@@ -555,6 +555,158 @@ p{margin:0}
 .gd-ord em{font-style:normal;font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:99px;background:#2A2A3C}.gd-ord em.nw{background:var(--blue)}.gd-ord em.lm{background:var(--lime);color:var(--ink)}
 @media (max-width:900px){.gdash{grid-template-columns:1fr}.gd-ui{transform:none}}
 @media (max-width:480px){.gd-row{grid-template-columns:1fr}.gd-k{gap:6px}.gd-k>div{padding:10px}.gd-ui{padding:12px}}
+/* ---------- home v3: shorter on phones, Run your shop, Hindi switch, two-button sticky bar ---------- */
+.lg{margin-left:auto;min-height:44px;padding:0 16px;border-radius:999px;border:0;background:rgba(255,255,255,.14);color:#fff;font:600 15px/1 "Mukta",var(--fb);cursor:pointer;touch-action:manipulation;transition:background .2s}
+.lg:hover{background:rgba(255,255,255,.24)}
+.lg:focus-visible,.run-tabs button:focus-visible{outline:2.5px solid var(--lime);outline-offset:3px}
+.nv{margin-left:auto}.nv+.lg{margin-left:0}
+[data-hi][lang=hi]{letter-spacing:0!important}
+h1[lang=hi],h2[lang=hi],h3[lang=hi],.mega[lang=hi]{line-height:1.25!important}
+h1[lang=hi] .scr{font:800 1em/1 var(--fd);font-style:italic;transform:rotate(-5deg) translate(.04em,-.02em);padding-right:.1em}
+.end h2[lang=hi]{text-transform:none}
+.dock .btn.wa{display:none}
+.run{position:relative;overflow:hidden;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:clamp(24px,4vw,64px);align-items:center;margin-top:20px;padding:clamp(24px,4.4vw,64px);border-radius:clamp(28px,4vw,48px);color:#fff;
+  background:radial-gradient(60% 70% at 100% 0%,rgba(91,54,245,.7) 0%,rgba(91,54,245,0) 65%),radial-gradient(50% 60% at 0% 100%,rgba(31,27,242,.55) 0%,rgba(31,27,242,0) 70%),var(--ink)}
+.run-copy{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:20px}
+.run h2{font:800 clamp(36px,5vw,72px)/.98 var(--fd);letter-spacing:-.045em}
+.run h2 em{font-style:normal;color:var(--lime)}
+.run-lead{max-width:520px;font-size:clamp(16px,1.3vw,18px);color:#C9C9D6}
+.run-tabs{display:flex;flex-wrap:wrap;gap:8px}
+.run-tabs button{min-height:44px;padding:0 18px;border-radius:999px;border:0;background:rgba(255,255,255,.1);color:#fff;font:600 15px/1 var(--fb);cursor:pointer;touch-action:manipulation;transition:background .2s,color .2s}
+.run-tabs button:hover{background:rgba(255,255,255,.2)}
+.run-tabs button[aria-selected=true]{background:var(--lime);color:var(--ink)}
+.run-txt{width:100%;max-width:540px;min-height:176px;padding:22px;border-radius:24px;background:rgba(255,255,255,.07);box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
+.run-txt b{display:block;font:700 clamp(21px,1.9vw,26px)/1.15 var(--fd);letter-spacing:-.025em}
+.run-txt p{margin-top:8px;font-size:15.5px;line-height:1.55;color:#C9C9D6}
+.run-plan{display:inline-block;margin-top:14px;padding:7px 12px;border-radius:999px;background:rgba(212,255,63,.14);color:var(--lime);font:600 11.5px/1.3 var(--fm);letter-spacing:.05em;text-transform:uppercase}
+.run-more{list-style:none;margin:0;padding:0;display:grid;gap:8px;font-size:15px;color:#D6D6DE}
+.run-more li{display:grid;grid-template-columns:20px 1fr;gap:10px;align-items:start}
+.run-more svg{margin-top:5px;color:var(--lime)}
+.run-ph{position:relative;display:flex;flex-direction:column;align-items:center;gap:18px}
+.run-ph::before{content:"";position:absolute;left:50%;top:46%;width:min(480px,120%);aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,rgba(212,255,63,.2) 0%,rgba(140,130,255,.26) 40%,rgba(140,130,255,0) 70%);pointer-events:none}
+.run-ph .ph{position:relative;--w:300px;aspect-ratio:auto;height:calc(var(--w)*1.92);transform:rotate(2.5deg)}
+.run-ph .sc{background:#F2F2EE;contain:paint;overflow-y:auto;overscroll-behavior:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-top:12px}
+.run-ph .sc::-webkit-scrollbar{display:none}
+.run-ph img{width:100%;height:auto;transition:opacity .22s}
+.run-ph .tagx{text-align:center;line-height:1.5}
+.ph iframe{height:792px}
+.stage .ph iframe{pointer-events:auto}
+.stage .info small{font-size:12.5px;color:#8F8FA0}
+.run-ph img.sw{opacity:0}
+.run-ph .tagx{position:relative}
+.proof-t{font:700 clamp(34px,4.6vw,64px)/1 var(--fd);letter-spacing:-.045em;margin-top:12px}
+.proof{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:28px}
+.proof figure{margin:0;border-radius:var(--r);overflow:hidden;background:var(--white);border:1px solid var(--line)}
+.proof img{width:100%;aspect-ratio:4/3;object-fit:cover}
+.proof blockquote{margin:0;padding:20px 22px 0;font:600 19px/1.35 var(--fd);letter-spacing:-.015em}
+.proof figcaption{padding:10px 22px 22px;font-size:14px;color:var(--mute)}
+@media (max-width:900px){
+  .run{grid-template-columns:1fr}
+  .run-ph{order:-1}
+  .run-ph .ph{--w:230px;transform:none}
+  .run-txt{min-height:0}
+  .dock{display:flex;gap:8px;left:0;right:0;bottom:0;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:rgba(11,11,20,.86);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 -1px 0 rgba(255,255,255,.08)}
+  .dock .btn{box-shadow:none}
+  .dock .btn{flex:1;min-width:0;padding:0 16px}
+  .dock .btn.wa{display:inline-flex;flex:none;width:auto;gap:8px;background:#0B0B14;color:#fff;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.28)}
+  .dock .btn.wa svg{color:#3DDC84}
+  .ft .legal{padding-bottom:calc(96px + env(safe-area-inset-bottom))}
+}
+@media (max-width:600px){
+  /* first screen: headline, price, the button and the top of the phone */
+  .h-top,.ann,.h-x,.incl,.fl2,.k3{display:none}
+  .hero.v2 .h-grid{padding:84px 0 0;gap:0}
+  .hero.v2 h1{font-size:clamp(42px,12.4vw,58px)}
+  .h-sub{margin-top:10px;font-size:19px}
+  .hero.v2 .h-lead{margin-top:10px;font-size:15.5px;line-height:1.5}
+  .h-cta{margin-top:18px;gap:10px}
+  .h-cta .btn.lime{flex:1 1 100%}
+  .h-cta .btn.ghost{display:none}
+  .h-note{margin-top:12px;font-size:13.5px}
+  .scene{height:400px;margin-top:8px}
+  .hero.v2{padding-bottom:28px}
+  /* why */
+  .intro{padding:48px 0 32px}
+  .intro .st{font-size:27px}
+  .bento{margin-top:24px;gap:10px}
+  .bx{min-height:0;padding:20px;border-radius:24px;gap:16px}
+  .bx.b1,.subrow{display:none}
+  .bx.b3{flex-direction:row;align-items:center;gap:16px}
+  .bx.b3 .cardh{display:none}
+  .bx.b3>div{display:flex;align-items:center;gap:16px}
+  .bx.b3 .big{font-size:56px;line-height:1}
+  .bx.b3 small{margin-top:0!important}
+  .mq{padding:12px 0}
+  /* what you get: six short rows */
+  .sec{padding-top:56px}
+  .sh2{margin-top:14px;padding-bottom:16px;gap:10px}
+  .sh2 .sh2-x{font-size:17px;line-height:1.35;letter-spacing:-.01em;font-weight:500}
+  .gets{gap:8px;margin-top:18px}
+  .gt{padding:14px 16px;border-radius:20px;display:grid;grid-template-columns:44px 1fr;column-gap:14px;row-gap:2px;align-items:center}
+  .gt>i{width:44px;height:44px;border-radius:14px;grid-row:1/3;align-self:start}
+  .gt>i svg{width:22px;height:22px}
+  .gt h3{margin:0;font-size:18px;align-self:end}
+  .gt p{font-size:14px;line-height:1.45;grid-column:2}
+  .gt .chips{display:none}
+  /* how it works */
+  .dark{margin-top:56px;padding:36px 0}
+  .dark .head p{display:none}
+  .steps{margin-top:20px;gap:8px}
+  .step{padding:18px;border-radius:22px;gap:8px}
+  .step .im,.state{display:none}
+  .step h3{font-size:21px}.step h3 br{display:none}
+  .step .go{width:40px;height:40px}
+  .step p{font-size:14.5px}
+  /* examples: one row of business chips, then the phone */
+  #layouts{padding-top:48px!important}
+  .pick{margin-top:18px;gap:14px}
+  #groups{display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x proximity;margin:0 calc(-1*var(--gut));padding:4px var(--gut) 8px;scrollbar-width:none}
+  #groups::-webkit-scrollbar{display:none}
+  .grp{display:contents}.grp>b{display:none}.grp>div{display:contents}
+  .grp button{flex:none;scroll-snap-align:start;white-space:nowrap}
+  .stage{padding:22px 16px;border-radius:26px;gap:16px}
+  .stage .ph{--w:236px;--s:.5867}
+  .bzl,.qx-tip{display:none}
+  .qx{margin-top:16px}
+  .qx-hold{zoom:.62}
+  .qx-stage{padding:16px 0 0}
+  /* run your shop */
+  .run{padding:22px 18px 24px;border-radius:26px;gap:18px;margin-top:14px}
+  .run-copy{gap:14px}
+  .run h2{font-size:34px}
+  .run-lead{font-size:15px}
+  .run-tabs{gap:6px;width:100%}
+  .run-tabs button{flex:1 1 auto;padding:0 12px;font-size:14px}
+  .run-txt{padding:16px;border-radius:20px}
+  .run-txt p{font-size:14.5px}
+  .run-more{display:none}
+  .run .btn{width:100%}
+  .run-ph .ph{--w:200px}
+  /* pricing */
+  .plans{margin-top:20px}
+  .plan{padding:24px 20px;border-radius:26px;gap:16px}
+  .plan ul{padding-top:16px;gap:9px}.plan li{font-size:14.5px}
+  .addon,.facts{display:none}
+  .pnote{margin-top:16px;gap:6px 18px;font-size:13px}
+  /* questions, end, footer */
+  .faqg{margin-top:16px;gap:8px}
+  .faqg aside p,.faqg aside .btn{display:none}
+  .faq summary{padding:16px 0;font-size:17px}
+  .faq summary::after{width:34px;height:34px}
+  .end{margin-top:56px;padding:40px 0 36px}
+  .end .badge{display:none}
+  .end .row{margin-top:24px}
+  .ft{padding-top:44px}
+  .ft .cols{grid-template-columns:1fr 1fr;gap:20px 16px;margin-top:28px}
+  .ft .cols>div:first-child{grid-column:1/-1}
+  .ft .cols a{font-size:14px;padding:5px 0}
+  .ft .wm{margin-top:24px}
+}
+.logo sup{white-space:nowrap}
+@media (max-width:480px){.logo sup{display:none}.dock .btn{font-size:15px;padding:0 12px;gap:8px}.dock .btn .ar{display:none}}
+.nv>a,.nv summary{white-space:nowrap}
+@media (min-width:981px) and (max-width:1380px){.hd .logo sup,.nv>a[href="#faq"]{display:none}}
+@media (min-width:981px) and (max-width:1180px){.nv>a[href="#how"],.nv>a[href="#features"]{display:none}}
 </style>
 </head>
 <body>
@@ -566,8 +718,9 @@ p{margin:0}
     <a href="#features">What you get</a><a href="#how">How it works</a><a href="#layouts">Examples</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a><a href="/shops/login">Log in</a>
     <a class="btn lime sm" href="/shops/studio">Create your page <span class="ar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></span></a>
   </nav>
+  <button class="lg" id="lg" type="button" lang="hi" aria-pressed="false" aria-label="Switch language · भाषा बदलें">हिंदी</button>
   <details class="mnav"><summary aria-label="Menu"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 8h16M4 16h16"/></svg></summary>
-    <div class="pn"><a href="#features">What you get</a><a href="#how">How it works</a><a href="#layouts">Examples</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a><a href="/shops/login">Log in</a><a class="btn lime" href="/shops/studio"><span>Create your page · ₹<span data-p="biz">1,000</span></span></a></div>
+    <div class="pn"><a href="#features">What you get</a><a href="#how">How it works</a><a href="#layouts">Examples</a><a href="#run">Run your shop</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a><a href="/shops/login">Log in</a><a class="btn lime" href="/shops/studio"><span data-hi='अपना पेज बनाएँ · ₹<span data-p="biz">1,000</span>'>Create your page · ₹<span data-p="biz">1,000</span></span></a></div>
   </details>
 </div></header>
 
@@ -584,12 +737,11 @@ p{margin:0}
     <div class="h-grid">
       <div class="h-copy">
         <a class="ann rv" href="#pricing"><span class="nw">New</span><span>Printed QR board and loyalty card included</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-        <h1 class="rv" style="--d:.04s"><span class="chrome">Your business,</span><br><span class="chrome">one scan</span> <span class="nw2"><span class="scr">away</span><span class="chrome">.</span></span></h1>
-        <p class="h-sub rv" style="--d:.06s">Website, QR and WhatsApp in ₹<span data-p="biz">1,000</span>.</p>
-        <p class="h-lead rv" style="--d:.08s">Your menu, services or price list, WhatsApp orders and bookings, UPI, Google reviews and a loyalty card, all behind one QR. For cafés, salons, gyms, clinics, shops and every local business. Ready in 5 minutes.</p>
-        <p class="h-hi rv" lang="hi" style="--d:.12s">आपका बिज़नेस, एक QR में: वेबसाइट, WhatsApp और UPI</p>
-        <div class="h-cta rv" style="--d:.16s"><a class="btn lime" href="/shops/studio"><span>Create your page · ₹<span data-p="biz">1,000</span></span> <span class="ar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></span></a><a class="btn ghost" href="https://wa.me/918302791217?text=Hi%20GetKeepsake!%20I%20want%20a%20page%20for%20my%20business."><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 20.5l1.3-4.3A8.5 8.5 0 1 1 8 19.3z"/></svg>WhatsApp us</a></div>
-        <p class="h-note rv" style="--d:.2s">Pay once. No monthly fee, no commission. <a href="#layouts" style="color:#fff">See example pages ↓</a></p>
+        <h1 class="rv" style="--d:.04s" data-hi='<span class="chrome">आपका बिज़नेस,</span><br><span class="chrome">बस एक स्कैन</span> <span class="nw2"><span class="scr">दूर</span><span class="chrome">.</span></span>'><span class="chrome">Your business,</span><br><span class="chrome">one scan</span> <span class="nw2"><span class="scr">away</span><span class="chrome">.</span></span></h1>
+        <p class="h-sub rv" style="--d:.06s" data-hi='वेबसाइट, QR और WhatsApp, सिर्फ़ ₹<span data-p="biz">1,000</span> में.'>Website, QR and WhatsApp in ₹<span data-p="biz">1,000</span>.</p>
+        <p class="h-lead rv" style="--d:.08s" data-hi="मेन्यू या रेट लिस्ट, WhatsApp ऑर्डर, UPI, Google रिव्यू और लॉयल्टी कार्ड, सब एक QR में. कैफ़े, सैलून, जिम, क्लिनिक और हर दुकान के लिए. 5 मिनट में तैयार.">Your menu or price list, WhatsApp orders, UPI, Google reviews and a loyalty card, all behind one QR. <span class="h-x">For cafés, salons, gyms, clinics, shops and every local business. </span>Ready in 5 minutes.</p>
+        <div class="h-cta rv" style="--d:.16s"><a class="btn lime" href="/shops/studio"><span data-hi='अपना पेज बनाएँ · ₹<span data-p="biz">1,000</span>'>Create your page · ₹<span data-p="biz">1,000</span></span> <span class="ar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></span></a><a class="btn ghost" href="https://wa.me/918302791217?text=Hi%20GetKeepsake!%20I%20want%20a%20page%20for%20my%20business."><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 20.5l1.3-4.3A8.5 8.5 0 1 1 8 19.3z"/></svg><span data-hi="WhatsApp करें">WhatsApp us</span></a></div>
+        <p class="h-note rv" style="--d:.2s"><span data-hi="एक बार पेमेंट. कोई महीने की फ़ीस नहीं, कोई कमीशन नहीं.">Pay once. No monthly fee, no commission.</span> <a href="#layouts" style="color:#fff" data-hi="उदाहरण पेज देखें ↓">See example pages ↓</a></p>
       </div>
       <div class="scene" id="phones" aria-label="Your QR board on the counter opens your page on any phone">
         <div class="orb" aria-hidden="true"></div>
@@ -614,7 +766,7 @@ p{margin:0}
 
 <section class="intro" aria-labelledby="introT"><div class="wrap">
   <p class="lbl rv">(Why — 01)</p>
-  <h2 id="introT" class="st rv" style="margin-top:20px">Pamphlets get a three-second look. <span class="g">Your QR stays on their phone and keeps bringing them back</span><span class="dot" aria-hidden="true"><svg width="0.5em" height="0.5em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></span></h2>
+  <h2 id="introT" class="st rv" style="margin-top:20px"><span data-hi="पैम्फलेट पर नज़र बस तीन सेकंड टिकती है.">Pamphlets get a three-second look.</span> <span class="g" data-hi="आपका QR ग्राहक के फ़ोन में रहता है और उन्हें बार-बार वापस लाता है">Your QR stays on their phone and keeps bringing them back</span><span class="dot" aria-hidden="true"><svg width="0.5em" height="0.5em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></span></h2>
   <div class="bento">
     <div class="bx b1 rv">
       <svg class="st4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.2 7.8L22 12l-7.8 2.2L12 22l-2.2-7.8L2 12l7.8-2.2z"/></svg>
@@ -637,29 +789,18 @@ p{margin:0}
 
 <section class="sec" id="features" aria-labelledby="featT"><div class="wrap">
   <p class="lbl rv">(What you get — 02)</p>
-  <div class="sh2 rv" style="margin-top:12px"><h2 id="featT" class="mega grad" style="font-size:clamp(44px,5.8vw,96px);line-height:.92">Everything<br>in one scan.</h2><h2>Six things every local business needs, and a dashboard to run them. <span class="g">All in the ₹<span data-p="biz">1,000</span> plan, ready in 5 minutes.</span></h2></div>
-  <div class="gets"><article class="gt rv" style="--d:0.00s"><i><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M10 6h4M9 11h6M9 15h4"/></svg></i><h3>Your page</h3><p>Menu, services or price list with photos, timings, map and Instagram. Change it from your phone any time; the QR stays the same.</p><div class="chips"><span>Café menu</span><span>Salon rate card</span><span>Gym plans</span><span>Property list</span></div></article><article class="gt rv" style="--d:0.05s"><i><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 20.5l1.3-4.3A8.5 8.5 0 1 1 8 19.3z"/><path d="M9 10h6M9 13h4"/></svg></i><h3>WhatsApp orders &amp; bookings</h3><p>Customers pick what they want and it lands on your WhatsApp with the total. Orders, appointments, trial classes or site visits.</p><div class="chips"><span>0% commission</span><span>No app needed</span></div></article><article class="gt rv" style="--d:0.10s"><i><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="M2.5 10h19M6 15h4"/></svg></i><h3>UPI payments</h3><p>A Pay button with your UPI ID. Money goes straight to your bank; we never touch it.</p><div class="chips"><span>Any UPI app</span><span>Straight to your bank</span></div></article><article class="gt rv" style="--d:0.15s"><i><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8L3.5 9.7l5.9-.9z"/></svg></i><h3>Google reviews</h3><p>One tap takes happy customers to your Google review page, right after they order or pay.</p><div class="chips"><span>More stars</span><span>More trust</span></div></article><article class="gt rv" style="--d:0.20s"><i><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"/><circle cx="8" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="16" cy="12" r="1.6"/></svg></i><h3>Loyalty card</h3><p>A stamp card on your page. Staff add a stamp with a PIN; you pick the reward. First-time visitors become regulars.</p><div class="chips"><span>Included</span><span>Your own reward</span></div></article><article class="gt rv" style="--d:0.25s"><i><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></i><h3>Found on Google</h3><p>Your page is built so Google and AI search can show it when people look for your business by name or area.</p><div class="chips"><span>Ready for Google</span><span>Ready for AI answers</span></div></article></div>
-  <div class="gdash rv">
-    <div class="gd-copy"><span class="lbl">Included · owner dashboard</span><h3>A premium dashboard for you.</h3><p>Run everything from your phone or laptop. See who scanned, who ordered and who hasn't come back, and act in one tap.</p>
-      <ul><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg><span>Live orders with a ding, and WhatsApp replies in one tap</span></li><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg><span>QR scans, sales and top items for every day</span></li><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg><span>Your customer list: new, regular and gone-quiet</span></li><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg><span>Loyalty members, reviews, offers and payments in one place</span></li></ul></div>
-    <div class="gd-ui" aria-hidden="true">
-      <div class="gd-top"><span class="gd-dot"></span><b>Good evening</b><span class="tagx">Example</span></div>
-      <div class="gd-k"><div class="o"><small>QR scans today</small><b>48</b><em>+18% vs last Fri</em></div><div><small>Orders</small><b>23</b><em>3 waiting</em></div><div class="y"><small>Sales</small><b>₹9,840</b><em>Avg ₹428</em></div></div>
-      <div class="gd-row"><div class="gd-bars"><small>Scans · last 7 days</small><div><i style="--h:38%"><u></u><s>M</s></i><i style="--h:52%"><u></u><s>T</s></i><i style="--h:44%"><u></u><s>W</s></i><i style="--h:70%"><u></u><s>T</s></i><i style="--h:58%"><u></u><s>F</s></i><i style="--h:86%"><u></u><s>S</s></i><i style="--h:64%"><u></u><s>S</s></i></div></div>
-        <ul class="gd-ord"><li><span class="av">RK</span><span><b>Riya K.</b><small>2 items · just now</small></span><em class="nw">New</em></li><li><span class="av">AM</span><span><b>Arjun M.</b><small>Haircut · 4 min ago</small></span><em>Ready</em></li><li><span class="av">SP</span><span><b>Sneha P.</b><small>Stamp 7 of 10</small></span><em class="lm">Loyalty</em></li></ul></div>
-    </div>
-  </div>
-  <div class="gpro rv"><div><span class="lbl w">Keepsake Pro · optional</span><p>Selling a lot or giving credit? Add an <b>online store</b>, unlimited <b>GST bills</b> and a <b>Smart Udhaar khata</b> customers confirm on WhatsApp, plus table QRs and day-end reports, for ₹<span data-p="pro">299</span> a month.</p></div><a class="btn lime" href="#pricing">See Pro <span class="ar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></span></a></div>
+  <div class="sh2 rv" style="margin-top:12px"><h2 id="featT" class="mega grad" style="font-size:clamp(44px,5.8vw,96px);line-height:.92" data-hi="सब कुछ<br>एक स्कैन में.">Everything<br>in one scan.</h2><h2 class="sh2-x">Six things every local business needs, and a dashboard to run them. <span class="g">All in the ₹<span data-p="biz">1,000</span> plan, ready in 5 minutes.</span></h2></div>
+  <div class="gets"><article class="gt rv" style="--d:0.00s"><i><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M10 6h4M9 11h6M9 15h4"/></svg></i><h3 data-hi="आपका पेज">Your page</h3><p>Menu, services or price list with photos, timings, map and Instagram. Change it from your phone any time; the QR stays the same.</p><div class="chips"><span>Café menu</span><span>Salon rate card</span><span>Gym plans</span><span>Property list</span></div></article><article class="gt rv" style="--d:0.05s"><i><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 20.5l1.3-4.3A8.5 8.5 0 1 1 8 19.3z"/><path d="M9 10h6M9 13h4"/></svg></i><h3 data-hi="WhatsApp ऑर्डर और बुकिंग">WhatsApp orders &amp; bookings</h3><p>Customers pick what they want and it lands on your WhatsApp with the total. Orders, appointments, trial classes or site visits.</p><div class="chips"><span>0% commission</span><span>No app needed</span></div></article><article class="gt rv" style="--d:0.10s"><i><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="M2.5 10h19M6 15h4"/></svg></i><h3 data-hi="UPI पेमेंट">UPI payments</h3><p>A Pay button with your UPI ID. Money goes straight to your bank; we never touch it.</p><div class="chips"><span>Any UPI app</span><span>Straight to your bank</span></div></article><article class="gt rv" style="--d:0.15s"><i><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8L3.5 9.7l5.9-.9z"/></svg></i><h3 data-hi="Google रिव्यू">Google reviews</h3><p>One tap takes happy customers to your Google review page, right after they order or pay.</p><div class="chips"><span>More stars</span><span>More trust</span></div></article><article class="gt rv" style="--d:0.20s"><i><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"/><circle cx="8" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="16" cy="12" r="1.6"/></svg></i><h3 data-hi="लॉयल्टी कार्ड">Loyalty card</h3><p>A stamp card on your page. Staff add a stamp with a PIN; you pick the reward. First-time visitors become regulars.</p><div class="chips"><span>Included</span><span>Your own reward</span></div></article><article class="gt rv" style="--d:0.25s"><i><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></i><h3 data-hi="Google पर दिखें">Found on Google</h3><p>Your page is built so Google and AI search can show it when people look for your business by name or area.</p><div class="chips"><span>Ready for Google</span><span>Ready for AI answers</span></div></article></div>
 </div></section>
 
 <section class="dark" id="how" aria-labelledby="howT">
   <div class="grain" aria-hidden="true" style="opacity:.08"></div>
   <div class="wrap" style="position:relative">
-    <div class="head rv"><div><p class="lbl w">(How it works — 03)</p><h2 id="howT" style="margin-top:14px">Three steps. Zero tech.</h2></div><p>Pick your type of business and we set up the right layout, colours and wording. You just fill it in.</p></div>
+    <div class="head rv"><div><p class="lbl w">(How it works — 03)</p><h2 id="howT" style="margin-top:14px" data-hi="तीन स्टेप. कोई झंझट नहीं.">Three steps. Zero tech.</h2></div><p>Pick your type of business and we set up the right layout, colours and wording. You just fill it in.</p></div>
     <div class="steps">
-      <a class="step rv" href="/shops/studio" style="text-decoration:none;color:inherit"><div class="top"><h3>01 · Fill in<br>your page</h3><span class="go" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></span></div><p>Add your menu, services or prices, photos and timings. Upload a photo of your menu or rate card and the items fill in by themselves.</p><div class="im"><img src="/assets/demo/biz/cafe-latte.webp" alt="" loading="lazy"></div></a>
-      <a class="step v rv" href="#qr" style="text-decoration:none;--d:.08s"><div class="top"><h3>02 · Put your QR<br>where people wait</h3><span class="go" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></span></div><p>Your printed counter board comes with the plan. We courier it to you, or you can download the QR and print more.</p><div class="im"><img src="/assets/demo/biz/cafe-bar.webp" alt="" loading="lazy"></div></a>
-      <a class="step rv" href="#layouts" style="text-decoration:none;color:inherit;--d:.16s"><div class="top"><h3>03 · Customers scan<br>&amp; come back</h3><span class="go" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></span></div><p>They see what you offer, message you on WhatsApp, pay by UPI, leave a Google review and collect a stamp every visit.</p><div class="im"><img src="/assets/demo/biz/salon-cover.webp" alt="" loading="lazy"></div></a>
+      <a class="step rv" href="/shops/studio" style="text-decoration:none;color:inherit"><div class="top"><h3 data-hi="01 · अपना पेज <br>भरें">01 · Fill in <br>your page</h3><span class="go" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></span></div><p>Add your menu, services or prices, photos and timings. Upload a photo of your menu or rate card and the items fill in by themselves.</p><div class="im"><img src="/assets/demo/biz/cafe-latte.webp" alt="" loading="lazy"></div></a>
+      <a class="step v rv" href="#qr" style="text-decoration:none;--d:.08s"><div class="top"><h3 data-hi="02 · QR काउंटर <br>पर लगाएँ">02 · Put your QR <br>where people wait</h3><span class="go" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></span></div><p>Your printed counter board comes with the plan. We courier it to you, or you can download the QR and print more.</p><div class="im"><img src="/assets/demo/biz/cafe-bar.webp" alt="" loading="lazy"></div></a>
+      <a class="step rv" href="#layouts" style="text-decoration:none;color:inherit;--d:.16s"><div class="top"><h3 data-hi="03 · ग्राहक स्कैन करें <br>और लौटकर आएँ">03 · Customers scan <br>&amp; come back</h3><span class="go" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></span></div><p>They see what you offer, message you on WhatsApp, pay by UPI, leave a Google review and collect a stamp every visit.</p><div class="im"><img src="/assets/demo/biz/salon-cover.webp" alt="" loading="lazy"></div></a>
     </div>
     <div class="state">
       <h2 class="rv">We build pages that bring your customers back. Every scan. Every visit.</h2>
@@ -675,12 +816,12 @@ p{margin:0}
 
 <section class="sec" id="layouts" aria-labelledby="layT" style="padding-top:clamp(56px,7vw,96px)"><div class="wrap">
   <p class="lbl rv">(Examples — 04)</p>
-  <div class="sh2 rv" style="margin-top:12px;border-bottom:0;padding-bottom:0"><h2 id="layT" style="font:700 clamp(36px,4.6vw,64px)/.95 var(--fd);letter-spacing:-.045em">Pick your business.<br><span class="grad">See your page.</span></h2><h2>Every business gets its own layout and words. <span class="g">Tap yours to see the page your customers will get.</span></h2></div>
+  <div class="sh2 rv" style="margin-top:12px;border-bottom:0;padding-bottom:0"><h2 id="layT" style="font:700 clamp(36px,4.6vw,64px)/.95 var(--fd);letter-spacing:-.045em" data-hi='अपना बिज़नेस चुनें.<br><span class="grad">अपना पेज देखें.</span>'>Pick your business.<br><span class="grad">See your page.</span></h2><h2 class="sh2-x">Every business gets its own layout and words. <span class="g">Tap yours to see the page your customers will get.</span></h2></div>
   <div class="pick">
     <div id="groups"></div>
     <div class="stage" aria-live="polite">
       <div class="ph"><div class="sc"><iframe id="stage" data-demo="cafe" title="Preview of the selected business" tabindex="-1"></iframe></div></div>
-      <div class="info"><b id="stName">Café</b><span id="stLay">Poster layout · Latte colours</span><a class="btn lime" id="stGo" href="/shops/studio?type=cafe">Start with this <span class="ar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></span></a></div>
+      <div class="info"><b id="stName">Café</b><span id="stLay">Poster layout · Latte colours</span><small data-hi="फ़ोन के अंदर स्क्रॉल करके पूरा पेज देखें ↕">Scroll inside the phone to see the whole page ↕</small><a class="btn lime" id="stGo" href="/shops/studio?type=cafe">Start with this <span class="ar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></span></a></div>
     </div>
   </div>
 
@@ -698,9 +839,51 @@ p{margin:0}
   </div>
 </div></section>
 
+<section class="sec" id="run" aria-labelledby="runT"><div class="wrap">
+  <p class="lbl rv">(Run your shop — 05)</p>
+  <div class="run rv">
+    <div class="grain" aria-hidden="true" style="opacity:.08"></div>
+    <div class="run-copy">
+      <h2 id="runT" data-hi="पूरी दुकान,<br><em>आपके फ़ोन में.</em>">Your whole shop,<br><em>in your phone.</em></h2>
+      <p class="run-lead" data-hi="वही लॉगिन आपका काउंटर भी चलाता है: बिल, उधार, स्टॉक और मुनाफ़ा. फ़ोन में ऐप की तरह इंस्टॉल होता है.">The same login runs your counter too: bills, udhaar, stock and profit. It installs on your phone like an app.</p>
+      <div class="run-tabs" role="tablist" aria-label="Dashboard screens">
+        <button type="button" role="tab" id="runT0" aria-controls="runPane" aria-selected="true" data-run="home" data-hi="होम">Home</button>
+        <button type="button" role="tab" id="runT1" aria-controls="runPane" aria-selected="false" tabindex="-1" data-run="bills" data-hi="GST बिल">GST bills</button>
+        <button type="button" role="tab" id="runT2" aria-controls="runPane" aria-selected="false" tabindex="-1" data-run="udhaar" data-hi="उधार खाता">Udhaar</button>
+        <button type="button" role="tab" id="runT3" aria-controls="runPane" aria-selected="false" tabindex="-1" data-run="profit" data-hi="मुनाफ़ा">Profit</button>
+      </div>
+      <div class="run-txt" id="runPane" role="tabpanel" aria-labelledby="runT0" aria-live="polite">
+        <b id="runH">Today, on one screen</b>
+        <p id="runP">Sales, orders, udhaar to collect and page scans the moment you open it. New orders ring on your phone; accept and reply on WhatsApp in one tap.</p>
+        <span class="run-plan" id="runPl">Included in the ₹<span data-p="biz">1,000</span> plan</span>
+      </div>
+      <ul class="run-more">
+        <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg><span>Mark items sold out or set a stock count</span></li>
+        <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg><span>Staff PIN for stamps, your login for money</span></li>
+        <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg><span>Works on any phone or laptop, nothing to download from a store</span></li>
+      </ul>
+      <a class="btn lime" href="#pricing"><span data-hi="प्लान देखें">See the plans</span> <span class="ar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></span></a>
+    </div>
+    <div class="run-ph">
+      <div class="ph"><div class="sc" id="runSc" tabindex="0" role="group" aria-label="Dashboard screen, scrollable"><img id="runImg" src="/assets/home/dash-home.v2.webp" width="600" height="3572" loading="lazy" decoding="async" alt="The dashboard home screen of a sample kirana store: sales today, orders, udhaar to collect and page scans"></div></div>
+      <span class="tagx">Real dashboard · sample shop<br><span data-hi="फ़ोन के अंदर स्क्रॉल करें ↕">Scroll inside the phone ↕</span></span>
+    </div>
+  </div>
+</div></section>
+
+<!-- Real shops go here. This section stays hidden until there is a real photo and a real quote with the owner's permission.
+     To show it: remove the "hidden" attribute and fill one <figure> per shop. Never put invented names, quotes or numbers here. -->
+<section class="sec" id="shops" aria-labelledby="shopsT" hidden><div class="wrap">
+  <p class="lbl">(Shops using it)</p>
+  <h2 id="shopsT" class="proof-t">On real counters.</h2>
+  <div class="proof">
+    <!-- <figure><img src="/assets/home/shop-NAME.v1.webp" width="800" height="600" loading="lazy" alt="SHOP NAME, AREA, CITY"><blockquote>THE OWNER'S OWN WORDS</blockquote><figcaption><b>OWNER NAME</b> · SHOP NAME, CITY</figcaption></figure> -->
+  </div>
+</div></section>
+
 <section class="sec" id="pricing" aria-labelledby="priceT"><div class="wrap">
-  <p class="lbl rv">(Pricing — 05)</p>
-  <h2 id="priceT" class="mega grad rv" style="margin-top:16px">Pay once.<br>Grow later.</h2>
+  <p class="lbl rv">(Pricing — 06)</p>
+  <h2 id="priceT" class="mega grad rv" style="margin-top:16px" data-hi="एक बार पेमेंट.<br>बढ़ें जब चाहें.">Pay once.<br>Grow later.</h2>
   <div class="sh2 rv"><span class="lbl">Simple, honest pricing</span><h2>Start with your page and loyalty card. <span class="g">Go Pro when you want an online store, GST bills and an udhaar khata. We keep adding features to every plan.</span></h2></div>
   <div class="plans">
     <div class="plan p1 rv">
@@ -732,9 +915,9 @@ p{margin:0}
 </div></section>
 
 <section class="sec" id="faq" aria-labelledby="faqT"><div class="wrap">
-  <p class="lbl rv">(Questions — 06)</p>
+  <p class="lbl rv">(Questions — 07)</p>
   <div class="faqg">
-    <aside class="rv"><h2 id="faqT" class="mega grad" style="font-size:clamp(48px,6vw,96px);line-height:.9">Good to<br>know.</h2><p>Still unsure? Message us and we'll help you finish your page.</p><a class="btn ink" href="https://wa.me/918302791217?text=Hi%20GetKeepsake!%20I%20have%20a%20question.">WhatsApp us <span class="ar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></span></a></aside>
+    <aside class="rv"><h2 id="faqT" class="mega grad" style="font-size:clamp(48px,6vw,96px);line-height:.9" data-hi="आपके<br>सवाल.">Good to<br>know.</h2><p>Still unsure? Message us and we'll help you finish your page.</p><a class="btn ink" href="https://wa.me/918302791217?text=Hi%20GetKeepsake!%20I%20have%20a%20question.">WhatsApp us <span class="ar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></span></a></aside>
     <div class="faq"><details class="rv"><summary>Can I use it as a QR code menu for my restaurant or café?</summary><p>Yes. Your menu, with sections, prices, photos and bestseller tags, opens when customers scan the QR on the table or counter. Customers can also order on WhatsApp, pay by UPI and leave a Google review from the same page.</p></details><details class="rv"><summary>Which businesses is it for?</summary><p>Cafés, restaurants, bakeries, salons, spas, gyms, clinics, dentists, boutiques, kirana stores, CAs, tutors, property dealers and almost any shop or service. Pick your business type and we set up the right layout and wording.</p></details><details class="rv"><summary>How much does it cost?</summary><p>₹1,000 once for your page, a printed QR board delivered to your shop and the loyalty stamp card. There&#x27;s no commission on WhatsApp orders or UPI payments. Keepsake Pro, with the online store and GST bills, is ₹299 a month or ₹2,999 a year, only if you need it.</p></details><details class="rv"><summary>How does the loyalty card work?</summary><p>It comes with your page. You choose the reward, like a free coffee after 10 visits or a free head massage after 5. Customers get the card on your page with their mobile number, no app needed. At the counter your staff type a secret PIN on the customer&#x27;s phone to add a stamp, one stamp a day per customer. When the card is full, the reward is ready. You see every member and can remind them on WhatsApp.</p></details><details class="rv"><summary>What does the online store add?</summary><p>Every product with photos, prices and search, and customers order right on your page for pickup or delivery. Orders show up on your dashboard as new, preparing, ready and done. It comes with Keepsake Pro (₹299 a month or ₹2,999 a year). If Pro ends, your products stay on your page and customers order on WhatsApp instead.</p></details><details class="rv"><summary>What&#x27;s in Keepsake Pro?</summary><p>The online store, unlimited GST bills with CA reports, Smart Udhaar (a credit khata customers confirm on WhatsApp, with reminders and a UPI link to pay), Table QRs, Add sale for walk-in customers, a day-end report with CSV, win-back offers and printable order slips. It&#x27;s ₹299 for 30 days or ₹2,999 for a year, you renew by hand and there&#x27;s no auto-debit. We keep adding tools to it.</p></details><details class="rv"><summary>How does the udhaar khata work?</summary><p>It's part of Keepsake Pro. Add udhaar or a payment for any customer from your dashboard. The customer gets it on WhatsApp with a private link where they tap to confirm, see what they owe and pay you by UPI. You see who owes what and since when, set a credit limit, and send a polite reminder in one tap.</p></details><details class="rv"><summary>Do my customers need an app?</summary><p>No. They scan the QR with their phone camera and your page opens in the browser.</p></details><details class="rv"><summary>Can I change my menu and prices later?</summary><p>Yes, as often as you like, from your phone. Log in, edit, tap Save, and the page updates straight away. The QR stays the same.</p></details><details class="rv"><summary>Where does UPI money go?</summary><p>Straight to your bank through your own UPI ID. GetKeepsake never touches your money.</p></details><details class="rv"><summary>Is the printed QR included?</summary><p>Yes. Your first printed board comes with the ₹1,000 plan. We print your QR on a thick 3.5 × 5 in counter board in the colour you pick and courier it to your shop anywhere in India in 5–7 days. You can also download your QR and print more copies yourself, any time.</p></details><details class="rv"><summary>I already bought a page. What changes for me?</summary><p>Nothing is taken away. You keep everything you paid for, at the price you paid.</p></details><details class="rv"><summary>Need help setting it up?</summary><p>WhatsApp us on <a href="https://wa.me/918302791217">+91 83027 91217</a> and we&#x27;ll help you finish your page.</p></details></div>
   </div>
 </div></section>
@@ -744,9 +927,9 @@ p{margin:0}
   <a class="badge" href="/shops/studio" aria-label="Create your page"><svg class="rt" viewBox="0 0 150 150" aria-hidden="true"><defs><path id="cp2" d="M75,75 m-56,0 a56,56 0 1,1 112,0 a56,56 0 1,1 -112,0"/></defs><text><textPath href="#cp2" textLength="340" lengthAdjust="spacing">Let's get started · Let's get started · </textPath></text></svg><span class="c"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></span></a>
   <div class="wrap" style="position:relative">
     <p class="lbl rv">Start your page today</p>
-    <h2 id="endT" class="rv">Make your business <mark>unmissable</mark> on every phone.</h2>
+    <h2 id="endT" class="rv" data-hi="हर फ़ोन पर दिखे <mark>आपका बिज़नेस</mark>.">Make your business <mark>unmissable</mark> on every phone.</h2>
     <p class="rv">₹<span data-p="biz">1,000</span> once, loyalty stamps included. Your page is live in minutes.</p>
-    <div class="row rv"><a class="btn lime" href="/shops/studio">Create your page <span class="ar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></span></a><a class="btn ghost" href="https://wa.me/918302791217?text=Hi%20GetKeepsake!%20I%20want%20a%20page%20for%20my%20business.">WhatsApp us</a></div>
+    <div class="row rv"><a class="btn lime" href="/shops/studio"><span data-hi="अपना पेज बनाएँ">Create your page</span> <span class="ar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></span></a><a class="btn ghost" href="https://wa.me/918302791217?text=Hi%20GetKeepsake!%20I%20want%20a%20page%20for%20my%20business."><span data-hi="WhatsApp करें">WhatsApp us</span></a></div>
   </div>
 </section>
 </main>
@@ -756,7 +939,7 @@ p{margin:0}
   <a class="mail grad" href="https://wa.me/918302791217">+91 83027 91217</a>
   <div class="cols">
     <div><img src="/assets/brand/logo.svg" alt="GetKeepsake for business" width="238" height="42" style="margin-bottom:16px"><p>GetKeepsake for Business gives local businesses a premium page, a QR and a loyalty stamp card that bring customers back.</p></div>
-    <div><b>Navigate</b><a href="#features">What you get</a><a href="#how">How it works</a><a href="#layouts">Examples</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a><a href="/shops/login">Log in</a></div>
+    <div><b>Navigate</b><a href="#features">What you get</a><a href="#how">How it works</a><a href="#layouts">Examples</a><a href="#run">Run your shop</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a><a href="/shops/login">Log in</a></div>
     <div><b>Businesses</b><a href="/shops/cafe">Cafés &amp; restaurants</a><a href="/shops/salon">Salons &amp; spas</a><a href="/shops/gym">Gyms &amp; fitness</a><a href="/shops/real-estate">Property dealers &amp; builders</a><a href="/shops/general-store">Kirana &amp; general stores</a><a href="/shops/boutique">Boutiques &amp; clothing</a><a href="/shops/clinic">Clinics &amp; doctors</a></div>
     <div><b>More businesses</b><a href="/shops/bakery">Bakeries &amp; cake shops</a><a href="/shops/sweet-shop">Sweet shops &amp; mithai</a><a href="/shops/restaurant">Restaurants &amp; dhabas</a><a href="/shops/cloud-kitchen">Cloud kitchens &amp; tiffin</a><a href="/shops/tea-stall">Tea stalls &amp; chai cafés</a><a href="/shops/jewellery">Jewellery shops</a><a href="/shops/ethnic-wear">Sarees &amp; ethnic wear</a><a href="/shops/gift-shop">Gift shops</a><a href="/shops/barber">Barbers &amp; men's grooming</a><a href="/shops/coaching">Coaching &amp; tuition</a><a href="/shops/optician">Opticians &amp; eyewear</a><a href="/shops/hardware">Hardware &amp; electricals</a><a href="/shops/mobile-repair">Mobile &amp; electronics repair</a><a href="/shops/jaipur">Shops in Jaipur</a></div>
     <div><b>More</b><a href="https://instagram.com/getkeepsake.business" rel="noopener">Instagram</a><a href="/hi/dukaan-ki-website">Dukaan ki website (Hindi)</a><a href="/hi/qr-menu-kaise-banaye">QR menu kaise banayein</a><a href="/hi/whatsapp-gst-bill">WhatsApp pe GST bill</a><a href="/gifts">Love-story websites &amp; cards</a><a href="/contact">Contact</a><a href="/terms">Terms</a><a href="/privacy">Privacy</a><a href="/refunds">Refunds</a></div>
@@ -764,7 +947,7 @@ p{margin:0}
   <div class="wm" aria-hidden="true">Keepsake</div>
   <div class="legal"><span>© <span id="yr">2026</span> GetKeepsake · Made in Jaipur</span><span>Help: <a href="https://wa.me/918302791217">+91 83027 91217</a></span></div>
 </div></footer>
-<div class="dock" id="dock"><a class="btn lime" href="/shops/studio"><span>Create your page · ₹<span data-p="biz">1,000</span></span> <span class="ar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></span></a></div>
+<div class="dock" id="dock"><a class="btn lime" href="/shops/studio"><span data-hi='अपना पेज बनाएँ · ₹<span data-p="biz">1,000</span>'>Create your page · ₹<span data-p="biz">1,000</span></span> <span class="ar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></span></a><a class="btn wa" href="https://wa.me/918302791217?text=Hi%20GetKeepsake!%20I%20want%20a%20page%20for%20my%20business." aria-label="WhatsApp us"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 20.5l1.3-4.3A8.5 8.5 0 1 1 8 19.3z"/></svg><span data-hi="WhatsApp">WhatsApp</span></a></div>
 <script src="/assets/biz.v16.js" defer></script><script src="/assets/biz-demos.v5.js" defer></script>
 <script>
 // Runs once the page and its deferred scripts are ready (biz.v16.js no longer blocks the first paint).
@@ -788,11 +971,50 @@ addEventListener("DOMContentLoaded", () => {
 
   // Prices always come from the live catalog, so the page never shows an old price.
   const inr = n => Number(n).toLocaleString("en-IN");
+  const P = {}, paint = () => Object.keys(P).forEach(k => document.querySelectorAll('[data-p="' + k + '"]').forEach(e => e.textContent = inr(P[k])));
   fetch("/api/checkout", { cache: "no-store" }).then(r => r.json()).then(c => {
-    const set = (k, v) => { if (v != null) document.querySelectorAll('[data-p="' + k + '"]').forEach(e => e.textContent = inr(v)); };
+    const set = (k, v) => { if (v != null) { P[k] = v; paint(); } };
     set("biz", c.products && c.products.biz && c.products.biz.price); set("pro", c.pro && c.pro.price); set("proYear", c.proYear && c.proYear.price);
     if (c.pro && c.proYear) { const sv = c.pro.price * 12 - c.proYear.price; if (sv > 0) set("save", sv); else document.querySelectorAll("[data-save]").forEach(e => e.hidden = true); } set("qr", c.delivery && c.delivery.bizQr && c.delivery.bizQr.price);
   }).catch(() => {});
+
+  // Hindi switch: the main headlines and buttons carry their Hindi in data-hi. The choice is remembered on this phone.
+  try {
+    const lg = document.getElementById("lg"), HI = [...document.querySelectorAll("[data-hi]")], root = document.documentElement;
+    HI.forEach(e => e._en = e.innerHTML);
+    const setLang = (hi, save) => { HI.forEach(e => { e.innerHTML = hi ? e.dataset.hi : e._en; if (hi) e.lang = "hi"; else e.removeAttribute("lang"); });
+      root.classList.toggle("hi", hi); lg.textContent = hi ? "English" : "हिंदी"; lg.lang = hi ? "en" : "hi"; lg.setAttribute("aria-pressed", hi); paint(); if (window.__ksRunWords) window.__ksRunWords();
+      if (save) try { localStorage.setItem("ks-lang", hi ? "hi" : "en"); } catch (e) {} };
+    lg.onclick = () => setLang(!root.classList.contains("hi"), true);
+    let want = ""; try { want = localStorage.getItem("ks-lang") || ""; } catch (e) {}
+    if (want === "hi" || (!want && /[?&]lang=hi\b/.test(location.search))) setLang(true, false);
+  } catch (e) {}
+
+  // Run your shop: real dashboard screens (sample shop), one tab each.
+  try {
+    const RUNS = { home: ["Today, on one screen", "Sales, orders, udhaar to collect and page scans the moment you open it. New orders ring on your phone; accept and reply on WhatsApp in one tap.", 'Included in the ₹<span data-p="biz">1,000</span> plan', "The dashboard home screen of a sample kirana store: sales today, orders, udhaar to collect and page scans",
+        "आज का पूरा हाल, एक स्क्रीन पर", "खोलते ही बिक्री, ऑर्डर, बाक़ी उधार और पेज स्कैन दिखते हैं. नया ऑर्डर आते ही फ़ोन बजता है; एक टैप में स्वीकार करें और WhatsApp पर जवाब दें.", '₹<span data-p="biz">1,000</span> के प्लान में शामिल'],
+      bills: ["GST bills in seconds", "Tap the items, add the customer and the bill is ready with CGST and SGST worked out. Print it or send it on WhatsApp. Your month's GST total is always there for your CA.", "A few free bills on Start · unlimited with Keepsake Pro", "The Sales screen of a sample store: sales today, payment due, GST this month and reports for the CA",
+        "सेकंडों में GST बिल", "सामान चुनें, ग्राहक जोड़ें और बिल तैयार, CGST और SGST अपने आप. प्रिंट करें या WhatsApp पर भेजें. महीने का GST हिसाब आपके CA के लिए हमेशा तैयार.", "Start में कुछ बिल मुफ़्त · Keepsake Pro में अनलिमिटेड"],
+      udhaar: ["Udhaar khata that collects", "Every credit entry goes to the customer's WhatsApp to confirm, so nobody argues later. Send a polite reminder with a UPI link in one tap.", "Keepsake Pro", "The Udhaar khata screen of a sample store: amount to collect, payments that came back and a Remind all button",
+        "उधार खाता जो वसूली भी कराए", "हर उधार की एंट्री ग्राहक के WhatsApp पर जाती है और वह ख़ुद पक्का करता है, तो बाद में कोई बहस नहीं. एक टैप में UPI लिंक के साथ विनम्र रिमाइंडर भेजें.", "Keepsake Pro"],
+      profit: ["Know your real profit", "Add what each product costs you and see profit and margin for today, the week or the month, item by item. Customers never see your cost prices.", "Keepsake Pro · with the online store", "The Profit panel of a sample store: profit, margin and the items that earn the most",
+        "अपना असली मुनाफ़ा जानें", "हर सामान की ख़रीद क़ीमत डालें और आज, हफ़्ते या महीने का मुनाफ़ा और मार्जिन देखें, सामान-दर-सामान. ग्राहक को आपकी ख़रीद क़ीमत कभी नहीं दिखती.", "Keepsake Pro · ऑनलाइन स्टोर के साथ"] };
+    const tabs = [...document.querySelectorAll("[data-run]")], img = document.getElementById("runImg");
+    const sc = document.getElementById("runSc"), pane = document.getElementById("runPane"); let cur = tabs[0];
+    const words = () => { const r = RUNS[cur.dataset.run], o = document.documentElement.classList.contains("hi") ? 4 : 0;
+      document.getElementById("runH").textContent = r[o]; document.getElementById("runP").textContent = r[o + 1]; document.getElementById("runPl").innerHTML = r[o + 2];
+      if (o) pane.lang = "hi"; else pane.removeAttribute("lang"); paint(); };
+    window.__ksRunWords = words;
+    const pick = (t, focus) => { const r = RUNS[t.dataset.run]; if (!r) return; cur = t;
+      tabs.forEach(x => { const on = x === t; x.setAttribute("aria-selected", on); x.tabIndex = on ? 0 : -1; });
+      words(); pane.setAttribute("aria-labelledby", t.id);
+      img.classList.add("sw"); const nx = new Image(); nx.onload = nx.onerror = () => { img.src = nx.src; img.alt = r[3]; sc.scrollTop = 0; img.classList.remove("sw"); }; nx.src = "/assets/home/dash-" + t.dataset.run + ".v2.webp";
+      if (focus) t.focus(); };
+    if (document.documentElement.classList.contains("hi")) words();
+    tabs.forEach((t, i) => { t.onclick = () => pick(t);
+      t.onkeydown = e => { const d = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0; if (d) { e.preventDefault(); pick(tabs[(i + d + tabs.length) % tabs.length], true); } }; });
+  } catch (e) {}
 
   // Header turns solid once the page scrolls; the phone dock shows between the hero and the end.
   const hd = document.getElementById("hd"), dock = document.getElementById("dock"), hero = document.querySelector(".hero"), end = document.querySelector(".end");
@@ -816,6 +1038,7 @@ addEventListener("DOMContentLoaded", () => {
   const DOC = `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=375"><style>html,body{margin:0}body{padding-top:30px}<\/style>
 <script src="/assets/biz.v16.js"><\/script><script src="/assets/biz-demos.v5.js"><\/script></head><body><main id="b"></main><script>
 function show(d){const b=document.getElementById("b");KSBiz.render(b,d,{preview:true});document.body.style.background=getComputedStyle(b).getPropertyValue("--bg")}
+addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("a[href]");if(a&&!/^#/.test(a.getAttribute("href")))e.preventDefault()},true);
 if(window.KSBizDemos&&KSBizDemos[frameElement.dataset.demo])show(KSBizDemos[frameElement.dataset.demo]);addEventListener("message",e=>{if(e.source===parent&&e.data&&e.data.ksbiz)show(e.data.ksbiz)});
 var y=0,dir=1,run=0;addEventListener("message",function(e){if(e.source===parent&&e.data&&"ksrun"in e.data)run=e.data.ksrun});if(frameElement.dataset.scroll)setInterval(function(){if(!run)return;var mx=document.body.scrollHeight-innerHeight;y+=dir*1.2;if(y>mx*0.55||y<0){dir*=-1}scrollTo(0,y)},40);<\/script></body></html>`;
   // The live pages start only after this page has loaded (the hero phone shows a still of the same page until then),
