@@ -560,9 +560,9 @@ p{margin:0}
 .lg:hover{background:rgba(255,255,255,.24)}
 .lg:focus-visible,.run-tabs button:focus-visible{outline:2.5px solid var(--lime);outline-offset:3px}
 .nv{margin-left:auto}.nv+.lg{margin-left:0}
-[data-hi][lang=hi]{font-family:"Mukta",var(--fb);letter-spacing:0!important}
-h1[lang=hi],h2[lang=hi],h3[lang=hi],.mega[lang=hi]{line-height:1.22!important;font-weight:600}
-h1[lang=hi] .scr{font:600 1em/1 "Mukta",var(--fb);font-style:italic;transform:rotate(-5deg) translate(.04em,-.02em);padding-right:.1em}
+[data-hi][lang=hi]{letter-spacing:0!important}
+h1[lang=hi],h2[lang=hi],h3[lang=hi],.mega[lang=hi]{line-height:1.25!important}
+h1[lang=hi] .scr{font:800 1em/1 var(--fd);font-style:italic;transform:rotate(-5deg) translate(.04em,-.02em);padding-right:.1em}
 .end h2[lang=hi]{text-transform:none}
 .dock .btn.wa{display:none}
 .run{position:relative;overflow:hidden;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:clamp(24px,4vw,64px);align-items:center;margin-top:20px;padding:clamp(24px,4.4vw,64px);border-radius:clamp(28px,4vw,48px);color:#fff;
@@ -584,9 +584,14 @@ h1[lang=hi] .scr{font:600 1em/1 "Mukta",var(--fb);font-style:italic;transform:ro
 .run-more svg{margin-top:5px;color:var(--lime)}
 .run-ph{position:relative;display:flex;flex-direction:column;align-items:center;gap:18px}
 .run-ph::before{content:"";position:absolute;left:50%;top:46%;width:min(480px,120%);aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,rgba(212,255,63,.2) 0%,rgba(140,130,255,.26) 40%,rgba(140,130,255,0) 70%);pointer-events:none}
-.run-ph .ph{position:relative;--w:min(300px,100%);aspect-ratio:600/1150;transform:rotate(2.5deg)}
-.run-ph .sc{background:#F2F2EE}
-.run-ph img{width:100%;height:100%;object-fit:cover;object-position:top;transition:opacity .22s}
+.run-ph .ph{position:relative;--w:300px;aspect-ratio:auto;height:calc(var(--w)*1.92);transform:rotate(2.5deg)}
+.run-ph .sc{background:#F2F2EE;contain:paint;overflow-y:auto;overscroll-behavior:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-top:12px}
+.run-ph .sc::-webkit-scrollbar{display:none}
+.run-ph img{width:100%;height:auto;transition:opacity .22s}
+.run-ph .tagx{text-align:center;line-height:1.5}
+.ph iframe{height:792px}
+.stage .ph iframe{pointer-events:auto}
+.stage .info small{font-size:12.5px;color:#8F8FA0}
 .run-ph img.sw{opacity:0}
 .run-ph .tagx{position:relative}
 .proof-t{font:700 clamp(34px,4.6vw,64px)/1 var(--fd);letter-spacing:-.045em;margin-top:12px}
@@ -600,9 +605,10 @@ h1[lang=hi] .scr{font:600 1em/1 "Mukta",var(--fb);font-style:italic;transform:ro
   .run-ph{order:-1}
   .run-ph .ph{--w:230px;transform:none}
   .run-txt{min-height:0}
-  .dock{display:flex;gap:8px}
+  .dock{display:flex;gap:8px;left:0;right:0;bottom:0;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:rgba(11,11,20,.86);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 -1px 0 rgba(255,255,255,.08)}
+  .dock .btn{box-shadow:none}
   .dock .btn{flex:1;min-width:0;padding:0 16px}
-  .dock .btn.wa{display:inline-flex;flex:none;width:auto;gap:8px;background:#0B0B14;color:#fff;box-shadow:0 18px 40px -12px rgba(11,11,20,.55),inset 0 0 0 1.5px rgba(255,255,255,.22)}
+  .dock .btn.wa{display:inline-flex;flex:none;width:auto;gap:8px;background:#0B0B14;color:#fff;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.28)}
   .dock .btn.wa svg{color:#3DDC84}
   .ft .legal{padding-bottom:calc(96px + env(safe-area-inset-bottom))}
 }
@@ -676,7 +682,6 @@ h1[lang=hi] .scr{font:600 1em/1 "Mukta",var(--fb);font-style:italic;transform:ro
   .run-more{display:none}
   .run .btn{width:100%}
   .run-ph .ph{--w:200px}
-  .run-ph .tagx{position:absolute;bottom:10px}
   /* pricing */
   .plans{margin-top:20px}
   .plan{padding:24px 20px;border-radius:26px;gap:16px}
@@ -816,7 +821,7 @@ h1[lang=hi] .scr{font:600 1em/1 "Mukta",var(--fb);font-style:italic;transform:ro
     <div id="groups"></div>
     <div class="stage" aria-live="polite">
       <div class="ph"><div class="sc"><iframe id="stage" data-demo="cafe" title="Preview of the selected business" tabindex="-1"></iframe></div></div>
-      <div class="info"><b id="stName">Café</b><span id="stLay">Poster layout · Latte colours</span><a class="btn lime" id="stGo" href="/shops/studio?type=cafe">Start with this <span class="ar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></span></a></div>
+      <div class="info"><b id="stName">Café</b><span id="stLay">Poster layout · Latte colours</span><small data-hi="फ़ोन के अंदर स्क्रॉल करके पूरा पेज देखें ↕">Scroll inside the phone to see the whole page ↕</small><a class="btn lime" id="stGo" href="/shops/studio?type=cafe">Start with this <span class="ar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></span></a></div>
     </div>
   </div>
 
@@ -860,8 +865,8 @@ h1[lang=hi] .scr{font:600 1em/1 "Mukta",var(--fb);font-style:italic;transform:ro
       <a class="btn lime" href="#pricing"><span data-hi="प्लान देखें">See the plans</span> <span class="ar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></span></a>
     </div>
     <div class="run-ph">
-      <div class="ph"><div class="sc"><img id="runImg" src="/assets/home/dash-home.v1.webp" width="600" height="1092" loading="lazy" decoding="async" alt="The dashboard home screen of a sample kirana store: sales today, orders, udhaar to collect and page scans"></div></div>
-      <span class="tagx">Real dashboard · sample shop</span>
+      <div class="ph"><div class="sc" id="runSc" tabindex="0" role="group" aria-label="Dashboard screen, scrollable"><img id="runImg" src="/assets/home/dash-home.v2.webp" width="600" height="3572" loading="lazy" decoding="async" alt="The dashboard home screen of a sample kirana store: sales today, orders, udhaar to collect and page scans"></div></div>
+      <span class="tagx">Real dashboard · sample shop<br><span data-hi="फ़ोन के अंदर स्क्रॉल करें ↕">Scroll inside the phone ↕</span></span>
     </div>
   </div>
 </div></section>
@@ -978,7 +983,7 @@ addEventListener("DOMContentLoaded", () => {
     const lg = document.getElementById("lg"), HI = [...document.querySelectorAll("[data-hi]")], root = document.documentElement;
     HI.forEach(e => e._en = e.innerHTML);
     const setLang = (hi, save) => { HI.forEach(e => { e.innerHTML = hi ? e.dataset.hi : e._en; if (hi) e.lang = "hi"; else e.removeAttribute("lang"); });
-      root.classList.toggle("hi", hi); lg.textContent = hi ? "English" : "हिंदी"; lg.lang = hi ? "en" : "hi"; lg.setAttribute("aria-pressed", hi); paint();
+      root.classList.toggle("hi", hi); lg.textContent = hi ? "English" : "हिंदी"; lg.lang = hi ? "en" : "hi"; lg.setAttribute("aria-pressed", hi); paint(); if (window.__ksRunWords) window.__ksRunWords();
       if (save) try { localStorage.setItem("ks-lang", hi ? "hi" : "en"); } catch (e) {} };
     lg.onclick = () => setLang(!root.classList.contains("hi"), true);
     let want = ""; try { want = localStorage.getItem("ks-lang") || ""; } catch (e) {}
@@ -987,17 +992,26 @@ addEventListener("DOMContentLoaded", () => {
 
   // Run your shop: real dashboard screens (sample shop), one tab each.
   try {
-    const RUNS = { home: ["Today, on one screen", "Sales, orders, udhaar to collect and page scans the moment you open it. New orders ring on your phone; accept and reply on WhatsApp in one tap.", 'Included in the ₹<span data-p="biz">1,000</span> plan', "The dashboard home screen of a sample kirana store: sales today, orders, udhaar to collect and page scans"],
-      bills: ["GST bills in seconds", "Tap the items, add the customer and the bill is ready with CGST and SGST worked out. Print it or send it on WhatsApp. Your month's GST total is always there for your CA.", "A few free bills on Start · unlimited with Keepsake Pro", "The Sales screen of a sample store: sales today, payment due and GST this month"],
-      udhaar: ["Udhaar khata that collects", "Every credit entry goes to the customer's WhatsApp to confirm, so nobody argues later. Send a polite reminder with a UPI link in one tap.", "Keepsake Pro", "The Udhaar khata screen of a sample store: amount to collect, payments that came back and a Remind all button"],
-      profit: ["Know your real profit", "Add what each product costs you and see profit and margin for today, the week or the month, item by item. Customers never see your cost prices.", "Keepsake Pro · with the online store", "The Profit panel of a sample store: profit, margin and the items that earn the most"] };
+    const RUNS = { home: ["Today, on one screen", "Sales, orders, udhaar to collect and page scans the moment you open it. New orders ring on your phone; accept and reply on WhatsApp in one tap.", 'Included in the ₹<span data-p="biz">1,000</span> plan', "The dashboard home screen of a sample kirana store: sales today, orders, udhaar to collect and page scans",
+        "आज का पूरा हाल, एक स्क्रीन पर", "खोलते ही बिक्री, ऑर्डर, बाक़ी उधार और पेज स्कैन दिखते हैं. नया ऑर्डर आते ही फ़ोन बजता है; एक टैप में स्वीकार करें और WhatsApp पर जवाब दें.", '₹<span data-p="biz">1,000</span> के प्लान में शामिल'],
+      bills: ["GST bills in seconds", "Tap the items, add the customer and the bill is ready with CGST and SGST worked out. Print it or send it on WhatsApp. Your month's GST total is always there for your CA.", "A few free bills on Start · unlimited with Keepsake Pro", "The Sales screen of a sample store: sales today, payment due, GST this month and reports for the CA",
+        "सेकंडों में GST बिल", "सामान चुनें, ग्राहक जोड़ें और बिल तैयार, CGST और SGST अपने आप. प्रिंट करें या WhatsApp पर भेजें. महीने का GST हिसाब आपके CA के लिए हमेशा तैयार.", "Start में कुछ बिल मुफ़्त · Keepsake Pro में अनलिमिटेड"],
+      udhaar: ["Udhaar khata that collects", "Every credit entry goes to the customer's WhatsApp to confirm, so nobody argues later. Send a polite reminder with a UPI link in one tap.", "Keepsake Pro", "The Udhaar khata screen of a sample store: amount to collect, payments that came back and a Remind all button",
+        "उधार खाता जो वसूली भी कराए", "हर उधार की एंट्री ग्राहक के WhatsApp पर जाती है और वह ख़ुद पक्का करता है, तो बाद में कोई बहस नहीं. एक टैप में UPI लिंक के साथ विनम्र रिमाइंडर भेजें.", "Keepsake Pro"],
+      profit: ["Know your real profit", "Add what each product costs you and see profit and margin for today, the week or the month, item by item. Customers never see your cost prices.", "Keepsake Pro · with the online store", "The Profit panel of a sample store: profit, margin and the items that earn the most",
+        "अपना असली मुनाफ़ा जानें", "हर सामान की ख़रीद क़ीमत डालें और आज, हफ़्ते या महीने का मुनाफ़ा और मार्जिन देखें, सामान-दर-सामान. ग्राहक को आपकी ख़रीद क़ीमत कभी नहीं दिखती.", "Keepsake Pro · ऑनलाइन स्टोर के साथ"] };
     const tabs = [...document.querySelectorAll("[data-run]")], img = document.getElementById("runImg");
-    const pick = (t, focus) => { const r = RUNS[t.dataset.run]; if (!r) return;
+    const sc = document.getElementById("runSc"), pane = document.getElementById("runPane"); let cur = tabs[0];
+    const words = () => { const r = RUNS[cur.dataset.run], o = document.documentElement.classList.contains("hi") ? 4 : 0;
+      document.getElementById("runH").textContent = r[o]; document.getElementById("runP").textContent = r[o + 1]; document.getElementById("runPl").innerHTML = r[o + 2];
+      if (o) pane.lang = "hi"; else pane.removeAttribute("lang"); paint(); };
+    window.__ksRunWords = words;
+    const pick = (t, focus) => { const r = RUNS[t.dataset.run]; if (!r) return; cur = t;
       tabs.forEach(x => { const on = x === t; x.setAttribute("aria-selected", on); x.tabIndex = on ? 0 : -1; });
-      document.getElementById("runH").textContent = r[0]; document.getElementById("runP").textContent = r[1]; document.getElementById("runPl").innerHTML = r[2]; paint();
-      document.getElementById("runPane").setAttribute("aria-labelledby", t.id);
-      img.classList.add("sw"); const nx = new Image(); nx.onload = nx.onerror = () => { img.src = nx.src; img.alt = r[3]; img.classList.remove("sw"); }; nx.src = "/assets/home/dash-" + t.dataset.run + ".v1.webp";
+      words(); pane.setAttribute("aria-labelledby", t.id);
+      img.classList.add("sw"); const nx = new Image(); nx.onload = nx.onerror = () => { img.src = nx.src; img.alt = r[3]; sc.scrollTop = 0; img.classList.remove("sw"); }; nx.src = "/assets/home/dash-" + t.dataset.run + ".v2.webp";
       if (focus) t.focus(); };
+    if (document.documentElement.classList.contains("hi")) words();
     tabs.forEach((t, i) => { t.onclick = () => pick(t);
       t.onkeydown = e => { const d = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0; if (d) { e.preventDefault(); pick(tabs[(i + d + tabs.length) % tabs.length], true); } }; });
   } catch (e) {}
@@ -1024,6 +1038,7 @@ addEventListener("DOMContentLoaded", () => {
   const DOC = `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=375"><style>html,body{margin:0}body{padding-top:30px}<\/style>
 <script src="/assets/biz.v16.js"><\/script><script src="/assets/biz-demos.v5.js"><\/script></head><body><main id="b"></main><script>
 function show(d){const b=document.getElementById("b");KSBiz.render(b,d,{preview:true});document.body.style.background=getComputedStyle(b).getPropertyValue("--bg")}
+addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("a[href]");if(a&&!/^#/.test(a.getAttribute("href")))e.preventDefault()},true);
 if(window.KSBizDemos&&KSBizDemos[frameElement.dataset.demo])show(KSBizDemos[frameElement.dataset.demo]);addEventListener("message",e=>{if(e.source===parent&&e.data&&e.data.ksbiz)show(e.data.ksbiz)});
 var y=0,dir=1,run=0;addEventListener("message",function(e){if(e.source===parent&&e.data&&"ksrun"in e.data)run=e.data.ksrun});if(frameElement.dataset.scroll)setInterval(function(){if(!run)return;var mx=document.body.scrollHeight-innerHeight;y+=dir*1.2;if(y>mx*0.55||y<0){dir*=-1}scrollTo(0,y)},40);<\/script></body></html>`;
   // The live pages start only after this page has loaded (the hero phone shows a still of the same page until then),
