@@ -1648,7 +1648,7 @@ function stamp() {
   try { KSQRCards.mount(el, { tone: S.tone, url: pageUrl(), code: shopName().slice(0, 18) }); const w = el.offsetWidth || 336; const sc = 220 / w; el.style.transform = "scale(" + sc + ")"; $("#stampWrap").style.height = Math.round((el.offsetHeight || 480) * sc) + "px"; } catch (e) {}
 }
 
-// ---------- GST bills (Keepsake Pro; 10 free bills on Start) ----------
+// ---------- GST bills (Keepsake Pro; 5 free bills on Start) ----------
 const blPost = b => post({ id: S.id, ...b });
 const BLR = [0, 5, 18, 40, 3];
 const BLMODE = { due: "Not paid yet", cash: "Cash", upi: "UPI", card: "Card", bank: "Bank" };

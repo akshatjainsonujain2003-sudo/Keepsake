@@ -1,5 +1,5 @@
 // Keepsake Billing: GST bills, bills of supply, cash memos, estimates and credit notes for business pages
-// (Keepsake Pro; 10 free bills on Start). Not a route: api/qr.js passes bl-* actions here.
+// (Keepsake Pro; 5 free bills on Start). Not a route: api/qr.js passes bl-* actions here.
 //   blset:<page>          = { gst: "regular"|"composition"|"none", gstin, legal, addr, state, prefix, inc, rate, hsn, u, terms,
 //                             big: turnover over ₹5 crore (6-digit HSN), design: "a4m"|"a4c"|"t58"|"t80", bank: { name, acc, ifsc }, sign }
 //   blno:<page>:<fy>      = last bill number issued in that financial year (INCR, so numbers never repeat)
@@ -21,7 +21,8 @@ const G = require("../assets/gst.v2.js");
 const { ph10 } = require("./_loyal");
 
 const ID = /^[a-z0-9]{8,16}$/i, TOK = /^[a-z0-9]{12,20}$/, YM = /^\d{4}-(0[1-9]|1[0-2])$/;
-const FREE = 10, MAXB = 50000, MAXMEM = 3000, B2C_ADDR = 50000;
+// Start shops get 5 free bills. Shops that made a bill before the change (10 Nov 2026) keep the 10 they were promised.
+const FREE = 5, FREE_OLD = 10, FREE_CUT = Date.parse("2026-11-10T09:45:00Z"), MAXB = 50000, MAXMEM = 3000, B2C_ADDR = 50000;
 const KIND = { regular: "tax", composition: "supply", none: "cash" };
 const MODES = ["cash", "upi", "card", "bank"];
 const DESIGNS = ["a4m", "a4c", "t58", "t80"];
@@ -131,12 +132,15 @@ async function save(id, doc, inMonth) {
   return false;
 }
 
+const freeOf = async id => (+(await db.cmd("ZCOUNT", "blz:" + id, "-inf", "(" + FREE_CUT)) || 0) > 0 ? FREE_OLD : FREE;
+
 async function create(id, m, b, ctx, from) {
   const set = await db.getj("blset:" + id);
   if (!set) return E(409, "Choose your GST type first.");
   const est = b.est === true && !from, kind = est ? "est" : KIND[set.gst || "regular"];
   const used = +(await db.cmd("GET", "blcnt:" + id)) || 0;
-  if (!est && !isPro(m) && used >= FREE) return E(402, "You've used your " + FREE + " free bills. Start Keepsake Pro for unlimited bills.");
+  const free = est || isPro(m) ? FREE : await freeOf(id);
+  if (!est && !isPro(m) && used >= free) return E(402, "You've used your " + free + " free bills. Start Keepsake Pro for unlimited bills.");
   if (await limit("bl-day:" + id, 500, 86400)) return E(429, "That's a lot of bills for one day. Try again tomorrow.");
   const x = await build(id, m, set, b, kind); if (x.error) return x;
   const pay = est ? null : payOf(b, x.calc.total); if (pay && pay.error) return E(400, pay.error);
@@ -246,7 +250,7 @@ async function handle(b, ctx) {
     const set = await db.getj("blset:" + id), used = +(await db.cmd("GET", "blcnt:" + id)) || 0;
     const ts = await db.cmd("ZRANGE", "blz:" + id, 0, 499, "REV");
     const bills = ts.length ? (await db.cmd("MGET", ...ts.map(t => "bl:" + t))).map(parse).filter(Boolean).map(row) : [];
-    return { ok: true, settings: set, used, free: FREE, pro: isPro(m), bills, mem: (await db.getj("blmem:" + id)) || {}, ca: (await db.cmd("GET", "blcak:" + id)) || "", months: await months(id) };
+    return { ok: true, settings: set, used, free: await freeOf(id), pro: isPro(m), bills, mem: (await db.getj("blmem:" + id)) || {}, ca: (await db.cmd("GET", "blcak:" + id)) || "", months: await months(id) };
   }
   if (a === "bl-settings") {
     const s = cleanSettings(b.settings || {}); if (s.error) return s;
@@ -306,4 +310,4 @@ async function handle(b, ctx) {
   }
   return E(400, "Unknown action.");
 }
-module.exports = { handle, cleanLines, cleanSettings, payOf, FREE };
+module.exports = { handle, cleanLines, cleanSettings, payOf, FREE, freeOf };
