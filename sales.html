@@ -235,6 +235,10 @@ function tools() {
     <button class="btn gh" id="cpl">Copy my link</button>
     <a class="btn gh" href="/assets/getkeepsake-business-sales-sheet.pdf" target="_blank" rel="noopener">Sales sheet (PDF)</a>
   </div>
+  <div class="card" style="margin-top:14px"><b>Link a blank QR board</b><p style="margin:6px 0 10px;color:var(--mu);font-size:15px">The shop already has its page? Give them a board from your bag and link it here. It will open their page straight away.</p>
+    ${(J.shopsList || []).length ? `<label style="display:block;font-size:13px;color:var(--mu);margin-bottom:4px" for="lkS">Shop</label><select id="lkS" style="width:100%;min-height:48px;border-radius:12px;border:1.5px solid var(--line,#ddd);padding:0 12px;font:inherit;background:#fff;margin-bottom:10px">${J.shopsList.map(x => `<option value="${esc(x.url)}">${esc(x.name)}${x.area ? " · " + esc(x.area) : ""}</option>`).join("")}</select>
+    <label style="display:block;font-size:13px;color:var(--mu);margin-bottom:4px" for="lkC">Code under the QR on the board</label><input id="lkC" placeholder="KSAB12CD34" maxlength="60" autocapitalize="characters" autocomplete="off" spellcheck="false" style="width:100%;min-height:48px;border-radius:12px;border:1.5px solid var(--line,#ddd);padding:0 12px;font:600 16px inherit;letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px">
+    <button class="btn ac" id="lkB" style="width:100%">Link this board</button><p id="lkO" role="status" style="margin:8px 0 0;font-size:14px;color:var(--mu)">You can link boards only for shops you signed up. Other owners link theirs from Dashboard → QR &amp; cards.</p>` : `<p style="margin:0;font-size:14px;color:var(--mu)">Your shops will appear here once one goes live with your code.</p>`}</div>
   <div class="card" style="margin-top:14px"><b>What to say in 20 seconds</b><p style="margin:6px 0 0;color:var(--mu);font-size:15px">“Your shop gets its own page: menu, offers, Google reviews, UPI and WhatsApp orders, behind one QR on your counter. ₹1,000 once, no monthly fee. Let me show you a café like yours…” Then open an example and let them scroll.</p></div>`;
 }
 function me() {
@@ -257,6 +261,14 @@ function wire() {
 
 // ---------- visits (with offline queue) ----------
 const queue = () => ls.get(QK, []);
+document.addEventListener("click", async e => { const b = e.target.closest("#lkB"); if (!b) return;
+  const o = $("#lkO"), qr = ($("#lkC").value || "").trim(), page = $("#lkS").value;
+  if (qr.length < 6) { o.textContent = "Type the code printed under the QR on the board."; $("#lkC").focus(); return; }
+  if (!navigator.onLine) { o.textContent = "You're offline. Connect to the internet to link the board."; return; }
+  b.disabled = true; o.textContent = "Linking…";
+  try { const j = await post({ action: "sp-qr-link", qr, page }); o.textContent = j.already ? "This board is already linked to that shop." : "Linked to " + (j.title || "the shop") + ". Scan the board to check it opens their page."; $("#lkC").value = ""; toast("Board linked"); }
+  catch (x) { o.textContent = x.message || "Could not link the board. Try again."; }
+  b.disabled = false; });
 function sheet(html) { $("#sh").innerHTML = '<div class="gr"></div>' + html; $("#sh").classList.add("on"); $("#ov").classList.add("on"); $("#sh").scrollTop = 0; }
 function closeSheet() { $("#sh").classList.remove("on"); $("#ov").classList.remove("on"); }
 $("#ov").onclick = closeSheet;

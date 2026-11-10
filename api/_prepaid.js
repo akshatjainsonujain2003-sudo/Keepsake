@@ -141,7 +141,86 @@ async function linkBiz(code, id, owner) {
   Object.assign(rec, { status: "claimed", memory: id, kind: "biz", owner, claimedAt: Date.now() });
   await db.setj("pcode:" + rec.code, rec);
   await db.cmd("INCR", "pbatch-claimed:" + rec.batch);
+  try { await db.cmd("SADD", "qrs:" + id, rec.code); } catch (e) {}
   return rec;
 }
 
-module.exports = { norm, valid, get, createBatch, batches, batchCodes, claim, unlock, linkBiz, urlFor, setComm, payout, salesView, TIERS };
+// ---------- Link a blank business QR board to a page that already exists ----------
+// A shop that made and paid for its page online (or with a salesperson) can attach one of our printed blank QR boards to it.
+// The owner does it from the dashboard; a salesperson can do it for the shops they signed up. No payment and no PIN:
+// a business board only ever points at a page that is already paid for.
+// qrs:<PAGE> = set of board codes linked to the page (at most MAX_BOARDS)
+const MAX_BOARDS = 5;
+const codeOf = v => { const m = String(v || "").toUpperCase().match(/KS[A-HJ-NP-Z2-9]{8}/); return m ? m[0] : norm(v); };
+const pageIdOf = v => { const m = String(v || "").match(/(?:\/b\/)?([a-z0-9]{8,16})\/?$/i); return m ? m[1] : ""; };
+async function tooMany(k, max) { const n = await db.cmd("INCR", k); if (n === 1) await db.cmd("EXPIRE", k, 3600); return n > max; }
+
+async function linkBoard(codeIn, id, who) {
+  const code = codeOf(codeIn);
+  if (!valid(code)) return { status: 400, error: "That QR code isn't right. Type the code printed under the QR, like KSAB12CD34." };
+  const m = await db.getj("customer-memory:" + id);
+  if (!m || m.kind !== "biz") return { status: 404, error: "That shop page wasn't found." };
+  if (m.paid === false) return { status: 402, error: "This page isn't live yet. Finish the payment first, then link the QR." };
+  if ((await db.cmd("SET", "pclaim-lock:" + code, "1", "NX", "EX", 15)) !== "OK") return { status: 409, error: "Please try again in a moment." };
+  try {
+    const rec = await db.getj("pcode:" + code);
+    if (!rec) return { status: 404, error: "We don't know that QR code. Check the letters under the QR." };
+    if (rec.tier !== "biz") return { status: 400, error: "That code is for a gift keepsake, not a shop QR board." };
+    if (rec.locked) return { status: 423, error: "This QR is locked. WhatsApp us on +91 83027 91217 and we'll sort it out." };
+    if (rec.status === "claimed") return rec.memory === id ? { ok: true, code, already: true } : { status: 409, error: "This QR board is already linked to another shop." };
+    if ((+(await db.cmd("SCARD", "qrs:" + id)) || 0) >= MAX_BOARDS) return { status: 409, error: "This page already has " + MAX_BOARDS + " QR boards. Remove one first." };
+    Object.assign(rec, { status: "claimed", memory: id, kind: "biz", owner: m.owner, claimedAt: Date.now(), linkedBy: who });
+    await db.setj("pcode:" + code, rec);
+    await db.cmd("INCR", "pbatch-claimed:" + rec.batch);
+    await db.cmd("SADD", "qrs:" + id, code);
+    return { ok: true, code, url: urlFor("biz", id), title: String(m.title || "").slice(0, 80) };
+  } finally { await db.cmd("DEL", "pclaim-lock:" + code); }
+}
+
+async function boards(id) {
+  const codes = await db.cmd("SMEMBERS", "qrs:" + id) || [];
+  const recs = await Promise.all(codes.map(c => db.getj("pcode:" + c)));
+  return recs.filter(r => r && r.status === "claimed" && r.memory === id).map(r => ({ code: r.code, at: r.claimedAt || 0 })).sort((a, b) => a.at - b.at);
+}
+
+// Owner actions (logged in): qr-boards { id }, qr-link { id, qr }, qr-unlink { id, qr }
+async function ownerHandle(b, ctx) {
+  const user = await ctx.user(); if (!user) return { status: 401, error: "Please log in." };
+  const id = String(b.id || ""); if (!/^[a-z0-9]{8,16}$/i.test(id)) return { status: 400, error: "Open this from your dashboard." };
+  const m = await db.getj("customer-memory:" + id);
+  if (!m || m.kind !== "biz" || m.owner !== user.id) return { status: 404, error: "That shop page isn't in your account." };
+  if (b.action === "qr-boards") return { ok: true, boards: await boards(id), max: MAX_BOARDS };
+  if (b.action === "qr-link") {
+    if (await tooMany("qrlink:" + user.id, 20) || await tooMany("qrlink-ip:" + ctx.ip, 40)) return { status: 429, error: "Too many tries. Please wait an hour." };
+    const r = await linkBoard(b.qr, id, "owner"); if (r.error) return r;
+    return { ...r, boards: await boards(id) };
+  }
+  if (b.action === "qr-unlink") {
+    const code = codeOf(b.qr), rec = valid(code) ? await db.getj("pcode:" + code) : null;
+    if (!rec || rec.status !== "claimed" || rec.memory !== id) return { status: 404, error: "That QR isn't linked to this page." };
+    Object.assign(rec, { status: "new", memory: "", kind: "", owner: "", claimedAt: 0, linkedBy: "" });
+    await db.setj("pcode:" + code, rec); await db.cmd("DECR", "pbatch-claimed:" + rec.batch); await db.cmd("SREM", "qrs:" + id, code);
+    return { ok: true, boards: await boards(id) };
+  }
+  return { status: 400, error: "Unknown action." };
+}
+
+// Salesperson: link a blank board to one of the shops they signed up. `sp` is the checked salesperson record.
+async function salesLink(sp, b, ip) {
+  if (await tooMany("qrlink-sp:" + sp.code, 60)) return { status: 429, error: "Too many tries. Please wait an hour." };
+  const id = pageIdOf(b.page); if (!id) return { status: 400, error: "Choose the shop first." };
+  if ((await db.cmd("ZSCORE", "sp-shops:" + sp.code, id)) == null) return { status: 403, error: "You can only link a QR for shops you signed up. Ask the owner to link it from their dashboard." };
+  return linkBoard(b.qr, id, "sp:" + sp.code);
+}
+
+// Which page should a logged-in owner be offered when they scan a blank business board? Their newest live page without asking them to rebuild it.
+async function ownerPage(user) {
+  if (!user) return "";
+  try {
+    const ids = await db.cmd("SMEMBERS", "customer-memories:" + user.id) || [];
+    for (const id of ids.slice(0, 40)) { const m = await db.getj("customer-memory:" + id); if (m && m.kind === "biz" && m.paid !== false) return id; }
+  } catch (e) {}
+  return "";
+}
+
+module.exports = { norm, valid, get, createBatch, batches, batchCodes, claim, unlock, linkBiz, urlFor, setComm, payout, salesView, TIERS, linkBoard, boards, ownerHandle, salesLink, ownerPage, codeOf, MAX_BOARDS };

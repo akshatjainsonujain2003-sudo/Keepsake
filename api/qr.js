@@ -34,6 +34,8 @@ module.exports = async (req, res) => {
       if (!rec) return page(res, 404, "This code isn't valid", "Please check the card, or message us and we'll sort it out.");
       if (rec.status === "claimed" && rec.memory) { res.setHeader("Cache-Control", "no-store"); return res.redirect(302, pp.urlFor(rec.kind, rec.memory)); }
       res.setHeader("Cache-Control", "no-store");
+      // A blank business board scanned by an owner who already has a live page: offer to link it instead of building a new page.
+      if (rec.tier === "biz" && !rec.locked) { let own = ""; try { own = await pp.ownerPage(await auth.currentUser(req)); } catch (e) {} if (own) return res.redirect(302, "/shops/dashboard?id=" + own + "&link=" + rec.code + "#qr"); }
       return res.redirect(302, (rec.tier === "site" ? "/builder" : rec.tier === "biz" ? "/shops/studio" : "/studio") + "?claim=" + rec.code);
     }
     if (req.method !== "POST") { res.setHeader("Allow", "GET, POST"); return db.reply(res, 405, { error: "Method not allowed." }); }
@@ -53,6 +55,9 @@ module.exports = async (req, res) => {
     if (/^bl-/.test(String((req.body || {}).action || ""))) { const r = await require("./_bill").handle(req.body, { ip: ip(req), user: () => auth.currentUser(req) }); return r.error ? db.reply(res, r.status || 400, { error: r.error }) : db.reply(res, 200, r); }
     if (/^cs-/.test(String((req.body || {}).action || ""))) { const r = await require("./_cost").handle(req.body, { ip: ip(req), user: () => auth.currentUser(req) }); return r.error ? db.reply(res, r.status || 400, { error: r.error }) : db.reply(res, 200, r); }
     if (/^bz-/.test(String((req.body || {}).action || ""))) { const r = await require("./_biz").handle(req.body, { ip: ip(req), user: () => auth.currentUser(req) }); return r.error ? db.reply(res, r.status || 400, { error: r.error }) : db.reply(res, 200, r); }
+    if (/^qr-(boards|link|unlink)$/.test(String((req.body || {}).action || ""))) { const r = await pp.ownerHandle(req.body, { ip: ip(req), user: () => auth.currentUser(req) }); return r.error ? db.reply(res, r.status || 400, { error: r.error }) : db.reply(res, 200, r); }
+    if ((req.body || {}).action === "sp-qr-link") { const b = req.body, sp = await require("./_sales").auth(b.code, b.tok); if (!sp) return db.reply(res, 401, { error: "Please log in again." });
+      const r = await pp.salesLink(sp, b, ip(req)); return r.error ? db.reply(res, r.status || 400, { error: r.error }) : db.reply(res, 200, r); }
     if ((req.body || {}).action === "sp-login") { const r = await require("./_sales").login(req.body.code, req.body.pin, ip(req)); return r.error ? db.reply(res, r.status, { error: r.error }) : db.reply(res, 200, r); }
     const user = await auth.currentUser(req);
     if (!user) return db.reply(res, 401, { error: "Please log in to activate your code." });
