@@ -31,7 +31,9 @@ function catalog() {
       card: { name: "Template", price: onSale(card, s), ...(s ? { was: card } : {}), desc: "One beautiful memory card from our designs." },
       site: { name: "Custom website", price: onSale(site, s), ...(s ? { was: site } : {}), desc: "A full page for your story: photos, videos, songs, timeline and letters." },
       // Business pages for shops and cafes (sold by QR card, paid online by the shop). Never on sale.
-      biz: { name: "Business page", price: rupees(env.PRICE_BUSINESS, 1000), desc: "A premium page for your shop: menu, photos, offers, UPI and a loyalty stamp card." }
+      biz: { name: "Business page", price: rupees(env.PRICE_BUSINESS, 1000), desc: "A premium page for your shop: menu, photos, offers, UPI and a loyalty stamp card." },
+      // Wedding invitation website (the "wedding" template). Its own price (PRICE_WEDDING), never part of the launch offer.
+      wedding: { name: "Wedding invitation", price: rupees(env.PRICE_WEDDING, 1999), desc: "One link for every guest: all the functions with maps, RSVP on WhatsApp, a countdown and your photos." }
     },
     delivery: {
       digital: { name: "Digital", price: 0, desc: "Short link, QR code and NFC-ready link to share or print." },
@@ -90,6 +92,9 @@ async function addPro(memory, days, at) {
   return memory;
 }
 const kindOf = memory => (memory.kind === "site" || memory.kind === "biz" ? memory.kind : "card");
+// What is being sold: a website made with the wedding template is the "wedding" product; everything else is its kind.
+const isWedding = memory => !!memory && memory.kind === "site" && !!memory.data && memory.data.tpl === "wedding";
+const productOf = memory => (isWedding(memory) ? "wedding" : kindOf(memory));
 
 // What this customer pays for a delivery option on this memory.
 // An already-active memory only pays for the frame.
@@ -126,7 +131,8 @@ function amountFor(memory, plan, extra) {
   if (!c.delivery[plan]) return { error: "Choose how you'd like it delivered." };
   if (kindOf(memory) === "biz" && isFrame(plan)) return { error: "Business pages are digital only." };
   if (plan === "bizQr" && kindOf(memory) !== "biz") return { error: "Printed QRs are for business pages." };
-  const active = memory.paid !== false, base = c.products[kindOf(memory)].price;
+  if (isWedding(memory) && isFrame(plan)) return { error: "Wedding invitations are digital only." };
+  const active = memory.paid !== false, base = c.products[productOf(memory)].price;
   if (plan === "loyalty") {
     if (kindOf(memory) !== "biz") return { error: "The loyalty card is for business pages." };
     if (memory.loyalty) return { error: "The loyalty card is already unlocked on this page." };
@@ -143,7 +149,7 @@ function amountFor(memory, plan, extra) {
   return { rupees: total, upgrade: active };
 }
 function describe(memory, plan, upgrade, withQr) {
-  const c = catalog(), product = c.products[kindOf(memory)].name;
+  const c = catalog(), product = c.products[productOf(memory)].name;
   if (plan === "sms" || plan === "sms1k") return c.sms.packs[plan].size + " SMS credits";
   if (plan === "pro") return upgrade ? "Keepsake Pro · 30 days" : `${product} + Keepsake Pro · 30 days`;
   if (plan === "proYear") return upgrade ? "Keepsake Pro · 1 year" : `${product} + Keepsake Pro · 1 year`;
@@ -249,4 +255,4 @@ async function markPaid(orderId, paymentId) {
   }
 }
 
-module.exports = { catalog, amountFor, addPro, isPro, storeOn, proPlan, describe, isFrame, isShip, hasQr, kindOf, keyId, configured, createOrder, verifyPayment, verifyWebhook, markPaid };
+module.exports = { isWedding, productOf, catalog, amountFor, addPro, isPro, storeOn, proPlan, describe, isFrame, isShip, hasQr, kindOf, keyId, configured, createOrder, verifyPayment, verifyWebhook, markPaid };

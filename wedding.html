@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#3A0A12">
+<title>Wedding Invitation Website with RSVP, Maps &amp; Countdown | GetKeepsake</title>
+<meta name="description" content="Make a wedding invitation website in minutes: every function with its venue and map, RSVP on WhatsApp, a countdown and your photos. One link for every guest. Free to design, pay once.">
+<link rel="canonical" href="https://getkeepsake.in/wedding">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta property="og:type" content="website"><meta property="og:site_name" content="GetKeepsake">
+<meta property="og:title" content="Your wedding invitation, on one link">
+<meta property="og:description" content="Every function with its venue and map, RSVP on WhatsApp, a countdown and your photos. Free to design, pay once.">
+<meta property="og:url" content="https://getkeepsake.in/wedding"><meta property="og:locale" content="en_IN">
+<meta property="og:image" content="https://getkeepsake.in/assets/og-image.jpg"><meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@400;500;600&display=swap">
+<link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/svg+xml" href="/assets/icon.svg"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Product","name":"Wedding invitation website","brand":{"@type":"Brand","name":"GetKeepsake"},"description":"A wedding invitation on one link: every function with its venue and map, RSVP on WhatsApp, a countdown and the couple's photos.","url":"https://getkeepsake.in/wedding","image":"https://getkeepsake.in/assets/og-image.jpg"}</script>
+<style>
+:root{--wine:#3A0A12;--wine2:#5A1220;--gold:#D9B66A;--gold2:#F0D9A0;--mari:#F2A30F;--ivory:#FBF3E4;--ink:#2A1418;--soft:#6F5750;--line:#E9D9BC;
+  --disp:"Cormorant Garamond",Georgia,serif;--body:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;--gut:20px}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--ivory);color:var(--ink);font:400 16px/1.6 var(--body);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+h1,h2,h3,p,ul{margin:0}ul{padding:0;list-style:none}
+a{color:inherit}
+img{max-width:100%;display:block}
+.wrap{width:min(100% - 2*var(--gut),1120px);margin-inline:auto}
+.eyebrow{font:600 12px/1.4 var(--body);letter-spacing:.22em;text-transform:uppercase;color:#9C7A33}
+.d{font-family:var(--disp);font-weight:500;letter-spacing:-.01em}
+.d i{font-style:italic;color:var(--wine2)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:52px;padding:0 26px;border-radius:999px;border:1px solid transparent;font:600 16px/1 var(--body);text-decoration:none;cursor:pointer;touch-action:manipulation;transition:transform .15s,box-shadow .2s}
+.btn:active{transform:scale(.97)}
+.btn.gold{background:linear-gradient(135deg,var(--gold2),var(--gold));color:var(--wine);box-shadow:0 14px 30px -16px #000a}
+.btn.line{border-color:#f6ecdc66;color:var(--ivory)}
+.btn.wine{border-color:var(--wine2);color:var(--wine2)}
+.btn.wa{background:#128C4A;color:#fff}
+:focus-visible{outline:2px solid var(--mari);outline-offset:3px}
+
+.nav{position:sticky;top:0;z-index:50;background:#3A0A12f2;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:var(--ivory)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:64px}
+.brand{font:500 26px/1 var(--disp);color:var(--gold2);text-decoration:none}
+.brand small{font:600 10px/1 var(--body);letter-spacing:.2em;text-transform:uppercase;color:#e9d5c0;margin-left:8px}
+.nav .btn{min-height:44px;padding:0 18px;font-size:14.5px}
+
+.hero{position:relative;color:var(--ivory);overflow:hidden;background:radial-gradient(120% 80% at 70% 0%,#7A1A2B 0%,var(--wine2) 40%,var(--wine) 100%)}
+.hero::before{content:"";position:absolute;inset:0;opacity:.14;pointer-events:none;background-image:radial-gradient(circle at 12px 12px,var(--gold) 1.2px,transparent 1.6px);background-size:24px 24px}
+.garland{position:relative;height:40px;background:
+  radial-gradient(circle at 50% 0,var(--mari) 0 9px,transparent 10px) 0 0/22px 22px repeat-x,
+  radial-gradient(circle at 50% 0,#FFD15C 0 8px,transparent 9px) 11px 12px/22px 22px repeat-x}
+.hero-in{position:relative;display:grid;grid-template-columns:minmax(0,1.1fr) auto;gap:clamp(24px,5vw,80px);align-items:center;padding:clamp(20px,4vw,56px) 0 clamp(40px,6vw,80px)}
+.hero .eyebrow{color:var(--gold2)}
+.hero h1{margin-top:12px;font-size:clamp(40px,7.4vw,84px);line-height:1}
+.hero h1 i{color:var(--gold)}
+.lead{margin-top:16px;max-width:540px;font-size:clamp(16px,1.6vw,19px);color:#F3E3CF}
+.cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}
+.price{margin-top:16px;font-size:14.5px;color:#e9d5c0}
+.price b{font:500 26px/1 var(--disp);color:var(--gold2);margin:0 4px}
+.ph{--w:290px;--s:calc((290 - 20) / 390);position:relative;width:var(--w);height:calc(var(--w)*2.05);padding:10px;border-radius:46px;background:#1c0a0e;box-shadow:0 40px 70px -30px #000c,inset 0 0 0 1.5px #ffffff26;margin:0 auto}
+.ph .sc{position:relative;width:100%;height:100%;border-radius:36px;overflow:hidden;background:var(--wine)}
+.ph iframe{position:absolute;left:0;top:0;width:390px;height:calc(100% / var(--s));border:0;transform:scale(var(--s));transform-origin:0 0}
+.ph-cap{margin-top:14px;text-align:center;font:600 11.5px/1.4 var(--body);letter-spacing:.14em;text-transform:uppercase;color:var(--gold2)}
+
+.sec{padding:clamp(56px,8vw,104px) 0}
+.sec h2{margin-top:10px;font-size:clamp(32px,5.2vw,58px);line-height:1.05}
+.sec .sub{margin-top:12px;max-width:560px;color:var(--soft)}
+.feats{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px;margin-top:32px}
+.feat{padding:22px;border-radius:22px;background:#fff;border:1px solid var(--line)}
+.feat i{display:grid;place-items:center;width:46px;height:46px;border-radius:14px;background:var(--wine);color:var(--gold2)}
+.feat i svg{width:22px;height:22px}
+.feat h3{margin-top:14px;font:600 24px/1.15 var(--disp);color:var(--wine2)}
+.feat p{margin-top:6px;font-size:15px;line-height:1.5;color:var(--soft)}
+.steps{counter-reset:s;display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-top:32px}
+.steps li{counter-increment:s;padding:22px;border-radius:22px;border:1px solid var(--line);background:#FFF9EE}
+.steps li::before{content:counter(s);display:block;font:italic 500 44px/1 var(--disp);color:var(--gold)}
+.steps h3{margin-top:8px;font:600 23px/1.15 var(--disp)}
+.steps p{margin-top:6px;font-size:15px;color:var(--soft)}
+.dark{background:var(--wine);color:var(--ivory)}
+.dark .eyebrow{color:var(--gold2)}.dark h2 i{color:var(--gold)}.dark .sub{color:#e9d5c0}
+.pbox{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(20px,4vw,56px);align-items:center}
+.pcard{padding:clamp(22px,3vw,36px);border-radius:28px;background:#ffffff0d;box-shadow:inset 0 0 0 1px #D9B66A66}
+.pcard .amt{font:500 clamp(54px,8vw,84px)/1 var(--disp);color:var(--gold2)}
+.pcard .amt small{font:500 15px/1 var(--body);color:#e9d5c0;margin-left:8px}
+.pcard ul{display:grid;gap:10px;margin:20px 0 24px;font-size:15.5px}
+.pcard li{display:grid;grid-template-columns:20px 1fr;gap:10px}
+.pcard li::before{content:"✓";color:var(--gold);font-weight:700}
+.pcard .btn{width:100%}
+.pcard .fine{margin-top:12px;font-size:13px;color:#e9d5c0;text-align:center}
+.help{margin-top:18px;padding:18px 20px;border-radius:20px;background:#ffffff0d;box-shadow:inset 0 0 0 1px #ffffff1f;font-size:15px}
+.help b{display:block;font:600 21px/1.2 var(--disp);color:var(--gold2);margin-bottom:4px}
+.help .btn{margin-top:12px;min-height:46px;font-size:15px}
+.faq{max-width:760px}
+.faq details{border-bottom:1px solid var(--line)}
+.faq summary{display:flex;justify-content:space-between;gap:16px;align-items:center;padding:18px 0;font:600 21px/1.25 var(--disp);cursor:pointer;list-style:none}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";flex:none;display:grid;place-items:center;width:34px;height:34px;border-radius:50%;border:1px solid var(--line);font:400 20px/1 var(--body);color:var(--wine2)}
+.faq details[open] summary::after{content:"–"}
+.faq p{padding:0 0 18px;color:var(--soft)}
+.partner{margin-top:36px;padding:22px;border-radius:22px;background:#FFF9EE;border:1px solid var(--line)}
+.partner h3{font:600 24px/1.2 var(--disp);color:var(--wine2)}
+.partner p{margin-top:6px;color:var(--soft);font-size:15px}
+.partner .btn{margin-top:14px;min-height:46px;font-size:15px}
+.end{text-align:center}
+.end .cta{justify-content:center}
+footer{padding:28px 0 calc(28px + env(safe-area-inset-bottom));background:var(--wine);color:#e9d5c0;font-size:13.5px}
+footer .wrap{display:flex;flex-wrap:wrap;gap:8px 18px;justify-content:space-between}
+footer a{color:var(--gold2)}
+.bar{display:none}
+@media (max-width:860px){
+  .hero-in{grid-template-columns:1fr;text-align:center}
+  .lead{margin-inline:auto}.cta{justify-content:center}
+  .ph{--w:250px;--s:calc((250 - 20) / 390)}
+  .pbox{grid-template-columns:1fr}
+  .cta .btn{flex:1 1 100%}
+  .bar{display:block;position:fixed;left:0;right:0;bottom:0;z-index:40;padding:10px 14px calc(10px + env(safe-area-inset-bottom));background:#2a0d12f2;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);transform:translateY(110%);transition:transform .25s ease-out}
+  .bar.show{transform:none}
+  .bar .btn{width:100%}
+  footer{padding-bottom:calc(96px + env(safe-area-inset-bottom))}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.bar{transition:none}}
+</style>
+<script src="/assets/ks-pixel.v1.js" defer></script><script src="/assets/ks-ref.v1.js" defer></script>
+</head>
+<body data-no-sale-bar>
+<header class="nav"><div class="wrap">
+  <a class="brand" href="/gifts">Keepsake<small>Weddings</small></a>
+  <a class="btn gold" href="/builder?tpl=wedding">Make yours</a>
+</div></header>
+
+<main>
+<section class="hero">
+  <div class="garland" aria-hidden="true"></div>
+  <div class="wrap hero-in">
+    <div>
+      <p class="eyebrow">Wedding invitation website</p>
+      <h1 class="d">Your wedding invitation, <i>on one link.</i></h1>
+      <p class="lead">Every function with its venue and map, RSVP on WhatsApp, a countdown and your photos. Send it to every guest in one tap, and change it any time.</p>
+      <div class="cta">
+        <a class="btn gold" href="/builder?tpl=wedding">Make your invitation</a>
+        <a class="btn line" href="/templates/wedding" target="_blank" rel="noopener">Open the sample ↗</a>
+      </div>
+      <p class="price">Free to design · pay once <b>₹<span data-wp>1,999</span></b> when you're happy with it</p>
+    </div>
+    <div>
+      <div class="ph"><div class="sc"><iframe title="Sample wedding invitation: scroll inside the phone" src="/templates/wedding" loading="eager"></iframe></div></div>
+      <p class="ph-cap">A sample invitation · scroll inside the phone</p>
+    </div>
+  </div>
+</section>
+
+<section class="sec"><div class="wrap">
+  <p class="eyebrow">What your guests get</p>
+  <h2 class="d">Everything they ask you, <i>answered once.</i></h2>
+  <p class="sub">No more sending the venue pin forty times. Guests open the link and find it all.</p>
+  <div class="feats">
+    <div class="feat"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.500" width="18" height="16" rx="3"/><path d="M3 9.500h18M8 2.500v4M16 2.500v4"/></svg></i><h3>Every function</h3><p>Haldi, Mehendi, Sangeet, Wedding and Reception, each with its day, time, venue and dress code. Guests can save each date to their phone calendar.</p></div>
+    <div class="feat"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.200 7-11.500a7 7 0 1 0-14 0C5 14.800 12 21 12 21z"/><circle cx="12" cy="9.500" r="2.500"/></svg></i><h3>Maps that open</h3><p>One tap opens Google Maps to the right venue for each function. Paste your own map link or just type the address.</p></div>
+    <div class="feat"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.500 20.500l1.300-4.300A8.500 8.500 0 1 1 8 19.300z"/><path d="M9 12l2 2 4-4"/></svg></i><h3>RSVP on WhatsApp</h3><p>Guests choose yes or no and how many are coming. The reply lands on the WhatsApp of the person you choose from each side.</p></div>
+    <div class="feat"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.500 2M9 2.500h6"/></svg></i><h3>Countdown</h3><p>Days, hours and minutes to the wedding, ticking live on the invitation.</p></div>
+    <div class="feat"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.400-7-10a4 4 0 0 1 7-2.600A4 4 0 0 1 19 10c0 5.600-7 10-7 10z"/></svg></i><h3>Dear Sharma Family</h3><p>Add a guest's name to the end of the link and the invitation greets them by name. One invitation, a personal link for each family.</p></div>
+    <div class="feat"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16v4zM13.500 6.500l4 4"/></svg></i><h3>Change it any time</h3><p>Venue changed? Timing moved? Edit it and every guest sees the new details on the same link. No reprinting.</p></div>
+  </div>
+</div></section>
+
+<section class="sec" style="padding-top:0"><div class="wrap">
+  <p class="eyebrow">How it works</p>
+  <h2 class="d">Ready <i>this evening.</i></h2>
+  <ol class="steps">
+    <li><h3>Fill in your details</h3><p>Names, parents' names, the functions and venues, your photos and who should receive the RSVPs.</p></li>
+    <li><h3>See it as your guests will</h3><p>The preview updates as you type. Designing and previewing is free.</p></li>
+    <li><h3>Pay once and send</h3><p>Pay by UPI or card, get your link, and send it on WhatsApp to everyone.</p></li>
+  </ol>
+</div></section>
+
+<section class="sec dark" id="price"><div class="wrap pbox">
+  <div>
+    <p class="eyebrow">Price</p>
+    <h2 class="d">One price. <i>The whole wedding.</i></h2>
+    <p class="sub">Less than the printing for a handful of cards, and it reaches every guest, in every city, the same minute.</p>
+    <div class="help"><b>Short on time? We'll make it for you.</b>Send us your card or the details on WhatsApp and we'll set up the invitation for you to check.<br><a class="btn wa" href="https://wa.me/918302791217?text=Hi%20Keepsake%2C%20please%20make%20our%20wedding%20invitation%20website." target="_blank" rel="noopener">Ask on WhatsApp</a></div>
+  </div>
+  <div class="pcard">
+    <p class="amt">₹<span data-wp>1,999</span><small>one time</small></p>
+    <ul>
+      <li>Up to 8 functions with venue, map and dress code</li>
+      <li>RSVP on WhatsApp to the people you choose</li>
+      <li>Countdown, your story and up to 8 photos</li>
+      <li>A personal greeting for each guest family</li>
+      <li>Unlimited changes, no monthly fee</li>
+    </ul>
+    <a class="btn gold" href="/builder?tpl=wedding">Make your invitation</a>
+    <p class="fine">Free to design. You pay only when you switch on the link.</p>
+  </div>
+</div></section>
+
+<section class="sec"><div class="wrap">
+  <p class="eyebrow">Questions</p>
+  <h2 class="d">Good to <i>know.</i></h2>
+  <div class="faq" style="margin-top:22px">
+    <details open><summary>Do guests need an app?</summary><p>No. The link opens in the browser on any phone. Maps open in Google Maps and replies open in WhatsApp.</p></details>
+    <details><summary>Can I change details after sending it?</summary><p>Yes. Log in, edit and save. Everyone who opens the same link sees the new details straight away.</p></details>
+    <details><summary>How do I send a personal link to each family?</summary><p>Add <b>?to=</b> and the name at the end of your link, for example <b>?to=Sharma Family</b>. The invitation then opens with "Dear Sharma Family,". We'll show you this once your link is live.</p></details>
+    <details><summary>Where do the RSVPs go?</summary><p>To the WhatsApp numbers you add, for example one cousin from each side. Each reply says who is coming and how many guests.</p></details>
+    <details><summary>Can I still send printed cards?</summary><p>Of course. Many families print fewer cards for elders and send the link to everyone else. You can also print the link as a QR code on the card.</p></details>
+    <details><summary>How long does the link stay live?</summary><p>It stays live after the wedding too, so you can keep it as a memory. There is no monthly fee.</p></details>
+  </div>
+  <div class="partner"><h3>Photographer, planner, card printer or decorator?</h3><p>Offer wedding invitation websites to your couples and earn on each one. We give you a code and a page that shows your sales.</p><a class="btn wine" href="https://wa.me/918302791217?text=Hi%20Keepsake%2C%20I%20work%20with%20weddings%20and%20want%20to%20offer%20invitation%20websites." target="_blank" rel="noopener">Partner with us on WhatsApp</a></div>
+</div></section>
+
+<section class="sec end" style="padding-top:0" id="end"><div class="wrap">
+  <h2 class="d">Send it <i>tonight.</i></h2>
+  <div class="cta"><a class="btn gold" href="/builder?tpl=wedding">Make your invitation</a><a class="btn wine" href="/templates/wedding" target="_blank" rel="noopener">Open the sample ↗</a></div>
+</div></section>
+</main>
+
+<footer><div class="wrap"><span>© 2026 Keepsake · <a href="/gifts">Gifts</a> · <a href="/contact">Contact</a> · <a href="/terms">Terms</a> · <a href="/privacy">Privacy</a> · <a href="/refunds">Refunds</a></span><span>WhatsApp <a href="https://wa.me/918302791217">+91 83027 91217</a></span></div></footer>
+
+<div class="bar" id="bar"><a class="btn gold" href="/builder?tpl=wedding">Make your invitation · ₹<span data-wp>1,999</span></a></div>
+
+<script>
+(function () {
+  // live price (PRICE_WEDDING in Vercel changes it everywhere)
+  fetch("/api/checkout").then(function (r) { return r.json(); }).then(function (c) {
+    var p = c && c.products && c.products.wedding; if (!p) return;
+    document.querySelectorAll("[data-wp]").forEach(function (e) { e.textContent = Number(p.price).toLocaleString("en-IN"); });
+  }).catch(function () {});
+  var bar = document.getElementById("bar"), hero = document.querySelector(".hero"), end = document.getElementById("end");
+  function sb() { bar.classList.toggle("show", scrollY > hero.offsetHeight - 160 && end.getBoundingClientRect().top > innerHeight * 0.8); }
+  addEventListener("scroll", sb, { passive: true }); sb();
+})();
+</script>
+</body>
+</html>

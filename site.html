@@ -31,7 +31,7 @@ html,body{margin:0;background:#2b060b}
   if (j.error) return j.inactive ? say("This keepsake isn’t active yet.", "If it’s yours, log in and activate it from My memories.") : say("This page could not be found.");
   if (j.kind !== "site") { location.replace("/m/" + m[1]); return; }
   // Designed templates are full pages: load the template and hand it this website's content.
-  if (["wildflower", "candlelit", "mixtape"].includes(j.data && j.data.tpl)) {
+  if (["wildflower", "candlelit", "mixtape", "wedding"].includes(j.data && j.data.tpl)) {
     const r = await fetch("/templates/" + j.data.tpl, { cache: "no-cache" });
     if (!r.ok) return say("This page could not be loaded. Please try again.");
     const safe = v => JSON.stringify(v).replace(/</g, "\\u003c").replace(/\u2028/g, "\\u2028").replace(/\u2029/g, "\\u2029");

@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#3A0A12">
+<title>Ananya &amp; Rohan · Wedding invitation · GetKeepsake</title><meta name="robots" content="noindex,follow">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@400;500;600&family=Pinyon+Script&display=swap">
+<style>
+/* Wedding invitation: a Keepsake website template. Maroon, gold and marigold. One link for every guest:
+   the functions with venue and map, RSVP on WhatsApp, a countdown and the couple's photos. */
+:root{--wine:#3A0A12;--wine2:#5A1220;--gold:#D9B66A;--gold2:#F0D9A0;--mari:#F2A30F;--ivory:#FBF3E4;--ink:#2A1418;--soft:#7A5F58;--line:#D9B66A55;
+  --disp:"Cormorant Garamond",Georgia,serif;--body:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;--script:"Pinyon Script","Cormorant Garamond",cursive}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--ivory);color:var(--ink);font:400 16px/1.6 var(--body);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{max-width:100%;display:block}
+a{color:inherit}
+h1,h2,h3,p{margin:0}
+.wrap{width:min(100% - 40px,720px);margin-inline:auto}
+.eyebrow{font:500 12px/1.4 var(--body);letter-spacing:.24em;text-transform:uppercase;color:var(--gold)}
+.sec{padding:64px 0;text-align:center;position:relative}
+.sec h2{font:500 clamp(32px,7vw,46px)/1.1 var(--disp);margin-top:10px}
+.sec h2 i{font-style:italic;color:var(--wine2)}
+.orn{display:flex;align-items:center;justify-content:center;gap:12px;margin:18px auto 0;color:var(--gold)}
+.orn::before,.orn::after{content:"";width:56px;height:1px;background:currentColor;opacity:.7}
+.orn svg{width:18px;height:18px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 22px;border-radius:999px;border:1px solid var(--wine2);background:transparent;color:var(--wine2);font:600 15px/1 var(--body);text-decoration:none;cursor:pointer;touch-action:manipulation;transition:transform .15s,background .2s,color .2s}
+.btn:active{transform:scale(.97)}
+.btn.gold{background:linear-gradient(135deg,var(--gold2),var(--gold));border-color:var(--gold);color:var(--wine)}
+.btn.wa{background:#128C4A;border-color:#128C4A;color:#fff}
+.btn[aria-disabled=true]{opacity:.55;pointer-events:none}
+.btn svg{width:18px;height:18px;flex:none}
+:focus-visible{outline:2px solid var(--mari);outline-offset:3px}
+
+/* cover */
+.cover{position:relative;min-height:100svh;padding:0 0 56px;color:var(--ivory);text-align:center;overflow:hidden;
+  background:radial-gradient(120% 70% at 50% 0%,#7A1A2B 0%,var(--wine2) 38%,var(--wine) 100%)}
+.cover::before{content:"";position:absolute;inset:0;opacity:.16;pointer-events:none;
+  background-image:radial-gradient(circle at 12px 12px,var(--gold) 1.2px,transparent 1.6px);background-size:24px 24px}
+.garland{position:relative;height:46px;background:
+  radial-gradient(circle at 50% 0,var(--mari) 0 9px,transparent 10px) 0 0/22px 22px repeat-x,
+  radial-gradient(circle at 50% 0,#FFD15C 0 8px,transparent 9px) 11px 12px/22px 22px repeat-x,
+  radial-gradient(circle at 50% 0,#E8590C 0 7px,transparent 8px) 0 24px/22px 22px repeat-x}
+.cover-in{position:relative;padding:26px 0 0}
+.to{font:italic 500 19px/1.3 var(--disp);color:var(--gold2);margin-bottom:10px}
+.to[hidden]{display:none}
+.invite{font:500 12.5px/1.5 var(--body);letter-spacing:.22em;text-transform:uppercase;color:var(--gold2)}
+.names{margin:14px 0 6px;font:500 clamp(46px,13vw,84px)/1 var(--disp);letter-spacing:-.01em}
+.names span{display:block}
+.names .amp{font:400 clamp(38px,10vw,62px)/1 var(--script);color:var(--gold);margin:2px 0 4px}
+.tagline{font:italic 400 clamp(18px,4.6vw,22px)/1.35 var(--disp);color:#F3E3CF}
+.arch{position:relative;width:min(74vw,330px);aspect-ratio:3/4;margin:26px auto 0;border-radius:999px 999px 14px 14px;padding:7px;background:linear-gradient(160deg,var(--gold2),var(--gold) 45%,#9C7A33)}
+.arch::after{content:"";position:absolute;inset:-9px;border:1px solid var(--gold);border-radius:999px 999px 20px 20px;opacity:.55;pointer-events:none}
+.arch .pic{width:100%;height:100%;border-radius:999px 999px 9px 9px;overflow:hidden;background:#2a070d}
+.arch img{width:100%;height:100%;object-fit:cover}
+.pic.empty{display:grid;place-items:center}.pic.empty::after{content:"♥";color:var(--gold);font-size:42px}.pic.empty img{display:none}
+.when{margin-top:26px;font:500 clamp(22px,5.6vw,28px)/1.25 var(--disp)}
+.where{margin-top:4px;font:500 12.5px/1.5 var(--body);letter-spacing:.2em;text-transform:uppercase;color:var(--gold2)}
+.cue{margin:26px auto 0;display:inline-flex;flex-direction:column;align-items:center;gap:6px;font:500 11px/1 var(--body);letter-spacing:.2em;text-transform:uppercase;color:var(--gold2);text-decoration:none}
+.cue svg{width:20px;height:20px;animation:bob 1.8s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(6px)}}
+
+/* countdown */
+.count{background:var(--wine);color:var(--ivory);padding:34px 0 38px;text-align:center}
+.count[hidden]{display:none}
+.count p{font:italic 400 18px/1.3 var(--disp);color:var(--gold2)}
+.cd{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;max-width:420px;margin:14px auto 0}
+.cd div{padding:12px 4px;border:1px solid var(--line);border-radius:14px;background:#ffffff0a}
+.cd b{display:block;font:500 clamp(30px,8vw,40px)/1 var(--disp);font-variant-numeric:tabular-nums}
+.cd span{display:block;margin-top:5px;font:500 10.5px/1 var(--body);letter-spacing:.16em;text-transform:uppercase;color:var(--gold2)}
+
+/* families */
+.fam .names2{display:grid;gap:6px;margin-top:22px;font:500 clamp(21px,5.2vw,26px)/1.3 var(--disp)}
+.fam .names2 i{font:400 26px/1 var(--script);color:var(--gold);font-style:normal}
+.note{display:grid;grid-template-columns:1fr;gap:22px;align-items:center;margin-top:34px;text-align:center}
+.note p{font:italic 400 clamp(19px,4.8vw,23px)/1.5 var(--disp);color:#4a2a2e}
+.note .pic{width:min(62vw,240px);aspect-ratio:1;margin:0 auto;border-radius:50%;overflow:hidden;border:5px solid #fff;box-shadow:0 0 0 1px var(--gold),0 18px 34px -20px #3a0a12aa;background:#eadfcd}
+.note .pic img{width:100%;height:100%;object-fit:cover}
+.note .pic.empty{display:none}
+
+/* events */
+.events{background:linear-gradient(180deg,#F6E9D2,var(--ivory))}
+.evs{display:grid;gap:14px;margin-top:30px;text-align:left}
+.ev{position:relative;display:grid;grid-template-columns:76px minmax(0,1fr);gap:16px;padding:18px;border-radius:22px;background:#fff;border:1px solid #E9D9BC;box-shadow:0 14px 30px -24px #3a0a1288}
+.ev .day{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;align-self:start;padding:12px 4px;border-radius:16px;background:var(--wine);color:var(--ivory);text-align:center}
+.ev .day b{font:500 30px/1 var(--disp)}
+.ev .day span{font:600 10.5px/1.2 var(--body);letter-spacing:.14em;text-transform:uppercase;color:var(--gold2)}
+.ev h3{font:600 clamp(24px,6vw,28px)/1.1 var(--disp);color:var(--wine2)}
+.ev .t{margin-top:4px;font:600 14px/1.4 var(--body)}
+.ev .v{margin-top:2px;font-size:14.5px;line-height:1.45;color:var(--soft)}
+.ev .dress{display:inline-block;margin-top:9px;padding:5px 11px;border-radius:999px;background:#FBEBC8;color:#6b4a10;font:600 12px/1.3 var(--body)}
+.ev .act{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.ev .act .btn{min-height:44px;padding:0 14px;font-size:14px;white-space:nowrap}
+
+/* story and photos */
+.story p.txt{max-width:560px;margin:20px auto 0;font:400 clamp(18px,4.6vw,21px)/1.6 var(--disp);color:#4a2a2e}
+.story p.txt+p.txt{margin-top:14px}
+.mt{margin-top:42px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:22px}
+.grid figure{margin:0;position:relative;border-radius:18px;overflow:hidden;background:#eadfcd;aspect-ratio:4/5}
+.grid figure:nth-child(3n+1){aspect-ratio:1}
+.grid img{width:100%;height:100%;object-fit:cover}
+.grid figcaption{position:absolute;left:0;right:0;bottom:0;padding:26px 12px 10px;background:linear-gradient(transparent,#1b0306cc);color:#fff;font:italic 500 16px/1.25 var(--disp);text-align:left}
+.grid figcaption:empty{display:none}
+
+/* rsvp */
+.rsvp{background:var(--wine);color:var(--ivory)}
+.rsvp h2 i{color:var(--gold)}
+.rsvp .by{margin-top:10px;font:italic 400 18px/1.4 var(--disp);color:var(--gold2)}
+.pick{display:grid;grid-template-columns:1fr 1fr;gap:8px;max-width:440px;margin:24px auto 0}
+.pick button{min-height:52px;padding:8px 10px;border-radius:16px;border:1px solid var(--line);background:#ffffff0a;color:var(--ivory);font:600 14.5px/1.25 var(--body);cursor:pointer;touch-action:manipulation}
+.pick button[aria-pressed=true]{background:linear-gradient(135deg,var(--gold2),var(--gold));border-color:var(--gold);color:var(--wine)}
+.guests{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:16px;font:500 15px/1 var(--body)}
+.guests[hidden]{display:none}
+.guests button{width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:transparent;color:var(--ivory);font:500 22px/1 var(--body);cursor:pointer}
+.guests b{min-width:28px;font:500 28px/1 var(--disp);font-variant-numeric:tabular-nums}
+.who{display:grid;gap:10px;max-width:440px;margin:22px auto 0}
+.who .btn{width:100%}
+.who small{display:block;margin-top:10px;font-size:13px;color:#e9d5c0}
+
+/* info and closing */
+.info ul{list-style:none;padding:0;margin:26px auto 0;display:grid;gap:10px;max-width:560px;text-align:left}
+.info li{display:grid;grid-template-columns:22px 1fr;gap:12px;padding:14px 16px;border-radius:16px;background:#fff;border:1px solid #E9D9BC;font-size:15px;line-height:1.5}
+.info li::before{content:"✦";color:var(--gold);font-size:15px;line-height:1.5}
+.end{padding-bottom:40px}
+.end .pic{width:min(70vw,300px);aspect-ratio:3/4;margin:0 auto 26px;border-radius:999px 999px 14px 14px;overflow:hidden;border:6px solid #fff;box-shadow:0 0 0 1px var(--gold),0 22px 40px -24px #3a0a12aa;background:#eadfcd}
+.end .pic img{width:100%;height:100%;object-fit:cover}
+.end .pic.empty{display:none}
+.end .closing{font:italic 400 22px/1.3 var(--disp);color:var(--soft)}
+.end .sign{margin-top:4px;font:400 clamp(40px,11vw,58px)/1.1 var(--script);color:var(--wine2)}
+.end .tag{margin-top:12px;font:600 13px/1 var(--body);letter-spacing:.12em;color:var(--gold);text-transform:none}
+.end .tag:empty{display:none}
+.end .share{margin-top:26px}
+.credit{margin-top:44px;font:400 12.5px/1.5 var(--body);color:var(--soft)}
+.credit a{color:var(--wine2);font-weight:600}
+
+.rv{opacity:0;transform:translateY(18px);transition:opacity .7s ease-out,transform .7s ease-out}
+.rv.in,.ks-preview .rv,html:not(.js) .rv{opacity:1;transform:none}
+@media (min-width:720px){
+  .note{grid-template-columns:auto 1fr;text-align:left;gap:36px}
+  .note .pic{margin:0}
+  .grid{grid-template-columns:repeat(4,1fr)}
+  .evs{grid-template-columns:1fr 1fr}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.rv{opacity:1;transform:none;transition:none}.cue svg{animation:none}}
+</style>
+<script src="/assets/ks-templates.v5.js"></script>
+</head>
+<body>
+<script>document.documentElement.classList.add("js");</script>
+
+<header class="cover">
+  <div class="garland" aria-hidden="true"></div>
+  <div class="wrap cover-in">
+    <p class="to" id="to" hidden></p>
+    <p class="invite" id="invite"></p>
+    <h1 class="names"><span id="nA"></span><span class="amp" aria-hidden="true">&amp;</span><span id="nB"></span></h1>
+    <p class="tagline" id="tagline"></p>
+    <div class="arch"><div class="pic"><img data-ph="photos.hero" alt="" width="600" height="800"></div></div>
+    <p class="when" id="when"></p>
+    <p class="where" id="where"></p>
+    <a class="cue" href="#events"><span>See the functions</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></a>
+  </div>
+</header>
+
+<section class="count" id="count" aria-label="Countdown to the wedding">
+  <p id="cdLine">Counting down to the big day</p>
+  <div class="cd" role="timer" aria-live="off"><div><b id="cdD">0</b><span>Days</span></div><div><b id="cdH">0</b><span>Hours</span></div><div><b id="cdM">0</b><span>Minutes</span></div><div><b id="cdS">0</b><span>Seconds</span></div></div>
+</section>
+
+<main>
+<section class="sec fam"><div class="wrap">
+  <p class="eyebrow rv" id="blessing"></p>
+  <div class="names2 rv"><span id="famA"></span><i aria-hidden="true">&amp;</i><span id="famB"></span></div>
+  <div class="orn rv" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c1.6 3.4 3.4 5.2 6.800 6.800C15.400 10.400 13.600 12.200 12 15.600 10.400 12.200 8.600 10.400 5.200 8.800 8.600 7.200 10.400 5.400 12 2zm0 14.400c.8 1.700 1.700 2.600 3.400 3.400-1.700.8-2.600 1.700-3.400 3.400-.8-1.700-1.700-2.600-3.400-3.400 1.700-.8 2.600-1.700 3.400-3.400z"/></svg></div>
+  <div class="note rv"><div class="pic"><img data-ph="photos.couple" alt="" loading="lazy" width="480" height="480"></div><p id="note"></p></div>
+</div></section>
+
+<section class="sec events" id="events"><div class="wrap">
+  <p class="eyebrow rv">The celebrations</p>
+  <h2 class="rv">Join us for <i>every function</i></h2>
+  <div class="evs" id="evs"></div>
+</div></section>
+
+<section class="sec story" id="storySec"><div class="wrap">
+  <p class="eyebrow rv">Our story</p>
+  <h2 class="rv" id="storyTitle"></h2>
+  <div id="storyTxt"></div>
+  <div id="momentsBox"><h2 class="rv mt" id="momentsTitle" style="font-size:clamp(26px,6vw,34px)"></h2><div class="grid" id="grid"></div></div>
+</div></section>
+
+<section class="sec rsvp" id="rsvp"><div class="wrap">
+  <p class="eyebrow rv">RSVP</p>
+  <h2 class="rv" id="rsvpTitle"></h2>
+  <p class="by rv" id="rsvpBy"></p>
+  <div class="pick rv" role="group" aria-label="Your reply"><button type="button" id="yes" aria-pressed="true">Joyfully accept</button><button type="button" id="no" aria-pressed="false">Regretfully decline</button></div>
+  <div class="guests rv" id="guests"><span>Guests</span><button type="button" id="gMinus" aria-label="One guest fewer">−</button><b id="gN" aria-live="polite">2</b><button type="button" id="gPlus" aria-label="One more guest">+</button></div>
+  <div class="who rv" id="who"></div>
+</div></section>
+
+<section class="sec info" id="infoSec"><div class="wrap">
+  <p class="eyebrow rv">For our guests</p>
+  <h2 class="rv" id="infoTitle"></h2>
+  <ul id="infoList"></ul>
+</div></section>
+
+<section class="sec end"><div class="wrap">
+  <div class="pic rv"><img data-ph="photos.end" alt="" loading="lazy" width="600" height="800"></div>
+  <p class="closing rv" id="closing"></p>
+  <p class="sign rv" id="sign"></p>
+  <p class="tag rv" id="hashtag"></p>
+  <div class="share rv"><button type="button" class="btn gold" id="share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7M16 6l-4-4-4 4M12 2v13"/></svg>Share this invitation</button></div>
+  <div class="credit">made with <a href="/wedding">Keepsake</a></div>
+</div></section>
+</main>
+
+<script>
+(function () {
+const K = window.KSKit, $ = id => document.getElementById(id);
+const el = (t, c, x) => { const e = document.createElement(t); if (c) e.className = c; if (x != null) e.textContent = x; return e; };
+const DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"], MON = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const time = d => { let h = d.getHours(); const m = d.getMinutes(), ap = h >= 12 ? "pm" : "am"; h = h % 12 || 12; return h + (m ? ":" + String(m).padStart(2, "0") : "") + " " + ap; };
+const WA = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 20.5l1.300-4.300A8.500 8.500 0 1 1 8 19.300z"/></svg>';
+let DATE = new Date(), NAMES = "", ATTEND = true, GUESTS = 2, CONTACTS = [], timer = 0;
+
+// One calendar file per function, made in the browser (no server needed).
+function ics(name, start, venue) {
+  const z = d => d.getUTCFullYear() + String(d.getUTCMonth() + 1).padStart(2, "0") + String(d.getUTCDate()).padStart(2, "0") + "T" + String(d.getUTCHours()).padStart(2, "0") + String(d.getUTCMinutes()).padStart(2, "0") + "00Z";
+  const esc = s => String(s).replace(/[\\;,]/g, "\\$&").replace(/\n/g, "\\n");
+  const end = new Date(start.getTime() + 3 * 3600e3);
+  const body = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//GetKeepsake//Wedding//EN", "BEGIN:VEVENT", "UID:" + start.getTime() + "-" + Math.random().toString(36).slice(2) + "@getkeepsake.in", "DTSTAMP:" + z(new Date()), "DTSTART:" + z(start), "DTEND:" + z(end),
+    "SUMMARY:" + esc(name + " · " + NAMES), "LOCATION:" + esc(venue), "END:VEVENT", "END:VCALENDAR"].join("\r\n");
+  const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([body], { type: "text/calendar" })); a.download = (name || "event").replace(/[^\w]+/g, "-") + ".ics";
+  document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+}
+
+function tick() {
+  const s = K.since(DATE);
+  if (!s.ahead) { $("cdLine").textContent = "We're married!"; ["cdD", "cdH", "cdM", "cdS"].forEach(i => $(i).parentNode.hidden = true); $("count").querySelector(".cd").hidden = true; clearInterval(timer); return; }
+  $("cdD").textContent = s.days; $("cdH").textContent = s.hours; $("cdM").textContent = s.minutes; $("cdS").textContent = s.seconds;
+}
+
+function rsvpLinks() {
+  const box = $("who"); box.textContent = "";
+  const text = "Namaste! " + (ATTEND ? "We will be there for " + NAMES + "'s wedding. Guests: " + GUESTS + "." : "Sorry, we won't be able to make it to " + NAMES + "'s wedding. Our love and blessings to the couple.") + "\nName: ";
+  CONTACTS.forEach(c => {
+    const n = K.waNum(c.phone), a = el("a", "btn wa"); a.innerHTML = WA; a.append("Reply to " + (K.str(c.name, 40) || "the family") + " on WhatsApp");
+    if (n) { a.href = "https://wa.me/" + n + "?text=" + encodeURIComponent(text); a.target = "_blank"; a.rel = "noopener"; } else a.setAttribute("aria-disabled", "true");
+    box.appendChild(a);
+  });
+  if (CONTACTS.length && !CONTACTS.some(c => K.waNum(c.phone))) box.appendChild(el("small", "", "The couple will add their WhatsApp numbers here."));
+  $("guests").hidden = !ATTEND; $("gN").textContent = GUESTS;
+  $("yes").setAttribute("aria-pressed", ATTEND); $("no").setAttribute("aria-pressed", !ATTEND);
+}
+$("yes").onclick = () => { ATTEND = true; rsvpLinks(); };
+$("no").onclick = () => { ATTEND = false; rsvpLinks(); };
+$("gMinus").onclick = () => { GUESTS = Math.max(1, GUESTS - 1); rsvpLinks(); };
+$("gPlus").onclick = () => { GUESTS = Math.min(20, GUESTS + 1); rsvpLinks(); };
+$("share").onclick = () => {
+  const url = location.origin + location.pathname, text = "You're invited to " + NAMES + "'s wedding. All the details are here:";
+  if (navigator.share) navigator.share({ title: NAMES + " · Wedding invitation", text, url }).catch(() => {});
+  else window.open("https://wa.me/?text=" + encodeURIComponent(text + " " + url), "_blank", "noopener");
+};
+
+function render(D) {
+  DATE = K.date(D.date);
+  const a = K.str(D.a, 30), b = K.str(D.b, 30); NAMES = a + " & " + b;
+  document.title = NAMES + " · Wedding invitation";
+  // A personal greeting for one guest: add ?to=Sharma%20Family to the link.
+  const to = K.str(new URLSearchParams(location.search).get("to") || "", 40).trim();
+  $("to").hidden = !to; $("to").textContent = to ? "Dear " + to + "," : "";
+  $("invite").textContent = K.str(D.invite, 60); $("nA").textContent = a; $("nB").textContent = b; $("tagline").textContent = K.str(D.tagline, 80);
+  $("when").textContent = DAYS[DATE.getDay()] + ", " + K.fmt.long(DATE);
+  $("where").textContent = K.str(D.city, 40);
+  document.querySelectorAll("[data-ph]").forEach(i => { K.setImg(i, K.get(D, i.dataset.ph)); i.alt = i.dataset.ph === "photos.hero" ? NAMES : ""; });
+
+  $("count").hidden = D.countdown === false; clearInterval(timer);
+  if (D.countdown !== false) { ["cdD", "cdH", "cdM", "cdS"].forEach(i => $(i).parentNode.hidden = false); $("count").querySelector(".cd").hidden = false; $("cdLine").textContent = "Counting down to the big day"; tick(); timer = setInterval(tick, 1000); }
+
+  $("blessing").textContent = K.str(D.blessing, 60); $("famA").textContent = K.str(D.familyA, 90); $("famB").textContent = K.str(D.familyB, 90);
+  $("note").textContent = K.str(D.note, 300);
+
+  const evs = $("evs"); evs.textContent = "";
+  (D.events || []).filter(e => e && K.str(e.name, 40).trim()).slice(0, 8).forEach(e => {
+    const d = K.date(e.when), venue = K.str(e.venue, 120), card = el("article", "ev rv");
+    const day = el("div", "day"); day.append(el("span", "", MON[d.getMonth()]), el("b", "", String(d.getDate())), el("span", "", DAYS[d.getDay()].slice(0, 3)));
+    const body = el("div"); body.append(el("h3", "", K.str(e.name, 40)), el("p", "t", DAYS[d.getDay()] + " · " + time(d)));
+    if (venue) body.appendChild(el("p", "v", venue));
+    if (K.str(e.dress, 50).trim()) body.appendChild(el("span", "dress", K.str(e.dress, 50)));
+    const act = el("div", "act");
+    if (venue || K.link(e.map)) { const m = el("a", "btn", "Open map"); m.href = K.link(e.map) || "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(venue); m.target = "_blank"; m.rel = "noopener"; act.appendChild(m); }
+    const c = el("button", "btn", "Save date"); c.type = "button"; c.onclick = () => ics(K.str(e.name, 40), d, venue); act.appendChild(c);
+    body.appendChild(act); card.append(day, body); evs.appendChild(card);
+  });
+
+  const st = $("storyTxt"); st.textContent = ""; K.paras(D.story).slice(0, 6).forEach(p => st.appendChild(el("p", "txt rv", p)));
+  $("storyTitle").textContent = K.str(D.storyTitle, 40);
+  const ms = (D.moments || []).filter(x => x && K.img(x.photo)).slice(0, 8), g = $("grid"); g.textContent = "";
+  ms.forEach(x => { const f = el("figure", "rv"), im = el("img"); im.src = K.img(x.photo); im.alt = K.str(x.cap, 60); im.loading = "lazy"; f.append(im, el("figcaption", "", K.str(x.cap, 60))); g.appendChild(f); });
+  $("momentsTitle").textContent = K.str(D.momentsTitle, 50); $("momentsBox").hidden = !ms.length;
+  const hasStory = D.showStory !== false && (st.children.length || ms.length);
+  $("storySec").hidden = !hasStory; st.hidden = !st.children.length; $("storyTitle").hidden = !st.children.length;
+
+  CONTACTS = (D.contacts || []).filter(c => c && (K.str(c.name, 40).trim() || K.waNum(c.phone))).slice(0, 4);
+  $("rsvp").hidden = D.showRsvp === false || !CONTACTS.length;
+  $("rsvpTitle").textContent = K.str(D.rsvpTitle, 40); $("rsvpBy").textContent = K.str(D.rsvpBy, 60); rsvpLinks();
+
+  const il = $("infoList"); il.textContent = ""; (D.info || []).map(x => K.str(x, 160).trim()).filter(Boolean).slice(0, 6).forEach(x => il.appendChild(el("li", "", x)));
+  $("infoTitle").textContent = K.str(D.infoTitle, 40); $("infoSec").hidden = D.showInfo === false || !il.children.length;
+
+  $("closing").textContent = K.str(D.closing, 40); $("sign").textContent = K.str(D.sign, 60); $("hashtag").textContent = K.str(D.hashtag, 40);
+  reveal();
+}
+
+let io = null;
+function reveal() {
+  const all = document.querySelectorAll(".rv:not(.in)");
+  if (!("IntersectionObserver" in window)) { all.forEach(e => e.classList.add("in")); return; }
+  if (!io) io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), { rootMargin: "0px 0px -8% 0px" });
+  all.forEach(e => io.observe(e));
+}
+K.boot("wedding", render);
+})();
+</script>
+</body>
+</html>

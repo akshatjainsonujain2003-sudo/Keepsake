@@ -12,7 +12,7 @@ const urlFor = (kind, id) => (kind === "site" ? "/s/" : kind === "biz" ? "/b/" :
 const bigPage = memory => !!memory && (!!memory.store || !!memory.storeAt || (memory.proUntil || 0) > Date.now());
 const tooBig = (data, kind, memory) => JSON.stringify(data).length > (kind === "biz" && bigPage(memory) ? 450000 : MAX[kind]);
 // A website is either section-based (older themes) or one of the designed templates.
-const TEMPLATES = ["wildflower", "candlelit", "mixtape"];
+const TEMPLATES = ["wildflower", "candlelit", "mixtape", "wedding"];
 // A business page (shops, cafes): data.biz === 1 with at least a name.
 const validData = (data, kind) => !!data && (kind === "biz" ? data.biz === 1 && typeof data.t === "string" && !!data.t.trim() : kind === "site" ? (Array.isArray(data.sections) || TEMPLATES.includes(data.tpl)) : Array.isArray(data.i));
 
@@ -120,8 +120,10 @@ module.exports = async (req, res) => {
       if (!memory || memory.owner !== user.id) return db.reply(res, 404, { error: "Memory not found in your account." });
       const kind = kindOf(memory.kind);
       if (!validData(data, kind) || tooBig(data, kind, memory)) return db.reply(res, 400, { error: kind === "biz" && !bigPage(memory) && JSON.stringify(data || {}).length > MAX.biz ? "Your page is too big. Add the Online store to list all your products." : "This memory is empty or too large." });
+      // A wedding invitation is a separate product with its own price: a saved website can't be switched into or out of it.
+      if (kind === "site" && ((memory.data || {}).tpl === "wedding") !== (data.tpl === "wedding")) return db.reply(res, 400, { error: "A wedding invitation is made as its own website. Start a new one to use this design." });
       const lockErr = setLock(memory, b); if (lockErr) return db.reply(res, 400, { error: lockErr });
-      memory.data = data; memory.title = clip(data.t || "Our Memories", 80) || "Our Memories"; memory.updated = Date.now();
+      memory.data = data; memory.title = clip(data.t || (data.tpl === "wedding" && data.a && data.b ? data.a + " & " + data.b + " · Wedding" : "") || "Our Memories", 80) || "Our Memories"; memory.updated = Date.now();
       await db.setj(key, memory);
       // A live shop page changed: tell Bing and the other IndexNow engines (at most once an hour per page).
       if (kind === "biz" && memory.paid !== false) await require("./_shopseo").ping(id, memory);

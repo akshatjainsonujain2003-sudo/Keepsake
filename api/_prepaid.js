@@ -115,6 +115,7 @@ async function claim({ code, pin, id, user, ip }) {
   if (!memory || memory.owner !== user.id) return { status: 404, error: "Keepsake not found in your account." };
   if (memory.kind === "biz") return { status: 400, error: "This code is for a keepsake, not a business page." };
   const kind = memory.kind === "site" ? "site" : "card";
+  if (kind === "site" && (memory.data || {}).tpl === "wedding") return { status: 400, error: "This code can't be used for a wedding invitation. Pay online to switch it on, or WhatsApp us." };
   if (rec.tier === "card" && kind === "site") return { status: 400, error: "This code is for a memory card. Make a card in the studio to use it, or WhatsApp us to upgrade." };
   if (memory.prepaid && memory.prepaid !== code) return { status: 409, error: "This keepsake already used a prepaid code." };
   if ((await db.cmd("SET", "pclaim-lock:" + code, "1", "NX", "EX", 30)) !== "OK") return { status: 409, error: "Please try again in a moment." };

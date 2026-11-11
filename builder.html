@@ -22,10 +22,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,500&family=DM+Sans:wght@400;500;700&display=swap">
 <link rel="stylesheet" href="/assets/site-themes.v1.css">
-<script src="/assets/ks-checkout.v15.js"></script>
+<script src="/assets/ks-checkout.v16.js"></script>
 <script src="/assets/ks-claim.v2.js"></script>
 <script src="/assets/site-render.v1.js"></script>
-<script src="/assets/ks-templates.v4.js"></script>
+<script src="/assets/ks-templates.v5.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js" defer></script>
 <style>
 :root{--bg:#240409;--panel:#33100f;--panel2:#3d1517;--line:#6b3a35;--ink:#f8f0df;--muted:#c9b99a;--gold:#e4c680;--field:#1a0206;--bad:#ff9aa8;--ok:#9ad8b0}
@@ -108,6 +108,11 @@ textarea.in{min-height:110px;resize:vertical;line-height:1.5}
 @media (max-width:420px){.themes{grid-template-columns:1fr 1fr}.row2{grid-template-columns:1fr}}
 
 [hidden]{display:none!important}
+/* wedding invitation tile */
+.art.wd{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:radial-gradient(120% 80% at 50% 0%,#7A1A2B,#3A0A12);color:#FBF3E4;position:relative;overflow:hidden}
+.art.wd .wd-g{position:absolute;left:0;right:0;top:0;height:22px;background:radial-gradient(circle at 50% 0,#F2A30F 0 6px,transparent 7px) 0 0/15px 15px repeat-x,radial-gradient(circle at 50% 0,#FFD15C 0 5px,transparent 6px) 7px 8px/15px 15px repeat-x}
+.art.wd .wd-n{font:500 30px/1 "Cormorant Garamond",Georgia,serif}.art.wd .wd-n i{color:#D9B66A;font-style:italic}
+.art.wd .wd-s{font:600 9px/1 Inter,system-ui,sans-serif;letter-spacing:.2em;text-transform:uppercase;color:#F0D9A0}
 /* designed templates */
 .designs{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .design{display:flex;flex-direction:column;gap:6px;text-align:left;padding:8px;border-radius:18px;border:1px solid var(--line);background:var(--panel);cursor:pointer;color:var(--ink)}
@@ -143,9 +148,9 @@ textarea.in{min-height:110px;resize:vertical;line-height:1.5}
 </header>
 <div class="layout">
  <main class="editor">
-  <div class="free-pill"><span>✨ Free to design &amp; preview · One-time <span data-price="site">₹299</span> to publish</span></div>
-  <h1 class="page">Your love-story website</h1>
-  <p class="lede">Pick a design below, then make it yours with your photos, Spotify song and words. Everything updates live in the preview.</p>
+  <div class="free-pill"><span>✨ Free to design &amp; preview · One-time <span id="pillSite"><span data-price="site">₹299</span></span><span id="pillWed" hidden>₹<span id="pillWedP">1,999</span></span> to publish</span></div>
+  <h1 class="page" id="pageH">Your love-story website</h1>
+  <p class="lede" id="pageL">Pick a design below, then make it yours with your photos, Spotify song and words. Everything updates live in the preview.</p>
 
   <section class="block">
     <h2>1. Choose a Design</h2>
@@ -219,6 +224,14 @@ const blank = { story: () => ({ type: "story", h: "", text: "", img: "" }), gall
 let raf = 0;
 function preview() { if (isTpl()) { tplPreview(); return; } cancelAnimationFrame(raf); raf = requestAnimationFrame(() => { KSSite.render($("#preview"), D, { editing: true }); if ($("#overlay").classList.contains("open")) KSSite.render($("#previewFull"), D, { editing: true }); }); }
 function changed() { dirty = true; save(); preview(); }
+// The wedding invitation has its own price and wording.
+function productUi() {
+  const w = !!D && D.tpl === "wedding";
+  $("#pillSite").hidden = w; $("#pillWed").hidden = !w;
+  $("#pageH").textContent = w ? "Your wedding invitation" : "Your love-story website";
+  $("#pageL").textContent = w ? "Add your names, the functions with venues, your photos and who guests should reply to. Everything updates live in the preview." : "Pick a design below, then make it yours with your photos, Spotify song and words. Everything updates live in the preview.";
+  if (w) $("#frameUpsellBox").hidden = true;
+}
 
 // ---------- photos ----------
 async function upload(file) {
@@ -258,7 +271,8 @@ function designs() {
   const box = $("#designs"); box.textContent = "";
   [["wildflower", '<div class="art wf"><div class="pol"><img class="ph" src="/assets/wildflower/lakedance.webp" alt=""><img class="edge" src="/assets/wildflower/polaroid.webp" alt=""></div><img class="fl" src="/assets/wildflower/pressed.webp" alt=""></div>'],
    ["candlelit", '<div class="art cl"><img class="seal" src="/assets/candlelit/seal.webp" alt=""><span class="nm">for you</span></div>'],
-   ["mixtape", '<div class="art mx"><img class="tp" src="/assets/mixtape/cassette.webp" alt=""><img class="pn" src="/assets/mixtape/heartpin.webp" alt=""></div>']].forEach(([k, art]) => {
+   ["mixtape", '<div class="art mx"><img class="tp" src="/assets/mixtape/cassette.webp" alt=""><img class="pn" src="/assets/mixtape/heartpin.webp" alt=""></div>'],
+   ["wedding", '<div class="art wd"><span class="wd-g"></span><span class="wd-n">A <i>&amp;</i> R</span><span class="wd-s">wedding invitation</span></div>']].forEach(([k, art]) => {
     const b = document.createElement("button"); b.type = "button"; b.className = "design" + (D.tpl === k ? " on" : "");
     b.innerHTML = art + "<b></b><small></small>"; b.querySelector("b").textContent = KSKit.NAMES[k]; b.querySelector("small").textContent = KSKit.HINTS[k];
     b.onclick = () => switchTo(k); box.appendChild(b);
@@ -267,9 +281,16 @@ function designs() {
 // switching design keeps what both designs share
 function switchTo(k) {
   if (D.tpl === k) return;
+  // A wedding invitation is its own product: a saved website can't turn into one (or back), so the switch starts a fresh, unsaved website.
+  if (EDIT_ID && (D.tpl === "wedding") !== (k === "wedding")) {
+    if (!confirm(k === "wedding" ? "The wedding invitation is a separate website. Start a new one? Your current website stays saved in My account." : "This starts a new website. Your wedding invitation stays saved in My account. Continue?")) return;
+    EDIT_ID = null; ACTIVE = false; CHECKOUT = null; $("#payPanel").hidden = true; $("#livePanel").hidden = true;
+    const u = new URL(location.href); u.searchParams.delete("edit"); u.searchParams.set("tpl", k); history.replaceState(null, "", u.pathname + u.search + u.hash);
+  }
   const next = KSKit.clone(KSKit.DEMO[k]), old = D || {};
-  if (old.tpl) { ["a", "b", "date", "place", "greeting", "letter", "sign"].forEach(f => { if (old[f]) next[f] = old[f]; });
-    if (old.song) ["url", "title"].forEach(f => { if (old.song[f]) next.song[f] = old.song[f]; });
+  const cross = (old.tpl === "wedding") !== (k === "wedding");   // a wedding date isn't an anniversary: only names and the main photo carry over
+  if (old.tpl) { (cross ? ["a", "b"] : ["a", "b", "date", "place", "greeting", "letter", "sign"]).forEach(f => { if (old[f]) next[f] = old[f]; });
+    if (old.song && next.song) ["url", "title"].forEach(f => { if (old.song[f]) next.song[f] = old.song[f]; });
     if (old.photos && old.photos.hero) next.photos.hero = old.photos.hero; }
   else if (old.sections) { // coming from an older look
     if (old.t && old.t.includes("&")) { const [x, y] = old.t.split("&"); next.a = x.trim(); next.b = y.trim(); }
@@ -427,7 +448,7 @@ function cover() {
 }
 function all() {
   const t = isTpl();
-  designs(); $("#tplEditor").hidden = !t; $$(".legacy").forEach(e => e.hidden = t); $("#themes").hidden = t; $("#legacyNote").hidden = t;
+  designs(); productUi(); $("#tplEditor").hidden = !t; $$(".legacy").forEach(e => e.hidden = t); $("#themes").hidden = t; $("#legacyNote").hidden = t;
   if (t) { if (FRAME_TPL !== D.tpl) { FRAME = null; } tplEditor(); } else { FRAME = null; FRAME_TPL = ""; $("#preview").style.height = ""; themes(); cover(); sections(); }
   preview();
 }
@@ -453,7 +474,7 @@ function setEdit(id) { EDIT_ID = id; const u = new URL(location.href); u.searchP
 let CLAIM = null;
 function claimPanel() { $("#livePanel").hidden = true; KSClaim.panel($("#payPanel"), { code: CLAIM.code, getId: () => EDIT_ID, onDone: url => { CLAIM = null; ACTIVE = true; const bn = $("#ksClaimBanner"); if (bn) bn.remove(); live(url); status("Activated with your prepaid code. Your website is live ♡", "ok"); } }); }
 function checkout(mode) {
-  if (!CHECKOUT) CHECKOUT = KSCheckout.mount($("#payPanel"), { kind: "site", getId: () => EDIT_ID, customer: () => USER, onPaid: v => { ACTIVE = true; live(v.url); const fr = v.plan === "frameQr" || v.plan === "frameNfc"; status(fr ? "Paid. Your website is live and we'll ship your photo frame soon." : "Paid. Your website is live ♡", "ok"); } });
+  if (!CHECKOUT) CHECKOUT = KSCheckout.mount($("#payPanel"), { kind: "site", product: () => (D && D.tpl === "wedding" ? "wedding" : "site"), getId: () => EDIT_ID, customer: () => USER, onPaid: v => { ACTIVE = true; live(v.url); const fr = v.plan === "frameQr" || v.plan === "frameNfc"; status(fr ? "Paid. Your website is live and we'll ship your photo frame soon." : "Paid. Your website is live ♡", "ok"); } });
   $("#payPanel").hidden = false; if (mode !== "upgrade") $("#livePanel").hidden = true;
   CHECKOUT.open(mode).then(() => $("#payPanel").scrollIntoView({ behavior: "smooth", block: "start" }));
 }
@@ -478,7 +499,7 @@ $("#qrPng").onclick = () => {
   img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(new XMLSerializer().serializeToString(svg));
 };
 $("#frameBtn").onclick = () => checkout("upgrade");
-KSCheckout.catalog().then(c => { $("#frameUpsellBox").hidden = c.free || !c.frames; });
+KSCheckout.catalog().then(c => { $("#frameUpsellBox").hidden = c.free || !c.frames || (D && D.tpl === "wedding"); if (c.products && c.products.wedding) $("#pillWedP").textContent = Number(c.products.wedding.price).toLocaleString("en-IN"); });
 $("#saveBtn").onclick = saveSite;
 $("#addBtn").onclick = () => { const t = $("#addType").value; D.sections.push(blank[t]()); changed(); sections(); const last = $$("#sections details").pop(); if (last) { last.open = true; last.scrollIntoView({ behavior: "smooth", block: "center" }); } };
 $("#previewBtn").onclick = () => { $("#overlay").classList.add("open"); document.body.style.overflow = "hidden"; if (isTpl()) openBig(); else { $("#previewFull").style.height = ""; KSSite.render($("#previewFull"), D, { editing: true }); } };
