@@ -211,28 +211,6 @@
     .partner-line{margin:22px 4px 0;text-align:center;font-size:14.5px;color:#6b5a52}
     .partner-line a{color:var(--wine,#6b1a24);font-weight:600}
     .gbar{display:none}
-    /* the four websites in the hero */
-    .wfan{display:flex;justify-content:center;align-items:flex-end;padding:30px 12px 54px;margin-top:8px}
-    .wc{position:relative;flex:none;width:clamp(132px,22vw,210px);aspect-ratio:3/4.4;margin:0 -14px;border-radius:20px;overflow:hidden;text-decoration:none;box-shadow:0 24px 40px -18px #0009,0 0 0 1px #ffffff1f;transition:transform .45s cubic-bezier(.2,.8,.2,1)}
-    .wc:nth-child(1){transform:rotate(-9deg) translateY(14px)}.wc:nth-child(2){transform:rotate(-3deg);z-index:2}.wc:nth-child(3){transform:rotate(3deg);z-index:3}.wc:nth-child(4){transform:rotate(9deg) translateY(14px);z-index:4}
-    .wc:hover,.wc:focus-visible{transform:translateY(-14px) rotate(0);z-index:6}
-    .wc:focus-visible{outline:2px solid #e4c680;outline-offset:4px}
-    .wc .art{position:absolute;inset:0;display:grid;place-items:center}
-    .wc b{position:absolute;left:10px;right:10px;bottom:10px;padding:7px 4px;border-radius:12px;background:#fff8ecee;color:#3a0a12;text-align:center;font:500 clamp(15px,1.8vw,19px)/1 "Cormorant Garamond",Georgia,serif}
-    .wc i{position:absolute;right:10px;top:10px;padding:4px 9px;border-radius:99px;background:#2f5bd3;color:#fff8e7;font:600 11px/1 Inter,system-ui,sans-serif;font-style:normal}
-    .wc-wf .art{background:linear-gradient(#eee7dbcc,#eee7dbcc),url(/assets/wildflower/linen.webp) center/300px}
-    .wc-wf .pol{position:relative;z-index:2;width:72%;rotate:-5deg;margin-top:-18%}
-    .wc-wf .ph{position:absolute;z-index:1;width:49%;height:30%;object-fit:cover;rotate:-5deg;margin-top:-29%}
-    .wc-wf .fl{position:absolute;z-index:3;width:46%;right:-6%;top:42%;rotate:18deg}
-    .wc-rl .art{background:radial-gradient(70% 60% at 50% 40%,#8e1b2c88,#0000 70%),url(/assets/redletter/velvet.webp) center/cover,#4a0c16}
-    .wc-rl .seal{width:58%;margin-top:-18%;filter:drop-shadow(0 10px 12px #000a)}
-    .wc-mx .art{background:url(/assets/mixtape/gingham.webp) center/220px}
-    .wc-mx .tp{width:84%;rotate:-8deg;margin-top:-18%;filter:drop-shadow(0 10px 12px #0006)}
-    .wc-sk .art{background:url(/assets/sunkissed/pool.webp) center/260px}
-    .wc-sk .ev{width:70%;rotate:-6deg;margin-top:-16%;filter:drop-shadow(0 12px 12px #1d4a6a77)}
-    .wc-sk .sl{position:absolute;width:30%;left:6%;top:8%;rotate:-20deg}
-    @media (max-width:520px){.wfan{padding:22px 4px 44px}.wc{width:25vw;margin:0 -1vw;border-radius:14px}.wc:nth-child(1){transform:rotate(-6deg) translateY(10px)}.wc:nth-child(2){transform:rotate(-2deg)}.wc:nth-child(3){transform:rotate(2deg)}.wc:nth-child(4){transform:rotate(6deg) translateY(10px)}.wc b{font-size:13px;left:5px;right:5px;bottom:5px;padding:5px 1px}.wc i{right:6px;top:6px;padding:3px 7px;font-size:10px}}
-    @media (prefers-reduced-motion:reduce){.wc{transition:none}}
     /* the demo panel takes on each design's colours */
     #demo .demo{padding:clamp(18px,4vw,40px);border-radius:32px;background:var(--tint,#efe7db);transition:background .5s}
     #demo[data-tpl=wildflower]{--tint:linear-gradient(#efe9dcf0,#efe9dcf0),url(/assets/wildflower/linen.webp) center/500px}
@@ -291,7 +269,6 @@
     /* film grain over the dark sections */
     .hero::before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.08;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
     /* website cards: soft gold glow and tilt toward the pointer */
-    .wc{box-shadow:0 24px 40px -18px #000a,0 0 0 1px #ffffff1f,0 0 40px -10px #e4c68055}
     .tilt{transform-style:preserve-3d;will-change:transform}
     /* glowing border that travels round the "most loved" card */
     @property --a{syntax:"<angle>";initial-value:0deg;inherits:false}
@@ -302,7 +279,37 @@
     .gcard .card{transition:transform .5s cubic-bezier(.2,.8,.2,1),box-shadow .5s}
     @media (prefers-reduced-motion:no-preference){.demo-ph{animation:floaty 6s ease-in-out infinite alternate}}
     @keyframes floaty{to{transform:translateY(-8px)}}
-    @media (prefers-reduced-motion:reduce){.bt .w{opacity:1;filter:none;transform:none;transition:none}.price-card.hot{animation:none}.sparkle{display:none}}
+    @media (prefers-reduced-motion:reduce){.bt .w{opacity:1;filter:none;transform:none;transition:none}.price-card.hot{animation:none}}
+    /* ===== landing v6: real phones + a Pinterest gallery wall ===== */
+    .phones{display:flex;justify-content:center;align-items:flex-end;gap:clamp(10px,2.4vw,34px);padding:8px 16px 64px;position:relative;z-index:1}
+    .ph4{position:relative;flex:0 1 220px;text-decoration:none;text-align:center;transition:transform .5s cubic-bezier(.2,.8,.2,1)}
+    .ph4:nth-child(1){transform:translateY(26px) rotate(-4deg)}.ph4:nth-child(2){transform:rotate(-1.5deg)}.ph4:nth-child(3){transform:rotate(1.5deg)}.ph4:nth-child(4){transform:translateY(26px) rotate(4deg)}
+    .ph4:hover,.ph4:focus-visible{transform:translateY(-10px) rotate(0)}
+    .ph4:focus-visible{outline:2px solid #e4c680;outline-offset:6px;border-radius:30px}
+    .ph4 .scr{display:block;padding:7px;border-radius:30px;background:#140306;box-shadow:0 30px 50px -24px #000c,inset 0 0 0 1px #ffffff26}
+    .ph4 .scr img{width:100%;height:auto;aspect-ratio:1/2;object-fit:cover;border-radius:24px}
+    .ph4 b{display:block;margin-top:14px;font:400 clamp(19px,1.8vw,24px)/1 "Cormorant Garamond",Georgia,serif;font-style:italic;color:#f3e3c3}
+    .ph4 i{position:absolute;right:-6px;top:-8px;padding:4px 10px;border-radius:99px;background:#f3e3c3;color:#3a0a12;font:600 11px/1.2 "DM Sans",system-ui,sans-serif;font-style:normal;rotate:8deg}
+    @media (max-width:640px){.phones{gap:8px;padding:0 10px 46px}.ph4 .scr{padding:4px;border-radius:18px}.ph4 .scr img{border-radius:14px}.ph4:nth-child(1),.ph4:nth-child(4){transform:translateY(16px) rotate(0)}.ph4:nth-child(2),.ph4:nth-child(3){transform:none}.ph4 b{font-size:15px;margin-top:9px}.ph4 i{right:-4px;top:-6px;padding:3px 7px;font-size:10px}}
+    .filters{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:6px -20px 28px;padding:2px 20px}
+    .filters::-webkit-scrollbar{display:none}
+    .filters button{flex:none;min-height:42px;padding:0 18px;border-radius:999px;border:1px solid #6b1a2433;background:#fffaf2;color:#4a2a24;font:500 14.5px/1 "DM Sans",system-ui,sans-serif;cursor:pointer;transition:background .25s,color .25s,border-color .25s}
+    .filters button[aria-pressed=true]{background:var(--wine,#6b1a24);border-color:var(--wine,#6b1a24);color:#f6ecdc}
+    .filters button:focus-visible{outline:2px solid #c9a24b;outline-offset:2px}
+    .masonry{columns:4 240px;column-gap:20px}
+    .pin{display:block;break-inside:avoid;margin:0 0 26px;text-decoration:none;color:inherit}
+    .pin[hidden]{display:none}
+    .pin .card,.pin .shot{display:block;border-radius:20px;overflow:hidden;box-shadow:0 22px 34px -26px #2b1014bb;transition:transform .45s cubic-bezier(.2,.8,.2,1),box-shadow .45s}
+    .pin .shot{padding:6px;background:#1c0a0e}
+    .pin .shot img{width:100%;height:auto;aspect-ratio:1/2;object-fit:cover;border-radius:15px}
+    .pin:hover .card,.pin:hover .shot,.pin:focus-visible .card,.pin:focus-visible .shot{transform:translateY(-6px);box-shadow:0 34px 40px -26px #2b1014dd}
+    .pin:focus-visible{outline:none}.pin:focus-visible .card,.pin:focus-visible .shot{outline:2px solid #c9a24b;outline-offset:3px}
+    .pm{display:flex;justify-content:space-between;align-items:baseline;gap:8px;padding:12px 4px 0}
+    .pm b{font:500 21px/1.1 "Cormorant Garamond",Georgia,serif;color:#2b1014}
+    .pm em{font-style:normal;font-size:13px;color:#7a5a4e;white-space:nowrap}
+    .pin.site .pm em{color:var(--wine,#6b1a24);font-weight:600}
+    @media (max-width:640px){.masonry{columns:2;column-gap:12px}.pin{margin-bottom:18px}.pin .card,.pin .shot{border-radius:14px}.pin .shot{padding:4px}.pin .shot img{border-radius:11px}.pm{flex-direction:column;gap:2px;padding-top:8px}.pm b{font-size:18px}}
+    @media (prefers-reduced-motion:reduce){.ph4,.pin .card,.pin .shot{transition:none}}
   </style>
   <link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
   <link rel="icon" type="image/svg+xml" href="/assets/icon.svg">
@@ -333,7 +340,6 @@
 <main id="top">
   <!-- HERO SECTION -->
   <section class="hero cord">
-    <canvas class="sparkle" id="sparkle" aria-hidden="true"></canvas>
     <div class="wrap hero-top">
       <span class="tagline">digital gifts for the people you love</span>
       <h1 class="d">Turn a moment into a <em>keepsake.</em></h1>
@@ -346,12 +352,12 @@
       <p class="hero-alt">Free to design · pay once, no subscription</p>
     </div>
 
-    <!-- THE FOUR WEBSITES, fanned out like gift cards -->
-    <div class="wfan" aria-label="Our four love-story websites">
-      <a class="wc wc-wf" href="#demo" data-pick="wildflower"><span class="art"><img class="pol" src="/assets/wildflower/polaroid.webp" alt=""><img class="ph" src="/assets/wildflower/lakedance.webp" alt=""><img class="fl" src="/assets/wildflower/pressed.webp" alt=""></span><b>Wildflower</b></a>
-      <a class="wc wc-rl" href="#demo" data-pick="candlelit"><span class="art"><img class="seal" src="/assets/redletter/seal-gold.webp" alt=""></span><b>Red Letter</b></a>
-      <a class="wc wc-mx" href="#demo" data-pick="mixtape"><span class="art"><img class="tp" src="/assets/mixtape/cassette.webp" alt=""></span><b>Mixtape</b></a>
-      <a class="wc wc-sk" href="#demo" data-pick="sunkissed"><span class="art"><img class="ev" src="/assets/sunkissed/env-open.webp" alt=""><img class="sl" src="/assets/sunkissed/slice0.webp" alt=""></span><b>Sunkissed</b><i>new</i></a>
+    <!-- THE FOUR WEBSITES, as real phones -->
+    <div class="phones" aria-label="Our four love-story websites">
+      <a class="ph4" href="#demo" data-pick="wildflower"><span class="scr"><img src="/assets/gifts/site-wildflower-hero.webp" alt="Wildflower website on a phone" width="480" height="960"></span><b>Wildflower</b></a>
+      <a class="ph4" href="#demo" data-pick="candlelit"><span class="scr"><img src="/assets/gifts/site-candlelit-gate.webp" alt="Red Letter website on a phone" width="480" height="960"></span><b>Red Letter</b></a>
+      <a class="ph4" href="#demo" data-pick="mixtape"><span class="scr"><img src="/assets/gifts/site-mixtape-hero.webp" alt="Mixtape website on a phone" width="480" height="960"></span><b>Mixtape</b></a>
+      <a class="ph4" href="#demo" data-pick="sunkissed"><span class="scr"><img src="/assets/gifts/site-sunkissed-gate.webp" alt="Sunkissed website on a phone" width="480" height="960"></span><b>Sunkissed</b><i>new</i></a>
     </div>
   </section>
 
@@ -455,51 +461,39 @@
     </div>
   </section>
 
-  <!-- MEMORY CARDS GRID -->
-  <section class="sec wrap" id="designs">
+  <!-- GALLERY WALL: every website and card -->
+  <section class="sec wrap wall" id="designs">
     <div class="sec-head">
       <div>
-        <div class="eyebrow">Memory cards · <span data-price="card">₹99</span></div>
-        <h2 class="d">Cards for anyone, <em>in minutes.</em></h2>
+        <h2 class="d">Find the one that <em>feels like them.</em></h2>
       </div>
-      <p>Sixteen card designs, from soft stationery to dreamy photo backgrounds. Tap one to start it free. <span class="swipe-hint">Swipe to see more →</span></p>
+      <p>Four love-story websites and sixteen cards. Pick who it's for, then tap a design to start it free.</p>
     </div>
-
-    <div class="grid">
-      <a class="gcard" href="/studio?design=fullMoon">
-        <div class="card"><img src="/assets/fullMoon.webp" alt="Full Moon memory card design" width="360" height="640" loading="lazy" decoding="async"><div class="cap"><span class="to">Tonight</span><span class="big">Under the same sky</span></div></div>
-        <div class="gmeta"><b>Full Moon</b><span>Start this card →</span></div>
-      </a>
-      <a class="gcard" href="/studio?design=laceAlbum">
-        <div class="card"><img src="/assets/laceAlbum.webp" alt="Lace Album memory card design" width="360" height="640" loading="lazy" decoding="async"><div class="slot" style="--x:24;--y:27;--w:52;--h:18.5;--ink-c:#5a3b2e;--k:0.85"><span class="to">Our photos</span><span class="big">Goa, 2024</span></div><div class="slot" style="--x:24;--y:55;--w:52;--h:18.5;--ink-c:#5a3b2e;--k:0.85"><span class="to">A note for you</span><span class="big">Still choosing you</span></div></div>
-        <div class="gmeta"><b>Lace Album</b><span>Start this card →</span></div>
-      </a>
-      <a class="gcard" href="/studio?design=envelope">
-        <div class="card"><img src="/assets/envelope.webp" alt="Love Letter memory card design" width="360" height="640" loading="lazy" decoding="async"><div class="slot" style="--x:13;--y:17;--w:74;--h:33;--ink-c:#5c1220;--k:0.9"><span class="to">Dear Aarav</span><span class="big">Open when you miss me</span><span class="sm">Eleven letters, one for every month apart.</span></div></div>
-        <div class="gmeta"><b>Love Letter</b><span>Start this card →</span></div>
-      </a>
-      <a class="gcard" href="/studio?design=mistForest">
-        <div class="card"><img src="/assets/mistForest.webp" alt="Misty Forest memory card design" width="360" height="640" loading="lazy" decoding="async"><div class="cap"><span class="to">The long walk</span><span class="big">Where we got lost and found each other</span></div></div>
-        <div class="gmeta"><b>Misty Forest</b><span>Start this card →</span></div>
-      </a>
-      <a class="gcard" href="/studio?design=swanLace">
-        <div class="card"><img src="/assets/swanLace.webp" alt="Swan Lace memory card design" width="360" height="640" loading="lazy" decoding="async"><div class="slot" style="--x:24;--y:31;--w:52;--h:40;--ink-c:#4a3320;--k:1"><span class="to">Our evening</span><span class="big">With love, always</span><span class="sm">An evening we will never forget</span></div></div>
-        <div class="gmeta"><b>Swan Lace</b><span>Start this card →</span></div>
-      </a>
-      <a class="gcard" href="/studio?design=goldenHaze">
-        <div class="card"><img src="/assets/goldenHaze.webp" alt="Golden Haze memory card design" width="360" height="640" loading="lazy" decoding="async"><div class="cap"><span class="to">That summer</span><span class="big">Everything glowed</span></div></div>
-        <div class="gmeta"><b>Golden Haze</b><span>Start this card →</span></div>
-      </a>
-      <a class="gcard" href="/studio?design=floralClip">
-        <div class="card"><img src="/assets/floralClip.webp" alt="Garden Note memory card design" width="360" height="640" loading="lazy" decoding="async"><div class="slot" style="--x:21;--y:41;--w:58;--h:21;--ink-c:#4a3a22;--k:0.9"><span class="to">Sunday mornings</span><span class="big">Coffee and you</span></div></div>
-        <div class="gmeta"><b>Garden Note</b><span>Start this card →</span></div>
-      </a>
-      <a class="gcard" href="/studio?design=terracottaArch">
-        <div class="card"><img src="/assets/terracottaArch.webp" alt="Terracotta Arch memory card design" width="360" height="640" loading="lazy" decoding="async"><div class="cap"><span class="to">Our first home</span><span class="big">Come in, stay a while</span></div></div>
-        <div class="gmeta"><b>Terracotta Arch</b><span>Start this card →</span></div>
-      </a>
+    <div class="filters" role="group" aria-label="Filter designs">
+      <button type="button" aria-pressed="true" data-f="all">All</button><button type="button" aria-pressed="false" data-f="site">Websites</button><button type="button" aria-pressed="false" data-f="card">Cards</button><button type="button" aria-pressed="false" data-f="her">For her</button><button type="button" aria-pressed="false" data-f="him">For him</button><button type="button" aria-pressed="false" data-f="parents">Parents</button><button type="button" aria-pressed="false" data-f="friends">Friends</button><button type="button" aria-pressed="false" data-f="birthday">Birthday</button><button type="button" aria-pressed="false" data-f="anniversary">Anniversary</button>
     </div>
-    <div class="more"><a class="btn line-wine" href="/designs">See all 16 card designs</a></div>
+    <div class="masonry" id="wall">
+      <a class="pin site" href="#demo" data-pick="wildflower" data-tags="site her him parents anniversary"><span class="shot"><img src="/assets/gifts/site-wildflower-hero.webp" alt="Wildflower love-story website" width="480" height="960" loading="lazy"></span><span class="pm"><b>Wildflower</b><em>Website · <span data-price="site">₹299</span></em></span></a>
+      <a class="pin" href="/studio?design=fullMoon" data-tags="card her him"><div class="card"><img loading="lazy" src="/assets/fullMoon.webp" alt="Full Moon memory card design" width="360" height="640"  decoding="async"><div class="cap"><span class="to">Tonight</span><span class="big">Under the same sky</span></div></div><span class="pm"><b>Full Moon</b><em>Card · <span data-price="card">₹99</span></em></span></a>
+      <a class="pin" href="/studio?design=greenVinyl" data-tags="card her him friends birthday"><div class="card"><img loading="lazy" src="/assets/greenVinyl.webp" alt="Green Vinyl memory card design" width="360" height="640"  decoding="async"><div class="cap"><span class="to">Our song</span><span class="big">Play it again</span><div class="player"><i></i><b></b><span>3:42</span></div></div></div><span class="pm"><b>Green Vinyl</b><em>Card · <span data-price="card">₹99</span></em></span></a>
+      <a class="pin" href="/studio?design=mistForest" data-tags="card her him"><div class="card"><img loading="lazy" src="/assets/mistForest.webp" alt="Misty Forest memory card design" width="360" height="640"  decoding="async"><div class="cap"><span class="to">The long walk</span><span class="big">Where we got lost and found each other</span></div></div><span class="pm"><b>Misty Forest</b><em>Card · <span data-price="card">₹99</span></em></span></a>
+      <a class="pin" href="/studio?design=goldenHaze" data-tags="card her friends birthday"><div class="card"><img loading="lazy" src="/assets/goldenHaze.webp" alt="Golden Haze memory card design" width="360" height="640"  decoding="async"><div class="cap"><span class="to">That summer</span><span class="big">Everything glowed</span></div></div><span class="pm"><b>Golden Haze</b><em>Card · <span data-price="card">₹99</span></em></span></a>
+      <a class="pin site" href="#demo" data-pick="candlelit" data-tags="site her him anniversary"><span class="shot"><img src="/assets/gifts/site-candlelit-hero.webp" alt="Red Letter love-story website" width="480" height="960" loading="lazy"></span><span class="pm"><b>Red Letter</b><em>Website · <span data-price="site">₹299</span></em></span></a>
+      <a class="pin" href="/studio?design=meadowLight" data-tags="card parents friends birthday"><div class="card"><img loading="lazy" src="/assets/meadowLight.webp" alt="Meadow Light memory card design" width="360" height="640"  decoding="async"><div class="cap"><span class="to">Quiet Sundays</span><span class="big">Nowhere to be</span></div></div><span class="pm"><b>Meadow Light</b><em>Card · <span data-price="card">₹99</span></em></span></a>
+      <a class="pin" href="/studio?design=terracottaArch" data-tags="card parents"><div class="card"><img loading="lazy" src="/assets/terracottaArch.webp" alt="Terracotta Arch memory card design" width="360" height="640"  decoding="async"><div class="cap"><span class="to">Our first home</span><span class="big">Come in, stay a while</span></div></div><span class="pm"><b>Terracotta Arch</b><em>Card · <span data-price="card">₹99</span></em></span></a>
+      <a class="pin" href="/studio?design=laceAlbum" data-tags="card her parents anniversary"><div class="card"><img loading="lazy" src="/assets/laceAlbum.webp" alt="Lace Album memory card design" width="360" height="640"  decoding="async"><div class="slot" style="--x:24;--y:27;--w:52;--h:18.5;--ink-c:#5a3b2e;--k:0.85"><span class="to">Our photos</span><span class="big">Goa, 2024</span></div><div class="slot" style="--x:24;--y:55;--w:52;--h:18.5;--ink-c:#5a3b2e;--k:0.85"><span class="to">A note for you</span><span class="big">Still choosing you</span></div></div><span class="pm"><b>Lace Album</b><em>Card · <span data-price="card">₹99</span></em></span></a>
+      <a class="pin" href="/studio?design=envelope" data-tags="card her him"><div class="card"><img loading="lazy" src="/assets/envelope.webp" alt="Love Letter memory card design" width="360" height="640"  decoding="async"><div class="slot" style="--x:13;--y:17;--w:74;--h:33;--ink-c:#5c1220;--k:0.9"><span class="to">Dear Aarav</span><span class="big">Open when you miss me</span><span class="sm">Eleven letters, one for every month apart.</span></div></div><span class="pm"><b>Love Letter</b><em>Card · <span data-price="card">₹99</span></em></span></a>
+      <a class="pin site" href="#demo" data-pick="mixtape" data-tags="site her him friends birthday"><span class="shot"><img src="/assets/gifts/site-mixtape-hero.webp" alt="Mixtape love-story website" width="480" height="960" loading="lazy"></span><span class="pm"><b>Mixtape</b><em>Website · <span data-price="site">₹299</span></em></span></a>
+      <a class="pin" href="/studio?design=floralClip" data-tags="card parents friends"><div class="card"><img loading="lazy" src="/assets/floralClip.webp" alt="Garden Note memory card design" width="360" height="640"  decoding="async"><div class="slot" style="--x:21;--y:41;--w:58;--h:21;--ink-c:#4a3a22;--k:0.9"><span class="to">Sunday mornings</span><span class="big">Coffee and you</span></div></div><span class="pm"><b>Garden Note</b><em>Card · <span data-price="card">₹99</span></em></span></a>
+      <a class="pin" href="/studio?design=burgundyFloral" data-tags="card her anniversary"><div class="card"><img loading="lazy" src="/assets/burgundyFloral.webp" alt="Burgundy Bloom memory card design" width="360" height="640"  decoding="async"><div class="slot" style="--x:21;--y:34.5;--w:58;--h:22;--ink-c:#4a3320;--k:0.9"><span class="to">Anniversary</span><span class="big">Seven years</span><span class="sm">and still counting</span></div></div><span class="pm"><b>Burgundy Bloom</b><em>Card · <span data-price="card">₹99</span></em></span></a>
+      <a class="pin" href="/studio?design=blueBotanical" data-tags="card parents birthday"><div class="card"><img loading="lazy" src="/assets/blueBotanical.webp" alt="Blue Botanica memory card design" width="360" height="640"  decoding="async"><div class="slot" style="--x:24;--y:29.5;--w:53;--h:41;--ink-c:#233556;--k:1"><span class="to">For my friend</span><span class="big">Thank you</span><span class="sm">for every late-night call</span></div></div><span class="pm"><b>Blue Botanica</b><em>Card · <span data-price="card">₹99</span></em></span></a>
+      <a class="pin" href="/studio?design=greenLily" data-tags="card her parents"><div class="card"><img loading="lazy" src="/assets/greenLily.webp" alt="Lily Lace memory card design" width="360" height="640"  decoding="async"><div class="slot" style="--x:19;--y:26.5;--w:62;--h:47;--ink-c:#4a3a22;--k:1"><span class="to">From the garden</span><span class="big">Always yours</span><span class="sm">14 February</span></div></div><span class="pm"><b>Lily Lace</b><em>Card · <span data-price="card">₹99</span></em></span></a>
+      <a class="pin site" href="#demo" data-pick="sunkissed" data-tags="site her him friends birthday"><span class="shot"><img src="/assets/gifts/site-sunkissed-hero.webp" alt="Sunkissed love-story website" width="480" height="960" loading="lazy"></span><span class="pm"><b>Sunkissed</b><em>Website · <span data-price="site">₹299</span></em></span></a>
+      <a class="pin" href="/studio?design=rugGarden" data-tags="card parents"><div class="card"><img loading="lazy" src="/assets/rugGarden.webp" alt="Persian Garden memory card design" width="360" height="640"  decoding="async"><div class="slot" style="--x:22;--y:22;--w:52;--h:57;--ink-c:#5a3220;--k:0.95"><span class="to">Dear Papa</span><span class="big">Happy Father&#x27;s Day</span><span class="sm">Thank you for every lesson, and every ride to school.</span></div></div><span class="pm"><b>Persian Garden</b><em>Card · <span data-price="card">₹99</span></em></span></a>
+      <a class="pin" href="/studio?design=pinkPalace" data-tags="card parents birthday"><div class="card"><img loading="lazy" src="/assets/pinkPalace.webp" alt="Blush Palace memory card design" width="360" height="640"  decoding="async"><div class="slot" style="--x:26;--y:36;--w:46;--h:27;--ink-c:#7a2a3a;--k:0.78"><span class="to">Happy birthday</span><span class="big">Mummy</span><span class="sm">From all of us, with love</span></div></div><span class="pm"><b>Blush Palace</b><em>Card · <span data-price="card">₹99</span></em></span></a>
+      <a class="pin" href="/studio?design=navyPaper" data-tags="card him friends"><div class="card"><img loading="lazy" src="/assets/navyPaper.webp" alt="Midnight Paper memory card design" width="360" height="640"  decoding="async"><div class="slot" style="--x:13;--y:20;--w:74;--h:56;--ink-c:#4a3a2a;--k:1"><span class="to">A note for you</span><span class="big">Dear Nani</span><span class="sm">Thank you for every summer, every story and every plate you filled twice.</span></div></div><span class="pm"><b>Midnight Paper</b><em>Card · <span data-price="card">₹99</span></em></span></a>
+      <a class="pin" href="/studio?design=swanLace" data-tags="card her anniversary"><div class="card"><img loading="lazy" src="/assets/swanLace.webp" alt="Swan Lace memory card design" width="360" height="640"  decoding="async"><div class="slot" style="--x:24;--y:31;--w:52;--h:40;--ink-c:#4a3320;--k:1"><span class="to">Our evening</span><span class="big">With love, always</span><span class="sm">An evening we will never forget</span></div></div><span class="pm"><b>Swan Lace</b><em>Card · <span data-price="card">₹99</span></em></span></a>
+    </div>
   </section>
 
   <!-- OCCASIONS: one compact row -->
@@ -510,12 +504,6 @@
         <h2 class="d">Not just for <em>couples.</em></h2>
       </div>
       <p>Start from an occasion, then change every colour, word and photo.</p>
-    </div>
-    <div class="match" aria-label="Which website suits your occasion">
-      <a href="#demo" data-pick="mixtape"><img src="/assets/mixtape/gingham.webp" alt=""><span><b>Mixtape</b>for a girlfriend or best friend</span></a>
-      <a href="#demo" data-pick="candlelit"><img src="/assets/redletter/velvet.webp" alt=""><span><b>Red Letter</b>for proposals and big romantic dates</span></a>
-      <a href="#demo" data-pick="wildflower"><img src="/assets/wildflower/linen.webp" alt=""><span><b>Wildflower</b>for anniversaries and parents</span></a>
-      <a href="#demo" data-pick="sunkissed"><img src="/assets/sunkissed/pool.webp" alt=""><span><b>Sunkissed</b>for birthdays, trips and new couples</span></a>
     </div>
     <nav class="jump occ" aria-label="Gift ideas by occasion">
       <a href="/gifts/girlfriend">For girlfriend</a>
@@ -676,22 +664,17 @@
     else if(c.nodeType===1&&c.tagName!=="BR")walk(c)})})(h);h.classList.add("bt")});
   if(calm||!("IntersectionObserver" in window))hs.forEach(function(h){h.classList.add("in")});
   else{var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target)}})},{threshold:.3});hs.forEach(function(h){io.observe(h)})}
+  // gallery wall filters
+  var fb=[].slice.call(document.querySelectorAll(".filters button")),pins=[].slice.call(document.querySelectorAll("#wall .pin"));
+  fb.forEach(function(b){b.onclick=function(){var f=b.dataset.f;fb.forEach(function(x){x.setAttribute("aria-pressed",x===b)});
+    pins.forEach(function(p){p.hidden=f!=="all"&&p.dataset.tags.split(" ").indexOf(f)<0})}});
   // tilt toward the pointer (mouse only)
   if(!calm&&matchMedia("(hover:hover) and (pointer:fine)").matches){
-    [].forEach.call(document.querySelectorAll(".wc, .gcard .card, .price-card"),function(el){
+    [].forEach.call(document.querySelectorAll(".price-card"),function(el){
       var base=getComputedStyle(el).transform;base=base==="none"?"":base;el.classList.add("tilt");
       el.addEventListener("pointermove",function(e){var r=el.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
         el.style.transform="perspective(700px) rotateX("+(-y*8)+"deg) rotateY("+(x*10)+"deg) translateY(-6px)"});
       el.addEventListener("pointerleave",function(){el.style.transform=""})})}
-  // gold sparkles in the hero
-  var c=document.getElementById("sparkle");if(!c||calm)return;var x=c.getContext("2d"),P=[],W,H,on=true,dpr=Math.min(2,devicePixelRatio||1);
-  function size(){W=c.offsetWidth;H=c.offsetHeight;c.width=W*dpr;c.height=H*dpr;x.setTransform(dpr,0,0,dpr,0,0)}
-  size();addEventListener("resize",size);
-  for(var k=0;k<(W<600?28:56);k++)P.push({x:Math.random()*W,y:Math.random()*H,r:.6+Math.random()*1.8,v:.15+Math.random()*.35,t:Math.random()*6.28});
-  new IntersectionObserver(function(e){on=e[0].isIntersecting}).observe(c);
-  (function frame(){requestAnimationFrame(frame);if(!on)return;x.clearRect(0,0,W,H);
-    P.forEach(function(p){p.y-=p.v;p.t+=.03;if(p.y<-4){p.y=H+4;p.x=Math.random()*W}
-      var a=.35+.35*Math.sin(p.t);x.beginPath();x.arc(p.x+Math.sin(p.t*.7)*6,p.y,p.r,0,6.283);x.fillStyle="rgba(240,214,150,"+a+")";x.shadowColor="rgba(240,214,150,.9)";x.shadowBlur=8;x.fill()})})();
 })();</script>
 <script src="/assets/ks2.js" defer></script>
 <script src="/assets/ks-sale.v1.js" defer></script>
