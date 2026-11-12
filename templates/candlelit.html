@@ -146,19 +146,19 @@ html.locked{overflow:hidden}
 @keyframes mq{to{transform:translateX(-50%)}}
 
 /* ---------- our story: a stamp and a polaroid on lace ---------- */
-.story .pics{position:relative;height:clamp(360px,100vw,470px);margin:0 auto 30px;max-width:440px}
+.story .pics{position:relative;height:clamp(470px,128vw,590px);margin:0 auto 30px;max-width:440px}
 .story .lace{position:absolute;width:64%;left:18%;top:2%;transform:rotate(4deg);opacity:.96}
 .stampf{position:absolute;aspect-ratio:485/700}
 .stampf .fr{position:absolute;inset:0;width:100%;height:100%}
 .stampf .ph{position:absolute;left:10.5%;right:10.5%;top:8.5%;bottom:8.5%;overflow:hidden;background:#e9dccb}
 .stampf .ph img{width:100%;height:100%;object-fit:cover}
-.story .stampf{width:50%;left:2%;top:4%;transform:rotate(-6deg)}
+.story .stampf{width:46%;left:0;top:40%;transform:rotate(-6deg)}
 .pola{position:absolute;background:#fffdf7;padding:9px 9px 36px;box-shadow:0 16px 26px #2b0a1045}
 .pola img{width:100%;aspect-ratio:1;object-fit:cover;background:#e9dccb}
-.pola .tp{position:absolute;left:24%;top:-16px;width:52%;transform:rotate(-4deg)}
-.story .pola{width:50%;right:2%;bottom:2%;transform:rotate(5deg)}
-.story .nh{left:40%;top:40%;width:24%;transform:rotate(-12deg)}
-.story .sr{right:4%;top:0;width:19%;transform:rotate(9deg)}
+.pola .tp{position:absolute;left:28%;top:-17px;width:44%;height:34px;object-fit:cover;transform:rotate(-4deg)}
+.story .pola{width:48%;right:0;bottom:0;transform:rotate(5deg)}
+.story .nh{left:38%;top:60%;width:22%;transform:rotate(-12deg)}
+.story .sr{right:2%;top:2%;width:18%;transform:rotate(9deg)}
 .story p{margin:0 0 1em;font:400 20px/1.65 var(--serif)}
 .story p:first-of-type::first-letter{float:left;font:400 78px/.8 var(--script);color:var(--oxblood);margin:10px 8px 0 0}
 .echo{padding:26px 0 34px;text-align:center;line-height:.82;overflow:hidden}
@@ -234,15 +234,53 @@ html.locked{overflow:hidden}
 .end .line{margin:24px 0 0;font:italic 400 19px var(--serif);color:var(--gold2)}
 .end h2{margin-top:6px;font:400 clamp(54px,15vw,80px)/1.05 var(--script);color:var(--ivory);text-shadow:0 3px 16px #000a}
 .end .date{margin-top:8px;font:italic 500 18px var(--serif);color:#f3e2c8cc}
-.end .seal{width:96px;margin:30px auto 0;filter:drop-shadow(0 8px 10px #000a)}
+.end .seal{width:118px;margin:30px auto 0;filter:drop-shadow(0 8px 10px #000a)}
 .end .credit{margin-top:40px;font:400 15px var(--serif);color:#f3e2c899}
+
+/* ---------- new: gold monogram seals ---------- */
+.mono{position:relative;display:block}
+.mono img{width:100%}
+.mono span{position:absolute;inset:0;display:grid;place-items:center;padding-top:4%;font:400 clamp(24px,7vw,34px)/1 var(--script);color:#5a3a12;text-shadow:0 1px 0 #f6dfa0,0 -1px 0 #7a5418;white-space:nowrap}
+.genv .s.mono{width:34%}
+
+/* ---------- new: the silver locket, lying on the page ---------- */
+.lk{position:relative;width:min(300px,78%);aspect-ratio:860/874;margin:30px auto 0}
+.lk>button{position:absolute;inset:0;width:100%;border:0;background:none;padding:0;cursor:pointer;z-index:5}
+.lk .closed{position:absolute;left:50%;top:0;height:100%;width:auto;translate:-50% 0;transform-origin:50% 0;filter:drop-shadow(0 14px 16px #2b0a1055);transition:opacity .5s,scale .5s}
+.lk .open{position:absolute;inset:0;opacity:0;scale:.85;filter:drop-shadow(0 16px 20px #2b0a1055);transition:opacity .7s .2s,scale .8s .2s cubic-bezier(.2,.8,.2,1)}
+.lk .open>img{width:100%}
+.lk .heart{position:absolute;top:52.4%;width:41.6%;height:43.7%;clip-path:url(#heart);background:#e9dccb}
+.lk .heart img{width:100%;height:100%;object-fit:cover}
+.lk .hl{left:5.5%}.lk .hr{left:53.3%}
+.lk.on .closed{opacity:0;scale:.8}
+.lk.on .open{opacity:1;scale:1}
+.lk-hint{margin-top:6px;font:italic 400 17px var(--serif);color:var(--soft)}
+@media (prefers-reduced-motion:no-preference){.lk:not(.on) .closed{animation:sway 4s ease-in-out infinite}}
+@keyframes sway{0%,100%{rotate:-4deg}50%{rotate:4deg}}
+
+/* ---------- new: painted garden scrap, brass key, cupid, origami hearts ---------- */
+.story .garden{position:absolute;width:60%;left:17%;top:0;transform:rotate(3deg);filter:drop-shadow(0 12px 18px #2b0a1040)}
+.story .gtape{left:38%;top:-12px;width:30%;transform:rotate(-6deg);z-index:2}
+.story .key{left:2%;top:10%;width:13%;transform:rotate(-28deg)}
+.reasons .fly{left:-160px;top:58px;width:130px;opacity:.9;z-index:5}
+.reasons.seen .fly{animation:fly 7s ease-in-out .4s forwards}
+@keyframes fly{to{transform:translate(calc(min(520px,100vw) + 320px),-20px)}}
+.reasons .oh{right:6%;top:40px;width:15%;transform:rotate(16deg)}
+.openwhen .key{left:50%;width:12%;top:24px;transform:translateX(-50%) rotate(90deg)}
+.openwhen .oh{left:5%;bottom:30px;width:14%;transform:rotate(-14deg)}
+.cal .lotus{width:46px;margin:22px auto 0}
+.gal figure:nth-child(4n+3)::after{content:"";position:absolute;right:-8px;top:-10px;width:38px;height:38px;background:url(/assets/redletter2/lotus.webp) center/contain no-repeat;transform:rotate(12deg)}
+.petalfall{position:fixed;inset:0;pointer-events:none;z-index:90;overflow:hidden}
+.petalfall img{position:absolute;top:-50px;animation:fall linear forwards}
+@keyframes fall{to{transform:translate(var(--dx),112vh) rotate(var(--r))}}
+@media (prefers-reduced-motion:reduce){.petalfall,.reasons .fly{display:none}}
 
 /* reveal on scroll */
 .js .rv{opacity:0;transform:translateY(22px);transition:opacity .9s,transform .9s}
 .js .rv.seen{opacity:1;transform:none}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}.js .rv{opacity:1;transform:none}}
 </style>
-<script src="/assets/ks-templates.v4.js"></script>
+<script src="/assets/ks-templates.v5.js"></script>
 <link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png"><link rel="icon" type="image/svg+xml" href="/assets/icon.svg"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest"></head>
 <body>
 <script>
@@ -250,12 +288,14 @@ document.documentElement.classList.add("js","locked");
 if (/[?&]preview=1/.test(location.search)) document.documentElement.classList.add("entered");
 </script>
 
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><clipPath id="heart" clipPathUnits="objectBoundingBox"><path d="M.5,.13C.44,.03 .34,0 .24,0C.1,0 0,.11 0,.27C0,.55 .3,.74 .5,1C.7,.74 1,.55 1,.27C1,.11 .9,0 .76,0C.66,0 .56,.03 .5,.13Z"/></clipPath></svg>
+
 <div class="gate" id="gate" role="dialog" aria-modal="true" aria-label="Open your keepsake">
  <div>
   <div class="for">a letter for</div>
   <div class="who" id="recipient">Meera</div>
   <button class="genv" id="gseal" type="button" aria-label="Open the envelope">
-   <img class="e" src="/assets/redletter/envelope.webp" alt=""><img class="s" src="/assets/redletter/seal-heart.webp" alt="">
+   <img class="e" src="/assets/redletter/envelope.webp" alt=""><span class="s mono"><img src="/assets/redletter2/seal.webp" alt=""><span data-initials>M&amp;A</span></span>
   </button>
   <div class="hint">tap the seal to open</div>
  </div>
@@ -275,13 +315,22 @@ if (/[?&]preview=1/.test(location.search)) document.documentElement.classList.ad
  </div>
  <div class="hdate" id="heroDate"></div>
  <div class="cue" id="cue">a letter is waiting for you</div>
+ <div class="lk" id="lk">
+  <img class="closed" src="/assets/redletter2/locket-closed.webp" alt="">
+  <div class="open"><img src="/assets/redletter2/locket-open.webp" alt="">
+   <div class="heart hl"><img class="warm" data-ph="photos.hero" alt=""></div>
+   <div class="heart hr"><img class="warm" data-ph="photos.storyA" alt=""></div>
+  </div>
+  <button type="button" id="lkBtn" aria-expanded="false" aria-label="Open the locket"></button>
+ </div>
+ <div class="lk-hint" id="lkHint">tap the locket</div>
 </section>
 
 <section class="cal paper rv" id="cal" aria-label="The day it all began">
  <div class="kick">the day it all began</div>
  <div class="mon" id="calMon"></div><div class="yr" id="calYr"></div>
  <div class="grid" id="grid"></div>
- <img class="fp" src="/assets/redletter/fingerprint.webp" alt="">
+ <img class="lotus" src="/assets/redletter2/lotus.webp" alt="">
  <div class="place" id="calPlace"></div>
 </section>
 
@@ -306,6 +355,8 @@ if (/[?&]preview=1/.test(location.search)) document.documentElement.classList.ad
 
 <section class="reasons paper" id="reasonsSec" aria-label="Reasons I love you">
  <div class="hand" aria-hidden="true"></div>
+ <img class="sticker fly" src="/assets/redletter2/cupid.webp" alt="">
+ <img class="sticker oh drop" src="/assets/redletter2/heart0.webp" alt="">
  <div class="kick">just a few of the</div>
  <h2 class="h2" id="reasonsTitle">reasons I love you</h2>
  <div class="deck" id="deck"></div>
@@ -318,7 +369,7 @@ if (/[?&]preview=1/.test(location.search)) document.documentElement.classList.ad
 <section class="story paper" aria-label="Our story">
  <div class="hand" aria-hidden="true"></div>
  <div class="pics rv">
-  <img class="lace" src="/assets/redletter/lace-oval.webp" alt="">
+  <img class="garden" src="/assets/redletter2/garden-scrap.webp" alt="A painted Indian garden with peacocks"><img class="sticker gtape" src="/assets/redletter/washi.webp" alt=""><img class="sticker key drop" src="/assets/redletter2/key.webp" alt="">
   <div class="stampf drop"><img class="fr" src="/assets/redletter/stamp-frame.webp" alt=""><div class="ph"><img class="warm" data-ph="photos.storyA" alt=""></div></div>
   <div class="pola"><img class="warm" data-ph="photos.storyB" alt=""><img class="tp" src="/assets/redletter/washi.webp" alt=""></div>
   <img class="sticker nh drop" src="/assets/redletter/news-heart.webp" alt="">
@@ -350,6 +401,8 @@ if (/[?&]preview=1/.test(location.search)) document.documentElement.classList.ad
 
 <section class="openwhen paper center" id="owSec" aria-label="Open when">
  <div class="hand" aria-hidden="true"></div>
+ <img class="sticker key drop" src="/assets/redletter2/key.webp" alt="">
+ <img class="sticker oh drop" src="/assets/redletter2/heart2.webp" alt="">
  <div class="kick">for the days you need me</div>
  <h2 class="h2">open when…</h2>
  <div class="ow" id="ow"></div>
@@ -385,7 +438,7 @@ if (/[?&]preview=1/.test(location.search)) document.documentElement.classList.ad
  <p class="line" id="endLine"></p>
  <h2 id="endNames">Meera &amp; Aarav</h2>
  <div class="date" id="endDate"></div>
- <img class="seal" src="/assets/redletter/seal-gold.webp" alt="">
+ <span class="seal mono"><img src="/assets/redletter2/seal.webp" alt=""><span data-initials>M&amp;A</span></span>
  <div class="credit">Made with <a href="/">GetKeepsake</a></div>
 </section>
 </main>
@@ -406,6 +459,8 @@ function render(D) {
   const nm = $("names"); nm.textContent = ""; nm.append(el("span", "a", a), el("span", "amp", "&"), el("span", "b", b));
   $("endNames").textContent = names;
   document.querySelectorAll("[data-ph]").forEach(i => K.setImg(i, K.get(D, i.dataset.ph)));
+  const ini = x => (Array.from(String(x || "").trim())[0] || "").toUpperCase();
+  document.querySelectorAll("[data-initials]").forEach(e => e.textContent = ini(a) + "&" + ini(b));
   const hd = $("heroDate"); hd.textContent = "";
   hd.append(ahead ? "save the date" : "since", el("i", "", "♥"), K.fmt.monthYear(d));
   $("cue").textContent = K.str(D.cue, 60);
@@ -515,15 +570,34 @@ function render(D) {
   if (/[?&]preview=1/.test(location.search)) { root.classList.remove("locked"); root.classList.add("js", "entered"); gate.remove(); return; }
   const enter = () => {
     gate.classList.add("opening");
-    setTimeout(() => root.classList.add("entered"), 800);
+    setTimeout(() => { root.classList.add("entered"); petals(); }, 800);
     setTimeout(() => { root.classList.remove("locked"); gate.remove(); }, matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 2100);
   };
   $("gseal").addEventListener("click", enter);
 })();
 
+// tap the locket to open it
+$("lkBtn").addEventListener("click", () => {
+  const on = $("lk").classList.toggle("on");
+  $("lkBtn").setAttribute("aria-expanded", on); $("lkBtn").setAttribute("aria-label", on ? "Close the locket" : "Open the locket");
+  $("lkHint").textContent = on ? "tap to close" : "tap the locket";
+});
+
+// a few rose petals drift down once the envelope opens
+function petals() {
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const box = el("div", "petalfall"); box.setAttribute("aria-hidden", "true");
+  for (let i = 0; i < 10; i++) {
+    const p = el("img"); p.src = "/assets/redletter2/petal" + (i % 6) + ".webp"; p.alt = "";
+    p.style.cssText = `left:${Math.random() * 100}%;width:${16 + Math.random() * 18}px;animation-duration:${5 + Math.random() * 3}s;animation-delay:${Math.random() * 1.5}s;--dx:${(Math.random() - .5) * 140}px;--r:${(Math.random() - .5) * 600}deg`;
+    box.appendChild(p);
+  }
+  document.body.appendChild(box); setTimeout(() => box.remove(), 10000);
+}
+
 // gentle reveals as things scroll into view
 const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("seen"); io.unobserve(e.target); } }), { threshold: .3 });
-const watch = () => document.querySelectorAll(".rv:not(.seen)").forEach(s => io.observe(s));
+const watch = () => document.querySelectorAll(".rv:not(.seen), .reasons:not(.seen)").forEach(s => io.observe(s));
 
 // tap the envelope to read the letter
 const letter = $("letter"), env = $("envBtn");
