@@ -281,6 +281,32 @@
       footer{padding-bottom:84px}
     }
     @media (prefers-reduced-motion:reduce){.gbar{transition:none}}
+    /* ===== soft motion layer (Magic UI / React Bits ideas, hand-written) ===== */
+    /* blur-in headings, word by word */
+    .bt .w{display:inline-block;opacity:0;filter:blur(10px);transform:translateY(14px);transition:opacity .7s,filter .7s,transform .7s cubic-bezier(.2,.8,.2,1);transition-delay:calc(var(--i) * 70ms)}
+    .bt.in .w{opacity:1;filter:none;transform:none}
+    /* shimmer on gold buttons */
+    .btn.gold{position:relative;overflow:hidden;isolation:isolate}
+    .btn.gold::after{content:"";position:absolute;inset:-2px;z-index:-1;background:linear-gradient(110deg,#0000 35%,#fff8e6b3 50%,#0000 65%);transform:translateX(-120%);animation:shine 3.6s ease-in-out infinite}
+    @keyframes shine{0%,55%{transform:translateX(-120%)}100%{transform:translateX(120%)}}
+    /* gold sparkles drifting in the hero */
+    .sparkle{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
+    .hero>*:not(.sparkle){position:relative;z-index:1}
+    /* film grain over the dark sections */
+    .hero::before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.08;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+    /* website cards: soft gold glow and tilt toward the pointer */
+    .wc{box-shadow:0 24px 40px -18px #000a,0 0 0 1px #ffffff1f,0 0 40px -10px #e4c68055}
+    .tilt{transform-style:preserve-3d;will-change:transform}
+    /* glowing border that travels round the "most loved" card */
+    @property --a{syntax:"<angle>";initial-value:0deg;inherits:false}
+    .price-card.hot{border-color:transparent;background:linear-gradient(145deg,#3a0810,#2a050b) padding-box,conic-gradient(from var(--a),#e4c68022 0 60%,#e4c680 75%,#fff4d6 80%,#e4c680 85%,#e4c68022) border-box;animation:beam 5s linear infinite}
+    @keyframes beam{to{--a:360deg}}
+    /* the phone demo floats gently with a warm halo */
+    .demo-ph{box-shadow:0 30px 60px -28px #2a0d12cc,inset 0 0 0 1.5px #ffffff22,0 0 0 10px #ffffff66,0 40px 90px -30px #c9a24b88}
+    .gcard .card{transition:transform .5s cubic-bezier(.2,.8,.2,1),box-shadow .5s}
+    @media (prefers-reduced-motion:no-preference){.demo-ph{animation:floaty 6s ease-in-out infinite alternate}}
+    @keyframes floaty{to{transform:translateY(-8px)}}
+    @media (prefers-reduced-motion:reduce){.bt .w{opacity:1;filter:none;transform:none;transition:none}.btn.gold::after,.price-card.hot{animation:none}.sparkle{display:none}}
   </style>
   <link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
   <link rel="icon" type="image/svg+xml" href="/assets/icon.svg">
@@ -311,6 +337,7 @@
 <main id="top">
   <!-- HERO SECTION -->
   <section class="hero cord">
+    <canvas class="sparkle" id="sparkle" aria-hidden="true"></canvas>
     <div class="wrap hero-top">
       <span class="tagline">digital gifts for the people you love</span>
       <h1 class="d">Turn a moment into a <em>keepsake.</em></h1>
@@ -643,6 +670,32 @@
   var bar=document.getElementById("gbar"),hero=document.querySelector(".hero"),fin=document.getElementById("finale");
   function sb(){var y=scrollY,show=y>hero.offsetHeight-120&&fin.getBoundingClientRect().top>innerHeight*0.7;bar.classList.toggle("show",show);document.body.classList.toggle("has-gbar",show)}
   addEventListener("scroll",sb,{passive:true});sb();
+})();</script>
+<script>(function(){
+  var calm=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  // blur-in headings, word by word
+  var hs=[].slice.call(document.querySelectorAll("main h1.d, main h2.d"));
+  hs.forEach(function(h){var i=0;(function walk(n){[].slice.call(n.childNodes).forEach(function(c){
+    if(c.nodeType===3){var f=document.createDocumentFragment();c.textContent.split(/(\s+)/).forEach(function(t){if(!t)return;if(/^\s+$/.test(t)){f.appendChild(document.createTextNode(t));return}var s=document.createElement("span");s.className="w";s.style.setProperty("--i",i++);s.textContent=t;f.appendChild(s)});n.replaceChild(f,c)}
+    else if(c.nodeType===1&&c.tagName!=="BR")walk(c)})})(h);h.classList.add("bt")});
+  if(calm||!("IntersectionObserver" in window))hs.forEach(function(h){h.classList.add("in")});
+  else{var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target)}})},{threshold:.3});hs.forEach(function(h){io.observe(h)})}
+  // tilt toward the pointer (mouse only)
+  if(!calm&&matchMedia("(hover:hover) and (pointer:fine)").matches){
+    [].forEach.call(document.querySelectorAll(".wc, .gcard .card, .price-card"),function(el){
+      var base=getComputedStyle(el).transform;base=base==="none"?"":base;el.classList.add("tilt");
+      el.addEventListener("pointermove",function(e){var r=el.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
+        el.style.transform="perspective(700px) rotateX("+(-y*8)+"deg) rotateY("+(x*10)+"deg) translateY(-6px)"});
+      el.addEventListener("pointerleave",function(){el.style.transform=""})})}
+  // gold sparkles in the hero
+  var c=document.getElementById("sparkle");if(!c||calm)return;var x=c.getContext("2d"),P=[],W,H,on=true,dpr=Math.min(2,devicePixelRatio||1);
+  function size(){W=c.offsetWidth;H=c.offsetHeight;c.width=W*dpr;c.height=H*dpr;x.setTransform(dpr,0,0,dpr,0,0)}
+  size();addEventListener("resize",size);
+  for(var k=0;k<(W<600?28:56);k++)P.push({x:Math.random()*W,y:Math.random()*H,r:.6+Math.random()*1.8,v:.15+Math.random()*.35,t:Math.random()*6.28});
+  new IntersectionObserver(function(e){on=e[0].isIntersecting}).observe(c);
+  (function frame(){requestAnimationFrame(frame);if(!on)return;x.clearRect(0,0,W,H);
+    P.forEach(function(p){p.y-=p.v;p.t+=.03;if(p.y<-4){p.y=H+4;p.x=Math.random()*W}
+      var a=.35+.35*Math.sin(p.t);x.beginPath();x.arc(p.x+Math.sin(p.t*.7)*6,p.y,p.r,0,6.283);x.fillStyle="rgba(240,214,150,"+a+")";x.shadowColor="rgba(240,214,150,.9)";x.shadowBlur=8;x.fill()})})();
 })();</script>
 <script src="/assets/ks2.js" defer></script>
 <script src="/assets/ks-sale.v1.js" defer></script>
