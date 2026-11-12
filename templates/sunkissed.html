@@ -1,0 +1,492 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#9fd3de">
+<title>Meera &amp; Aarav · Sunkissed · GetKeepsake</title><meta name="robots" content="noindex,follow">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,500..800&family=Fraunces:ital,opsz,wght@0,9..144,400;1,9..144,400&family=Gochi+Hand&display=swap">
+<link rel="preload" as="image" href="/assets/sunkissed/pool.webp"><link rel="preload" as="image" href="/assets/sunkissed/env-closed.webp">
+<style>
+/* Sunkissed: a GetKeepsake website template.
+   An Amalfi summer, printed in cornflower-blue ink: pool water, painted lemon stripes, postage stamps and a yellow envelope. */
+:root{
+  --cream:#fff8e7;--lemon:#f6de7a;--zest:#f4c430;--sea:#9fd3de;--sky:#a8c8ee;--blue:#2f5bd3;--ink:#2340a8;--ink2:#4a63b8;
+  --poster:"Bricolage Grotesque","Arial Black",system-ui,sans-serif;--serif:"Fraunces",Georgia,serif;--hand:"Gochi Hand","Comic Sans MS",cursive;
+  --wobble:255px 18px 225px 18px/18px 225px 18px 255px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--sea) url(/assets/sunkissed/pool.webp) center/600px;color:var(--ink);font:400 18px/1.7 var(--serif);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{display:block;max-width:100%}
+a{color:inherit}
+h1,h2,h3,p{margin:0;font-weight:400}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+:focus-visible{outline:2.5px dashed var(--blue);outline-offset:5px;border-radius:6px}
+img:not([src]){visibility:hidden}
+html.locked{overflow:hidden}
+main{position:relative;max-width:520px;margin:0 auto;background:var(--cream);box-shadow:0 0 0 1px #2340a81a,0 30px 80px #1d3a6a55;overflow:hidden}
+section{position:relative;padding:76px max(22px,env(safe-area-inset-left,0px)) 76px max(22px,env(safe-area-inset-right,0px))}
+.deco{position:absolute;pointer-events:none;user-select:none;z-index:3;filter:drop-shadow(0 8px 10px #1d3a6a33)}
+.h2{font:800 clamp(40px,11.5vw,56px)/.95 var(--poster);font-variation-settings:"wdth" 82;letter-spacing:-.02em;color:var(--blue);text-wrap:balance}
+.hand{font:400 22px/1.3 var(--hand);color:var(--blue)}
+.center{text-align:center}
+.paper{background:url(/assets/sunkissed/paper.webp) center/520px,var(--cream)}
+.ystripe{background:url(/assets/sunkissed/stripes-yellow.webp) center/360px,var(--lemon)}
+.bstripe{background:url(/assets/sunkissed/stripes-blue.webp) center/420px,var(--cream)}
+.pool{background:url(/assets/sunkissed/pool.webp) center/520px,var(--sea)}
+/* a hand-inked frame: wobbly blue line */
+.inked{background:#fffdf6;border:2.5px solid var(--blue);border-radius:var(--wobble);box-shadow:4px 5px 0 var(--sky)}
+/* wavy edge between sections */
+.wave-b{-webkit-mask:radial-gradient(18px 13px at 50% 100%,#0000 98%,#000) 50% calc(100% + 1px)/36px 26px repeat-x,linear-gradient(#000,#000) top/100% calc(100% - 12px) no-repeat;
+        mask:radial-gradient(18px 13px at 50% 100%,#0000 98%,#000) 50% calc(100% + 1px)/36px 26px repeat-x,linear-gradient(#000,#000) top/100% calc(100% - 12px) no-repeat}
+.doodle{fill:none;stroke:var(--blue);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.polaroid{background:#fff;padding:9px 9px 40px;box-shadow:0 18px 30px -14px #1d3a6a77;position:relative}
+.polaroid img{width:100%;aspect-ratio:4/5;object-fit:cover;background:var(--sky)}
+.polaroid figcaption{position:absolute;left:0;right:0;bottom:6px;text-align:center;font:400 21px/1.2 var(--hand);color:var(--blue)}
+figure{margin:0}
+/* postage stamp: white perforated edge */
+.stamp{position:relative;filter:drop-shadow(0 10px 12px #1d3a6a40)}
+.stamp>div{padding:10px;background:#fff;
+  -webkit-mask:linear-gradient(#000 0 0) content-box,radial-gradient(circle 5px,#0000 95%,#000) -7px -7px/14px 14px round;mask:linear-gradient(#000 0 0) content-box,radial-gradient(circle 5px,#0000 95%,#000) -7px -7px/14px 14px round;
+  -webkit-mask:linear-gradient(#000 0 0) 9px 9px/calc(100% - 18px) calc(100% - 18px) no-repeat,radial-gradient(circle 5px,#0000 95%,#000) -7px -7px/14px 14px round;mask:linear-gradient(#000 0 0) 9px 9px/calc(100% - 18px) calc(100% - 18px) no-repeat,radial-gradient(circle 5px,#0000 95%,#000) -7px -7px/14px 14px round}
+.stamp img{width:100%;aspect-ratio:4/5;object-fit:cover;outline:1.5px solid var(--blue);outline-offset:-5px;background:var(--sky)}
+
+/* ---------- 1. the envelope floating on the pool ---------- */
+.gate{display:none}
+.js .gate{position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:24px;text-align:center;overflow:hidden;background:url(/assets/sunkissed/pool.webp) 0 0/560px,var(--sea);transition:opacity .9s,visibility 0s .9s}
+@media (prefers-reduced-motion:no-preference){.js .gate{animation:drift 40s linear infinite}}
+@keyframes drift{to{background-position:560px 280px}}
+.ks-preview .gate,.entered .gate{opacity:0;visibility:hidden;pointer-events:none}
+.gate .for{font:400 26px/1 var(--hand);color:#fff;text-shadow:0 2px 10px #1d5a7a88}
+.gate .who{font:800 clamp(64px,19vw,104px)/.9 var(--poster);font-variation-settings:"wdth" 78;letter-spacing:-.02em;color:#fff;text-shadow:3px 4px 0 var(--blue);margin:4px 0 26px}
+.envb{position:relative;display:block;width:min(330px,82vw);margin:0 auto}
+.envb .ec,.envb .eo{width:100%;filter:drop-shadow(0 26px 22px #1d4a6a66)}
+.envb .eo{position:absolute;left:5%;width:90%;bottom:0;opacity:0;transform:translateY(10%) scale(.94);transition:opacity .6s .35s,transform .9s .35s cubic-bezier(.2,.8,.2,1)}
+.envb .seal{position:absolute;left:50%;top:44%;width:30%;translate:-50% -50%;transition:transform .55s,opacity .5s}
+.envb .seal img{width:100%;filter:drop-shadow(0 6px 8px #1d3a6a55)}
+.envb .seal span{position:absolute;inset:0;display:grid;place-items:center;font:400 clamp(24px,7vw,32px)/1 var(--hand);color:#3c5f9e;text-shadow:0 1px 0 #d7e6fa}
+.envb .ec{transition:opacity .5s .3s}
+.envb .card{position:absolute;left:18%;right:18%;top:24%;padding:12px 8px;background:#fffdf6;border-radius:3px;box-shadow:0 8px 16px #1d3a6a33;font:400 24px/1.1 var(--hand);color:var(--blue);opacity:0;transition:transform 1s 1s cubic-bezier(.2,.8,.2,1),opacity .4s .9s}
+@media (prefers-reduced-motion:no-preference){.envb{animation:bob 4s ease-in-out infinite alternate}.envb .seal{animation:breathe 2.4s ease-in-out infinite}}
+@keyframes bob{from{transform:translateY(-6px) rotate(-2deg)}to{transform:translateY(6px) rotate(2deg)}}
+@keyframes breathe{50%{scale:1.07}}
+.gate .tip{margin-top:26px;font:400 22px/1 var(--hand);color:#fff;text-shadow:0 2px 8px #1d5a7a99}
+.gate .fl{position:absolute;pointer-events:none;filter:drop-shadow(0 14px 12px #1d4a6a55)}
+.gate .fl1{width:min(120px,26vw);left:6%;top:10%;rotate:-20deg}
+.gate .fl2{width:min(90px,20vw);right:8%;top:18%;rotate:30deg}
+.gate .fl3{width:min(130px,28vw);right:4%;bottom:10%;rotate:12deg}
+.gate .fl4{width:min(100px,22vw);left:4%;bottom:14%;rotate:-8deg}
+@media (prefers-reduced-motion:no-preference){.gate .fl{animation:float 6s ease-in-out infinite alternate}.gate .fl2{animation-delay:-2s}.gate .fl3{animation-delay:-4s}.gate .fl4{animation-delay:-1s}}
+@keyframes float{to{transform:translate(8px,-12px) rotate(8deg)}}
+.opening .envb{animation:none}
+.opening .envb .seal{animation:none;transform:translateY(-60px) rotate(-30deg) scale(1.2);opacity:0}
+.opening .envb .ec{opacity:0}
+.opening .envb .eo{opacity:1;transform:none}
+.opening .envb .card{opacity:1;transform:translateY(-62%)}
+
+/* ---------- 2. names over the water ---------- */
+.hero{padding-top:60px;padding-bottom:110px;text-align:center;color:#fff}
+.hero .tagline{font:400 24px/1.2 var(--hand);color:#fff;text-shadow:0 2px 8px #1d5a7a88}
+.names{margin:6px 0 0;font:800 clamp(70px,21vw,112px)/.84 var(--poster);font-variation-settings:"wdth" 76;letter-spacing:-.03em;color:#fff;text-shadow:3px 4px 0 var(--blue);position:relative;z-index:2}
+.names span{display:block}
+.names .amp{font:400 .46em/1.1 var(--hand);color:var(--lemon);text-shadow:2px 3px 0 var(--blue);letter-spacing:0}
+.hcol{position:relative;height:clamp(370px,106vw,490px);margin:20px auto 0;max-width:420px}
+.hcol .p1{position:absolute;left:4%;top:0;width:58%;rotate:-5deg;z-index:2}
+.hcol .p2{position:absolute;right:2%;top:24%;width:46%;rotate:6deg;z-index:3}
+.hcol .note{position:absolute;left:6%;bottom:0;z-index:4;font:400 26px/1 var(--hand);color:#fff;text-shadow:0 2px 6px #1d5a7a99;rotate:-4deg}
+.hcol .note svg{display:inline-block;width:44px;height:30px;vertical-align:-6px;margin-left:4px}
+.hcol .note .doodle{stroke:#fff}
+.hcol .sg{width:42%;right:0;top:-6%;rotate:14deg;z-index:5}
+.hcol .lm{width:30%;left:-6%;top:54%;rotate:-18deg;z-index:4}
+.hcol .sl{width:18%;right:4%;bottom:-4%;rotate:20deg;z-index:5}
+
+/* scrolling words */
+.band{background:var(--blue);color:var(--cream);padding:12px 0 10px;overflow:hidden;white-space:nowrap}
+.band .in{display:inline-flex;align-items:center;gap:22px;font:400 26px/1 var(--hand)}
+.band img{width:26px}
+@media (prefers-reduced-motion:no-preference){.band .in{animation:mq 38s linear infinite}}
+@keyframes mq{to{transform:translateX(-50%)}}
+
+/* since */
+.since{padding:58px 22px 30px;text-align:center}
+.since .d{font:800 clamp(30px,9vw,42px)/1 var(--poster);font-variation-settings:"wdth" 80;color:var(--blue)}
+.since .hand{margin-top:8px}
+.since .hat{width:120px;right:-26px;top:-38px;rotate:16deg}
+
+/* ---------- 3. our story ---------- */
+.story{padding-top:30px}
+.story .h2{text-align:center}
+.chap{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:center;margin-top:46px}
+.chap .polaroid{rotate:-4deg}
+.chap:nth-child(even) .polaroid{order:2;rotate:4deg}
+.chap .txt{padding:16px 16px 14px}
+.chap h3{font:800 25px/1.05 var(--poster);font-variation-settings:"wdth" 82;color:var(--blue);margin-bottom:6px}
+.chap p{font-size:16.5px;line-height:1.55}
+.chap time{display:inline-block;margin-top:8px;font:400 19px/1 var(--hand);color:var(--blue);background:var(--lemon);padding:3px 10px 4px;border-radius:999px}
+.chap .sl{width:56px;z-index:4}
+.chap:nth-child(odd) .sl{left:-10px;top:-18px;rotate:-20deg}
+.chap:nth-child(even) .sl{right:-8px;bottom:-14px;rotate:24deg}
+.story .arrow{display:block;width:70px;height:46px;margin:6px auto -26px}
+@media (max-width:380px){.chap{grid-template-columns:1fr}.chap:nth-child(even) .polaroid{order:0}.chap .polaroid{width:78%;margin:0 auto}}
+
+/* ---------- 4. together for ---------- */
+.count{padding:70px 22px}
+.cbox{position:relative;max-width:380px;margin:0 auto;padding:30px 18px 26px;text-align:center}
+.cbox .hand{font-size:24px}
+.nums{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin:12px 0 4px}
+.nums b{display:block;font:800 clamp(30px,9vw,40px)/1 var(--poster);font-variation-settings:"wdth" 80;color:var(--blue);font-variant-numeric:tabular-nums}
+.nums small{font:400 17px/1 var(--hand);color:var(--ink2)}
+.cbox .s1{width:74px;left:-26px;top:-26px;rotate:-14deg}
+.cbox .s2{width:62px;right:-20px;bottom:-24px;rotate:30deg}
+
+/* ---------- 5. moments as stamps ---------- */
+.moments{padding:22px}
+.moments .panel{position:relative;background:url(/assets/sunkissed/paper.webp) center/520px,var(--cream);border-radius:22px;padding:50px 16px 54px;box-shadow:0 10px 24px #1d3a6a26}
+.moments .h2,.moments .intro{text-align:center}
+.moments .intro{margin-top:6px}
+.sgrid{display:grid;grid-template-columns:1fr 1fr;gap:24px 16px;margin-top:34px}
+.sgrid figure{rotate:-2deg}
+.sgrid figure:nth-child(even){rotate:2.5deg;translate:0 14px}
+.sgrid figcaption{margin-top:6px;text-align:center;font:400 20px/1.2 var(--hand);color:var(--blue)}
+.moments .rs{position:absolute;width:86px;z-index:4;filter:drop-shadow(0 6px 8px #1d3a6a40)}
+
+/* ---------- 6. little things ---------- */
+.love .h2{text-align:center;max-width:12ch;margin:0 auto}
+.love ul{list-style:none;margin:34px 0 0;padding:0;display:grid;gap:16px}
+.love li{position:relative;padding:16px 18px 16px 62px;font:400 18px/1.45 var(--serif)}
+.love li:nth-child(odd){rotate:-1deg}.love li:nth-child(even){rotate:1.2deg;margin-left:14px}
+.love li img{position:absolute;left:12px;top:50%;width:38px;translate:0 -50%}
+.love .fr{width:150px;right:-30px;top:-40px;rotate:18deg}
+.love .fm{width:120px;left:-24px;bottom:-30px;rotate:-12deg}
+
+/* ---------- 7. the letter ---------- */
+.letter{text-align:center}
+.letter .hand{font-size:26px;margin-bottom:22px}
+.lenv{position:relative;display:block;width:min(300px,78%);margin:0 auto}
+.lenv img{width:100%;filter:drop-shadow(0 20px 18px #1d3a6a44)}
+.lenv small{display:block;margin-top:10px;font:400 21px/1 var(--hand);color:var(--blue)}
+@media (prefers-reduced-motion:no-preference){.lenv img{animation:bob 4s ease-in-out infinite alternate}}
+.unfold{display:grid;grid-template-rows:0fr;transition:grid-template-rows 1.1s cubic-bezier(.2,.7,.2,1)}
+.unfold>div{overflow:hidden}
+.letter.open .unfold{grid-template-rows:1fr}
+.note{position:relative;margin:30px 8px 14px;padding:42px 26px 30px;text-align:left;rotate:-1deg}
+.note h3{font:400 38px/1 var(--hand);color:var(--blue);margin-bottom:14px}
+.note p{margin:0 0 1em;font-size:18px;line-height:1.75}
+.note .sign{font:400 32px/1 var(--hand);color:var(--blue);text-align:right;margin-top:10px}
+.note .bow{width:92px;left:50%;top:-44px;margin-left:-46px}
+.js .note .w{opacity:0;transition:opacity .5s;transition-delay:calc(min(var(--i)*28ms,6s) + .8s)}
+.letter.open .note .w{opacity:1}
+.letter:not(.open) .note .w{transition-delay:0s}
+.letter .hy{width:150px;left:-40px;bottom:30px;rotate:-14deg}
+
+/* ---------- open when ---------- */
+.ow .h2{text-align:center}
+.owg{display:grid;grid-template-columns:1fr 1fr;gap:22px 14px;margin-top:32px;align-items:start}
+.owe{display:block;width:100%;text-align:center}
+.owe .e{position:relative;display:block}
+.owe .e img{width:100%;filter:drop-shadow(0 12px 12px #1d3a6a40);transition:transform .5s}
+.owe .e>span{position:absolute;left:50%;top:44%;width:26%;translate:-50% -50%;transition:transform .5s,opacity .4s}
+.owe .e span img{filter:drop-shadow(0 3px 4px #1d3a6a55)}
+.owe b{display:block;margin-top:6px;font:400 22px/1.15 var(--hand);color:var(--blue)}
+.owe .m{display:grid;grid-template-rows:0fr;transition:grid-template-rows .6s}
+.owe .m>div{overflow:hidden}
+.owe .m p{margin-top:10px;padding:12px 12px;font:italic 400 16px/1.5 var(--serif);text-align:left}
+.owe.on .m{grid-template-rows:1fr}
+.owe.on .e>span{transform:translateY(-30px) rotate(-30deg);opacity:0}
+
+/* ---------- 8. song under the umbrellas ---------- */
+.song{padding:0}
+.song .sky{position:relative;aspect-ratio:1100/619;background:url(/assets/sunkissed/umbrellas.webp) center/cover}
+.song .sky .h2{position:absolute;left:0;right:0;top:16px;text-align:center;color:#fff;text-shadow:3px 4px 0 var(--blue)}
+.scard{position:relative;margin:-60px 22px 0;padding:22px 18px 20px;display:grid;grid-template-columns:96px 1fr;gap:16px;align-items:center;text-align:left;z-index:2}
+.disc{width:96px;aspect-ratio:1;border-radius:50%;padding:5px;background:repeating-radial-gradient(circle,#2340a8 0 2px,#1f3591 2px 4px);box-shadow:0 8px 14px #1d3a6a55}
+.disc img{width:100%;height:100%;border-radius:50%;object-fit:cover;border:3px solid var(--lemon)}
+.playing .disc{animation:spin 6s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.scard h3{font:800 23px/1.1 var(--poster);font-variation-settings:"wdth" 82;color:var(--blue)}
+.scard .n{font:400 19px/1.2 var(--hand);color:var(--ink2)}
+.play{margin-top:10px;display:inline-flex;align-items:center;gap:8px;padding:8px 16px 9px;border-radius:999px;background:var(--blue);color:var(--cream);font:400 19px/1 var(--hand)}
+#spot{margin:16px 22px 0}
+#spot iframe{display:block;width:100%;border:0;border-radius:12px}
+.song .pad{height:60px}
+
+/* ---------- 9. a postcard to end ---------- */
+.end{text-align:center;padding-bottom:60px}
+.pc{position:relative;width:100%;max-width:470px;aspect-ratio:900/586;margin:20px auto 0;rotate:-2deg;filter:drop-shadow(0 18px 22px #1d3a6a44)}
+.pc>img.bg{position:absolute;inset:0;width:100%;height:100%}
+.pc .ph{position:absolute;left:9%;top:15%;width:34%;rotate:-5deg;padding:5px 5px 18px;background:#fff;box-shadow:0 6px 10px #1d3a6a33}
+.pc .ph img{width:100%;aspect-ratio:4/5;object-fit:cover}
+.pc .wr{position:absolute;left:55%;right:6%;top:44%;text-align:left;font:400 clamp(17px,4.6vw,24px)/1.32 var(--hand);color:var(--blue)}
+.pc .wr b{display:block;font-weight:400;font-size:1.35em;line-height:1.1}
+.pc .st{position:absolute;right:6.5%;top:6%;width:13%;rotate:6deg}
+.pc .st2{position:absolute;right:20%;top:4%;width:12%;rotate:-8deg}
+.end .hy{width:130px;right:-30px;bottom:40px;rotate:20deg}
+.end .shell{width:70px;left:12px;bottom:70px;rotate:-16deg}
+.end .fm{width:110px;left:-20px;top:20px;rotate:-24deg}
+.end .names2{margin-top:44px;font:800 clamp(44px,13vw,64px)/.9 var(--poster);font-variation-settings:"wdth" 78;color:var(--blue)}
+.end .hand{margin-top:8px}
+.credit{margin-top:40px;font:400 15px var(--serif);color:var(--ink2)}
+
+/* gentle reveal for the photos only */
+.js .rv{opacity:0;transform:translateY(18px) rotate(var(--r,0deg));transition:opacity .8s,transform .8s}
+.js .rv.seen{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}.js .rv,.js .note .w{opacity:1;transform:none}}
+</style>
+<script src="/assets/ks-templates.v5.js"></script>
+<link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png"><link rel="icon" type="image/svg+xml" href="/assets/icon.svg"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest"></head>
+<body>
+<script>
+document.documentElement.classList.add("js","locked");
+if (/[?&]preview=1/.test(location.search)) document.documentElement.classList.add("entered");
+</script>
+
+<div class="gate" id="gate" role="dialog" aria-modal="true" aria-label="Open your letter">
+ <img class="fl fl1" src="/assets/sunkissed/slice0.webp" alt=""><img class="fl fl2" src="/assets/sunkissed/lemon.webp" alt="">
+ <img class="fl fl3" src="/assets/sunkissed/slice2.webp" alt=""><img class="fl fl4" src="/assets/sunkissed/slice3.webp" alt="">
+ <div>
+  <div class="for">a little summer for</div>
+  <div class="who" id="recipient">Meera</div>
+  <button class="envb" id="gseal" type="button" aria-label="Break the seal and open the envelope">
+   <img class="ec" src="/assets/sunkissed/env-closed.webp" alt="">
+   <img class="eo" src="/assets/sunkissed/env-open.webp" alt="">
+   <span class="card" data-greeting>Hey you,</span>
+   <span class="seal"><img src="/assets/sunkissed/seal.webp" alt=""><span data-initials>M&amp;A</span></span>
+  </button>
+  <p class="tip">tap the seal</p>
+ </div>
+</div>
+
+<main>
+<section class="hero pool wave-b" aria-label="The two of you">
+ <p class="tagline" id="tagline">a little summer, all for you</p>
+ <h1 class="names" id="names"><span>Meera</span><span class="amp">&amp;</span><span>Aarav</span></h1>
+ <div class="hcol">
+  <figure class="polaroid p1"><img data-ph="photos.hero" alt=""></figure>
+  <figure class="polaroid p2"><img data-ph="photos.hero2" alt=""></figure>
+  <img class="deco sg" src="/assets/sunkissed/sunglasses.webp" alt="">
+  <img class="deco lm" src="/assets/sunkissed/lemon.webp" alt="">
+  <img class="deco sl" src="/assets/sunkissed/slice1.webp" alt="">
+  <p class="note" id="note"><span id="noteTx">us, by the lake</span><svg viewBox="0 0 44 30" aria-hidden="true"><path class="doodle" d="M2 24C14 26 30 20 38 6"/><path class="doodle" d="M30 6 38 5 39 13"/></svg></p>
+ </div>
+</section>
+
+<div class="band" aria-hidden="true"><div class="in" id="words"></div></div>
+
+<section class="since paper" aria-label="Since">
+ <img class="deco hat" src="/assets/sunkissed/hat.webp" alt="">
+ <p class="d" id="sinceD">12 March 2021</p>
+ <p class="hand" id="sinceL">the day it all began, in Udaipur</p>
+</section>
+
+<section class="story paper" id="story" aria-label="Our story">
+ <h2 class="h2">Our story</h2>
+ <svg class="arrow" viewBox="0 0 70 46" aria-hidden="true"><path class="doodle" d="M8 6C30 2 52 12 54 36"/><path class="doodle" d="M46 30 54 38 62 29"/></svg>
+ <div id="chapters"></div>
+</section>
+
+<section class="count ystripe" id="countSec" aria-label="How long we've been together">
+ <div class="cbox inked">
+  <img class="deco s1" src="/assets/sunkissed/slice0.webp" alt=""><img class="deco s2" src="/assets/sunkissed/slice3.webp" alt="">
+  <p class="hand" id="countT">together for</p>
+  <div class="nums" id="nums"></div>
+  <p class="hand" id="countTail" style="font-size:20px">and every sunny day after</p>
+ </div>
+</section>
+
+<section class="moments bstripe" id="momentsSec" aria-label="Moments">
+ <div class="panel">
+ <img class="rs" src="/assets/sunkissed/stamp0.webp" alt="" style="right:-6px;top:-18px;rotate:10deg;width:74px">
+ <h2 class="h2">Postcards from us</h2>
+ <p class="hand intro" id="momentsIntro"></p>
+ <div class="sgrid" id="sgrid"></div>
+ </div>
+</section>
+
+<section class="love paper" id="loveSec" aria-label="Little things I love about you">
+ <img class="deco fr" src="/assets/sunkissed/freesia.webp" alt="">
+ <img class="deco fm" src="/assets/sunkissed/forgetmenot.webp" alt="">
+ <h2 class="h2" id="loveTitle">Little things I love about you</h2>
+ <ul id="love"></ul>
+</section>
+
+<section class="letter pool" id="letter" aria-label="A letter">
+ <img class="deco hy" src="/assets/sunkissed/hydrangea.webp" alt="">
+ <p class="hand" id="letterTitle" style="color:#fff;text-shadow:0 2px 8px #1d5a7a99">Open this on a sunny day</p>
+ <button class="lenv" type="button" id="envBtn" aria-expanded="false" aria-controls="noteBox"><img src="/assets/sunkissed/env-open.webp" alt="A yellow envelope lined with lemons"><small style="color:#fff">tap to read</small></button>
+ <div class="unfold"><div>
+  <article class="note inked" id="noteBox">
+   <img class="deco bow" src="/assets/sunkissed/bow.webp" alt="">
+   <h3 data-greeting tabindex="-1" id="greet">Hey you,</h3>
+   <div id="letterBody"></div>
+   <p class="sign" id="sign">Yours, Aarav</p>
+  </article>
+ </div></div>
+</section>
+
+<section class="ow paper" id="owSec" aria-label="Open when">
+ <h2 class="h2">Open when…</h2>
+ <div class="owg" id="owg"></div>
+</section>
+
+<section class="song" id="songSec" aria-label="Our song">
+ <div class="sky"><h2 class="h2">Our song</h2></div>
+ <div class="scard inked" id="scard">
+  <div class="disc"><img data-ph="photos.cover" alt="Album cover"></div>
+  <div><h3 id="songTitle"></h3><p class="n" id="songNote"></p>
+   <button type="button" class="play" id="spotBtn"><svg width="11" height="11" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6 4v16l14-8z"/></svg>play our song</button></div>
+ </div>
+ <div id="spot"></div>
+ <div class="pad"></div>
+</section>
+
+<section class="end paper" aria-label="A postcard">
+ <img class="deco fm" src="/assets/sunkissed/forgetmenot.webp" alt="">
+ <div class="pc">
+  <img class="bg" src="/assets/sunkissed/postcard.webp" alt="">
+  <figure class="ph"><img data-ph="photos.end" alt=""></figure>
+  <img class="st" src="/assets/sunkissed/stamp3.webp" alt=""><img class="st2" src="/assets/sunkissed/stamp1.webp" alt="">
+  <p class="wr"><b id="pcNames">M &amp; A</b><span id="endLine">wish you were here, always</span></p>
+ </div>
+ <img class="deco hy" src="/assets/sunkissed/hydrangea.webp" alt="">
+ <img class="deco shell" src="/assets/sunkissed/shell.webp" alt="">
+ <p class="names2" id="endNames">Meera &amp; Aarav</p>
+ <p class="hand" id="endDate"></p>
+ <div class="credit">Made with <a href="/">GetKeepsake</a></div>
+</section>
+</main>
+
+<script>
+const K = KSKit, $ = id => document.getElementById(id);
+const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+const SLICES = [0, 1, 2, 3].map(i => "/assets/sunkissed/slice" + i + ".webp");
+let tick = null;
+document.querySelectorAll("main section:not(.hero) img").forEach(i => i.loading = "lazy");
+const ini = s => (Array.from(String(s || "").trim())[0] || "").toUpperCase();
+const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("seen"); io.unobserve(e.target); } }), { threshold: .15 });
+
+function render(D) {
+  const a = K.str(D.a, 30), b = K.str(D.b, 30), d = K.date(D.date), ahead = d > Date.now(), place = K.str(D.place, 40);
+  document.title = `${a} & ${b} · GetKeepsake`;
+  if ($("recipient")) $("recipient").textContent = K.str(D.recipient || a, 30);
+  document.querySelectorAll("[data-initials]").forEach(e => e.textContent = ini(a) + "&" + ini(b));
+  document.querySelectorAll("[data-ph]").forEach(i => K.setImg(i, K.get(D, i.dataset.ph)));
+  document.querySelectorAll("[data-greeting]").forEach(e => e.textContent = K.str(D.greeting, 40));
+
+  $("tagline").textContent = K.str(D.tagline, 60);
+  const nm = $("names"); nm.textContent = ""; nm.append(el("span", "", a), el("span", "amp", "&"), el("span", "", b));
+  $("noteTx").textContent = K.str(D.note, 30); $("note").hidden = !K.str(D.note, 30);
+  document.querySelector(".hcol .p2").hidden = !K.img(K.get(D, "photos.hero2"));
+
+  const w = $("words"); w.textContent = ""; const list = K.words(D.words);
+  for (let r = 0; r < 2; r++) list.forEach((x, i) => { w.appendChild(el("span", "", x)); const im = el("img"); im.src = SLICES[i % 2 ? 2 : 0]; im.alt = ""; w.appendChild(im); });
+  w.parentElement.hidden = !list.length;
+
+  $("sinceD").textContent = K.fmt.long(d);
+  $("sinceL").textContent = (ahead ? "our day" : "the day it all began") + (place ? ", in " + place : "");
+
+  // story chapters, polaroids alternating sides
+  const ch = $("chapters"); ch.textContent = "";
+  (D.story || []).filter(c => c && (c.title || c.text)).slice(0, 6).forEach((c, i) => {
+    const art = el("article", "chap");
+    const f = el("figure", "polaroid rv"), im = el("img"); im.alt = K.str(c.title, 40); im.loading = "lazy"; K.setImg(im, c.photo); f.appendChild(im);
+    const sl = el("img", "deco sl"); sl.src = SLICES[(i + 1) % 4]; sl.alt = ""; sl.loading = "lazy";
+    const t = el("div", "txt inked");
+    t.append(el("h3", "", K.str(c.title, 40)), el("p", "", K.str(c.text, 300)));
+    if (K.str(c.when, 30)) t.appendChild(el("time", "", K.str(c.when, 30)));
+    art.append(f, t, sl); ch.appendChild(art);
+  });
+  $("story").hidden = !ch.children.length;
+
+  // together for (or until, if the date is ahead)
+  $("countSec").hidden = D.countdown === false;
+  $("countT").textContent = ahead ? "only this long to go" : "together for";
+  $("countTail").hidden = ahead;
+  const nums = $("nums");
+  const draw = () => { const t = K.since(d); nums.textContent = ""; [[t.days.toLocaleString("en-IN"), "days"], [t.hours, "hours"], [t.minutes, "mins"], [t.seconds, "secs"]].forEach(([v, l]) => { const c = el("div"); c.append(el("b", "", String(v)), el("small", "", l)); nums.appendChild(c); }); };
+  draw(); clearInterval(tick); tick = setInterval(draw, 1000);
+
+  // moments as postage stamps
+  $("momentsIntro").textContent = K.str(D.momentsIntro, 80);
+  const sg = $("sgrid"); sg.textContent = "";
+  (D.moments || []).filter(x => K.img(x.photo)).slice(0, 8).forEach(x => {
+    const f = el("figure", "rv"), s = el("div", "stamp"), inn = el("div"), im = el("img"); im.src = K.img(x.photo); im.alt = K.str(x.cap, 60); im.loading = "lazy";
+    inn.appendChild(im); s.appendChild(inn); f.appendChild(s); if (K.str(x.cap, 60)) f.appendChild(el("figcaption", "", K.str(x.cap, 60)));
+    sg.appendChild(f);
+  });
+  $("momentsSec").hidden = !sg.children.length;
+
+  // little things
+  $("loveTitle").textContent = K.str(D.loveTitle, 50);
+  const ul = $("love"); ul.textContent = "";
+  (D.love || []).map(t => K.str(t, 90)).filter(Boolean).slice(0, 8).forEach((t, i) => {
+    const li = el("li", "inked"), im = el("img"); im.src = SLICES[i % 4]; im.alt = ""; im.loading = "lazy";
+    li.append(im, t); ul.appendChild(li);
+  });
+  $("loveSec").hidden = !ul.children.length;
+
+  // the letter
+  $("letterTitle").textContent = K.str(D.letterTitle, 50);
+  $("sign").textContent = K.str(D.sign, 40);
+  const body = $("letterBody"); body.textContent = ""; let n = 0;
+  K.paras(D.letter).forEach(t => {
+    const p = el("p");
+    t.split(/(\s+)/).forEach(x => { if (/^\s+$/.test(x)) { p.append(x); return; } const s = el("span", "w", x); s.style.setProperty("--i", n++); p.appendChild(s); });
+    body.appendChild(p);
+  });
+
+  // open when: small sealed envelopes
+  const og = $("owg"); og.textContent = "";
+  (D.openWhen || []).filter(x => x && x.when && x.msg).slice(0, 6).forEach(x => {
+    const bt = el("button", "owe"); bt.type = "button"; bt.setAttribute("aria-expanded", "false"); bt.setAttribute("aria-label", "Open when " + K.str(x.when, 30));
+    bt.innerHTML = '<span class="e"><img src="/assets/sunkissed/env-closed.webp" alt="" loading="lazy"><span><img src="/assets/sunkissed/seal.webp" alt="" loading="lazy"></span></span><b></b><span class="m"><span style="display:block;overflow:hidden"><p class="inked"></p></span></span>';
+    bt.querySelector("b").textContent = "open when " + K.str(x.when, 30); bt.querySelector("p").textContent = K.str(x.msg, 200);
+    bt.onclick = () => { const on = bt.classList.toggle("on"); bt.setAttribute("aria-expanded", on); };
+    og.appendChild(bt);
+  });
+  $("owSec").hidden = !og.children.length;
+
+  // song: the button opens the real Spotify player
+  $("songTitle").textContent = K.str(D.song && D.song.title, 50);
+  $("songNote").textContent = K.str(D.song && D.song.note, 60);
+  const sp = K.spotify(D.song && D.song.url);
+  $("spotBtn").hidden = !sp; $("spot").textContent = ""; $("scard").classList.remove("playing");
+  $("spotBtn").onclick = () => { if (!sp || $("spot").firstChild) return; const f = el("iframe"); f.src = sp.src; f.height = sp.h; f.allow = "autoplay; encrypted-media; clipboard-write"; f.title = "Our song on Spotify"; $("spot").appendChild(f); $("scard").classList.add("playing"); };
+
+  // postcard
+  $("pcNames").textContent = ini(a) + " & " + ini(b);
+  $("endLine").textContent = K.str(D.endLine, 50);
+  $("endNames").textContent = `${a} & ${b}`;
+  $("endDate").textContent = (ahead ? "see you on " : "since ") + K.fmt.long(d);
+}
+
+// opening: break the seal, the envelope opens and a note peeks out
+(function () {
+  const root = document.documentElement, gate = $("gate");
+  if (/[?&]preview=1/.test(location.search)) { root.classList.remove("locked"); gate.remove(); return; }
+  let done = false;
+  $("gseal").addEventListener("click", () => {
+    if (done) return; done = true;
+    const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    gate.classList.add("opening");
+    setTimeout(() => { root.classList.add("entered"); root.classList.remove("locked"); }, calm ? 0 : 2300);
+    setTimeout(() => gate.remove(), calm ? 0 : 3300);
+  });
+})();
+
+// the letter opens from the envelope
+(function () {
+  const sec = $("letter"), env = $("envBtn");
+  env.addEventListener("click", () => {
+    const open = !sec.classList.contains("open");
+    sec.classList.toggle("open", open); env.setAttribute("aria-expanded", open);
+    env.querySelector("small").textContent = open ? "tap to fold it away" : "tap to read";
+    if (open) setTimeout(() => $("noteBox").scrollIntoView({ behavior: "smooth", block: "start" }), 600);
+  });
+})();
+
+K.boot("sunkissed", D => { render(D); document.querySelectorAll(".rv:not(.seen)").forEach(x => io.observe(x)); });
+</script>
+</body>
+</html>

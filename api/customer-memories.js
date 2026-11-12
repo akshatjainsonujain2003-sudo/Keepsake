@@ -12,7 +12,7 @@ const urlFor = (kind, id) => (kind === "site" ? "/s/" : kind === "biz" ? "/b/" :
 const bigPage = memory => !!memory && (!!memory.store || !!memory.storeAt || (memory.proUntil || 0) > Date.now());
 const tooBig = (data, kind, memory) => JSON.stringify(data).length > (kind === "biz" && bigPage(memory) ? 450000 : MAX[kind]);
 // A website is either section-based (older themes) or one of the designed templates.
-const TEMPLATES = ["wildflower", "candlelit", "mixtape"];
+const TEMPLATES = ["wildflower", "candlelit", "mixtape", "sunkissed"];
 // A business page (shops, cafes): data.biz === 1 with at least a name.
 const validData = (data, kind) => !!data && (kind === "biz" ? data.biz === 1 && typeof data.t === "string" && !!data.t.trim() : kind === "site" ? (Array.isArray(data.sections) || TEMPLATES.includes(data.tpl)) : Array.isArray(data.i));
 
