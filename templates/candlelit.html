@@ -3,197 +3,282 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#4a0c16">
+<meta name="theme-color" content="#5b0d18">
 <title>Meera &amp; Aarav · Red Letter · GetKeepsake</title><meta name="robots" content="noindex,follow">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap">
-<link rel="preload" as="image" href="/assets/redletter2/env-back.webp"><link rel="preload" as="image" href="/assets/redletter2/seal.webp">
 <style>
-/* Red Letter v2: a GetKeepsake website template.
-   A sealed maroon letter, a silver locket and a painted Indian garden. Maroon, forest green and antique gold. */
+/* Red Letter: a GetKeepsake website template. Velvet and old paper, letters, stamps, lace, wax and playing cards. */
 :root{
-  --wine:#4a0c16;--maroon:#7a1424;--crimson:#8e1b2c;--forest:#1f3b2d;--forest2:#162d22;
-  --gold:#c9a45c;--gold2:#e9cf8f;--champ:#f1e1c0;--ivory:#fbf6ec;--ink:#3a0a12;
-  --script:"Pinyon Script","Snell Roundhand",cursive;--serif:"Cormorant Garamond",Georgia,serif;
-  --foil:linear-gradient(100deg,#a8803c 0%,#f3dc9a 38%,#c9a45c 62%,#8f6a2c 100%);
-  --arch:url(#arch);
+  --oxblood:#6b0f1a;--bordeaux:#8e1b2c;--ivory:#f7f0e4;--parch:#eadbc2;--gold:#b8924a;--gold2:#e6cf9a;--ink:#2b0a10;--soft:#7d4f55;
+  --script:"Pinyon Script",cursive;--serif:"Cormorant Garamond",Georgia,serif;
+  --R:/assets/redletter/;
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{margin:0;background:#2a050b url(/assets/redletter2/paper-maroon.webp) center/420px;color:var(--champ);font:400 19px/1.65 var(--serif);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body{margin:0;background:#2a050b url(/assets/redletter/velvet.webp) center/520px;color:var(--ink);font:400 19px/1.65 var(--serif);-webkit-font-smoothing:antialiased;overflow-x:hidden}
 img{display:block;max-width:100%}
 a{color:inherit}
-h1,h2,h3,p{margin:0;font-weight:400}
-button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
-:focus-visible{outline:2px solid var(--gold2);outline-offset:4px;border-radius:4px}
+h1,h2,h3{margin:0;font-weight:400}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
 img:not([src]){visibility:hidden}
-.locked body{overflow:hidden;height:100vh}
-main{position:relative;max-width:520px;margin:0 auto;box-shadow:0 0 120px #000d;overflow:hidden}
-section{position:relative;padding:84px max(24px,env(safe-area-inset-left,0px)) 84px max(24px,env(safe-area-inset-right,0px));overflow:hidden;text-align:center}
-/* backgrounds */
-.bg-maroon{background:radial-gradient(120% 80% at 50% 0%,#0000 40%,#2a050b99),url(/assets/redletter2/paper-maroon.webp) center/420px,var(--maroon)}
-.bg-wine{background:radial-gradient(90% 60% at 50% 20%,#6b16264d,#0000 70%),var(--wine)}
-.bg-forest{background:radial-gradient(90% 60% at 50% 25%,#2e5a43,#0000 70%),var(--forest)}
-.grain{position:fixed;inset:0;pointer-events:none;z-index:60;background:url(/assets/redletter2/grain.webp) center/360px;mix-blend-mode:overlay;opacity:.22}
-/* type */
-.kick{font-size:13px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);font-weight:500}
-.h2{font-family:var(--script);font-size:clamp(40px,11vw,54px);line-height:1.1;margin:6px 0 0;background:var(--foil);-webkit-background-clip:text;background-clip:text;color:transparent;padding:0 .15em}
-.script{font-family:var(--script)}
-.rule{display:flex;align-items:center;justify-content:center;gap:12px;margin:18px auto 0}
-.rule::before,.rule::after{content:"";height:1px;width:56px;background:linear-gradient(90deg,#0000,var(--gold))}
-.rule::after{transform:scaleX(-1)}
-.rule img{width:26px}
-/* gold-edged frames */
-.frame{background:var(--champ);padding:9px 9px 34px;box-shadow:0 14px 30px #0008;position:relative}
-.frame::after{content:"";position:absolute;inset:5px 5px 28px;border:1px solid var(--gold);pointer-events:none}
-.frame img{width:100%;aspect-ratio:4/5;object-fit:cover}
-.frame figcaption{position:absolute;left:0;right:0;bottom:2px;font-family:var(--script);font-size:21px;line-height:1.2;color:var(--maroon)}
-.archbox{position:relative;margin:0 auto}
-.archbox img{width:100%;height:100%;object-fit:cover;clip-path:var(--arch)}
-.archbox svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
-.archbox path{fill:none;vector-effect:non-scaling-stroke}
+/* one tall column, like a letter; velvet shows either side on wide screens */
+main{max-width:520px;margin:0 auto;box-shadow:0 0 90px #000c;overflow:hidden}
+section{position:relative;padding:76px 26px;overflow:hidden}
+.paper{background:linear-gradient(#f7f0e48c,#f7f0e48c),url(/assets/redletter/paper.webp) center top/100% auto repeat-y,var(--ivory)}
+.velvet{background:linear-gradient(#3f081133,#2a050b66),url(/assets/redletter/velvet.webp) center top/100% auto repeat-y,var(--oxblood);color:var(--ivory)}
+/* faint old handwriting behind the paper sections */
+.hand{position:absolute;inset:0;z-index:0;pointer-events:none;background:url(/assets/redletter/handwriting.webp) center top/112% auto repeat-y;opacity:.12;mix-blend-mode:multiply}
+.velvet .hand{filter:invert(1);mix-blend-mode:screen;opacity:.05}
+section>*:not(.hand){position:relative}
+.kick{font:italic 400 19px var(--serif);color:var(--soft)}
+.velvet .kick{color:var(--gold2)}
+.h2{font:400 clamp(48px,13.5vw,66px)/1.05 var(--script);color:var(--oxblood)}
+.velvet .h2{color:var(--ivory);text-shadow:0 2px 12px #0006}
+.center{text-align:center}
+.warm{filter:sepia(.12) saturate(1.04) contrast(1.03)}
+.drop{filter:drop-shadow(0 10px 14px #2b0a1055)}
+.velvet .drop{filter:drop-shadow(0 14px 18px #000a)}
+.sticker{position:absolute;pointer-events:none;z-index:4}
 
-/* 1. the sealed envelope (opening screen) */
-.gate{position:fixed;inset:0;z-index:80;display:grid;place-items:center;padding:24px;background:radial-gradient(100% 70% at 50% 40%,#0000 30%,#1a0207e6),url(/assets/redletter2/paper-maroon.webp) center/420px,var(--maroon);transition:opacity 1s .2s,transform 1.2s .2s}
-.gate .in{width:min(88vw,400px);text-align:center}
-.gate .for{font-size:13px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold)}
-.gate .who{font-family:var(--script);font-size:clamp(52px,15vw,72px);line-height:1.2;color:var(--champ);margin:2px 0 26px;text-shadow:0 2px 20px #0009}
-.envl{display:block;position:relative;width:100%;aspect-ratio:760/547;margin:0 auto;perspective:1100px;filter:drop-shadow(0 22px 26px #0009)}
-.envl>img,.envl .card{position:absolute;left:0;top:0;width:100%;height:100%}
-.envl .back{z-index:1}
-.envl .card{left:8%;width:84%;top:7%;height:86%;z-index:3;background:url(/assets/redletter2/paper-letter.webp) center/cover,var(--champ);border-radius:2px;padding:9% 8%;transition:transform 1s cubic-bezier(.2,.8,.2,1);box-shadow:0 -4px 14px #0005}
-.envl .card i{display:block;height:2px;background:#cdb58d;margin:9% 0 0}.envl .card i:nth-child(3){width:70%}
-.envl .card b{display:block;font-family:var(--script);font-weight:400;font-size:clamp(20px,6vw,28px);color:var(--maroon);text-align:left;line-height:1}
-.envl .front{z-index:4}
-.flap{position:absolute;left:0;width:100%;bottom:100%;height:78.25%;transform-origin:50% 100%;transform-style:preserve-3d;transform:rotateX(180deg);z-index:5;transition:transform .95s cubic-bezier(.5,.05,.25,1),z-index 0s .48s}
-.flap img{position:absolute;inset:0;width:100%;height:100%;backface-visibility:hidden;-webkit-backface-visibility:hidden}
-.flap .fb{transform:rotateY(180deg)}
-.seal{position:absolute;z-index:6;left:50%;top:38%;width:30%;transform:translate(-50%,-50%);transition:transform .6s,opacity .6s;filter:drop-shadow(0 6px 10px #0008)}
-.seal img{width:100%}
-.seal span{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--script);font-size:clamp(22px,6.6vw,30px);color:#5a3a12;text-shadow:0 1px 0 #f6dfa0,0 -1px 0 #7a5418;padding-top:4%}
-.gate .cue{font-style:italic;font-size:20px;color:var(--champ);margin:30px 0 0}
-.gate .tap{margin:10px 0 0;font-size:13px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);animation:pulse 2.4s ease-in-out infinite}
-@keyframes pulse{50%{opacity:.45}}
-.gate.opening .seal{transform:translate(-50%,-30%) scale(1.15) rotate(18deg);opacity:0}
-.gate.opening .flap{transform:rotateX(0deg);z-index:2;transition-delay:.35s,.83s}
-.gate.opening .card{transform:translateY(-58%);transition-delay:1.25s}
-.gate.gone{opacity:0;transform:scale(1.06);pointer-events:none}
-/* falling petals */
-.petals{position:fixed;inset:0;pointer-events:none;z-index:70;overflow:hidden}
-.petals img{position:absolute;top:-60px;animation:fall linear forwards}
-@keyframes fall{to{transform:translate(var(--dx),112vh) rotate(var(--r))}}
+/* ---------- opening: an embossed envelope on velvet ---------- */
+.gate{display:none}
+.js .gate{position:fixed;inset:0;z-index:100;display:grid;place-items:center;text-align:center;padding:24px;color:var(--ivory);
+  background:radial-gradient(80% 60% at 50% 45%,#8e1b2c66,#0000 70%),url(/assets/redletter/velvet.webp) center/cover,#3f0811;transition:opacity 1s 1s,visibility 0s 2s}
+.js.entered .gate{opacity:0;visibility:hidden;pointer-events:none}
+.ks-preview .gate{display:none!important}
+.gate .for{font:italic 400 19px var(--serif);color:var(--gold2)}
+.gate .who{font:400 clamp(60px,18vw,100px)/1.1 var(--script);margin:0 0 22px;text-shadow:0 3px 16px #000a}
+.genv{position:relative;width:min(320px,80vw);margin:0 auto;border:0;padding:0;background:none;cursor:pointer;display:block}
+.genv .e{width:100%;filter:drop-shadow(0 26px 30px #000b);transition:transform 1.1s cubic-bezier(.5,0,.2,1),opacity 1s .2s}
+.genv .s{position:absolute;left:50%;top:60%;width:27%;translate:-50% -50%;filter:drop-shadow(0 6px 8px #0008);transition:transform .6s,opacity .5s}
+.gate .hint{margin-top:22px;font:italic 400 17px var(--serif);color:#f3e2c8bb}
+@media (prefers-reduced-motion:no-preference){.genv .s{animation:pulse 2.4s ease-in-out infinite}}
+@keyframes pulse{50%{transform:scale(1.07)}}
+.opening .genv .s{animation:none;transform:translateY(-40px) scale(1.4) rotate(-20deg);opacity:0}
+.opening .genv .e{transform:translateY(60vh) rotate(6deg);opacity:0}
+html.locked{overflow:hidden}
 
-/* 2. the letter */
-.letter{padding-top:64px}
-.sheet{position:relative;margin:26px auto 0;max-width:440px;text-align:left;color:var(--ink);background:url(/assets/redletter2/paper-letter.webp) center/600px,var(--champ);padding:46px 30px 40px;box-shadow:0 24px 50px #0009;border-radius:2px}
-.sheet::before{content:"";position:absolute;inset:10px;border:1px solid #c9a45c99;pointer-events:none}
-.sheet .lotus{width:44px;margin:-14px auto 16px}
-.sheet h1{font-family:var(--script);font-size:40px;line-height:1.2;color:var(--maroon);margin:0 0 14px}
-.sheet p{margin:0 0 1em;font-size:20px;line-height:1.7}
-.sheet .sign{font-family:var(--script);font-size:32px;color:var(--maroon);text-align:right;margin-top:18px}
-.js .w{opacity:0;filter:blur(3px);transition:opacity .6s,filter .6s;transition-delay:calc(min(var(--i) * 28ms,7s) + .5s)}
-.entered .w{opacity:1;filter:none}
+/* ---------- hero ---------- */
+.hero{padding:58px 22px 64px;text-align:center}
+.hero .tagline{font:italic 400 20px var(--serif);color:var(--soft)}
+.names{position:relative;z-index:3;font:400 clamp(66px,19vw,106px)/.9 var(--script);color:var(--oxblood);margin:14px 0 -18px;text-shadow:0 2px 0 var(--ivory),0 0 14px var(--ivory)}
+.names .a{display:block;text-align:left;padding-left:4%}
+.names .amp{display:block;font-size:.45em;line-height:1;margin:2px 0 -4px}
+.names .b{display:block;text-align:right;padding-right:4%}
+.stage{position:relative;width:86%;margin:0 auto}
+.hpic{position:relative;aspect-ratio:4/5;border-radius:12px;overflow:hidden;background:#e9dccb;box-shadow:0 24px 40px #2b0a1055;
+  -webkit-mask:radial-gradient(circle 30px at 50% 100%,#0000 98%,#000);mask:radial-gradient(circle 30px at 50% 100%,#0000 98%,#000)}
+.hpic img{width:100%;height:100%;object-fit:cover}
+.hbtn{position:relative;z-index:3;width:50px;height:50px;margin:-25px auto 0;border-radius:50%;background:var(--oxblood);display:grid;place-items:center;color:var(--ivory);font-size:20px;box-shadow:0 6px 14px #2b0a1055}
+.hero .washi{left:58%;top:-14px;width:38%;transform:rotate(7deg);z-index:2}
+.hero .hearts{left:-12%;top:30%;width:34%;transform:rotate(-14deg)}
+.hero .tag{right:-10%;top:76%;width:44%;transform:rotate(-7deg);filter:drop-shadow(0 12px 14px #0007)}
+.hdate{margin-top:28px;font:italic 500 20px var(--serif);color:var(--oxblood)}
+.hdate i{font-style:normal;color:var(--gold);margin:0 8px}
+.cue{margin-top:4px;font:italic 400 17px var(--serif);color:var(--soft)}
+@media (prefers-reduced-motion:no-preference){
+ .entered .names{animation:rise 1.2s .2s both}.entered .hpic{animation:rise 1.2s .45s both}
+ .entered .hero .hearts{animation:pop .8s 1.2s cubic-bezier(.3,1.6,.5,1) both}.entered .hero .tag{animation:swing 1.6s 1.3s both}.entered .hero .washi{animation:fadein .6s 1s both}
+}
+@keyframes rise{from{opacity:0;transform:translateY(26px)}}
+@keyframes fadein{from{opacity:0}}
+@keyframes pop{from{opacity:0;transform:rotate(-40deg) scale(.4)}}
+@keyframes swing{0%{opacity:0;transform:rotate(20deg) translateY(-24px)}45%{opacity:1;transform:rotate(-14deg)}75%{transform:rotate(-4deg)}100%{transform:rotate(-7deg)}}
 
-/* 3. the locket */
-.lk{position:relative;width:min(84%,380px);aspect-ratio:860/874;margin:30px auto 0}
-.lk>button{position:absolute;inset:0;width:100%}
-.lk .closed{position:absolute;left:50%;top:-10%;height:100%;width:auto;transform-origin:50% 0;animation:swing 3.6s ease-in-out infinite;transition:opacity .6s,transform .6s}
-@keyframes swing{0%,100%{transform:translateX(-50%) rotate(-3deg)}50%{transform:translateX(-50%) rotate(3deg)}}
-.lk .open{position:absolute;inset:0;opacity:0;transform:scale(.9);transition:opacity .8s .25s,transform .9s .25s cubic-bezier(.2,.8,.2,1)}
-.lk .open img.base{width:100%}
-.lk .heart{position:absolute;top:52.4%;width:41.6%;height:43.7%;clip-path:url(#heart);opacity:0;transition:opacity 1s .9s}
+/* ---------- the day it all began: a calendar with a heart drawn round the date ---------- */
+.cal{text-align:center;padding-top:12px}
+.cal .mon{font:400 56px/1 var(--script);color:var(--oxblood)}
+.cal .yr{font:italic 500 18px var(--serif);color:var(--soft)}
+.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px 0;max-width:340px;margin:18px auto 0;font:500 17px/2.2 var(--serif);color:var(--ink)}
+.grid .wd{font:italic 500 15px/2 var(--serif);color:var(--soft)}
+.grid .day{position:relative}
+.grid .day.hit{color:var(--bordeaux);font-weight:600}
+.grid .day.hit svg{position:absolute;left:50%;top:50%;width:175%;transform:translate(-50%,-50%);overflow:visible}
+.grid .day.hit path{fill:none;stroke:var(--bordeaux);stroke-width:2.2;stroke-linecap:round;stroke-dasharray:260;stroke-dashoffset:260;transition:stroke-dashoffset 1.8s .3s ease}
+.cal.seen .grid .day.hit path{stroke-dashoffset:0}
+.cal .fp{width:52px;margin:26px auto 0;opacity:.9}
+.cal .place{margin-top:8px;font:italic 400 19px/1.4 var(--serif);color:var(--soft)}
+.cal .place b{display:block;font:400 36px/1.2 var(--script);color:var(--oxblood)}
+
+/* ---------- the letter: an envelope with lace, then the letter on torn paper ---------- */
+.letter{text-align:center}
+.env{position:relative;width:min(300px,76vw);margin:34px auto 0;border:0;padding:0;background:none;cursor:pointer;display:block;transition:transform .6s}
+.env img.e{width:100%;filter:drop-shadow(0 26px 30px #000b)}
+.env .greet{position:absolute;left:18%;right:18%;top:24%;font:400 clamp(30px,9vw,40px)/1.1 var(--script);color:var(--oxblood);transition:opacity .5s}
+.env .petals{position:absolute;width:44%;right:-24%;bottom:-6%;transform:rotate(18deg)}
+.letter.open .env{transform:scale(.9)}
+.letter.open .env .greet{opacity:0}
+.letter .hint{margin-top:18px;font:italic 400 17px var(--serif);color:#f3e2c8cc}
+.unfold{display:grid;grid-template-rows:0fr;transition:grid-template-rows 1.2s cubic-bezier(.2,.7,.2,1)}
+.unfold>div{overflow:hidden}
+.letter.open .unfold{grid-template-rows:1fr}
+.note{position:relative;margin:34px -6px 6px;text-align:left;color:var(--ink);border:34px solid transparent;border-image:url(/assets/redletter/torn-paper.webp) 70 fill / 34px stretch;filter:drop-shadow(0 18px 24px #0009)}
+.note>div{padding:6px 4px 26px}
+.note h3{font:400 46px/1 var(--script);color:var(--oxblood);margin-bottom:14px}
+.note p{margin:0 0 1em;font:400 20px/1.6 var(--serif)}
+.note .sign{font:400 38px/1 var(--script);color:var(--oxblood);text-align:right;margin-top:16px}
+.js .note .w{opacity:0;transition:opacity .5s;transition-delay:calc(var(--i)*28ms + .9s)}
+.letter.open .note .w{opacity:1}
+.letter:not(.open) .note .w{transition-delay:0s}
+
+/* ---------- reasons, on a hand of playing cards ---------- */
+.reasons{text-align:center;padding-left:0;padding-right:0}
+.reasons .h2,.reasons .kick,.reasons .toast,.reasons .swipe{padding:0 24px}
+.deck{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;padding:34px 19% 34px;scrollbar-width:none}
+.deck::-webkit-scrollbar{display:none}
+.pc{flex:none;width:62%;max-width:250px;aspect-ratio:5/7;scroll-snap-align:center;position:relative;border-radius:14px;background:url(/assets/redletter/paper.webp) center/cover,#fbf6ec;box-shadow:0 16px 26px #2b0a1040,0 0 0 1px #2b0a1018;display:grid;place-items:center;padding:30px 22px;color:var(--ink)}
+.pc::before{content:"";position:absolute;inset:9px;border:1px solid #8e1b2c33;border-radius:8px}
+.pc:nth-child(3n+1)::after{content:"";position:absolute;left:28%;top:-14px;width:44%;height:30px;background:url(/assets/redletter/tape-red.webp) center/contain no-repeat;transform:rotate(-5deg)}
+.pc .r{position:absolute;font:600 24px/1 var(--serif);color:var(--bordeaux);text-align:center}
+.pc .r small{display:block;font-size:18px}
+.pc .r.t{left:15px;top:14px}.pc .r.bt{right:15px;bottom:14px;transform:rotate(180deg)}
+.pc p{margin:0;font:italic 500 22px/1.35 var(--serif);text-align:center}
+.pc:nth-child(odd){transform:rotate(-2deg)}.pc:nth-child(even){transform:rotate(2deg)}
+.swipe{font:italic 400 16px var(--serif);color:var(--soft)}
+.reasons .toast{margin-top:4px;font:400 36px var(--script);color:var(--oxblood)}
+
+/* ---------- words band ---------- */
+.band{background:#2a050b;padding:16px 0 8px;overflow:hidden;border-block:1px solid #b8924a40}
+.band .in{display:flex;width:max-content;gap:28px;align-items:center;font:400 42px/1.2 var(--script);color:var(--gold2);white-space:nowrap}
+.band i{font:normal 15px var(--serif);color:var(--gold)}
+@media (prefers-reduced-motion:no-preference){.band .in{animation:mq 40s linear infinite}}
+@keyframes mq{to{transform:translateX(-50%)}}
+
+/* ---------- our story: a stamp and a polaroid on lace ---------- */
+.story .pics{position:relative;height:clamp(470px,128vw,590px);margin:0 auto 30px;max-width:440px}
+.story .lace{position:absolute;width:64%;left:18%;top:2%;transform:rotate(4deg);opacity:.96}
+.stampf{position:absolute;aspect-ratio:485/700}
+.stampf .fr{position:absolute;inset:0;width:100%;height:100%}
+.stampf .ph{position:absolute;left:10.5%;right:10.5%;top:8.5%;bottom:8.5%;overflow:hidden;background:#e9dccb}
+.stampf .ph img{width:100%;height:100%;object-fit:cover}
+.story .stampf{width:46%;left:0;top:40%;transform:rotate(-6deg)}
+.pola{position:absolute;background:#fffdf7;padding:9px 9px 36px;box-shadow:0 16px 26px #2b0a1045}
+.pola img{width:100%;aspect-ratio:1;object-fit:cover;background:#e9dccb}
+.pola .tp{position:absolute;left:28%;top:-17px;width:44%;height:34px;object-fit:cover;transform:rotate(-4deg)}
+.story .pola{width:48%;right:0;bottom:0;transform:rotate(5deg)}
+.story .nh{left:38%;top:60%;width:22%;transform:rotate(-12deg)}
+.story .sr{right:2%;top:2%;width:18%;transform:rotate(9deg)}
+.story p{margin:0 0 1em;font:400 20px/1.65 var(--serif)}
+.story p:first-of-type::first-letter{float:left;font:400 78px/.8 var(--script);color:var(--oxblood);margin:10px 8px 0 0}
+.echo{padding:26px 0 34px;text-align:center;line-height:.82;overflow:hidden}
+.echo span{display:block;font:400 clamp(50px,14vw,74px)/1 var(--script);color:var(--oxblood);white-space:nowrap}
+.echo span:nth-child(2){opacity:.42;transform:translateX(5%)}.echo span:nth-child(3){opacity:.16;transform:translateX(-5%)}
+
+/* ---------- reruns: ticket stubs ---------- */
+.onair{display:inline-flex;align-items:center;gap:8px;padding:5px 14px;border:1px solid #e6cf9a66;border-radius:999px;font:italic 500 16px/1.2 var(--serif);color:var(--gold2)}
+.onair::before{content:"";width:7px;height:7px;border-radius:50%;background:#ff5a4e;box-shadow:0 0 8px #ff5a4e}
+.reruns .stillwrap{position:relative;width:80%;margin:30px auto 24px}
+.reruns .pola{position:relative;transform:rotate(-2deg)}
+.reruns .pola img{aspect-ratio:4/3}
+.reruns .cupid{right:-12%;top:-10%;width:30%;transform:rotate(10deg)}
+.tickets{display:grid;gap:14px;margin-top:20px}
+.tk{display:grid;grid-template-columns:76px 1fr;background:url(/assets/redletter/paper.webp) center/cover,var(--ivory);color:var(--ink);text-align:left;min-height:88px;box-shadow:0 10px 18px #0005;
+  -webkit-mask:radial-gradient(circle 11px at 0 50%,#0000 97%,#000) left/51% 100% no-repeat,radial-gradient(circle 11px at 100% 50%,#0000 97%,#000) right/51% 100% no-repeat;
+          mask:radial-gradient(circle 11px at 0 50%,#0000 97%,#000) left/51% 100% no-repeat,radial-gradient(circle 11px at 100% 50%,#0000 97%,#000) right/51% 100% no-repeat}
+.tk .ep{display:grid;place-items:center;align-content:center;border-right:2px dashed #8e1b2c55;font:italic 500 15px/1.1 var(--serif);color:var(--bordeaux);text-align:center;padding:8px}
+.tk .ep b{display:block;font:400 30px/1 var(--script)}
+.tk .tx{padding:15px 16px 15px 18px}
+.tk strong{display:block;font:600 20px/1.2 var(--serif)}
+.tk small{display:block;margin-top:3px;font:italic 400 17px/1.35 var(--serif);color:var(--soft)}
+
+/* ---------- moments on playing cards ---------- */
+.gal{display:grid;grid-template-columns:1fr 1fr;gap:22px 14px;margin-top:28px}
+.gal figure{margin:0;background:url(/assets/redletter/paper.webp) center/cover,#fbf6ec;border-radius:10px;padding:28px 10px 14px;position:relative;box-shadow:0 16px 24px #000a}
+.gal figure:nth-child(odd){rotate:-2.5deg}.gal figure:nth-child(even){rotate:2.5deg;translate:0 16px}
+.gal figure:nth-child(4n+2)::after{content:"";position:absolute;left:28%;top:-14px;width:44%;height:28px;background:url(/assets/redletter/washi.webp) center/contain no-repeat;transform:rotate(4deg)}
+.gal img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:3px}
+.gal .r{position:absolute;left:10px;top:6px;font:600 17px/1 var(--serif);color:var(--bordeaux)}
+.gal .r2{position:absolute;right:10px;bottom:6px;font:600 17px/1 var(--serif);color:var(--bordeaux);transform:rotate(180deg)}
+.gal figcaption{margin-top:6px;font:400 26px/1.1 var(--script);color:var(--oxblood);text-align:center}
+
+/* ---------- open when: wine envelopes ---------- */
+.ow{display:grid;grid-template-columns:1fr 1fr;gap:18px 14px;margin-top:36px}
+.owe{border:0;background:none;padding:0;cursor:pointer;color:inherit;font:inherit}
+.e2{display:block;position:relative;margin-top:26%}
+.e2 .cd{position:absolute;left:8%;right:8%;bottom:10%;height:84%;z-index:1;display:grid;place-items:center;padding:8px 10px;text-align:center;background:url(/assets/redletter/paper.webp) center/cover,var(--ivory);color:var(--ink);font:italic 500 16px/1.3 var(--serif);box-shadow:0 -4px 10px #0002;transition:transform .9s .1s cubic-bezier(.2,.8,.3,1.1),z-index 0s .5s}
+.e2 img{position:relative;z-index:2;width:100%;filter:drop-shadow(0 12px 14px #2b0a1066)}
+.owe.on .cd{transform:translateY(-58%) rotate(-2deg);z-index:3;box-shadow:0 12px 22px #2b0a1040}
+.owe .lbl{display:block;margin-top:8px;font:italic 400 15px var(--serif);color:var(--soft)}
+.owe .lbl b{display:block;font:400 28px/1.1 var(--script);color:var(--oxblood)}
+
+/* ---------- our song ---------- */
+.song{background:url(/assets/redletter/glow.webp) center/cover,#5b0d18;color:var(--ivory)}
+.song .kick{color:var(--gold2)}.song .h2{color:var(--ivory)}
+.song .tkt{position:relative;display:grid;grid-template-columns:116px 1fr;gap:16px;align-items:center;margin-top:28px;padding:18px 16px;background:url(/assets/redletter/paper.webp) center/cover,var(--ivory);color:var(--ink);text-align:left;box-shadow:0 18px 30px #0008;
+  -webkit-mask:radial-gradient(circle 12px at 50% 0,#0000 97%,#000) top/100% 51% no-repeat,radial-gradient(circle 12px at 50% 100%,#0000 97%,#000) bottom/100% 51% no-repeat;
+          mask:radial-gradient(circle 12px at 50% 0,#0000 97%,#000) top/100% 51% no-repeat,radial-gradient(circle 12px at 50% 100%,#0000 97%,#000) bottom/100% 51% no-repeat}
+.song .stampf{position:relative;width:100%}
+.song h3{font:600 23px/1.15 var(--serif)}
+.song .by{font:italic 400 17px var(--serif);color:var(--soft)}
+.song button{margin-top:10px;display:inline-flex;align-items:center;gap:8px;border:0;border-radius:999px;padding:9px 18px;background:var(--oxblood);color:var(--ivory);font:italic 500 16px var(--serif);cursor:pointer}
+.song .kiss{right:-6px;top:-34px;width:23%;transform:rotate(12deg)}
+#spot iframe{display:block;width:100%;margin:16px auto 0;border:0;border-radius:12px}
+
+/* ---------- together for: a real lace doily with a live counter ---------- */
+.count{text-align:center;padding-top:36px;padding-bottom:46px}
+.dw{position:relative;width:min(360px,94%);margin:0 auto}
+.dw .doily{width:100%;filter:drop-shadow(0 12px 16px #2b0a1030)}
+.dw .in{position:absolute;inset:22% 12%;display:grid;place-items:center;align-content:center;text-align:center}
+.dw .t{font:400 36px/1 var(--script);color:var(--oxblood)}
+.nums{display:grid;grid-template-columns:repeat(4,auto);justify-content:center;margin-top:10px}
+.nums div{padding:0 9px;border-left:1px solid #8e1b2c40;font:500 30px/1 var(--serif);color:var(--ink)}
+.nums div:first-child{border-left:0}
+.nums small{display:block;margin-top:5px;font:italic 500 13px var(--serif);color:var(--soft)}
+.count .hh{left:50%;bottom:-6%;width:34%;translate:-50% 0;transform:rotate(-4deg)}
+
+/* ---------- the ending: a stamp on an old flower painting ---------- */
+.end{text-align:center;padding-bottom:50px;color:var(--ivory);background:linear-gradient(#2a050bcc,#2a050bb3 40%,#2a050bee),url(/assets/redletter/flowers.webp) center/cover,#2a050b}
+.end .stampf{position:relative;width:60%;margin:8px auto 0;transform:rotate(-3deg)}
+.end .orch{left:-4%;top:28%;width:40%;transform:rotate(-18deg)}
+.end .line{margin:24px 0 0;font:italic 400 19px var(--serif);color:var(--gold2)}
+.end h2{margin-top:6px;font:400 clamp(54px,15vw,80px)/1.05 var(--script);color:var(--ivory);text-shadow:0 3px 16px #000a}
+.end .date{margin-top:8px;font:italic 500 18px var(--serif);color:#f3e2c8cc}
+.end .seal{width:118px;margin:30px auto 0;filter:drop-shadow(0 8px 10px #000a)}
+.end .credit{margin-top:40px;font:400 15px var(--serif);color:#f3e2c899}
+
+/* ---------- new: gold monogram seals ---------- */
+.mono{position:relative;display:block}
+.mono img{width:100%}
+.mono span{position:absolute;inset:0;display:grid;place-items:center;padding-top:4%;font:400 clamp(24px,7vw,34px)/1 var(--script);color:#5a3a12;text-shadow:0 1px 0 #f6dfa0,0 -1px 0 #7a5418;white-space:nowrap}
+.genv .s.mono{width:34%}
+
+/* ---------- new: the silver locket, lying on the page ---------- */
+.lk{position:relative;width:min(300px,78%);aspect-ratio:860/874;margin:30px auto 0}
+.lk>button{position:absolute;inset:0;width:100%;border:0;background:none;padding:0;cursor:pointer;z-index:5}
+.lk .closed{position:absolute;left:50%;top:0;height:100%;width:auto;translate:-50% 0;transform-origin:50% 0;filter:drop-shadow(0 14px 16px #2b0a1055);transition:opacity .5s,scale .5s}
+.lk .open{position:absolute;inset:0;opacity:0;scale:.85;filter:drop-shadow(0 16px 20px #2b0a1055);transition:opacity .7s .2s,scale .8s .2s cubic-bezier(.2,.8,.2,1)}
+.lk .open>img{width:100%}
+.lk .heart{position:absolute;top:52.4%;width:41.6%;height:43.7%;clip-path:url(#heart);background:#e9dccb}
 .lk .heart img{width:100%;height:100%;object-fit:cover}
 .lk .hl{left:5.5%}.lk .hr{left:53.3%}
-.lk.on .closed{opacity:0;animation:none;transform:translateX(-50%) scale(.85)}
-.lk.on .open{opacity:1;transform:none}
-.lk.on .heart{opacity:1}
-.lk .tap{position:absolute;left:0;right:0;bottom:-6px;font-size:13px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);animation:pulse 2.4s ease-in-out infinite;transition:opacity .4s}
-.lk.on .tap{opacity:0;animation:none}
-.names{font-family:var(--script);font-size:clamp(46px,13vw,62px);line-height:1.15;margin:34px 0 4px;color:var(--champ)}
-.names .amp{display:inline-block;margin:0 .2em;background:var(--foil);-webkit-background-clip:text;background-clip:text;color:transparent}
-.since{font-size:13px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold)}
-.tagline{font-style:italic;font-size:21px;color:var(--champ);opacity:.9;margin-top:4px}
-.count{display:flex;justify-content:center;gap:10px;margin:26px auto 0}
-.count div{min-width:66px;padding:10px 6px 8px;border:1px solid #c9a45c88;border-radius:4px;font-size:30px;line-height:1;font-variant-numeric:tabular-nums;color:var(--champ)}
-.count small{display:block;margin-top:6px;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)}
-.count .cl{font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-top:26px}
+.lk.on .closed{opacity:0;scale:.8}
+.lk.on .open{opacity:1;scale:1}
+.lk-hint{margin-top:6px;font:italic 400 17px var(--serif);color:var(--soft)}
+@media (prefers-reduced-motion:no-preference){.lk:not(.on) .closed{animation:sway 4s ease-in-out infinite}}
+@keyframes sway{0%,100%{rotate:-4deg}50%{rotate:4deg}}
 
-/* 4. our story */
-.story .archbox{width:min(86%,380px);aspect-ratio:3/4;margin-top:28px}
-.story .body{max-width:440px;margin:30px auto 0;text-align:left}
-.story .body p{margin:0 0 1em;font-size:20px}
-.story .body p:first-child::first-letter{font-family:var(--script);float:left;font-size:72px;line-height:.8;padding:8px 10px 0 0;color:var(--gold2)}
-.story .pic{position:relative;width:min(62%,250px);margin:34px auto 0;transform:rotate(-3deg)}
-.story .key{position:absolute;width:62px;right:-46px;bottom:-24px;transform:rotate(28deg);filter:drop-shadow(0 6px 8px #0008)}
-
-/* 5. reasons */
-.reasons ol{list-style:none;margin:30px auto 0;padding:0;max-width:430px;text-align:left;display:grid;gap:16px}
-.reasons li{display:grid;grid-template-columns:40px 1fr;gap:14px;align-items:center;font-size:21px;line-height:1.45;padding:14px 16px;background:#3a081299;border:1px solid #c9a45c55;border-radius:4px}
-.reasons li img{width:40px;height:40px;object-fit:contain}
-.reasons .end{font-family:var(--script);font-size:36px;color:var(--gold2);margin-top:26px}
-.cupid{position:absolute;width:150px;top:40px;left:-170px;opacity:.85;pointer-events:none}
-.seen .cupid{animation:fly 7s ease-in-out .3s forwards}
-@keyframes fly{to{transform:translate(calc(min(520px,100vw) + 340px),-30px)}}
-.reasons .ht{position:absolute;width:54px;pointer-events:none;filter:drop-shadow(0 6px 8px #0007)}
-
-/* words band */
-.band{background:var(--forest2);border-block:1px solid #c9a45c55;padding:16px 0;overflow:hidden;white-space:nowrap}
-.band .in{display:inline-flex;align-items:center;gap:22px;animation:marq 34s linear infinite;font-style:italic;font-size:22px;color:var(--champ)}
-.band img{width:20px}
-@keyframes marq{to{transform:translateX(-50%)}}
-
-/* 6. reruns and moments */
-.still{width:min(78%,320px);margin:28px auto 0;transform:rotate(2deg)}
-.eps{display:grid;gap:12px;max-width:430px;margin:30px auto 0;text-align:left}
-.ep{display:grid;grid-template-columns:58px 1fr;gap:12px;align-items:center;padding:12px 14px;border:1px solid #c9a45c77;border-radius:4px;background:#2a050b66}
-.ep .n{font-family:var(--script);font-size:34px;line-height:1;color:var(--gold2);text-align:center}
-.ep .n small{display:block;font-family:var(--serif);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
-.ep strong{display:block;font-weight:600;font-size:20px;color:var(--champ)}
-.ep span{display:block;font-style:italic;font-size:17px;color:#e8d6b4cc}
-.gal{display:grid;grid-template-columns:1fr 1fr;gap:22px 16px;margin:32px auto 0;max-width:440px}
-.gal figure{margin:0;transform:rotate(-2deg)}
-.gal figure:nth-child(even){transform:rotate(2deg) translateY(16px)}
-.momintro{font-style:italic;font-size:20px;max-width:30ch;margin:10px auto 0;color:#f1e1c0d9}
-
-/* 7. open when */
-.ow{display:grid;grid-template-columns:1fr 1fr;align-items:start;gap:30px 16px;margin:34px auto 0;max-width:440px}
-.owe{display:block;width:100%;text-align:center}
-.owe .envl{filter:drop-shadow(0 10px 14px #0008);perspective:600px}
-.owe .flap{transition:transform .7s cubic-bezier(.5,.05,.25,1),z-index 0s .35s}
-.owe.on .flap{transform:rotateX(0deg);z-index:2}
-.owe .lbl{position:absolute;z-index:6;left:0;right:0;bottom:12%;line-height:1.1}
-.owe .lbl small{display:block;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold)}
-.owe .lbl b{display:block;font-family:var(--script);font-weight:400;font-size:clamp(20px,5.6vw,26px);color:var(--champ);padding:0 6px}
-.owe .msg{display:grid;grid-template-rows:0fr;transition:grid-template-rows .6s}
-.owe.on .msg{grid-template-rows:1fr}
-.owe .msg>div{overflow:hidden}
-.owe .msg p{margin-top:12px;padding:14px 12px;background:url(/assets/redletter2/paper-letter.webp) center/400px,var(--champ);color:var(--ink);font-size:17px;line-height:1.5;font-style:italic;border-radius:2px;box-shadow:0 8px 18px #0007}
-.owkey{width:46px;margin:14px auto 0;transform:rotate(90deg)}
-
-/* 8. song and goodbye */
-.songcard{position:relative;max-width:360px;aspect-ratio:3/4;margin:30px auto 0;background:url(/assets/redletter2/card-green.webp) center/cover;box-shadow:0 22px 44px #000a;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px 34px}
-.disc{width:58%;aspect-ratio:1;border-radius:50%;padding:7px;background:var(--foil);box-shadow:0 10px 24px #0009}
-.disc img{width:100%;height:100%;border-radius:50%;object-fit:cover}
-.playing .disc{animation:spin 9s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-.songcard h3{font-family:var(--script);font-size:38px;line-height:1.15;color:var(--champ);margin-top:18px}
-.songcard .note{font-style:italic;font-size:18px;color:#e8d6b4d9}
-.play{display:inline-flex;align-items:center;gap:8px;margin-top:16px;padding:9px 18px;border:1px solid var(--gold);border-radius:30px;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold2)}
-#spot{max-width:440px;margin:18px auto 0}
-#spot iframe{width:100%;border:0;border-radius:12px}
-.end .archbox{width:min(74%,320px);aspect-ratio:3/4;margin-top:8px}
-.end .line{font-family:var(--script);font-size:clamp(40px,11vw,52px);line-height:1.15;color:var(--champ);margin-top:30px}
-.end .nm{font-size:13px;letter-spacing:.26em;text-transform:uppercase;color:var(--gold);margin-top:10px}
-.end .seal{position:relative;left:auto;top:auto;transform:none;width:118px;margin:30px auto 0}
-.end .seal span{font-size:26px}
-.credit{margin-top:34px;font-size:14px;color:#e8d6b499}
-.credit a{color:var(--gold2)}
+/* ---------- new: painted garden scrap, brass key, cupid, origami hearts ---------- */
+.story .garden{position:absolute;width:60%;left:17%;top:0;transform:rotate(3deg);filter:drop-shadow(0 12px 18px #2b0a1040)}
+.story .gtape{left:38%;top:-12px;width:30%;transform:rotate(-6deg);z-index:2}
+.story .key{left:2%;top:10%;width:13%;transform:rotate(-28deg)}
+.reasons .fly{left:-160px;top:58px;width:130px;opacity:.9;z-index:5}
+.reasons.seen .fly{animation:fly 7s ease-in-out .4s forwards}
+@keyframes fly{to{transform:translate(calc(min(520px,100vw) + 320px),-20px)}}
+.reasons .oh{right:6%;top:40px;width:15%;transform:rotate(16deg)}
+.openwhen .key{left:50%;width:12%;top:24px;transform:translateX(-50%) rotate(90deg)}
+.openwhen .oh{left:5%;bottom:30px;width:14%;transform:rotate(-14deg)}
+.cal .lotus{width:46px;margin:22px auto 0}
+.gal figure:nth-child(4n+3)::after{content:"";position:absolute;right:-8px;top:-10px;width:38px;height:38px;background:url(/assets/redletter2/lotus.webp) center/contain no-repeat;transform:rotate(12deg)}
+.petalfall{position:fixed;inset:0;pointer-events:none;z-index:90;overflow:hidden}
+.petalfall img{position:absolute;top:-50px;animation:fall linear forwards}
+@keyframes fall{to{transform:translate(var(--dx),112vh) rotate(var(--r))}}
+@media (prefers-reduced-motion:reduce){.petalfall,.reasons .fly{display:none}}
 
 /* reveal on scroll */
-.js .rv{opacity:0;transform:translateY(24px);transition:opacity .9s,transform .9s}
+.js .rv{opacity:0;transform:translateY(22px);transition:opacity .9s,transform .9s}
 .js .rv.seen{opacity:1;transform:none}
-.js .reasons li.rv{transition-delay:calc(var(--i) * 120ms)}
-@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}.js .rv,.js .w{opacity:1;transform:none;filter:none}.petals,.cupid{display:none}.lk .closed{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}.js .rv{opacity:1;transform:none}}
 </style>
 <script src="/assets/ks-templates.v5.js"></script>
 <link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png"><link rel="icon" type="image/svg+xml" href="/assets/icon.svg"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest"></head>
@@ -202,122 +287,158 @@ section{position:relative;padding:84px max(24px,env(safe-area-inset-left,0px)) 8
 document.documentElement.classList.add("js","locked");
 if (/[?&]preview=1/.test(location.search)) document.documentElement.classList.add("entered");
 </script>
-<svg width="0" height="0" style="position:absolute" aria-hidden="true">
- <clipPath id="arch" clipPathUnits="objectBoundingBox"><path d="M0,1V.34C0,.2 .13,.14 .25,.12C.36,.1 .45,.06 .5,0C.55,.06 .64,.1 .75,.12C.87,.14 1,.2 1,.34V1Z"/></clipPath>
- <clipPath id="heart" clipPathUnits="objectBoundingBox"><path d="M.5,.13C.44,.03 .34,0 .24,0C.1,0 0,.11 0,.27C0,.55 .3,.74 .5,1C.7,.74 1,.55 1,.27C1,.11 .9,0 .76,0C.66,0 .56,.03 .5,.13Z"/></clipPath>
-</svg>
-<div class="grain" aria-hidden="true"></div>
 
-<div class="gate" id="gate" role="dialog" aria-modal="true" aria-label="Open your letter">
- <div class="in">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><clipPath id="heart" clipPathUnits="objectBoundingBox"><path d="M.5,.13C.44,.03 .34,0 .24,0C.1,0 0,.11 0,.27C0,.55 .3,.74 .5,1C.7,.74 1,.55 1,.27C1,.11 .9,0 .76,0C.66,0 .56,.03 .5,.13Z"/></clipPath></svg>
+
+<div class="gate" id="gate" role="dialog" aria-modal="true" aria-label="Open your keepsake">
+ <div>
   <div class="for">a letter for</div>
   <div class="who" id="recipient">Meera</div>
-  <button class="envl" id="gseal" type="button" aria-label="Break the seal and open the letter">
-   <img class="back" src="/assets/redletter2/env-back.webp" alt="">
-   <span class="card" aria-hidden="true"><b data-greeting>Dear you,</b><i></i><i></i><i></i></span>
-   <img class="front" src="/assets/redletter2/env-front.webp" alt="">
-   <span class="flap" aria-hidden="true"><img src="/assets/redletter2/env-flap.webp" alt=""><img class="fb" src="/assets/redletter2/env-flap-back.webp" alt=""></span>
-   <span class="seal"><img src="/assets/redletter2/seal.webp" alt=""><span data-initials>M&amp;A</span></span>
+  <button class="genv" id="gseal" type="button" aria-label="Open the envelope">
+   <img class="e" src="/assets/redletter/envelope.webp" alt=""><span class="s mono"><img src="/assets/redletter2/seal.webp" alt=""><span data-initials>M&amp;A</span></span>
   </button>
-  <p class="cue" id="cue">a letter is waiting for you</p>
-  <p class="tap">tap the seal</p>
+  <div class="hint">tap the seal to open</div>
  </div>
 </div>
 
 <main>
-<section class="letter bg-maroon" id="letter" aria-label="A letter">
- <div class="kick">sealed with love</div>
- <article class="sheet">
-  <img class="lotus" src="/assets/redletter2/lotus.webp" alt="">
-  <h1 data-greeting tabindex="-1" id="greet">Dear you,</h1>
-  <div id="letterBody"></div>
-  <p class="sign" id="sign">Always yours, Aarav</p>
- </article>
-</section>
-
-<section class="locket bg-forest" aria-label="The two of you">
- <div class="kick" id="tagline">two hearts, one story</div>
+<section class="hero paper" aria-label="The two of you">
+ <div class="hand" aria-hidden="true"></div>
+ <div class="tagline" id="tagline">two hearts, one story</div>
+ <h1 class="names" id="names"><span class="a">Meera</span><span class="amp">&amp;</span><span class="b">Aarav</span></h1>
+ <div class="stage">
+  <div class="hpic"><img class="warm" data-ph="photos.hero" alt=""></div>
+  <div class="hbtn" aria-hidden="true">♥</div>
+  <img class="sticker washi" src="/assets/redletter/washi.webp" alt="">
+  <img class="sticker hearts drop" src="/assets/redletter/hearts.webp" alt="">
+  <img class="sticker tag" src="/assets/redletter/tag.webp" alt="">
+ </div>
+ <div class="hdate" id="heroDate"></div>
+ <div class="cue" id="cue">a letter is waiting for you</div>
  <div class="lk" id="lk">
   <img class="closed" src="/assets/redletter2/locket-closed.webp" alt="">
-  <div class="open">
-   <img class="base" src="/assets/redletter2/locket-open.webp" alt="">
-   <div class="heart hl"><img data-ph="photos.hero" alt=""></div>
-   <div class="heart hr"><img data-ph="photos.storyA" alt=""></div>
+  <div class="open"><img src="/assets/redletter2/locket-open.webp" alt="">
+   <div class="heart hl"><img class="warm" data-ph="photos.hero" alt=""></div>
+   <div class="heart hr"><img class="warm" data-ph="photos.storyA" alt=""></div>
   </div>
   <button type="button" id="lkBtn" aria-expanded="false" aria-label="Open the locket"></button>
-  <div class="tap">tap to open</div>
  </div>
- <h2 class="names" id="names">Meera <span class="amp">&amp;</span> Aarav</h2>
- <div class="since" id="since"></div>
- <div class="count rv" id="count"></div>
- <div class="cl kick" id="countT" style="margin-top:12px">together for</div>
+ <div class="lk-hint" id="lkHint">tap the locket</div>
 </section>
 
-<section class="story bg-wine" aria-label="Our story">
- <div class="kick" id="storyKicker">chapter one, and every one since</div>
- <h2 class="h2">Our story</h2>
- <div class="archbox rv">
-  <img src="/assets/redletter2/garden.webp" alt="A painted Indian garden with two peacocks and lotus flowers">
-  <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M0,100V34C0,20 13,14 25,12C36,10 45,6 50,0C55,6 64,10 75,12C87,14 100,20 100,34V100Z" stroke="#f1e1c0" stroke-width="7"/><path d="M0,100V34C0,20 13,14 25,12C36,10 45,6 50,0C55,6 64,10 75,12C87,14 100,20 100,34V100Z" stroke="#c9a45c" stroke-width="1.5"/></svg>
- </div>
- <div class="body" id="storyBody"></div>
- <figure class="pic frame rv" id="storyPic"><img data-ph="photos.storyB" alt=""><img class="key" src="/assets/redletter2/key.webp" alt=""></figure>
+<section class="cal paper rv" id="cal" aria-label="The day it all began">
+ <div class="kick">the day it all began</div>
+ <div class="mon" id="calMon"></div><div class="yr" id="calYr"></div>
+ <div class="grid" id="grid"></div>
+ <img class="lotus" src="/assets/redletter2/lotus.webp" alt="">
+ <div class="place" id="calPlace"></div>
 </section>
 
-<section class="reasons bg-maroon" id="reasonsSec" aria-label="Reasons I love you">
- <img class="cupid" src="/assets/redletter2/cupid.webp" alt="">
- <img class="ht" src="/assets/redletter2/heart0.webp" alt="" style="right:18px;top:34px;transform:rotate(14deg)">
- <img class="ht" src="/assets/redletter2/heart2.webp" alt="" style="left:14px;bottom:40px;transform:rotate(-12deg);width:44px">
+<section class="letter velvet" id="letter" aria-label="A letter">
+ <div class="hand" aria-hidden="true"></div>
+ <div class="kick">sealed with love</div>
+ <h2 class="h2">For you</h2>
+ <button class="env" type="button" id="envBtn" aria-expanded="false" aria-controls="note">
+  <img class="e" src="/assets/redletter/envelope-lace.webp" alt="">
+  <span class="greet" data-greeting>Dear you,</span>
+  <img class="sticker petals" src="/assets/redletter/petals.webp" alt="">
+ </button>
+ <div class="hint" id="envHint">tap the envelope to read it</div>
+ <div class="unfold"><div>
+  <article class="note" id="note"><div>
+   <h3 data-greeting>Dear you,</h3>
+   <div id="letterBody"></div>
+   <div class="sign" id="sign">Always yours, Aarav</div>
+  </div></article>
+ </div></div>
+</section>
+
+<section class="reasons paper" id="reasonsSec" aria-label="Reasons I love you">
+ <div class="hand" aria-hidden="true"></div>
+ <img class="sticker fly" src="/assets/redletter2/cupid.webp" alt="">
+ <img class="sticker oh drop" src="/assets/redletter2/heart0.webp" alt="">
  <div class="kick">just a few of the</div>
  <h2 class="h2" id="reasonsTitle">reasons I love you</h2>
- <ol id="reasons"></ol>
- <p class="end rv" id="reasonsEnd"></p>
+ <div class="deck" id="deck"></div>
+ <div class="swipe">swipe the cards</div>
+ <div class="toast" id="reasonsEnd"></div>
 </section>
 
 <div class="band" aria-hidden="true"><div class="in" id="words"></div></div>
 
-<section class="reruns bg-wine" id="reruns" aria-label="Our favourite reruns">
- <div class="kick">now showing</div>
- <h2 class="h2">our favourite reruns</h2>
- <figure class="still frame rv" id="still"><img data-ph="photos.tv" alt=""></figure>
- <div class="eps" id="eps"></div>
+<section class="story paper" aria-label="Our story">
+ <div class="hand" aria-hidden="true"></div>
+ <div class="pics rv">
+  <img class="garden" src="/assets/redletter2/garden-scrap.webp" alt="A painted Indian garden with peacocks"><img class="sticker gtape" src="/assets/redletter/washi.webp" alt=""><img class="sticker key drop" src="/assets/redletter2/key.webp" alt="">
+  <div class="stampf drop"><img class="fr" src="/assets/redletter/stamp-frame.webp" alt=""><div class="ph"><img class="warm" data-ph="photos.storyA" alt=""></div></div>
+  <div class="pola"><img class="warm" data-ph="photos.storyB" alt=""><img class="tp" src="/assets/redletter/washi.webp" alt=""></div>
+  <img class="sticker nh drop" src="/assets/redletter/news-heart.webp" alt="">
+  <img class="sticker sr drop" src="/assets/redletter/stamp-rose.webp" alt="">
+ </div>
+ <div class="kick" id="storyKicker"></div>
+ <h2 class="h2" style="margin:2px 0 16px">Our story</h2>
+ <div id="storyBody"></div>
 </section>
 
-<section class="moments bg-forest" id="momentsSec" aria-label="Moments so far">
- <div class="kick">kept in gold</div>
+<div class="echo paper" aria-hidden="true" id="echo"><span></span><span></span><span></span></div>
+
+<section class="reruns velvet center" id="reruns" aria-label="Our favourite reruns">
+ <div class="hand" aria-hidden="true"></div>
+ <div class="onair">now showing</div>
+ <h2 class="h2" style="margin-top:12px">our favourite reruns</h2>
+ <div class="stillwrap rv" id="still">
+  <div class="pola"><img class="warm" data-ph="photos.tv" alt=""><img class="tp" src="/assets/redletter/tape-red.webp" alt=""></div>
+  <img class="sticker cupid drop" src="/assets/redletter/stamp-cupid.webp" alt="">
+ </div>
+ <div class="tickets" id="sched"></div>
+</section>
+
+<section class="moments velvet center" id="momentsSec" aria-label="Moments so far">
  <h2 class="h2">moments so far</h2>
- <p class="momintro" id="momentsIntro"></p>
+ <p class="kick" id="momentsIntro" style="margin:8px auto 0;max-width:30ch"></p>
  <div class="gal" id="gal"></div>
 </section>
 
-<section class="openwhen bg-maroon" id="owSec" aria-label="Open when">
+<section class="openwhen paper center" id="owSec" aria-label="Open when">
+ <div class="hand" aria-hidden="true"></div>
+ <img class="sticker key drop" src="/assets/redletter2/key.webp" alt="">
+ <img class="sticker oh drop" src="/assets/redletter2/heart2.webp" alt="">
  <div class="kick">for the days you need me</div>
  <h2 class="h2">open when…</h2>
- <img class="owkey" src="/assets/redletter2/key.webp" alt="">
  <div class="ow" id="ow"></div>
 </section>
 
-<section class="song bg-forest" id="songSec" aria-label="Our song">
+<section class="song center" aria-label="Our song">
  <div class="kick">press play</div>
  <h2 class="h2">our song</h2>
- <div class="songcard" id="songCard">
-  <div class="disc"><img data-ph="photos.cover" alt="Album cover"></div>
-  <h3 id="songTitle"></h3>
-  <p class="note" id="songNote"></p>
-  <button type="button" class="play" id="spotBtn"><svg width="11" height="11" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6 4v16l14-8z"/></svg>Play on Spotify</button>
+ <div style="position:relative">
+  <div class="tkt">
+   <div class="stampf"><img class="fr" src="/assets/redletter/stamp-frame.webp" alt=""><div class="ph"><img class="warm" data-ph="photos.cover" alt="Album cover"></div></div>
+   <div><h3 id="songTitle"></h3><div class="by" id="songNote"></div><button type="button" id="spotBtn"><svg width="11" height="11" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6 4v16l14-8z"/></svg>Play on Spotify</button></div>
+  </div>
+  <img class="sticker kiss drop" src="/assets/redletter/stamp-kiss.webp" alt="">
  </div>
  <div id="spot"></div>
 </section>
 
-<section class="end bg-wine" aria-label="Closing">
- <div class="archbox rv">
-  <img data-ph="photos.end" alt="">
-  <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M0,100V34C0,20 13,14 25,12C36,10 45,6 50,0C55,6 64,10 75,12C87,14 100,20 100,34V100Z" stroke="#f1e1c0" stroke-width="7"/><path d="M0,100V34C0,20 13,14 25,12C36,10 45,6 50,0C55,6 64,10 75,12C87,14 100,20 100,34V100Z" stroke="#c9a45c" stroke-width="1.5"/></svg>
+<section class="count paper rv" aria-label="Together for">
+ <div class="hand" aria-hidden="true"></div>
+ <div class="dw">
+  <img class="doily" src="/assets/redletter/doily.webp" alt="">
+  <div class="in"><div class="t" id="countT">together for</div><div class="nums" id="nums"></div></div>
+  <img class="sticker hh drop" src="/assets/redletter/hands-heart.webp" alt="">
+ </div>
+</section>
+
+<section class="end" aria-label="Closing">
+ <div style="position:relative">
+  <div class="stampf drop"><img class="fr" src="/assets/redletter/stamp-frame.webp" alt=""><div class="ph"><img class="warm" data-ph="photos.end" alt=""></div></div>
+  <img class="sticker orch drop" src="/assets/redletter/orchids.webp" alt="">
  </div>
  <p class="line" id="endLine"></p>
- <p class="nm" id="endNames">Meera &amp; Aarav</p>
- <p class="since" id="endDate" style="margin-top:6px;opacity:.8"></p>
- <div class="seal"><img src="/assets/redletter2/seal.webp" alt=""><span data-initials>M&amp;A</span></div>
+ <h2 id="endNames">Meera &amp; Aarav</h2>
+ <div class="date" id="endDate"></div>
+ <span class="seal mono"><img src="/assets/redletter2/seal.webp" alt=""><span data-initials>M&amp;A</span></span>
  <div class="credit">Made with <a href="/">GetKeepsake</a></div>
 </section>
 </main>
@@ -325,22 +446,38 @@ if (/[?&]preview=1/.test(location.search)) document.documentElement.classList.ad
 <script>
 const K = KSKit, $ = id => document.getElementById(id);
 const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
-const MOTIFS = ["lotus", "flower", "peacock", "star", "paisley"].map(n => "/assets/redletter2/" + n + ".webp");
-const PREVIEW = /[?&]preview=1/.test(location.search);
-const CALM = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const RANKS = ["A", "K", "Q", "J", "10", "9", "8", "7"];
 let tick = null;
-// pictures below the letter load only when they're needed
-document.querySelectorAll("main section:not(.letter) img").forEach(i => i.loading = "lazy");
-const initial = s => (Array.from(String(s || "").trim())[0] || "").toUpperCase();
+// pictures below the first screen load only when they're needed
+document.querySelectorAll("main section:not(.hero) img").forEach(i => i.loading = "lazy");
 
 function render(D) {
   const a = K.str(D.a, 30), b = K.str(D.b, 30), d = K.date(D.date), names = `${a} & ${b}`, ahead = d > Date.now();
-  const place = K.str(D.place, 40);
   document.title = `${names} · GetKeepsake`;
   if ($("recipient")) $("recipient").textContent = K.str(D.recipient || a, 30);
-  document.querySelectorAll("[data-initials]").forEach(e => e.textContent = initial(a) + "&" + initial(b));
-  if ($("cue")) $("cue").textContent = K.str(D.cue, 60);
+  $("tagline").textContent = K.str(D.tagline, 60);
+  const nm = $("names"); nm.textContent = ""; nm.append(el("span", "a", a), el("span", "amp", "&"), el("span", "b", b));
+  $("endNames").textContent = names;
   document.querySelectorAll("[data-ph]").forEach(i => K.setImg(i, K.get(D, i.dataset.ph)));
+  const ini = x => (Array.from(String(x || "").trim())[0] || "").toUpperCase();
+  document.querySelectorAll("[data-initials]").forEach(e => e.textContent = ini(a) + "&" + ini(b));
+  const hd = $("heroDate"); hd.textContent = "";
+  hd.append(ahead ? "save the date" : "since", el("i", "", "♥"), K.fmt.monthYear(d));
+  $("cue").textContent = K.str(D.cue, 60);
+
+  // calendar with a heart drawn round the day
+  $("calMon").textContent = K.fmt.month(d); $("calYr").textContent = d.getFullYear();
+  const g = $("grid"); g.textContent = "";
+  ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"].forEach(x => g.appendChild(el("div", "wd", x)));
+  const first = (new Date(d.getFullYear(), d.getMonth(), 1).getDay() + 6) % 7, days = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
+  for (let i = 0; i < first; i++) g.appendChild(el("div"));
+  for (let i = 1; i <= days; i++) {
+    const c = el("div", "day" + (i === d.getDate() ? " hit" : ""), String(i));
+    if (i === d.getDate()) c.insertAdjacentHTML("beforeend", '<svg viewBox="0 0 60 54" aria-hidden="true"><path d="M30 50C12 37 4 27 4 17 4 9 10 4 17 4c6 0 10 3 13 9 3-6 7-9 13-9 7 0 13 5 13 13 0 10-8 20-26 33-2 1-6 1-8-2"/></svg>');
+    g.appendChild(c);
+  }
+  const pl = $("calPlace"); pl.textContent = "";
+  pl.append(K.fmt.long(d)); if (K.str(D.place, 60)) pl.appendChild(el("b", "", K.str(D.place, 60)));
 
   // the letter, split into words so it appears as if being written
   document.querySelectorAll("[data-greeting]").forEach(e => e.textContent = K.str(D.greeting, 40));
@@ -352,122 +489,124 @@ function render(D) {
     body.appendChild(p);
   });
 
-  // locket, names and the live counter
-  $("tagline").textContent = K.str(D.tagline, 60);
-  const nm = $("names"); nm.textContent = ""; nm.append(a, " ", el("span", "amp", "&"), " ", b);
-  $("since").textContent = (ahead ? "save the date · " : "since ") + K.fmt.long(d) + (place ? " · " + place : "");
-  $("countT").textContent = ahead ? "until our day" : "and counting";
-  const cnt = $("count");
-  const draw = () => { const t = K.since(d); cnt.textContent = ""; [[t.days, "days"], [t.hours, "hours"], [t.minutes, "mins"], [t.seconds, "secs"]].forEach(([v, l]) => { const c = el("div", "", v.toLocaleString("en-IN")); c.appendChild(el("small", "", l)); cnt.appendChild(c); }); };
-  draw(); clearInterval(tick); tick = setInterval(draw, 1000);
+  // reasons, one per playing card
+  $("reasonsTitle").textContent = K.str(D.reasonsTitle, 40);
+  $("reasonsEnd").textContent = K.str(D.reasonsEnd, 40);
+  const deck = $("deck"); deck.textContent = "";
+  (D.reasons || []).map(t => K.str(t, 90)).filter(Boolean).slice(0, 8).forEach((t, i) => {
+    const c = el("div", "pc"), r = RANKS[i];
+    c.innerHTML = `<div class="r t">${r}<small>♥</small></div><div class="r bt">${r}<small>♥</small></div>`;
+    c.appendChild(el("p", "", t)); deck.appendChild(c);
+  });
+  $("reasonsSec").hidden = !deck.children.length;
+
+  const w = $("words"); w.textContent = "";
+  const list = K.words(D.words);
+  for (let r = 0; r < 2; r++) list.forEach(x => { w.appendChild(el("span", "", x)); w.appendChild(el("i", "", "♥")); });
+  const cap = K.str(D.filmCaption, 40) || names;
+  $("echo").querySelectorAll("span").forEach(s => s.textContent = cap);
 
   // story
   $("storyKicker").textContent = K.str(D.storyKicker, 60);
   const sb = $("storyBody"); sb.textContent = "";
   K.paras(D.story).forEach(t => sb.appendChild(el("p", "", t)));
-  $("storyPic").hidden = !K.img(K.get(D, "photos.storyB"));
 
-  // reasons, each with a gold motif
-  $("reasonsTitle").textContent = K.str(D.reasonsTitle, 40);
-  $("reasonsEnd").textContent = K.str(D.reasonsEnd, 40);
-  const ol = $("reasons"); ol.textContent = "";
-  (D.reasons || []).map(t => K.str(t, 90)).filter(Boolean).slice(0, 8).forEach((t, i) => {
-    const li = el("li", "rv"), im = el("img"); im.src = MOTIFS[i % MOTIFS.length]; im.alt = ""; im.loading = "lazy";
-    li.style.setProperty("--i", i % 3); li.append(im, el("span", "", t)); ol.appendChild(li);
-  });
-  $("reasonsSec").hidden = !ol.children.length;
-
-  // scrolling words
-  const w = $("words"); w.textContent = "";
-  const list = K.words(D.words);
-  for (let r = 0; r < 2; r++) list.forEach(x => { w.appendChild(el("span", "", x)); const i = el("img"); i.src = MOTIFS[0]; i.alt = ""; w.appendChild(i); });
-  w.parentElement.hidden = !list.length;
-
-  // favourite reruns, as episodes
-  const eps = $("eps"); eps.textContent = "";
+  // favourite reruns, as ticket stubs
+  const tk = $("sched"); tk.textContent = "";
   (D.reruns || []).filter(x => x && (x.title || x.note)).slice(0, 8).forEach((x, i) => {
-    const e = el("div", "ep rv"), num = el("div", "n", K.roman(i)), tx = el("div");
-    num.prepend(el("small", "", "ep."));
-    tx.appendChild(el("strong", "", K.str(x.title, 40))); if (x.note) tx.appendChild(el("span", "", K.str(x.note, 90)));
-    e.append(num, tx); eps.appendChild(e);
+    const t = el("div", "tk"), ep = el("div", "ep"), tx = el("div", "tx");
+    ep.append("ep.", el("b", "", K.roman(i)));
+    tx.appendChild(el("strong", "", K.str(x.title, 40))); if (x.note) tx.appendChild(el("small", "", K.str(x.note, 90)));
+    t.append(ep, tx); tk.appendChild(t);
   });
-  $("reruns").hidden = D.showTv === false || !eps.children.length;
+  $("reruns").hidden = D.showTv === false || !tk.children.length;
   $("still").hidden = !K.img(K.get(D, "photos.tv"));
 
-  // moments, in gold frames
+  // moments on playing cards
   $("momentsIntro").textContent = K.str(D.momentsIntro, 140);
   const gal = $("gal"); gal.textContent = "";
-  (D.moments || []).filter(x => K.img(x.photo)).slice(0, 8).forEach(x => {
-    const f = el("figure", "frame rv"), im = el("img");
+  (D.moments || []).filter(x => K.img(x.photo)).slice(0, 8).forEach((x, i) => {
+    const f = el("figure", "rv"), im = el("img", "warm"), r = RANKS[i] + " ♥";
     im.src = K.img(x.photo); im.alt = K.str(x.cap, 60); im.loading = "lazy";
-    f.appendChild(im); if (K.str(x.cap, 60)) f.appendChild(el("figcaption", "", K.str(x.cap, 60)));
+    f.append(el("span", "r", r), im);
+    if (K.str(x.cap, 60)) f.appendChild(el("figcaption", "", K.str(x.cap, 60)));
+    f.appendChild(el("span", "r2", r));
     gal.appendChild(f);
   });
   $("momentsSec").hidden = !gal.children.length;
 
-  // open when... little envelopes
+  // open when...
   const ow = $("ow"); ow.textContent = "";
   (D.openWhen || []).filter(x => x.when && x.msg).slice(0, 8).forEach(x => {
     const bt = el("button", "owe"); bt.type = "button"; bt.setAttribute("aria-expanded", "false");
-    bt.innerHTML = '<span class="envl"><img class="back" src="/assets/redletter2/env-back.webp" alt="" loading="lazy"><img class="front" src="/assets/redletter2/env-front.webp" alt="" loading="lazy"><span class="flap"><img src="/assets/redletter2/env-flap.webp" alt="" loading="lazy"><img class="fb" src="/assets/redletter2/env-flap-back.webp" alt="" loading="lazy"></span><span class="lbl"><small>open when</small><b></b></span></span><span class="msg"><span style="display:block;overflow:hidden"><p></p></span></span>';
-    bt.querySelector(".lbl b").textContent = K.str(x.when, 30); bt.querySelector(".msg p").textContent = K.str(x.msg, 200);
+    bt.innerHTML = '<span class="e2"><span class="cd"></span><img src="/assets/redletter/envelope-wine.webp" alt="" loading="lazy"></span><span class="lbl">open when<b></b></span>';
+    bt.querySelector(".cd").textContent = K.str(x.msg, 200); bt.querySelector(".lbl b").textContent = K.str(x.when, 30);
     bt.setAttribute("aria-label", "Open when " + K.str(x.when, 30));
     bt.onclick = () => { const on = bt.classList.toggle("on"); bt.setAttribute("aria-expanded", on); };
     ow.appendChild(bt);
   });
   $("owSec").hidden = !ow.children.length;
 
-  // song: the button opens the real Spotify player
+  // song: the ticket opens the real Spotify player
   $("songTitle").textContent = K.str(D.song && D.song.title, 50);
   $("songNote").textContent = K.str(D.song && D.song.note, 60);
   const sp = K.spotify(D.song && D.song.url);
-  $("spotBtn").hidden = !sp; $("spot").textContent = ""; $("songCard").classList.remove("playing");
-  $("spotBtn").onclick = () => { if (!sp || $("spot").firstChild) return; const f = el("iframe"); f.src = sp.src; f.height = sp.h; f.allow = "autoplay; encrypted-media; clipboard-write"; f.title = "Our song on Spotify"; $("spot").appendChild(f); $("songCard").classList.add("playing"); };
+  $("spotBtn").hidden = !sp; $("spot").textContent = "";
+  $("spotBtn").onclick = () => { if (!sp || $("spot").firstChild) return; const f = el("iframe"); f.src = sp.src; f.height = sp.h; f.allow = "autoplay; encrypted-media; clipboard-write"; f.title = "Our song on Spotify"; $("spot").appendChild(f); };
 
-  // goodbye
-  $("endLine").textContent = K.str(D.filmCaption, 40) || "you and me, always";
-  $("endNames").textContent = names;
+  // together for... (or a countdown, if the date is still ahead)
+  $("countT").textContent = ahead ? "until our day" : "together for";
+  const nums = $("nums");
+  const draw = () => { const t = K.since(d); nums.textContent = ""; [[t.days, "days"], [t.hours, "hours"], [t.minutes, "mins"], [t.seconds, "secs"]].forEach(([v, l]) => { const c = el("div", "", String(v).padStart(2, "0")); c.appendChild(el("small", "", l)); nums.appendChild(c); }); };
+  draw(); clearInterval(tick); tick = setInterval(draw, 1000);
+
+  $("endLine").textContent = "a love that led us here";
   $("endDate").textContent = ahead ? K.fmt.long(d) : "since " + K.fmt.long(d);
 }
 
-// rose petals drift down once the letter is opened
-function petals() {
-  if (CALM) return;
-  const box = el("div", "petals"); box.setAttribute("aria-hidden", "true");
-  for (let i = 0; i < 16; i++) {
-    const p = el("img"); p.src = "/assets/redletter2/petal" + (i % 6) + ".webp"; p.alt = "";
-    const s = 16 + Math.random() * 22, dur = 6 + Math.random() * 5;
-    p.style.cssText = `left:${Math.random() * 100}%;width:${s}px;animation-duration:${dur}s;animation-delay:${Math.random() * 3}s;--dx:${(Math.random() - .5) * 160}px;--r:${(Math.random() - .5) * 720}deg`;
-    box.appendChild(p);
-  }
-  document.body.appendChild(box);
-  setTimeout(() => box.remove(), 15000);
-}
-
-// opening: break the seal, the flap lifts and the letter slides out
+// opening: break the seal and the envelope slides away
 (function () {
   const root = document.documentElement, gate = $("gate");
-  if (PREVIEW) { root.classList.remove("locked"); gate.remove(); $("lk").classList.add("on"); return; }
-  let done = false;
+  if (/[?&]preview=1/.test(location.search)) { root.classList.remove("locked"); root.classList.add("js", "entered"); gate.remove(); return; }
   const enter = () => {
-    if (done) return; done = true;
-    if (CALM) { root.classList.remove("locked"); root.classList.add("entered"); gate.remove(); $("greet").focus({ preventScroll: true }); return; }
     gate.classList.add("opening");
-    setTimeout(() => { gate.classList.add("gone"); root.classList.remove("locked"); root.classList.add("entered"); window.scrollTo(0, 0); petals(); }, 2300);
-    setTimeout(() => { gate.remove(); $("greet").focus({ preventScroll: true }); }, 3600);
+    setTimeout(() => { root.classList.add("entered"); petals(); }, 800);
+    setTimeout(() => { root.classList.remove("locked"); gate.remove(); }, matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 2100);
   };
   $("gseal").addEventListener("click", enter);
 })();
 
 // tap the locket to open it
 $("lkBtn").addEventListener("click", () => {
-  const lk = $("lk"), on = lk.classList.toggle("on");
+  const on = $("lk").classList.toggle("on");
   $("lkBtn").setAttribute("aria-expanded", on); $("lkBtn").setAttribute("aria-label", on ? "Close the locket" : "Open the locket");
+  $("lkHint").textContent = on ? "tap to close" : "tap the locket";
 });
 
+// a few rose petals drift down once the envelope opens
+function petals() {
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const box = el("div", "petalfall"); box.setAttribute("aria-hidden", "true");
+  for (let i = 0; i < 10; i++) {
+    const p = el("img"); p.src = "/assets/redletter2/petal" + (i % 6) + ".webp"; p.alt = "";
+    p.style.cssText = `left:${Math.random() * 100}%;width:${16 + Math.random() * 18}px;animation-duration:${5 + Math.random() * 3}s;animation-delay:${Math.random() * 1.5}s;--dx:${(Math.random() - .5) * 140}px;--r:${(Math.random() - .5) * 600}deg`;
+    box.appendChild(p);
+  }
+  document.body.appendChild(box); setTimeout(() => box.remove(), 10000);
+}
+
 // gentle reveals as things scroll into view
-const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("seen"); io.unobserve(e.target); } }), { threshold: .2 });
+const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("seen"); io.unobserve(e.target); } }), { threshold: .3 });
 const watch = () => document.querySelectorAll(".rv:not(.seen), .reasons:not(.seen)").forEach(s => io.observe(s));
+
+// tap the envelope to read the letter
+const letter = $("letter"), env = $("envBtn");
+env.addEventListener("click", () => {
+  const open = !letter.classList.contains("open");
+  letter.classList.toggle("open", open); env.setAttribute("aria-expanded", open);
+  $("envHint").textContent = open ? "tap to close" : "tap the envelope to read it";
+  if (open) setTimeout(() => $("note").scrollIntoView({ behavior: "smooth", block: "start" }), 700);
+});
 
 K.boot("candlelit", D => { render(D); watch(); });
 </script>

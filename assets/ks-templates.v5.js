@@ -157,9 +157,8 @@
         { key: "tagline", label: "Line above your names", type: "text", max: 60 },
         { key: "date", label: "The day it all began (first date, anniversary…)", type: "date" },
         { key: "place", label: "Where it began", type: "text", max: 40 },
-        { key: "cue", label: "Line under the seal", type: "text", max: 60 },
-        { key: "photos.hero", label: "Locket photo, left heart", type: "photo" },
-        { key: "photos.storyA", label: "Locket photo, right heart", type: "photo" } ] },
+        { key: "cue", label: "Line under the date", type: "text", max: 60 },
+        { key: "photos.hero", label: "Main photo (also inside the locket)", type: "photo" } ] },
       { group: "The letter", fields: [
         { key: "greeting", label: "Greeting", type: "text", max: 40 },
         { key: "letter", label: "Your letter (leave a blank line between paragraphs)", type: "area", max: 2000 },
@@ -168,19 +167,19 @@
         { key: "reasonsTitle", label: "Heading", type: "text", max: 40 },
         { key: "reasons", label: "Reasons", type: "strings", max: 8, item: "Reason", add: "Add a reason", itemMax: 90 },
         { key: "reasonsEnd", label: "Closing line", type: "text", max: 40 },
-        { key: "filmCaption", label: "Closing line on the last screen", type: "text", max: 40 },
+        { key: "filmCaption", label: "Big line written three times across the page", type: "text", max: 40 },
         { key: "words", label: "Scrolling words (separate with commas)", type: "text", max: 160 } ] },
       { group: "Our story", fields: [
         { key: "storyKicker", label: "Line above the heading", type: "text", max: 60 },
         { key: "story", label: "Your story (leave a blank line between paragraphs)", type: "area", max: 1500 },
-        { key: "photos.storyB", label: "Photo beside your story", type: "photo" } ] },
+        { key: "photos.storyA", label: "Postage-stamp photo (also inside the locket)", type: "photo" }, { key: "photos.storyB", label: "Polaroid photo", type: "photo" } ] },
       { group: "Our favourite reruns (optional)", fields: [
         { key: "showTv", label: "Show this section", type: "toggle" },
-        { key: "photos.tv", label: "Photo above the episodes", type: "photo" },
+        { key: "photos.tv", label: "Photo above the tickets", type: "photo" },
         { key: "reruns", label: "Memories you replay", type: "list", max: 8, add: "Add an episode", of: [{ key: "title", label: "Episode title", type: "text", max: 40 }, { key: "note", label: "One line about it", type: "text", max: 90 }] } ] },
       { group: "Moments so far", fields: [
         { key: "momentsIntro", label: "Intro line", type: "text", max: 140 },
-        PHOTO_LIST("moments", "Photos in gold frames", 8) ] },
+        PHOTO_LIST("moments", "Photos on playing cards", 8) ] },
       { group: "Open when…", fields: [
         { key: "openWhen", label: "Envelopes", type: "list", max: 8, add: "Add an envelope", of: [{ key: "when", label: "Open when…", type: "text", max: 30 }, { key: "msg", label: "Note inside", type: "area", max: 200 }] } ] },
       { group: "Song & ending", fields: [
@@ -188,7 +187,7 @@
         { key: "song.title", label: "Song name", type: "text", max: 50 },
         { key: "song.note", label: "Note about it", type: "text", max: 60 },
         { key: "photos.cover", label: "Album cover photo", type: "photo" },
-        { key: "photos.end", label: "Closing photo (in the arch)", type: "photo" } ] }
+        { key: "photos.end", label: "Closing stamp photo", type: "photo" } ] }
     ],
     mixtape: [
       { group: "The two of you", fields: [
@@ -226,7 +225,7 @@
     ]
   };
   const NAMES = { wildflower: "Wildflower", candlelit: "Red Letter", mixtape: "Mixtape" };
-  const HINTS = { wildflower: "A pressed-flower scrapbook of your story", candlelit: "A sealed maroon letter, a silver locket and a painted Indian garden", mixtape: "Gingham, film strips and a mixtape for your favourite person" };
+  const HINTS = { wildflower: "A pressed-flower scrapbook of your story", candlelit: "A wine-red love letter: a gold seal, a silver locket, stamps and playing cards", mixtape: "Gingham, film strips and a mixtape for your favourite person" };
 
   // ---------- helpers ----------
   const str = (v, n) => String(v == null ? "" : v).slice(0, n || 4000);
