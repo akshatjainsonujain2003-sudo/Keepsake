@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#FCEDD8">
+  <meta name="theme-color" content="#FFF1EF">
   <title>Digital Gifts for Loved Ones — Love-Story Websites &amp; Cards | GetKeepsake</title>
   <meta name="description" content="Personalised digital gifts in India: make a love-story website (₹299) or memory card (₹99) with your photos, Spotify song and a letter. Share by link, QR code or NFC tap. Ready in 10 minutes.">
   <link rel="canonical" href="https://getkeepsake.in/gifts">
@@ -402,7 +402,7 @@
   <link rel="icon" type="image/svg+xml" href="/assets/icon.svg">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
-<link rel="stylesheet" href="/assets/ks-coral.v1.css">
+<link rel="stylesheet" href="/assets/ks-berry.v1.css">
 <script src="/assets/ks-pixel.v1.js" defer></script><script src="/assets/ks-ref.v1.js" defer></script></head>
 <body>
 
@@ -430,6 +430,7 @@
   <section class="chero" id="top-hero">
     <div class="ch-in">
       <div class="ch-art">
+        <span class="ch-hearts" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
         <div class="fan" id="fan" aria-roledescription="carousel" aria-label="Memory card designs">
         <a class="fc" draggable="false" href="/studio?design=pinkPalace" aria-label="Start the Blush Palace card"><img src="/assets/pinkPalace.webp" alt="Blush Palace memory card" width="360" height="640"></a>
         <a class="fc" draggable="false" href="/studio?design=greenVinyl" aria-label="Start the Green Vinyl card"><img src="/assets/greenVinyl.webp" alt="Green Vinyl memory card" width="360" height="640"></a>
@@ -442,7 +443,7 @@
         <div class="fan-dots" id="fanDots" aria-label="Choose a card design"></div>
       </div>
       <div class="ch-copy">
-        <p class="ch-kick">Websites and cards for every bond you love</p>
+        <p class="ch-kick">A gift for the one you love</p>
         <h1 class="ch-h1">A little website about the two of you.</h1>
         <p class="ch-lead">Your photos, your song and a letter, made into a page they'll open again and again. Ready in 10 minutes, shared by a link or a QR code.</p>
         <div class="ch-cta"><a class="btn wine" href="#designs">Make yours</a><a class="btn line-wine" href="#demo">See one open</a></div>
@@ -451,19 +452,27 @@
     </div>
   </section>
 
-  <!-- WHO IS IT FOR: every bond, standing together -->
-  <section class="kbond" id="bonds">
-    <div class="wrap kbond-head"><h2 class="d">Who is it <em>for?</em></h2><p>Tap a bond to see the designs made for them.</p></div>
-    <div class="kh-stage">
-      <a class="kh-pair" href="#designs" data-bond="siblings"><span class="kh-tag" style="background:#bcd3ee;rotate:-5deg">siblings</span><img src="/assets/cast/vihaan-2.webp" alt="Older brother holding out his wrist for a rakhi" width="400" height="700"><img class="flip" style="--f:.9" src="/assets/cast/anya-2.webp" alt="Younger sister holding up a rakhi" width="400" height="700"></a>
-      <a class="kh-pair" href="#designs" data-bond="friends"><span class="kh-tag" style="background:#f2c14e;rotate:4deg">best friends</span><img src="/assets/cast/riya-2.webp" alt="A girl taking a selfie" width="400" height="700"><img style="--f:.95" src="/assets/cast/kabir-2.webp" alt="A boy jumping to wave" width="400" height="700"></a>
-      <a class="kh-pair couple" href="#designs" data-bond="couple"><span class="kh-tag" style="background:#f2b8b5;rotate:-3deg;top:-38px">couples</span>
-        <svg class="kh-hearts" viewBox="0 0 70 40" aria-hidden="true"><path fill="#d9485f" d="M20 14c-2-5-9-4-9 1 0 4 5 7 9 11 4-4 9-7 9-11 0-5-7-6-9-1Z"/><path fill="#f2b8b5" d="M42 10c-1.5-4-7-3-7 1 0 3 4 5.5 7 8.5 3-3 7-5.5 7-8.5 0-4-5.5-5-7-1Z"/><path fill="#d9485f" d="M56 20c-1-3-5-2.5-5 .5 0 2.3 3 4 5 6 2-2 5-3.7 5-6 0-3-4-3.5-5-.5Z"/></svg>
-        <img src="/assets/cast/aarav-2.webp" alt="A boy hiding a gift behind his back" width="400" height="700"><img class="flip" style="--f:.94" src="/assets/cast/meera-2.webp" alt="A girl hugging her phone with a heart on it" width="400" height="700"></a>
-      <a class="kh-pair" href="#designs" data-bond="parents"><span class="kh-tag" style="background:#c9d6b0;rotate:5deg">mummy papa</span><img style="--f:.93" src="/assets/cast/mummy-2.webp" alt="A mother holding a tiffin box" width="400" height="700"><img src="/assets/cast/papa-2.webp" alt="A father giving a thumbs up" width="400" height="700"></a>
-      <a class="kh-pair" href="#designs" data-bond="grandparents"><span class="kh-tag" style="background:#fff;border:1.5px solid #6e1a2633;rotate:-4deg">nani nana</span><img style="--f:.86" src="/assets/cast/nani-2.webp" alt="A grandmother offering a ladoo" width="400" height="700"><img style="--f:.9" src="/assets/cast/nana-2.webp" alt="A grandfather dancing with his walking stick" width="400" height="700"></a>
+  <!-- MARQUEE: the moments couples make one for -->
+  <div class="mq" aria-hidden="true"><div class="mq-in"><span>Anniversaries</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.6-10-9.3C.3 8.200 2.200 4 6 4c2.200 0 3.600 1.200 4.500 2.600L12 8.500l1.500-1.900C14.400 5.200 15.800 4 18 4c3.800 0 5.700 4.200 4 7.700C19.500 16.400 12 21 12 21Z"/></svg><span>Her birthday</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.6-10-9.3C.3 8.200 2.200 4 6 4c2.200 0 3.600 1.200 4.500 2.600L12 8.500l1.500-1.900C14.400 5.200 15.800 4 18 4c3.800 0 5.700 4.200 4 7.700C19.500 16.400 12 21 12 21Z"/></svg><span>His birthday</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.6-10-9.3C.3 8.200 2.200 4 6 4c2.200 0 3.600 1.200 4.500 2.600L12 8.500l1.500-1.900C14.400 5.200 15.800 4 18 4c3.800 0 5.700 4.200 4 7.700C19.500 16.400 12 21 12 21Z"/></svg><span>Long-distance</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.6-10-9.3C.3 8.200 2.200 4 6 4c2.200 0 3.600 1.200 4.500 2.600L12 8.500l1.500-1.900C14.400 5.200 15.800 4 18 4c3.800 0 5.700 4.200 4 7.700C19.500 16.400 12 21 12 21Z"/></svg><span>Proposals</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.6-10-9.3C.3 8.200 2.200 4 6 4c2.200 0 3.600 1.200 4.500 2.600L12 8.500l1.500-1.900C14.400 5.200 15.800 4 18 4c3.800 0 5.700 4.200 4 7.700C19.500 16.400 12 21 12 21Z"/></svg><span>Valentine's Day</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.6-10-9.3C.3 8.200 2.200 4 6 4c2.200 0 3.600 1.200 4.500 2.600L12 8.500l1.500-1.900C14.400 5.200 15.800 4 18 4c3.800 0 5.700 4.200 4 7.700C19.500 16.400 12 21 12 21Z"/></svg><span>Karva Chauth</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.6-10-9.3C.3 8.200 2.200 4 6 4c2.200 0 3.600 1.200 4.500 2.600L12 8.500l1.500-1.900C14.400 5.200 15.800 4 18 4c3.800 0 5.700 4.200 4 7.700C19.500 16.400 12 21 12 21Z"/></svg><span>Just because</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.6-10-9.3C.3 8.200 2.200 4 6 4c2.200 0 3.600 1.200 4.500 2.600L12 8.500l1.500-1.900C14.400 5.200 15.800 4 18 4c3.800 0 5.700 4.200 4 7.700C19.500 16.400 12 21 12 21Z"/></svg><span>Anniversaries</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.6-10-9.3C.3 8.200 2.200 4 6 4c2.200 0 3.600 1.200 4.500 2.600L12 8.500l1.500-1.900C14.400 5.200 15.800 4 18 4c3.800 0 5.700 4.200 4 7.700C19.500 16.400 12 21 12 21Z"/></svg><span>Her birthday</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.6-10-9.3C.3 8.200 2.200 4 6 4c2.200 0 3.600 1.200 4.500 2.600L12 8.500l1.500-1.900C14.400 5.200 15.800 4 18 4c3.800 0 5.700 4.200 4 7.700C19.500 16.400 12 21 12 21Z"/></svg><span>His birthday</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.6-10-9.3C.3 8.200 2.200 4 6 4c2.200 0 3.600 1.200 4.500 2.600L12 8.500l1.500-1.900C14.400 5.200 15.800 4 18 4c3.800 0 5.700 4.200 4 7.700C19.500 16.400 12 21 12 21Z"/></svg><span>Long-distance</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.6-10-9.3C.3 8.200 2.200 4 6 4c2.200 0 3.600 1.200 4.500 2.600L12 8.500l1.500-1.900C14.400 5.200 15.800 4 18 4c3.800 0 5.700 4.200 4 7.700C19.500 16.400 12 21 12 21Z"/></svg><span>Proposals</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.6-10-9.3C.3 8.200 2.200 4 6 4c2.200 0 3.600 1.200 4.500 2.600L12 8.500l1.500-1.900C14.400 5.200 15.800 4 18 4c3.800 0 5.700 4.200 4 7.700C19.500 16.400 12 21 12 21Z"/></svg><span>Valentine's Day</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.6-10-9.3C.3 8.200 2.200 4 6 4c2.200 0 3.600 1.200 4.500 2.600L12 8.500l1.500-1.900C14.400 5.200 15.800 4 18 4c3.800 0 5.700 4.200 4 7.700C19.500 16.400 12 21 12 21Z"/></svg><span>Karva Chauth</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.6-10-9.3C.3 8.200 2.200 4 6 4c2.200 0 3.600 1.200 4.500 2.600L12 8.500l1.500-1.900C14.400 5.200 15.800 4 18 4c3.800 0 5.700 4.200 4 7.700C19.500 16.400 12 21 12 21Z"/></svg><span>Just because</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.6-10-9.3C.3 8.200 2.200 4 6 4c2.200 0 3.600 1.200 4.500 2.600L12 8.500l1.500-1.900C14.400 5.200 15.800 4 18 4c3.800 0 5.700 4.200 4 7.700C19.500 16.400 12 21 12 21Z"/></svg></div></div>
+
+  <!-- FOR EVERY KIND OF US: couple moments -->
+  <section class="kmom wrap" id="moments">
+    <div class="kmom-head">
+      <h2 class="d">For every kind <em>of us.</em></h2>
+      <p>New love, five years in, or a thousand kilometres apart. Pick your moment and start from there.</p>
     </div>
-    <div class="kh-floor"></div>
+    <div class="kmom-grid">
+      <div class="kmom-art" aria-hidden="true">
+        <svg class="kh-hearts" viewBox="0 0 70 40"><path fill="#C8143F" d="M20 14c-2-5-9-4-9 1 0 4 5 7 9 11 4-4 9-7 9-11 0-5-7-6-9-1Z"/><path fill="#FF8FA3" d="M42 10c-1.5-4-7-3-7 1 0 3 4 5.5 7 8.5 3-3 7-5.5 7-8.5 0-4-5.500-5-7-1Z"/><path fill="#C8143F" d="M56 20c-1-3-5-2.500-5 .5 0 2.300 3 4 5 6 2-2 5-3.700 5-6 0-3-4-3.500-5-.5Z"/></svg>
+        <img src="/assets/cast/aarav-2.webp" alt="" width="400" height="700" loading="lazy"><img class="flip" src="/assets/cast/meera-2.webp" alt="" width="400" height="700" loading="lazy">
+      </div>
+      <a class="mom m-a" href="/gifts/anniversary"><b>Anniversary</b><span>A live counter of every day together, and the story of how it started.</span><i aria-hidden="true">→</i></a>
+      <a class="mom m-b" href="/gifts/girlfriend"><b>For her</b><span>The café, the trips, your song, and a letter she will read more than once.</span><i aria-hidden="true">→</i></a>
+      <a class="mom m-c" href="/gifts/boyfriend"><b>For him</b><span>The inside jokes, the photos he pretends to hate, and reasons you love him.</span><i aria-hidden="true">→</i></a>
+      <a class="mom m-d" href="/gifts/birthday"><b>Birthday</b><span>Send it at midnight: your photos together, their song and a birthday letter.</span><i aria-hidden="true">→</i></a>
+      <a class="mom m-e" href="/gifts/long-distance"><b>Long-distance</b><span>Open-when letters for the nights you can't be there.</span><i aria-hidden="true">→</i></a>
+      <a class="mom m-f" href="/gifts/karva-chauth"><b>Karva Chauth</b><span>A page to open when the moon is out, with a note only for them.</span><i aria-hidden="true">→</i></a>
+    </div>
   </section>
 
   <!-- HOW IT WORKS -->
@@ -501,7 +510,7 @@
             <div class="layer on">
               <img src="/assets/pinkPalace.webp" alt="Blush Palace memory card design">
               <div class="slot" style="--x:26;--y:36;--w:46;--h:27;--ink-c:#7a2a3a;--k:0.78">
-                <span class="to">Happy birthday</span><span class="big">Mummy</span><span class="sm">From all of us, with love</span>
+                <span class="to">Happy anniversary</span><span class="big">My love</span><span class="sm">Five years of us</span>
               </div>
               <div class="sheet">
                 <div class="row">
@@ -548,7 +557,7 @@
     </div>
     <div class="demo" id="websites">
       <div class="demo-ph">
-        <img class="cast-peek cp-demo" src="/assets/cast/riya-1.webp" alt="" loading="lazy" width="400" height="700"><div class="demo-sc"><iframe id="demoF" title="Live demo of the Wildflower love-story website" data-src="/templates/wildflower" loading="lazy"></iframe><button type="button" class="demo-go" id="demoGo">Tap to open the demo</button></div></div>
+        <div class="demo-sc"><iframe id="demoF" title="Live demo of the Wildflower love-story website" data-src="/templates/wildflower" loading="lazy"></iframe><button type="button" class="demo-go" id="demoGo">Tap to open the demo</button></div></div>
       <div class="demo-side">
         <div class="demo-tabs" role="tablist" aria-label="Website designs">
           <button type="button" role="tab" aria-selected="true" data-demo="wildflower">Wildflower</button>
@@ -558,12 +567,12 @@
         </div>
         <h3 id="demoN">Wildflower</h3>
         <p id="demoP">A pressed-flower scrapbook of your story: the day you met on a ticket stub, a live “together for” counter, sticky notes of little things you love, your someday list and a letter in a flower envelope.</p>
-        <p class="demo-for" id="demoFor"><b>Best for</b> anniversaries, parents and slow, sentimental love stories</p>
+        <p class="demo-for" id="demoFor"><b>Best for</b> anniversaries and slow, sentimental love stories</p>
         <div class="web-cta">
           <a class="btn gold sm" id="demoUse" href="/builder?tpl=wildflower">Use this design</a>
           <a class="btn line-wine sm" id="demoOpen" href="/templates/wildflower" target="_blank" rel="noopener">Open full screen ↗</a>
         </div>
-        <p class="quick">Want something simpler for a birthday, parent or friend? <a href="#designs">Make a <span data-price="card">₹99</span> memory card →</a></p>
+        <p class="quick">Want something smaller? <a href="#designs">Make a <span data-price="card">₹99</span> memory card →</a></p>
       </div>
     </div>
   </section>
@@ -574,10 +583,10 @@
       <div>
         <h2 class="d">Find the one that <em>feels like them.</em></h2>
       </div>
-      <p>Four love-story websites and sixteen cards. Pick the bond, then tap a design to start it free.</p>
+      <p>Four love-story websites and sixteen cards. Tap a design to start it free.</p>
     </div>
     <div class="filters" role="group" aria-label="Filter designs">
-      <button type="button" aria-pressed="true" data-f="all">All</button><button type="button" aria-pressed="false" data-f="couple">Couples</button><button type="button" aria-pressed="false" data-f="friends">Best friends</button><button type="button" aria-pressed="false" data-f="siblings">Siblings</button><button type="button" aria-pressed="false" data-f="parents">Mummy-Papa</button><button type="button" aria-pressed="false" data-f="grandparents">Nani-Nana</button><button type="button" aria-pressed="false" data-f="birthday">Birthday</button><button type="button" aria-pressed="false" data-f="anniversary">Anniversary</button><button type="button" aria-pressed="false" data-f="site">Websites</button><button type="button" aria-pressed="false" data-f="card">Cards</button>
+      <button type="button" aria-pressed="true" data-f="all">All</button><button type="button" aria-pressed="false" data-f="site">Websites</button><button type="button" aria-pressed="false" data-f="card">Cards</button><button type="button" aria-pressed="false" data-f="anniversary">Anniversary</button><button type="button" aria-pressed="false" data-f="birthday">Birthday</button><button type="button" aria-pressed="false" data-f="her">For her</button><button type="button" aria-pressed="false" data-f="him">For him</button>
     </div>
     <div class="masonry" id="wall">
       <a class="pin site" href="#demo" data-pick="wildflower" data-tags="site her him parents anniversary couple"><span class="shot"><img src="/assets/gifts/site-wildflower-hero.webp" alt="Wildflower love-story website" width="480" height="960" loading="lazy"></span><span class="pm"><b>Wildflower</b><em>Website · <span data-price="site">₹299</span></em></span></a>
@@ -589,43 +598,18 @@
       <a class="pin" href="/studio?design=meadowLight" data-tags="card parents friends birthday siblings grandparents"><div class="card"><img loading="lazy" src="/assets/meadowLight.webp" alt="Meadow Light memory card design" width="360" height="640"  decoding="async"><div class="cap"><span class="to">Quiet Sundays</span><span class="big">Nowhere to be</span></div></div><span class="pm"><b>Meadow Light</b><em>Card · <span data-price="card">₹99</span></em></span></a>
       <a class="pin" href="/studio?design=terracottaArch" data-tags="card parents grandparents"><div class="card"><img loading="lazy" src="/assets/terracottaArch.webp" alt="Terracotta Arch memory card design" width="360" height="640"  decoding="async"><div class="cap"><span class="to">Our first home</span><span class="big">Come in, stay a while</span></div></div><span class="pm"><b>Terracotta Arch</b><em>Card · <span data-price="card">₹99</span></em></span></a>
       <a class="pin" href="/studio?design=laceAlbum" data-tags="card her parents anniversary couple grandparents"><div class="card"><img loading="lazy" src="/assets/laceAlbum.webp" alt="Lace Album memory card design" width="360" height="640"  decoding="async"><div class="slot" style="--x:24;--y:27;--w:52;--h:18.5;--ink-c:#5a3b2e;--k:0.85"><span class="to">Our photos</span><span class="big">Goa, 2024</span></div><div class="slot" style="--x:24;--y:55;--w:52;--h:18.5;--ink-c:#5a3b2e;--k:0.85"><span class="to">A note for you</span><span class="big">Still choosing you</span></div></div><span class="pm"><b>Lace Album</b><em>Card · <span data-price="card">₹99</span></em></span></a>
-      <a class="pin" href="/studio?design=envelope" data-tags="card her him couple"><div class="card"><img loading="lazy" src="/assets/envelope.webp" alt="Love Letter memory card design" width="360" height="640"  decoding="async"><div class="slot" style="--x:13;--y:17;--w:74;--h:33;--ink-c:#5c1220;--k:0.9"><span class="to">Dear Aarav</span><span class="big">Open when you miss me</span><span class="sm">Eleven letters, one for every month apart.</span></div></div><span class="pm"><b>Love Letter</b><em>Card · <span data-price="card">₹99</span></em></span></a>
+      <a class="pin" href="/studio?design=envelope" data-tags="card her him couple"><div class="card"><img loading="lazy" src="/assets/envelope.webp" alt="Love Letter memory card design" width="360" height="640"  decoding="async"><div class="slot" style="--x:13;--y:17;--w:74;--h:33;--ink-c:#5c1220;--k:0.9"><span class="to">My love</span><span class="big">Open when you miss me</span><span class="sm">Eleven letters, one for every month apart.</span></div></div><span class="pm"><b>Love Letter</b><em>Card · <span data-price="card">₹99</span></em></span></a>
       <a class="pin site" href="#demo" data-pick="mixtape" data-tags="site her him friends birthday couple siblings"><span class="shot"><img src="/assets/gifts/site-mixtape-hero.webp" alt="Mixtape love-story website" width="480" height="960" loading="lazy"></span><span class="pm"><b>Mixtape</b><em>Website · <span data-price="site">₹299</span></em></span></a>
       <a class="pin" href="/studio?design=floralClip" data-tags="card parents friends siblings"><div class="card"><img loading="lazy" src="/assets/floralClip.webp" alt="Garden Note memory card design" width="360" height="640"  decoding="async"><div class="slot" style="--x:21;--y:41;--w:58;--h:21;--ink-c:#4a3a22;--k:0.9"><span class="to">Sunday mornings</span><span class="big">Coffee and you</span></div></div><span class="pm"><b>Garden Note</b><em>Card · <span data-price="card">₹99</span></em></span></a>
       <a class="pin" href="/studio?design=burgundyFloral" data-tags="card her anniversary couple"><div class="card"><img loading="lazy" src="/assets/burgundyFloral.webp" alt="Burgundy Bloom memory card design" width="360" height="640"  decoding="async"><div class="slot" style="--x:21;--y:34.5;--w:58;--h:22;--ink-c:#4a3320;--k:0.9"><span class="to">Anniversary</span><span class="big">Seven years</span><span class="sm">and still counting</span></div></div><span class="pm"><b>Burgundy Bloom</b><em>Card · <span data-price="card">₹99</span></em></span></a>
-      <a class="pin" href="/studio?design=blueBotanical" data-tags="card parents birthday grandparents"><div class="card"><img loading="lazy" src="/assets/blueBotanical.webp" alt="Blue Botanica memory card design" width="360" height="640"  decoding="async"><div class="slot" style="--x:24;--y:29.5;--w:53;--h:41;--ink-c:#233556;--k:1"><span class="to">For my friend</span><span class="big">Thank you</span><span class="sm">for every late-night call</span></div></div><span class="pm"><b>Blue Botanica</b><em>Card · <span data-price="card">₹99</span></em></span></a>
+      <a class="pin" href="/studio?design=blueBotanical" data-tags="card parents birthday grandparents"><div class="card"><img loading="lazy" src="/assets/blueBotanical.webp" alt="Blue Botanica memory card design" width="360" height="640"  decoding="async"><div class="slot" style="--x:24;--y:29.5;--w:53;--h:41;--ink-c:#233556;--k:1"><span class="to">For you</span><span class="big">Thank you</span><span class="sm">for every late-night call</span></div></div><span class="pm"><b>Blue Botanica</b><em>Card · <span data-price="card">₹99</span></em></span></a>
       <a class="pin" href="/studio?design=greenLily" data-tags="card her parents couple"><div class="card"><img loading="lazy" src="/assets/greenLily.webp" alt="Lily Lace memory card design" width="360" height="640"  decoding="async"><div class="slot" style="--x:19;--y:26.5;--w:62;--h:47;--ink-c:#4a3a22;--k:1"><span class="to">From the garden</span><span class="big">Always yours</span><span class="sm">14 February</span></div></div><span class="pm"><b>Lily Lace</b><em>Card · <span data-price="card">₹99</span></em></span></a>
       <a class="pin site" href="#demo" data-pick="sunkissed" data-tags="site her him friends birthday couple siblings"><span class="shot"><img src="/assets/gifts/site-sunkissed-hero.webp" alt="Sunkissed love-story website" width="480" height="960" loading="lazy"></span><span class="pm"><b>Sunkissed</b><em>Website · <span data-price="site">₹299</span></em></span></a>
-      <a class="pin" href="/studio?design=rugGarden" data-tags="card parents grandparents"><div class="card"><img loading="lazy" src="/assets/rugGarden.webp" alt="Persian Garden memory card design" width="360" height="640"  decoding="async"><div class="slot" style="--x:22;--y:22;--w:52;--h:57;--ink-c:#5a3220;--k:0.95"><span class="to">Dear Papa</span><span class="big">Happy Father&#x27;s Day</span><span class="sm">Thank you for every lesson, and every ride to school.</span></div></div><span class="pm"><b>Persian Garden</b><em>Card · <span data-price="card">₹99</span></em></span></a>
-      <a class="pin" href="/studio?design=pinkPalace" data-tags="card parents birthday grandparents"><div class="card"><img loading="lazy" src="/assets/pinkPalace.webp" alt="Blush Palace memory card design" width="360" height="640"  decoding="async"><div class="slot" style="--x:26;--y:36;--w:46;--h:27;--ink-c:#7a2a3a;--k:0.78"><span class="to">Happy birthday</span><span class="big">Mummy</span><span class="sm">From all of us, with love</span></div></div><span class="pm"><b>Blush Palace</b><em>Card · <span data-price="card">₹99</span></em></span></a>
-      <a class="pin" href="/studio?design=navyPaper" data-tags="card him friends couple siblings"><div class="card"><img loading="lazy" src="/assets/navyPaper.webp" alt="Midnight Paper memory card design" width="360" height="640"  decoding="async"><div class="slot" style="--x:13;--y:20;--w:74;--h:56;--ink-c:#4a3a2a;--k:1"><span class="to">A note for you</span><span class="big">Dear Nani</span><span class="sm">Thank you for every summer, every story and every plate you filled twice.</span></div></div><span class="pm"><b>Midnight Paper</b><em>Card · <span data-price="card">₹99</span></em></span></a>
+      <a class="pin" href="/studio?design=rugGarden" data-tags="card parents grandparents"><div class="card"><img loading="lazy" src="/assets/rugGarden.webp" alt="Persian Garden memory card design" width="360" height="640"  decoding="async"><div class="slot" style="--x:22;--y:22;--w:52;--h:57;--ink-c:#5a3220;--k:0.95"><span class="to">To my person</span><span class="big">Happy anniversary</span><span class="sm">Thank you for every ordinary day you made special.</span></div></div><span class="pm"><b>Persian Garden</b><em>Card · <span data-price="card">₹99</span></em></span></a>
+      <a class="pin" href="/studio?design=pinkPalace" data-tags="card parents birthday grandparents"><div class="card"><img loading="lazy" src="/assets/pinkPalace.webp" alt="Blush Palace memory card design" width="360" height="640"  decoding="async"><div class="slot" style="--x:26;--y:36;--w:46;--h:27;--ink-c:#7a2a3a;--k:0.78"><span class="to">Happy birthday</span><span class="big">My love</span><span class="sm">Another year of you and me</span></div></div><span class="pm"><b>Blush Palace</b><em>Card · <span data-price="card">₹99</span></em></span></a>
+      <a class="pin" href="/studio?design=navyPaper" data-tags="card him friends couple siblings"><div class="card"><img loading="lazy" src="/assets/navyPaper.webp" alt="Midnight Paper memory card design" width="360" height="640"  decoding="async"><div class="slot" style="--x:13;--y:20;--w:74;--h:56;--ink-c:#4a3a2a;--k:1"><span class="to">A note for you</span><span class="big">Dear you</span><span class="sm">Thank you for every late-night call, every long drive and every time you stayed.</span></div></div><span class="pm"><b>Midnight Paper</b><em>Card · <span data-price="card">₹99</span></em></span></a>
       <a class="pin" href="/studio?design=swanLace" data-tags="card her anniversary couple"><div class="card"><img loading="lazy" src="/assets/swanLace.webp" alt="Swan Lace memory card design" width="360" height="640"  decoding="async"><div class="slot" style="--x:24;--y:31;--w:52;--h:40;--ink-c:#4a3320;--k:1"><span class="to">Our evening</span><span class="big">With love, always</span><span class="sm">An evening we will never forget</span></div></div><span class="pm"><b>Swan Lace</b><em>Card · <span data-price="card">₹99</span></em></span></a>
     </div>
-  </section>
-
-  <!-- OCCASIONS: one compact row -->
-  <section class="sec wrap" id="gift-ideas">
-    <div class="sec-head">
-      <div>
-        <div class="eyebrow">Occasions</div>
-        <h2 class="d">Not just for <em>couples.</em></h2>
-      </div>
-      <p>Start from an occasion, then change every colour, word and photo.</p>
-    </div>
-    <div class="cast-row" aria-hidden="true"><img src="/assets/cast/nani-1.webp" alt="" loading="lazy" style="--f:.86"><img src="/assets/cast/mummy-1.webp" alt="" loading="lazy" style="--f:.94"><img src="/assets/cast/papa-1.webp" alt="" loading="lazy"><img src="/assets/cast/anya-1.webp" alt="" loading="lazy" style="--f:.88"><img src="/assets/cast/vihaan-1.webp" alt="" loading="lazy"></div>
-    <nav class="jump occ" aria-label="Gift ideas by occasion">
-      <a href="/gifts/girlfriend">For girlfriend</a>
-      <a href="/gifts/boyfriend">For boyfriend</a>
-      <a href="/gifts/anniversary">Anniversary</a>
-      <a href="/gifts/birthday">Birthday</a>
-      <a href="/studio?occasion=mother">Mother</a>
-      <a href="/studio?occasion=father">Father</a>
-      <a href="/studio?occasion=friend">Friend</a>
-      <a href="/studio?occasion=thanks">Thank you</a>
-      <a href="/gifts/karva-chauth">Karva Chauth</a>
-      <a href="/gifts/long-distance">Long-distance</a>
-      <a href="/digital-gifts">All digital gifts</a>
-    </nav>
   </section>
 
   <!-- PRICING SECTION -->
@@ -677,10 +661,10 @@
     <div class="faq-in">
       <div class="eyebrow" style="text-align:center">Good to know</div>
       <h2 class="d">Questions</h2>
-      <img class="cast-peek cp-faq" src="/assets/cast/nana-1.webp" alt="" loading="lazy" width="400" height="700">
+      
       <details open>
         <summary>What is the difference between a Memory Card and a Website?</summary>
-        <p>A <b>Memory Card (<span data-price="card">₹99</span>)</b> is a single interactive card with your photo gallery, a song, a video and a personal letter—great for birthdays, parents, friends or quick surprises. A <b>Love-Story Website (<span data-price="site">₹299</span>)</b> is a full multi-section experience (like <i>Wildflower</i>, <i>Red Letter</i>, <i>Mixtape</i> or <i>Sunkissed</i>) with interactive polaroids, wax seals, live relationship timers and multiple “open when” letters.</p>
+        <p>A <b>Memory Card (<span data-price="card">₹99</span>)</b> is a single interactive card with your photo gallery, a song, a video and a personal letter. It is great for a birthday or a quick surprise. A <b>Love-Story Website (<span data-price="site">₹299</span>)</b> is a full multi-section experience (like <i>Wildflower</i>, <i>Red Letter</i>, <i>Mixtape</i> or <i>Sunkissed</i>) with interactive polaroids, wax seals, live relationship timers and multiple “open when” letters.</p>
       </details>
       <details>
         <summary>Does the person need an app to open it?</summary>
@@ -702,8 +686,8 @@
     <h2 class="d">Someone is waiting for <em>this.</em></h2>
     <p>Design it tonight in 10 minutes. You don't pay a rupee until you love how it looks.</p>
     <div class="kh-cta"><a class="btn wine" href="/builder">Make a website · <span data-price="site">₹299</span></a><a class="btn line-wine" href="/studio">Make a card · <span data-price="card">₹99</span></a></div>
-    <div class="kfin-crowd" aria-hidden="true">
-      <img src="/assets/cast/nana-1.webp" alt="" loading="lazy" style="--f:.86"><img src="/assets/cast/nani-1.webp" alt="" loading="lazy" style="--f:.82"><img src="/assets/cast/papa-1.webp" alt="" loading="lazy"><img src="/assets/cast/mummy-1.webp" alt="" loading="lazy" style="--f:.94"><img src="/assets/cast/aarav-1.webp" alt="" loading="lazy" style="--f:1.04"><img src="/assets/cast/meera-1.webp" alt="" loading="lazy"><img src="/assets/cast/riya-1.webp" alt="" loading="lazy" style="--f:.98"><img src="/assets/cast/kabir-1.webp" alt="" loading="lazy" style="--f:.93"><img src="/assets/cast/vihaan-1.webp" alt="" loading="lazy"><img src="/assets/cast/anya-1.webp" alt="" loading="lazy" style="--f:.86">
+    <div class="kfin-crowd duo" aria-hidden="true">
+      <img src="/assets/cast/aarav-1.webp" alt="" loading="lazy" width="400" height="700"><img src="/assets/cast/meera-1.webp" alt="" loading="lazy" width="400" height="700" style="--f:.96">
     </div>
     <div class="kfin-word" aria-hidden="true">Keepsake</div>
   </section>
@@ -746,7 +730,7 @@
     candlelit:["Red Letter","A wine-red love letter. They open the envelope to find your letter, a calendar with a heart round your date, “reasons I love you” on playing cards, photos as stamps and polaroids, and “open when…” envelopes."],
     mixtape:["Mixtape","A retro red-gingham scrapbook for your favourite person: a camera that snaps a photo, your pictures on film strips, a cassette that plays your song, and a broken heart they can mend."],
     sunkissed:["Sunkissed","A sunny love story in blue ink. A yellow envelope floats on pool water; inside, your story in polaroids, photos as postage stamps, a letter lined with lemons, “open when…” envelopes and a postcard to end it."]};
-  var FOR={wildflower:"anniversaries, parents and slow, sentimental love stories",candlelit:"proposals, big romantic dates and long-distance love",mixtape:"a girlfriend, boyfriend or best friend who loves cute and retro",sunkissed:"birthdays, summer trips and new couples"};
+  var FOR={wildflower:"anniversaries and slow, sentimental love stories",candlelit:"proposals, big romantic dates and long-distance love",mixtape:"a girlfriend or boyfriend who loves cute and retro",sunkissed:"birthdays, summer trips and new couples"};
   var f=document.getElementById("demoF"),go=document.getElementById("demoGo"),tabs=[].slice.call(document.querySelectorAll("[data-demo]")),on=false;
   function load(k){f.src="/templates/"+k;f.title="Live demo of the "+D[k][0]+" love-story website";go.hidden=true;on=true}
   function pick(t,focus){var k=t.dataset.demo;tabs.forEach(function(x){var s=x===t;x.setAttribute("aria-selected",s);x.tabIndex=s?0:-1});
