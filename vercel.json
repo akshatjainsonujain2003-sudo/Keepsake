@@ -2,6 +2,11 @@
   "cleanUrls": true,
   "redirects": [
     {
+      "source": "/gifts/karva-chauth",
+      "destination": "/gifts/valentines",
+      "permanent": false
+    },
+    {
       "source": "/shops/pharmacy",
       "destination": "/shops/clinic",
       "permanent": true

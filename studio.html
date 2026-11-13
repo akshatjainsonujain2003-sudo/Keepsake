@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#3b0710">
+<meta name="theme-color" content="#3D0A19">
 <title>Memory Card Studio (₹99) — Design a Digital Keepsake Card | GetKeepsake</title>
 <link rel="canonical" href="https://getkeepsake.in/studio">
 <meta name="description" content="Design a personalised digital memory card with your photos, Spotify song, video and private note for ₹99. Share by link, QR code or NFC tap.">
@@ -11,7 +11,7 @@
 <meta name="robots" content="index,follow">
 <script>/* customers' own cards (/m/…, /c/…) use this page too: keep those out of search */if(/^\/(m|c)\//.test(location.pathname)){document.querySelector('meta[name=robots]').content="noindex,nofollow";document.querySelector('link[rel=canonical]').remove()}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&family=Parisienne&display=swap" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&family=Parisienne&display=swap"></noscript>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@600;700&family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&family=Parisienne&display=swap" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@600;700&family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&family=Parisienne&display=swap"></noscript>
 <style>
 :root{
  --wine:#42070f;--wine2:#210307;--burg:#6d1723;--ivory:#f8f0df;--paper:#fffaf0;
@@ -1453,6 +1453,45 @@ window.qrcode=function(typeNumber,errorLevel){
 #qrPanel.locked .qrBox img{filter:blur(7px);opacity:.35}
 #qrPanel.locked .qrBox::after{content:"Your QR code appears here after you save";position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:14px;font:600 14px/1.35 system-ui,sans-serif;color:#2a0409}
 </style>
+<style id="berry">
+/* Strawberry Milk chrome for the card studio. Only the page around the card changes; the card designs keep their own colours. */
+body{background:#FFF1EF}
+::selection{background:#FF8FA355}
+.topbar{background:#3D0A19f2;border-bottom-color:#ffffff24}
+.brand{color:#fff}
+.iconbtn{border-color:#ffffff40}
+.hero{background:radial-gradient(circle at 82% 25%,#E0446C88,transparent 34%),radial-gradient(circle at 12% 90%,#C8143F77,transparent 34%),linear-gradient(135deg,#8E0F31,#4A0D1F 60%,#3D0A19)}
+.hero:before,.hero:after{border-color:#ffffff24}
+.eyebrow,.hero h1 em{color:#FFE08A}
+.hero h1,.sectionHead h2,.panel h3,.step h3,.faq summary,.darkPanel h3{font-family:"Inter Tight","DM Sans",system-ui,sans-serif;font-weight:700;letter-spacing:-.04em}
+.hero h1 em{font-family:Parisienne,cursive;font-weight:400;letter-spacing:0}
+.btn{background:#C8143F;color:#fff;box-shadow:0 12px 24px -12px #C8143F99}
+.btn:hover{box-shadow:0 18px 30px -12px #C8143Faa}
+.hero .btn:not(.ghost),.linkSection .btn:not(.ghost){background:#FFE08A;color:#3D0A19}
+.btn.ghost{border-color:#ffffff66}
+.heroFrame{border-color:#FFF1EF;box-shadow:0 35px 100px #0009,0 0 0 1px #FF8FA3}
+.floatingTag{background:#fff;color:#4A0D1F}
+.sectionHead .script{color:#E0446C}
+.sectionHead h2{color:#C8143F}
+.sectionHead p,.step p{color:#7E4A57}
+.template.active:before{color:#3D0A19;background:#FFE08A}
+.studio{background:#FFE4E6;border-top-color:#F6CFD3}
+.panel,.step{background:#FFFAF8;border-color:#F6CFD3}
+.pill{border-color:#F6CFD3;background:#FFFAF8;color:#7E4A57}
+.pill.active{background:#C8143F;border-color:#C8143F;color:#fff}
+.field label,.previewTitle span{color:#7E4A57}
+.field select,.field textarea{border-color:#F0BFC6;background:#fff}
+.field select:focus,.field textarea:focus{border-color:#C8143F;box-shadow:0 0 0 4px #C8143F20}
+.field .upload{border-color:#F0BFC6;background:linear-gradient(135deg,#FFFAF8,#FFE4E6)}
+.tool{border-color:#C8143F55;background:#FFFAF8;color:#C8143F}
+.linkSection{background:radial-gradient(60% 80% at 10% 0%,#C8143Faa,#0000 65%),linear-gradient(135deg,#4A0D1F,#3D0A19)}
+.darkPanel{border-color:#ffffff2e}
+.how{background:#FFF1EF}
+.step:after{border-color:#C8143F33}.step .num{color:#E0446C}
+.faq details{border-color:#F6CFD3}.faq summary{color:#C8143F;font-size:22px}
+footer{background:#3D0A19}
+</style>
+
 <script src="/assets/ks-pixel.v1.js" defer></script><script src="/assets/ks-ref.v1.js" defer></script></head>
 <body>
 <div class="topbar"><div class="wrap nav">
