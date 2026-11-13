@@ -1,0 +1,38 @@
+/* Keepsake gifts: light hero with the cast. Shared by the gifts sub-pages. Cached for a year: rename (v2…) when changing. */
+.gh{position:relative;overflow:hidden;background:radial-gradient(40% 60% at 12% 80%,#f6dcd6,#0000 70%),radial-gradient(40% 60% at 90% 70%,#dbe7f5,#0000 70%),#fbf6ee;color:#2b1a14}
+.gh-in{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:clamp(16px,4vw,56px);align-items:end;padding-top:clamp(30px,5vw,64px)}
+.gh-copy{padding-bottom:clamp(36px,5vw,64px)}
+.gh .crumb{margin:0 0 14px;font-size:13.5px;color:#7a5a4e}
+.gh .crumb a{color:#6e1a26}
+.gh-kick{display:block;margin:0;font:400 clamp(24px,3vw,32px)/1 Parisienne,"Snell Roundhand",cursive;color:#6e1a26}
+.gh h1{margin:12px 0 0;max-width:13ch;font:500 clamp(42px,6.2vw,84px)/.97 "Cormorant Garamond",Georgia,serif;letter-spacing:-.02em;color:#2b1a14;text-wrap:balance}
+.gh h1 em{color:#6e1a26}
+.gh .lead{margin:18px 0 0;max-width:46ch;font-size:clamp(16px,1.5vw,18px);color:#6a5148}
+.gh .cta-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px;justify-content:flex-start}
+.gh .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.gh-art{position:relative;display:flex;justify-content:center;align-items:flex-end;gap:0;--h:clamp(230px,26vw,360px)}
+.gh-art img{height:calc(var(--h) * var(--f,1));width:auto;max-width:none;filter:drop-shadow(0 10px 10px #2b1a1428)}
+.gh-art img+img{margin-left:calc(var(--h) * -.06)}
+.gh-art.crowd{--h:clamp(150px,15vw,220px)}
+.gh-art.crowd img+img{margin-left:calc(var(--h) * -.1)}
+.gh-art.apart img+img{margin-left:calc(var(--h) * .28)}
+.gh-art .string{position:absolute;left:18%;right:18%;top:8%;height:46%;width:64%;overflow:visible}
+.gh-art .string path{fill:none;stroke:#6e1a26;stroke-width:2;stroke-dasharray:2 7;stroke-linecap:round;opacity:.7}
+.gh-art .flip{transform:scaleX(-1)}
+.gh-floor{height:22px;background:#3a0a12}
+@media (max-width:820px){
+  .gh-in{grid-template-columns:1fr;text-align:center}
+  .gh h1,.gh .lead{margin-left:auto;margin-right:auto}
+  .gh .cta-row,.gh .chips{justify-content:center}
+  .gh-copy{padding-bottom:6px}
+  .gh-art{--h:clamp(200px,58vw,280px)}
+  .gh-art.crowd{--h:clamp(110px,30vw,160px)}
+}
+@media (prefers-reduced-motion:no-preference){.gh-art img{animation:ghbob 4.5s ease-in-out infinite alternate;transform-origin:50% 100%}.gh-art img:nth-child(even){animation-delay:-2s}.gh-art img.flip{animation-name:ghbobf}}
+@keyframes ghbob{from{rotate:-.8deg}to{rotate:.8deg}}
+@keyframes ghbobf{from{transform:scaleX(-1) rotate(-.8deg)}to{transform:scaleX(-1) rotate(.8deg)}}
+.web-art.sk{background:url(/assets/sunkissed/pool.webp) center/360px}
+.gh .jump{justify-content:flex-start;margin-top:22px}
+.gh .jump a{border-color:#6e1a2644;color:#6e1a26;background:#fffaf2;min-height:42px;display:inline-flex;align-items:center}
+.gh .jump a:hover{background:#6e1a26;color:#fbf1e4}
+@media (max-width:820px){.gh .jump{justify-content:center}}

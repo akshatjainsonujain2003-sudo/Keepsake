@@ -25,28 +25,29 @@
 <script src="/assets/ks-checkout.v15.js"></script>
 <script src="/assets/ks-claim.v2.js"></script>
 <script src="/assets/site-render.v1.js"></script>
-<script src="/assets/ks-templates.v4.js"></script>
+<script src="/assets/ks-templates.v5.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js" defer></script>
 <style>
-:root{--bg:#240409;--panel:#33100f;--panel2:#3d1517;--line:#6b3a35;--ink:#f8f0df;--muted:#c9b99a;--gold:#e4c680;--field:#1a0206;--bad:#ff9aa8;--ok:#9ad8b0}
+:root{--bg:#fbf6ee;--panel:#fffaf2;--panel2:#f4e9dc;--line:#e1cfbd;--ink:#2b1a14;--muted:#6a5148;--gold:#6e1a26;--field:#ffffff;--bad:#b3261e;--ok:#2e7d4f}
 *{box-sizing:border-box}
 html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 "DM Sans",system-ui,sans-serif}
 a{color:var(--gold)}
 button,input,textarea,select{font:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--gold);outline-offset:2px}
-.top{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:12px;justify-content:space-between;padding:12px 18px;background:#240409f2;border-bottom:1px solid #ffffff14;backdrop-filter:blur(8px)}
-.brand{font:italic 500 28px/1 "Cormorant Garamond",Georgia,serif;color:var(--gold);text-decoration:none}
+.top{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:12px;justify-content:space-between;padding:12px 18px;background:#3a0a12;border-bottom:1px solid #00000014;backdrop-filter:blur(8px)}
+.brand{font:400 32px/1 Parisienne,"Snell Roundhand",cursive;color:#e4c680;text-decoration:none}
+.top .chip{color:#f6ecdc;border-color:#f6ecdc44}
 .top nav{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .chip{padding:8px 14px;border-radius:999px;border:1px solid var(--line);text-decoration:none;color:var(--ink);font-size:13.5px;background:none;cursor:pointer}
 .layout{display:grid;grid-template-columns:minmax(0,460px) minmax(0,1fr);gap:0;min-height:calc(100svh - 60px)}
-.editor{padding:26px 22px 120px;border-right:1px solid #ffffff14}
-.stage{position:sticky;top:60px;height:calc(100svh - 60px);display:grid;place-items:center;padding:24px;background:radial-gradient(ellipse at 50% 30%,#4a0f15,#1b0306 75%)}
-.phone{width:390px;height:min(780px,calc(100svh - 120px));border-radius:42px;border:10px solid #120204;overflow:hidden;box-shadow:0 30px 80px #0009;background:#000}
+.editor{padding:26px 22px 120px;border-right:1px solid var(--line)}
+.stage{position:sticky;top:60px;height:calc(100svh - 60px);display:grid;place-items:center;padding:24px;background:radial-gradient(40% 50% at 20% 80%,#f6dcd6,#0000 70%),radial-gradient(40% 50% at 85% 25%,#dbe7f5,#0000 70%),#f6ece0}
+.phone{width:390px;height:min(780px,calc(100svh - 120px));border-radius:42px;border:10px solid #120204;overflow:hidden;box-shadow:0 30px 60px -20px #2b101499;background:#000}
 .phone-in{height:100%;overflow-y:auto;overscroll-behavior:contain}
 h1.page{font:500 clamp(36px,6vw,48px)/1.05 "Cormorant Garamond",Georgia,serif;margin:0 0 6px}
 .lede{color:var(--muted);margin:0 0 18px;font-size:15px}
 .free-pill{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;background:rgba(228,198,128,0.12);border:1px solid rgba(228,198,128,0.35);color:var(--gold);font-size:12.5px;font-weight:500;margin-bottom:14px}
-.block{border-top:1px solid #ffffff14;padding:22px 0}
+.block{border-top:1px solid var(--line);padding:22px 0}
 .block>h2{font:500 26px/1.1 "Cormorant Garamond",Georgia,serif;margin:0 0 14px}
 .themes{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .theme{display:flex;flex-direction:column;gap:8px;text-align:left;padding:10px;border-radius:16px;border:1px solid var(--line);background:var(--panel);cursor:pointer}
@@ -75,12 +76,12 @@ textarea.in{min-height:110px;resize:vertical;line-height:1.5}
 .thumbs div{position:relative}
 .thumbs img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:10px}
 .thumbs button{position:absolute;top:4px;right:4px;width:24px;height:24px;border-radius:50%;border:0;background:#000b;color:#fff;cursor:pointer;line-height:1}
-.list-row{display:grid;gap:8px;padding:12px;border-radius:14px;background:#00000026;margin-bottom:8px}
+.list-row{display:grid;gap:8px;padding:12px;border-radius:14px;background:var(--panel2);margin-bottom:8px}
 .list-row .rm{justify-self:end}
 .addsec{display:flex;gap:8px}
 .addsec select{flex:1}
 .btn{display:inline-flex;justify-content:center;align-items:center;gap:8px;padding:14px 22px;border-radius:999px;border:0;cursor:pointer;font-weight:700;text-decoration:none}
-.btn.gold{background:linear-gradient(135deg,#e8cf8e,#b88a3e);color:#2a0409}
+.btn.gold{background:#6e1a26;color:#fbf1e4}
 .btn.line{background:none;border:1px solid var(--line);color:var(--ink)}
 .btn.wide{width:100%}
 .btn:disabled{opacity:.6;cursor:wait}
@@ -125,18 +126,21 @@ textarea.in{min-height:110px;resize:vertical;line-height:1.5}
 .art.mx{background:url(/assets/mixtape/gingham.webp) center/200px}
 .art.mx .tp{width:66%;rotate:-6deg;filter:drop-shadow(0 8px 10px #0005)}
 .art.mx .pn{position:absolute;right:8%;top:8%;width:26%;rotate:20deg}
+.art.sk{background:url(/assets/sunkissed/pool.webp) center/260px}
+.art.sk .ev{width:52%;rotate:-6deg;filter:drop-shadow(0 10px 10px #1d4a6a66)}
+.art.sk .sl{position:absolute;right:8%;top:8%;width:24%;rotate:20deg}
 .legacy-note{font-size:13px;color:var(--muted);margin:10px 0 0}
 .phone-in iframe,.overlay iframe{display:block;width:100%;height:100%;border:0;background:#fff}
 .overlay .scroll iframe{height:100%}
 .tplf .grp>summary .name{font-weight:700}
 .tglrow{display:flex;gap:10px;align-items:center;margin:0 0 14px;color:var(--ink);font-size:15px;cursor:pointer}
-.tglrow input{width:20px;height:20px;accent-color:#d6b06a}
+.tglrow input{width:20px;height:20px;accent-color:#6e1a26}
 .save-hint{font-size:13px;color:var(--muted);margin:8px 0 0;text-align:center}
 </style>
 <link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png"><link rel="icon" type="image/svg+xml" href="/assets/icon.svg"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest"><script src="/assets/ks-pixel.v1.js" defer></script><script src="/assets/ks-ref.v1.js" defer></script></head>
 <body>
 <header class="top">
-  <a class="brand" href="/">Keepsake</a>
+  <a class="brand" href="/gifts">Keepsake</a>
   <nav id="nav">
     <a class="chip" href="/studio"><span data-price="card">₹99</span> Memory Cards</a>
   </nav>
@@ -258,7 +262,8 @@ function designs() {
   const box = $("#designs"); box.textContent = "";
   [["wildflower", '<div class="art wf"><div class="pol"><img class="ph" src="/assets/wildflower/lakedance.webp" alt=""><img class="edge" src="/assets/wildflower/polaroid.webp" alt=""></div><img class="fl" src="/assets/wildflower/pressed.webp" alt=""></div>'],
    ["candlelit", '<div class="art cl"><img class="seal" src="/assets/candlelit/seal.webp" alt=""><span class="nm">for you</span></div>'],
-   ["mixtape", '<div class="art mx"><img class="tp" src="/assets/mixtape/cassette.webp" alt=""><img class="pn" src="/assets/mixtape/heartpin.webp" alt=""></div>']].forEach(([k, art]) => {
+   ["mixtape", '<div class="art mx"><img class="tp" src="/assets/mixtape/cassette.webp" alt=""><img class="pn" src="/assets/mixtape/heartpin.webp" alt=""></div>'],
+   ["sunkissed", '<div class="art sk"><img class="ev" src="/assets/sunkissed/env-open.webp" alt=""><img class="sl" src="/assets/sunkissed/slice0.webp" alt=""></div>']].forEach(([k, art]) => {
     const b = document.createElement("button"); b.type = "button"; b.className = "design" + (D.tpl === k ? " on" : "");
     b.innerHTML = art + "<b></b><small></small>"; b.querySelector("b").textContent = KSKit.NAMES[k]; b.querySelector("small").textContent = KSKit.HINTS[k];
     b.onclick = () => switchTo(k); box.appendChild(b);
