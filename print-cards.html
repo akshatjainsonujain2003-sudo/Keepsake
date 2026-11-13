@@ -1,0 +1,76 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Print files · Card HQ · Keepsake</title>
+<link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<script src="/assets/vendor/jszip.3.10.1.min.js" defer></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@600;700&family=DM+Sans:wght@400;500;700&family=Parisienne&display=swap">
+<style>
+/* Print files for one run of gift cards: QR images + a code list for the card printer, and A4 sheets of PIN inserts (one per card, card size). */
+*{box-sizing:border-box}
+body{margin:0;background:#EFE3E4;color:#4A0D1F;font:400 15px/1.5 "DM Sans",system-ui,sans-serif}
+.bar{position:sticky;top:0;z-index:2;padding:12px 16px;background:#3D0A19;color:#fff}
+.bar-in{max-width:210mm;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.bar h1{flex:1 1 220px;margin:0;font:700 19px/1.2 "Inter Tight",sans-serif;letter-spacing:-.02em}
+.bar h1 small{display:block;font:400 13px/1.4 "DM Sans",sans-serif;letter-spacing:0;color:#FFD9DE}
+.bar button{min-height:42px;padding:0 16px;border-radius:999px;border:0;background:#FFE08A;color:#3D0A19;font:700 14px "DM Sans",sans-serif;cursor:pointer}
+.bar button.l{background:none;border:1px solid #ffffff73;color:#fff}
+.bar button[disabled]{opacity:.6;cursor:wait}
+.bar select{min-height:42px;padding:0 12px;border-radius:999px;border:1px solid #ffffff73;background:#3D0A19;color:#fff;font:600 14px "DM Sans",sans-serif}
+.how{max-width:210mm;margin:14px auto 0;padding:14px 18px;border-radius:14px;background:#fff;font-size:14px}
+.how b{font-family:"Inter Tight",sans-serif}
+.how ol{margin:6px 0 0;padding-left:20px}
+#st{min-height:1.4em;margin-top:6px;font-weight:700;color:#C8143F}
+.sheet{width:210mm;min-height:297mm;margin:14px auto;background:#fff;padding:13.5mm 19.4mm;display:grid;grid-template-columns:repeat(2,85.6mm);grid-auto-rows:54mm;align-content:start;page-break-after:always;break-after:page}
+.ins{position:relative;width:85.6mm;height:54mm;padding:5mm 6mm;border:0.2mm dashed #C9AEB3;display:grid;grid-template-columns:1fr auto;grid-template-rows:auto 1fr auto;gap:0 4mm;overflow:hidden;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.ins .k{font:400 7.2mm/1 Parisienne,cursive;color:#C8143F}
+.ins .n{justify-self:end;align-self:start;font:700 2.6mm/1 "DM Sans",sans-serif;color:#7E4A57}
+.ins .p{grid-column:1/-1;align-self:center}
+.ins .p small{display:block;font:700 2.6mm/1.2 "DM Sans",sans-serif;color:#7E4A57}
+.ins .p b{display:block;margin-top:1mm;font:700 9.4mm/1 ui-monospace,Menlo,Consolas,monospace;letter-spacing:1.6mm;color:#4A0D1F}
+.ins ol{margin:0;padding-left:3.6mm;font:400 2.5mm/1.45 "DM Sans",sans-serif;color:#4A0D1F;grid-column:1/-1;white-space:nowrap}
+.ins .c{position:absolute;right:6mm;bottom:5mm;font:600 2.2mm/1 ui-monospace,Menlo,monospace;letter-spacing:.2mm;color:#7E4A57}
+.ins.used::after{content:"ACTIVATED";position:absolute;inset:0;display:grid;place-items:center;background:#ffffffd9;font:700 4mm "Inter Tight",sans-serif;color:#1F7A4D;transform:rotate(-12deg)}
+.ins.void::after{content:"CANCELLED";position:absolute;inset:0;display:grid;place-items:center;background:#ffffffd9;font:700 4mm "Inter Tight",sans-serif;color:#B3261E;transform:rotate(-12deg)}
+@media print{body{background:#fff}.bar,.how{display:none}.sheet{margin:0}@page{size:A4;margin:0}}
+</style></head><body>
+<div class="bar"><div class="bar-in"><h1 id="title">Loading…</h1>
+  <select id="fmt" aria-label="QR image format"><option value="svg">QR as SVG (best for print)</option><option value="png">QR as PNG, 1200 px</option></select>
+  <button id="zip">QR images (ZIP)</button><button id="csv" class="l">Code list (CSV)</button><button id="pr" class="l">Print PIN inserts</button></div></div>
+<div class="how"><b>How to use these files</b>
+  <ol><li><b>QR images (ZIP):</b> one file per card, named with its number and code (for example 017_KSAB12CD34). Give them to the card printer with the code list. Each card gets a different QR.</li>
+  <li><b>PIN inserts:</b> print this page on A4 at 100% and cut on the dashed lines. Each insert is card size and carries the PIN for one card.</li>
+  <li><b>Packing:</b> ask the printer to keep the cards in number order. Card 17 goes with insert 17. To check a card, scan it and look up its code in Card HQ: it shows the card’s number.</li></ol>
+  <div id="st" role="status"></div></div>
+<div id="out"></div>
+<script>
+(async function(){
+  var q=new URLSearchParams(location.search),id=q.get("run"),key="";try{key=localStorage.getItem("ks-hq-key")||""}catch(e){}
+  var T=document.getElementById("title"),st=document.getElementById("st"),base="https://getkeepsake.in";
+  var esc=function(t){return String(t==null?"":t).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})};
+  if(!key){T.innerHTML='Please log in<small><a style="color:#FFE08A" href="/card-hq">Open Card HQ</a> first, then come back to this page.</small>';return}
+  var r=await fetch("/api/admin",{method:"POST",headers:{"Content-Type":"application/json","x-admin-key":key},body:JSON.stringify({action:"cards-run",id:id})});
+  var j=await r.json().catch(function(){return {}});
+  if(!r.ok){T.textContent=j.error||"Could not load this print run.";return}
+  var run=j.run,cards=j.cards,pad=function(n){return String(n).padStart(3,"0")},file=function(c){return pad(c.n)+"_"+c.code},slug=String(run.name).replace(/[^\w]+/g,"-").toLowerCase();
+  T.innerHTML=esc(run.name)+" · "+cards.length+" cards<small>"+(run.tier==="site"?"Unlocks a love-story website":"Unlocks a memory card")+(run.note?" · "+esc(run.note):"")+"</small>";
+  // PIN inserts, 10 per A4 sheet, in card-number order
+  var ins=cards.map(function(c){return '<div class="ins'+(c.status==="active"?" used":c.status==="void"?" void":"")+'"><div class="k">Keepsake</div><div class="n">Card '+c.n+" of "+cards.length+'</div><div class="p"><small>Your PIN</small><b>'+esc(c.pin)+'</b></div><ol><li>Scan the card with your phone camera.</li><li>Add your photos, your song and your letter.</li><li>Enter this PIN to make it live.</li></ol><div class="c">'+c.code+"</div></div>"});
+  var out=document.getElementById("out");for(var i=0;i<ins.length;i+=10)out.insertAdjacentHTML("beforeend",'<div class="sheet">'+ins.slice(i,i+10).join("")+"</div>");
+  document.getElementById("pr").onclick=function(){(document.fonts?document.fonts.ready:Promise.resolve()).then(function(){print()})};
+  var save=function(blob,name){var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(function(){URL.revokeObjectURL(a.href)},4000)};
+  document.getElementById("csv").onclick=function(){
+    var rows=[["number","code","pin","qr_link","qr_file","design","unlocks","status"]].concat(cards.map(function(c){return [c.n,c.code,c.pin,base+"/k/"+c.code,file(c),run.name,run.tier==="site"?"website":"memory card",c.status]}));
+    save(new Blob([rows.map(function(r){return r.map(function(v){v=String(v);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v}).join(",")}).join("\n")],{type:"text/csv"}),"keepsake-cards-"+slug+"-"+run.id+".csv")};
+  // One QR per card: black on white with a 4-module quiet zone, error correction M.
+  var make=function(u){var x=qrcode(0,"M");x.addData(u);x.make();return x};
+  var svg=function(x){var n=x.getModuleCount(),m=4,s=n+m*2,d="";for(var r=0;r<n;r++)for(var c=0;c<n;c++)if(x.isDark(r,c))d+="M"+(c+m)+" "+(r+m)+"h1v1h-1z";
+    return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+s+" "+s+'" width="'+s*10+'" height="'+s*10+'" shape-rendering="crispEdges"><rect width="'+s+'" height="'+s+'" fill="#fff"/><path d="'+d+'" fill="#000"/></svg>'};
+  var png=function(x){var n=x.getModuleCount(),m=4,s=n+m*2,k=Math.floor(1200/s),cv=document.createElement("canvas");cv.width=cv.height=s*k;var g=cv.getContext("2d");g.fillStyle="#fff";g.fillRect(0,0,cv.width,cv.height);g.fillStyle="#000";
+    for(var r=0;r<n;r++)for(var c=0;c<n;c++)if(x.isDark(r,c))g.fillRect((c+m)*k,(r+m)*k,k,k);return new Promise(function(ok){cv.toBlob(ok,"image/png")})};
+  document.getElementById("zip").onclick=async function(){var bt=this,f=document.getElementById("fmt").value;
+    if(!window.JSZip||!window.qrcode){st.textContent="Still loading, try again in a moment.";return}
+    bt.disabled=true;try{var z=new JSZip();
+      for(var i=0;i<cards.length;i++){var c=cards[i],x=make(base+"/k/"+c.code);z.file(file(c)+"."+f,f==="svg"?svg(x):await png(x));if(i%20===0)st.textContent="Making "+(i+1)+" of "+cards.length+"…"}
+      save(await z.generateAsync({type:"blob"}),"keepsake-qr-"+slug+"-"+run.id+"-"+f+".zip");st.textContent="Done: "+cards.length+" QR images in the ZIP."}
+    catch(e){st.textContent="Could not make the files: "+(e&&e.message||e)}finally{bt.disabled=false}};
+})();
+</script></body></html>
