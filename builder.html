@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#240409">
+<meta name="theme-color" content="#FCEDD8">
 <title>Make a Love-Story Website (₹299) · GetKeepsake</title>
 <link rel="canonical" href="https://getkeepsake.in/builder">
 <meta property="og:type" content="website">
@@ -20,7 +20,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="description" content="Build a website for your story with photos, videos, Spotify songs, a timeline and letters. Share it by link, QR code or NFC tap.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,500&family=DM+Sans:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@600;700&family=Cormorant+Garamond:ital,wght@0,500;1,500&family=DM+Sans:wght@400;500;700&display=swap">
 <link rel="stylesheet" href="/assets/site-themes.v1.css">
 <script src="/assets/ks-checkout.v15.js"></script>
 <script src="/assets/ks-claim.v2.js"></script>
@@ -28,27 +28,27 @@
 <script src="/assets/ks-templates.v5.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js" defer></script>
 <style>
-:root{--bg:#fbf6ee;--panel:#fffaf2;--panel2:#f4e9dc;--line:#e1cfbd;--ink:#2b1a14;--muted:#6a5148;--gold:#6e1a26;--field:#ffffff;--bad:#b3261e;--ok:#2e7d4f}
+:root{--bg:#FCEDD8;--panel:#FFF8EE;--panel2:#FBE1CC;--line:#F0D2BC;--ink:#5C0B21;--muted:#85404F;--gold:#B0183D;--field:#ffffff;--bad:#b3261e;--ok:#2e7d4f}
 *{box-sizing:border-box}
 html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 "DM Sans",system-ui,sans-serif}
 a{color:var(--gold)}
 button,input,textarea,select{font:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--gold);outline-offset:2px}
-.top{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:12px;justify-content:space-between;padding:12px 18px;background:#3a0a12;border-bottom:1px solid #00000014;backdrop-filter:blur(8px)}
-.brand{font:400 32px/1 Parisienne,"Snell Roundhand",cursive;color:#e4c680;text-decoration:none}
-.top .chip{color:#f6ecdc;border-color:#f6ecdc44}
+.top{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:12px;justify-content:space-between;padding:12px 18px;background:#FCEDD8e6;border-bottom:1px solid #B0183D1f;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+.brand{font:400 32px/1 Parisienne,"Snell Roundhand",cursive;color:#B0183D;text-decoration:none}
+.top .chip{color:#B0183D;border-color:#B0183D40;background:#ffffffb3}
 .top nav{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .chip{padding:8px 14px;border-radius:999px;border:1px solid var(--line);text-decoration:none;color:var(--ink);font-size:13.5px;background:none;cursor:pointer}
 .layout{display:grid;grid-template-columns:minmax(0,460px) minmax(0,1fr);gap:0;min-height:calc(100svh - 60px)}
 .editor{padding:26px 22px 120px;border-right:1px solid var(--line)}
-.stage{position:sticky;top:60px;height:calc(100svh - 60px);display:grid;place-items:center;padding:24px;background:radial-gradient(40% 50% at 20% 80%,#f6dcd6,#0000 70%),radial-gradient(40% 50% at 85% 25%,#dbe7f5,#0000 70%),#f6ece0}
+.stage{position:sticky;top:60px;height:calc(100svh - 60px);display:grid;place-items:center;padding:24px;background:radial-gradient(40% 50% at 20% 80%,#FF5E5E4d,#0000 70%),radial-gradient(44% 54% at 82% 24%,#FFD464a6,#0000 70%),#FCEDD8}
 .phone{width:390px;height:min(780px,calc(100svh - 120px));border-radius:42px;border:10px solid #120204;overflow:hidden;box-shadow:0 30px 60px -20px #2b101499;background:#000}
 .phone-in{height:100%;overflow-y:auto;overscroll-behavior:contain}
-h1.page{font:500 clamp(36px,6vw,48px)/1.05 "Cormorant Garamond",Georgia,serif;margin:0 0 6px}
+h1.page{font:700 clamp(34px,6vw,46px)/1 "Inter Tight","DM Sans",system-ui,sans-serif;letter-spacing:-.04em;color:#B0183D;margin:0 0 8px}
 .lede{color:var(--muted);margin:0 0 18px;font-size:15px}
 .free-pill{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;background:rgba(228,198,128,0.12);border:1px solid rgba(228,198,128,0.35);color:var(--gold);font-size:12.5px;font-weight:500;margin-bottom:14px}
 .block{border-top:1px solid var(--line);padding:22px 0}
-.block>h2{font:500 26px/1.1 "Cormorant Garamond",Georgia,serif;margin:0 0 14px}
+.block>h2{font:600 23px/1.1 "Inter Tight","DM Sans",system-ui,sans-serif;letter-spacing:-.03em;margin:0 0 14px}
 .themes{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .theme{display:flex;flex-direction:column;gap:8px;text-align:left;padding:10px;border-radius:16px;border:1px solid var(--line);background:var(--panel);cursor:pointer}
 .theme.on{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold)}
@@ -81,7 +81,7 @@ textarea.in{min-height:110px;resize:vertical;line-height:1.5}
 .addsec{display:flex;gap:8px}
 .addsec select{flex:1}
 .btn{display:inline-flex;justify-content:center;align-items:center;gap:8px;padding:14px 22px;border-radius:999px;border:0;cursor:pointer;font-weight:700;text-decoration:none}
-.btn.gold{background:#6e1a26;color:#fbf1e4}
+.btn.gold{background:#B0183D;color:#fff}
 .btn.line{background:none;border:1px solid var(--line);color:var(--ink)}
 .btn.wide{width:100%}
 .btn:disabled{opacity:.6;cursor:wait}
@@ -134,7 +134,7 @@ textarea.in{min-height:110px;resize:vertical;line-height:1.5}
 .overlay .scroll iframe{height:100%}
 .tplf .grp>summary .name{font-weight:700}
 .tglrow{display:flex;gap:10px;align-items:center;margin:0 0 14px;color:var(--ink);font-size:15px;cursor:pointer}
-.tglrow input{width:20px;height:20px;accent-color:#6e1a26}
+.tglrow input{width:20px;height:20px;accent-color:#B0183D}
 .save-hint{font-size:13px;color:var(--muted);margin:8px 0 0;text-align:center}
 </style>
 <link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png"><link rel="icon" type="image/svg+xml" href="/assets/icon.svg"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest"><script src="/assets/ks-pixel.v1.js" defer></script><script src="/assets/ks-ref.v1.js" defer></script></head>
@@ -181,7 +181,7 @@ textarea.in{min-height:110px;resize:vertical;line-height:1.5}
    <div class="status" id="saveStatus" role="status"></div>
    <div class="panel" id="payPanel" hidden></div>
    <div class="panel" id="livePanel" hidden>
-    <h3 style="margin:0 0 10px;font:500 26px/1.1 'Cormorant Garamond',Georgia,serif">Your website is live ♡</h3>
+    <h3 style="margin:0 0 10px;font:600 24px/1.1 'Inter Tight','DM Sans',system-ui,sans-serif;letter-spacing:-.03em">Your website is live ♡</h3>
     <div class="linkbox" id="liveLink"></div>
     <div class="acts">
       <button class="btn gold" type="button" id="shareBtn">Share on WhatsApp</button>
