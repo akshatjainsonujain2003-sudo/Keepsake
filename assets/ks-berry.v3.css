@@ -146,7 +146,8 @@ details[open] summary::after{background:var(--c-crimson);border-color:var(--c-cr
 .price-link{color:var(--c-crimson)}
 
 /* finale wordmark in the palette */
-.kfin-word{background:linear-gradient(90deg,var(--c-crimson),var(--c-pink) 35%,var(--c-coral) 65%,#FFB56B);-webkit-background-clip:text;background-clip:text;color:transparent}
+.kfin-word{background:linear-gradient(90deg,var(--c-crimson),var(--c-pink) 35%,var(--c-coral) 65%,#FFB56B);-webkit-background-clip:text;background-clip:text;color:transparent;font-size:clamp(76px,20vw,280px);line-height:1.45;margin:-.5em 0 0;padding:0 .14em .06em}
+.kfin{padding-inline:0}
 .kbond-head h2,.kfin h2.d{font-size:clamp(38px,5.4vw,72px)}
 footer{background:var(--c-deep)}
 footer .brand{color:var(--c-cream)}
@@ -160,18 +161,26 @@ footer .brand{color:var(--c-cream)}
 .demo-tabs button:focus-visible,.demo-go:focus-visible,.filters button:focus-visible{outline-color:var(--c-crimson)}
 .match a{background:#FFFAF8;border-color:#C8143F2e}
 
-/* ===== sub-pages: the light hero with the cast (ks-gifts.v1.css) in Coral Wave ===== */
-.gh{background:radial-gradient(40% 60% at 10% 78%,#FF8FA34d,#0000 70%),radial-gradient(44% 64% at 88% 60%,#FFE08Aa6,#0000 70%),radial-gradient(30% 40% at 60% 100%,#E0446C33,#0000 70%),var(--c-cream);color:var(--c-ink)}
-.gh .crumb{color:var(--c-ink-2)}
-.gh .crumb a{color:var(--c-crimson)}
-.gh-kick{font:600 15px/1.3 "DM Sans",system-ui,sans-serif;color:var(--c-crimson)}
-.gh h1{font:700 clamp(40px,6vw,84px)/.96 var(--f-display);letter-spacing:-.045em;color:var(--c-crimson)}
-.gh h1 em{font-style:normal;color:var(--c-pink)}
-.gh .lead{color:var(--c-ink-2)}
-.gh-art .string path{stroke:var(--c-crimson)}
-.gh-floor{height:14px;background:linear-gradient(90deg,var(--c-crimson),var(--c-pink),var(--c-coral),var(--c-yellow))}
-.gh .jump a{border-color:#C8143F2e;color:var(--c-crimson);background:#FFFAF8}
-.gh .jump a:hover{background:var(--c-crimson);color:#fff}
+/* ===== sub-pages: the same glowing berry hero as the landing page (overrides ks-gifts.v1.css) ===== */
+.gh{color:#FFE9EC;background:radial-gradient(46% 70% at 78% 60%,#E0446Ccc,#0000 70%),radial-gradient(40% 60% at 0% 0%,#C8143Fb3,#0000 70%),radial-gradient(40% 50% at 100% 100%,#C8143F80,#0000 70%),linear-gradient(120deg,#6E0C27,#4A0D1F 60%,#3D0A19)}
+.gh::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.55;background-image:radial-gradient(#ffffff26 1px,#0000 1.5px);background-size:22px 22px;-webkit-mask-image:radial-gradient(50% 70% at 76% 50%,#000,#0000);mask-image:radial-gradient(50% 70% at 76% 50%,#000,#0000)}
+.gh-in{position:relative}
+.gh .crumb{color:#F2BFC6}
+.gh .crumb a{color:#FFE9EC}
+.gh-kick{display:inline-block;padding:6px 14px;border-radius:99px;border:1px solid #ffffff38;background:#ffffff17;font:600 13.5px/1.2 "DM Sans",system-ui,sans-serif;color:var(--c-yellow)}
+.gh h1,.gh h1.d{font:700 clamp(40px,6vw,84px)/.96 var(--f-display);letter-spacing:-.045em;color:#fff}
+.gh h1 em,.gh h1.d em{font:400 1.06em/.8 Parisienne,"Snell Roundhand",cursive;letter-spacing:0;color:var(--c-yellow);display:inline-block;rotate:-3deg;translate:0 .05em;text-shadow:0 0 28px #FFE08A66}
+.gh .lead{color:#FFD9DE;margin-top:clamp(26px,3vw,40px)}
+.gh .btn.wine,.gh .btn.gold{background:var(--c-yellow);color:#3D0A19;box-shadow:0 14px 30px -14px #FFE08A99}
+.gh .btn.wine:hover,.gh .btn.gold:hover{background:#FFE9A8}
+.gh .btn.line-wine{background:transparent;color:#fff;border-color:#ffffff80}
+.gh .btn.line-wine:hover{background:#ffffff1f;color:#fff;border-color:#fff}
+.gh-art img{filter:drop-shadow(0 14px 14px #1F030B88)}
+.gh-art .string path{stroke:var(--c-yellow)}
+.gh-floor{height:0}
+.gh .jump a{border-color:#ffffff59;color:#fff;background:#ffffff17}
+.gh .jump a:hover{background:#fff;color:var(--c-crimson)}
+.gh :focus-visible{outline:2px solid var(--c-yellow);outline-offset:3px}
 .web-txt h3,.why h3,.ideas h3{font-family:var(--f-display);font-weight:600;letter-spacing:-.03em;color:var(--c-ink)}
 .why div{border-color:var(--c-line);background:#FFFAF8}
 .ideas div{border-left-color:var(--c-coral)}
