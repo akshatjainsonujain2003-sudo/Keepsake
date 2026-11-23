@@ -1,7 +1,7 @@
 // robots.txt, sitemap.xml and /api/config, in one function (the hosting plan allows at most 12).
 const pages = ["/", "/shops/cafe", "/shops/salon", "/shops/gym", "/shops/real-estate", "/shops/general-store", "/shops/boutique", "/shops/clinic", "/shops/bakery", "/shops/sweet-shop", "/shops/restaurant", "/shops/cloud-kitchen", "/shops/tea-stall", "/shops/jewellery", "/shops/ethnic-wear", "/shops/gift-shop", "/shops/barber", "/shops/coaching", "/shops/optician", "/shops/hardware", "/shops/mobile-repair", "/shops/jaipur", "/hi/dukaan-ki-website", "/hi/qr-menu-kaise-banaye", "/hi/whatsapp-gst-bill", "/gifts", "/digital-gifts", "/gifts/girlfriend", "/gifts/boyfriend", "/gifts/anniversary", "/gifts/birthday", "/gifts/valentines", "/gifts/long-distance", "/designs", "/contact", "/terms", "/privacy", "/refunds", "/shipping"];
 // Date the public pages last changed. Bump it when page content changes; search engines trust lastmod only when it's accurate.
-const UPDATED = "2026-11-13";
+const UPDATED = "2026-11-24";
 // Private or per-customer paths: crawled by nobody (they are also noindex).
 const PRIVATE = ["/admin", "/hq", "/api/", "/login", "/dashboard", "/account", "/creator", "/shops/dashboard", "/shops/my", "/m/", "/s/", "/c/", "/k/", "/u/", "/p/", "/bill/", "/ca/"];
 const handler = async (req, res) => {
