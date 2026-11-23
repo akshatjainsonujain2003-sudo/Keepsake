@@ -169,7 +169,7 @@ section{position:relative;padding:clamp(80px,12vw,150px) 0}
 .strip figcaption{margin-top:10px;font:400 italic 17px var(--serif);color:var(--soft)}
 
 /* ---------- a letter in a flower envelope ---------- */
-.letter{text-align:center;overflow:hidden}
+.letter{text-align:center;overflow:visible}
 .letter .label{margin-bottom:8px}
 .letter h2{font-size:clamp(40px,7vw,64px);text-wrap:balance}
 .stack{display:grid;justify-items:center;margin:40px auto 0;width:min(560px,100%)}
@@ -180,9 +180,9 @@ section{position:relative;padding:clamp(80px,12vw,150px) 0}
 @media (prefers-reduced-motion:no-preference){.envbtn img{animation:breathe 3.2s ease-in-out infinite}}
 @keyframes breathe{50%{transform:translateY(-6px) rotate(-1deg)}}
 .handletter{width:min(420px,84%);rotate:5deg;translate:14% -2%;opacity:0;transform:translateY(40%) scale(.85);transition:transform 1.2s .2s cubic-bezier(.2,.8,.3,1),opacity .8s .2s;box-shadow:0 20px 40px -20px #3a332466}
-.note{position:relative;width:min(470px,92%);text-align:left;background:var(--paper);padding:clamp(34px,7vw,52px);rotate:-1.5deg;opacity:0;transform:translateY(46%) scale(.85);transition:transform 1.2s .35s cubic-bezier(.2,.8,.3,1),opacity .8s .35s;box-shadow:0 30px 60px -30px #2a292277;z-index:2}
+.note{position:relative;width:min(470px,92%);min-width:0;text-align:left;background:var(--paper);padding:clamp(34px,7vw,52px);rotate:-1.5deg;opacity:0;transform:translateY(46%) scale(.85);transition:transform 1.2s .35s cubic-bezier(.2,.8,.3,1),opacity .8s .35s;box-shadow:0 30px 60px -30px #2a292277;z-index:2;overflow-wrap:anywhere}
 .note h3{font-size:clamp(32px,6vw,44px);margin-bottom:16px}
-.note p{font-size:18px;line-height:1.75;margin:0 0 1em}
+.note p{font-size:18px;line-height:1.75;margin:0 0 1em;overflow-wrap:anywhere}
 .note .sig{font:400 clamp(44px,8vw,58px)/1 var(--hand);color:var(--olive);text-align:right;margin-top:8px}
 .note .stamp{right:-26px;top:-30px;width:86px;rotate:10deg}
 .letter.open .envbtn{transform:translateY(75%) scale(.6) rotate(-6deg);opacity:0;pointer-events:none}
@@ -444,12 +444,9 @@ section{position:relative;padding:clamp(80px,12vw,150px) 0}
    <div>
     <h3 id="songTitle">Slow Mornings</h3>
     <div class="by">Our song</div>
-    <div class="prog"><b id="bar"></b></div>
     <div class="ctrl">
-     <button type="button" aria-label="Previous"><svg width="18" height="18" viewBox="0 0 24 24"><path fill="currentColor" d="M6 5h2v14H6zM20 5v14L9 12z"/></svg></button>
-     <button type="button" class="play" id="play" aria-label="Play"><svg width="16" height="16" viewBox="0 0 24 24"><path id="pi" fill="currentColor" d="M7 4v16l13-8z"/></svg></button>
-     <button type="button" aria-label="Next"><svg width="18" height="18" viewBox="0 0 24 24"><path fill="currentColor" d="M16 5h2v14h-2zM4 5v14l11-7z"/></svg></button>
-     <small id="time">0:00 / 3:42</small>
+     <button type="button" class="play" id="play" aria-label="Open Spotify player"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentColor" d="M7 4v16l13-8z"/></svg></button>
+     <small id="playHint">Tap to reach the Spotify player below</small>
     </div>
    </div>
   </div>
@@ -580,7 +577,7 @@ function render(D, first) {
   $("songCap").textContent = K.str(D.song && D.song.cap, 90);
   const sp = K.spotify(D.song && D.song.url), spot = $("spot");
   if (!sp) spot.textContent = "";
-  else if (!spot.firstChild || spot.firstChild.src !== sp.src) { spot.textContent = ""; const f = el("iframe"); f.src = sp.src; f.height = sp.h; f.loading = "lazy"; f.allow = "encrypted-media; clipboard-write"; f.title = "Our song on Spotify"; spot.appendChild(f); }
+  else if (!spot.firstChild || spot.firstChild.src !== sp.src) { spot.textContent = ""; const f = el("iframe"); f.src = sp.src; f.height = sp.h; f.loading = "lazy"; f.allow = "autoplay; encrypted-media; clipboard-write; fullscreen; picture-in-picture"; f.loading = "eager"; f.title = "Our song on Spotify"; spot.appendChild(f); }
 
   // countdown + words
   $("countSec").hidden = D.countdown === false;
@@ -667,15 +664,13 @@ function render(D, first) {
   setTimeout(tick, 1000);
 })();
 
-// player: spins the record; the real song plays in the Spotify player below it
+// The visible button must not fake playback: Spotify owns the audio controls.
 (function () {
-  const p = $("player"), b = $("play"), bar = $("bar"), t = $("time");
-  let on = false, sec = 0, timer = 0; const len = 222;
+  const b = $("play"), spot = $("spot");
   b.onclick = () => {
-    on = !on; p.classList.toggle("on", on); b.setAttribute("aria-label", on ? "Pause" : "Play");
-    $("pi").setAttribute("d", on ? "M6 4h4v16H6zM14 4h4v16h-4z" : "M7 4v16l13-8z");
-    clearInterval(timer);
-    if (on) timer = setInterval(() => { sec = (sec + 1) % len; bar.style.width = (sec / len * 100) + "%"; t.textContent = `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, "0")} / 3:42`; }, 1000);
+    const frame = spot.querySelector("iframe");
+    if (frame) { spot.scrollIntoView({ behavior: "smooth", block: "center" }); frame.focus(); }
+    else { $("playHint").textContent = "This song is not available to play right now."; }
   };
 })();
 
