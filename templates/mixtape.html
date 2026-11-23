@@ -210,11 +210,11 @@ section{position:relative;padding:clamp(80px,11vw,140px) 0}
 
 /* ---------- the letter, with red embroidery ---------- */
 .letter{background:url(/assets/mixtape/gingham.webp) center/cover}
-.ltr{position:relative;background:var(--paper);padding:clamp(56px,9vw,90px) clamp(28px,7vw,80px);box-shadow:0 30px 50px -30px #2c1c18aa}
+.ltr{position:relative;min-width:0;background:var(--paper);padding:clamp(56px,9vw,90px) clamp(28px,7vw,80px);box-shadow:0 30px 50px -30px #2c1c18aa;overflow-wrap:anywhere}
 .ltr .e1{right:12px;top:12px;width:min(120px,26%);transform:scaleY(-1)}
 .ltr .e2{left:12px;bottom:12px;width:min(120px,26%);transform:scaleX(-1)}
 .ltr h3{font:700 clamp(40px,7vw,56px)/1 var(--hand);color:var(--red);margin-bottom:18px}
-.ltr p{margin:0 0 1em;font-size:19px;line-height:1.8}
+.ltr p{margin:0 0 1em;font-size:19px;line-height:1.8;overflow-wrap:anywhere}
 .ltr .sig{font:700 clamp(32px,5vw,42px)/1 var(--hand);text-align:right;margin-top:16px}
 .ltr .seal{position:absolute;left:50%;bottom:-48px;width:96px;margin-left:-48px;filter:drop-shadow(0 8px 10px #0004)}
 .js .ltr .w{opacity:0;transition:opacity .4s;transition-delay:calc(var(--i)*28ms + .3s)}
@@ -418,10 +418,12 @@ function render(D, first) {
   (D.tracks || []).map(t => K.str(t, 60)).filter(Boolean).slice(0, 8).forEach(t => tl.appendChild(el("li", "", t)));
   $("jcard").hidden = !tl.children.length;
   const sp = K.spotify(D.song && D.song.url);
+  $("playBtn").hidden = !sp;
   $("playBtn").onclick = () => {
-    const on = $("player").classList.toggle("playing");
-    $("playBtn").querySelector("span").textContent = on ? "pause the tape" : "play our song";
-    if (on && sp && !$("spot").firstChild) { const f = el("iframe"); f.src = sp.src; f.height = sp.h; f.allow = "autoplay; encrypted-media; clipboard-write"; f.title = "Our song on Spotify"; $("spot").appendChild(f); }
+    if (!sp) return;
+    if (!$("spot").firstChild) { const f = el("iframe"); f.src = sp.src; f.height = sp.h; f.loading = "eager"; f.allow = "autoplay; encrypted-media; clipboard-write; fullscreen; picture-in-picture"; f.title = "Our song on Spotify"; $("spot").appendChild(f); }
+    $("playBtn").querySelector("span").textContent = "use the Spotify player below";
+    $("spot").scrollIntoView({ behavior: "smooth", block: "center" });
   };
   if (!sp) $("spot").textContent = "";
 
