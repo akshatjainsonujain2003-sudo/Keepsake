@@ -40,6 +40,7 @@ module.exports = async (req, res) => {
     // Admin app (/hq)
     if (typeof b.action === "string" && b.action.startsWith("hq-") || b.action && String(b.action).startsWith("push-")) {
       const H = require("./_hq");
+      if (b.action === "hq-gifts-data") return db.reply(res, 200, await require("./_gifts").data());
       if (b.action === "hq-gifts-summary") return db.reply(res, 200, await require("./_gifts").summary());
       if (b.action === "hq-gifts-orders") return db.reply(res, 200, { orders: await require("./_gifts").orders() });
       if (b.action === "hq-gifts-pages") return db.reply(res, 200, { pages: await require("./_gifts").pages() });
