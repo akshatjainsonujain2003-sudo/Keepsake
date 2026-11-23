@@ -111,12 +111,12 @@ html.locked{overflow:hidden}
 .letter.open .env .greet{opacity:0}
 .letter .hint{margin-top:18px;font:italic 400 17px var(--serif);color:#f3e2c8cc}
 .unfold{display:grid;grid-template-rows:0fr;transition:grid-template-rows 1.2s cubic-bezier(.2,.7,.2,1)}
-.unfold>div{overflow:hidden}
+.unfold>div{min-height:0;overflow:hidden}
 .letter.open .unfold{grid-template-rows:1fr}
-.note{position:relative;margin:34px -6px 6px;text-align:left;color:var(--ink);border:34px solid transparent;border-image:url(/assets/redletter/torn-paper.webp) 70 fill / 34px stretch;filter:drop-shadow(0 18px 24px #0009)}
+.note{position:relative;min-width:0;margin:34px -6px 6px;text-align:left;color:var(--ink);border:34px solid transparent;border-image:url(/assets/redletter/torn-paper.webp) 70 fill / 34px stretch;filter:drop-shadow(0 18px 24px #0009);overflow-wrap:anywhere}
 .note>div{padding:6px 4px 26px}
 .note h3{font:400 46px/1 var(--script);color:var(--oxblood);margin-bottom:14px}
-.note p{margin:0 0 1em;font:400 20px/1.6 var(--serif)}
+.note p{margin:0 0 1em;font:400 20px/1.6 var(--serif);overflow-wrap:anywhere}
 .note .sign{font:400 38px/1 var(--script);color:var(--oxblood);text-align:right;margin-top:16px}
 .js .note .w{opacity:0;transition:opacity .5s;transition-delay:calc(var(--i)*28ms + .9s)}
 .letter.open .note .w{opacity:1}
@@ -157,7 +157,8 @@ html.locked{overflow:hidden}
 .pola img{width:100%;aspect-ratio:1;object-fit:cover;background:#e9dccb}
 .pola .tp{position:absolute;left:24%;top:-16px;width:52%;transform:rotate(-4deg)}
 .story .pola{width:50%;right:2%;bottom:2%;transform:rotate(5deg)}
-.story .nh{left:43%;top:43%;width:15%;transform:rotate(-12deg)}
+.story .stampf,.story .pola{z-index:2}
+.story .nh{left:52%;top:4%;width:12%;z-index:1;transform:rotate(-12deg)}
 .story .sr{right:4%;top:0;width:19%;transform:rotate(9deg)}
 .story p{margin:0 0 1em;font:400 20px/1.65 var(--serif)}
 .story p:first-of-type::first-letter{float:left;font:400 78px/.8 var(--script);color:var(--oxblood);margin:10px 8px 0 0}
@@ -497,7 +498,7 @@ function render(D) {
   $("songNote").textContent = K.str(D.song && D.song.note, 60);
   const sp = K.spotify(D.song && D.song.url);
   $("spotBtn").hidden = !sp; $("spot").textContent = "";
-  $("spotBtn").onclick = () => { if (!sp || $("spot").firstChild) return; const f = el("iframe"); f.src = sp.src; f.height = sp.h; f.allow = "autoplay; encrypted-media; clipboard-write"; f.title = "Our song on Spotify"; $("spot").appendChild(f); };
+  $("spotBtn").onclick = () => { if (!sp || $("spot").firstChild) return; const f = el("iframe"); f.src = sp.src; f.height = sp.h; f.allow = "autoplay; encrypted-media; clipboard-write; fullscreen; picture-in-picture"; f.loading = "eager"; f.title = "Our song on Spotify"; $("spot").appendChild(f); $("spot").scrollIntoView({ behavior: "smooth", block: "center" }); };
 
   // together for... (or a countdown, if the date is still ahead)
   $("countT").textContent = ahead ? "until our day" : "together for";
