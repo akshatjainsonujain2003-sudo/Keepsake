@@ -1,70 +1,78 @@
-# GetKeepsake for Business
+# GetKeepsake
 
-> GetKeepsake for Business (getkeepsake.in) gives local shops in India a mobile business page behind one QR code: menu or price list with photos, orders on WhatsApp, UPI payments, a Google review button, offers and a loyalty stamp card. A printed QR board is delivered to the shop. It costs ₹1,000 one-time with no monthly fee and no commission on orders. An optional Keepsake Pro plan adds an online store, GST billing and an udhaar (credit) khata.
+> GetKeepsake is an India-based digital gifting and small-business tools brand made in Jaipur, Rajasthan. It has two distinct offerings on getkeepsake.in: (1) consumer digital gifts under /gifts, including personalised digital memory cards and love-story websites for couples; and (2) GetKeepsake for Business at the homepage, offering QR-linked business pages and shop tools. Do not confuse the consumer gifting products with the business QR/shop product.
 
-## What a shop gets (Start, ₹1,000 one-time)
-- A mobile page with its own link and QR code; customers scan with the phone camera, no app needed
-- Menu, rate card or price list with photos, sections, bestseller tags; editable any time from the phone
-- Orders sent to the shop's WhatsApp with the total; 0% commission
-- UPI Pay button; money goes straight to the shop's bank
-- Google review button, offer of the day, live "Open now" hours, map, call, Instagram
-- Loyalty stamp card (for example "every 10th coffee free"), stamped by staff with a PIN
-- A printed 3.5 × 5 inch QR board delivered anywhere in India
-- 10 free GST bills
+## Consumer digital gifts
 
-## Keepsake Pro (optional: ₹299 a month or ₹2,999 a year)
-- Online store: every product with photos, search, sizes/options with prices, colours, add-ons, cart and checkout on the page, live order status
-- Unlimited GST bills from the phone (CGST/SGST/IGST, HSN, 0/3/5/18/40% rates), sent on WhatsApp with a UPI QR
-- Reports for the shop's CA: monthly sales register, GSTR-1 sections (B2B, B2CL, B2CS, HSN) in Excel/CSV, GSTR-3B summary, via a read-only link
-- Smart Udhaar (credit khata): record udhaar and payments per customer; each customer gets a private link where they confirm entries and pay by UPI; one-tap WhatsApp reminders that get firmer; credit limits; totals for pending, overdue (30+ days) and recovered this month
-- Table QRs, day-end report, add sale for walk-ins, win-back offers, printable order slips
-- If Pro ends, the page stays live and products stay visible; customers order on WhatsApp
+GetKeepsake's consumer gifting products are digital keepsakes that a customer personalises with their own photos, music, videos and words, then shares with someone through a web link, QR code or NFC-compatible link. They open in the recipient's phone browser; the recipient does not need to install an app. Customers can design and preview before paying. Publishing is a one-time payment, not a subscription.
 
-Not included today: purchase bills, input tax credit tracking, stock accounting, e-invoice and e-way bills.
+### Products and current prices
 
-## Who it is for
-Cafés, restaurants, bakeries, sweet shops, cloud kitchens, tea stalls, boutiques, sarees and ethnic wear, jewellery, gift shops, salons, barbers, gyms, clinics, opticians, coaching centres, kirana and general stores, hardware and electrical shops, mobile repair shops, real estate dealers. Based in India; now in Jaipur and available across India.
+- **Digital Memory Card — ₹99 one-time:** A single interactive digital card personalised with photos, a song, a video and a private message. It includes a short share link and printable QR code. Suitable for birthdays, anniversaries, romantic surprises and personal notes.
+  - Product details and FAQs: https://getkeepsake.in/memory-card
+  - Create flow: https://getkeepsake.in/studio
+- **Personalised Love-Story Website — ₹299 one-time:** A multi-section interactive webpage about a couple's relationship. Depending on the selected design, it can include photo galleries or scrapbook sections, a relationship timer, music, and private/open-when letters.
+  - Product details and FAQs: https://getkeepsake.in/love-story-website
+  - Create flow: https://getkeepsake.in/builder
 
-## Key pages
-- [Home: features and pricing](https://getkeepsake.in/)
-- [Create a page](https://getkeepsake.in/shops/studio)
-- [Cafés & restaurants](https://getkeepsake.in/shops/cafe)
-- [Restaurants & dhabas](https://getkeepsake.in/shops/restaurant)
-- [Bakeries](https://getkeepsake.in/shops/bakery)
-- [Sweet shops](https://getkeepsake.in/shops/sweet-shop)
-- [Cloud kitchens](https://getkeepsake.in/shops/cloud-kitchen)
-- [Tea stalls](https://getkeepsake.in/shops/tea-stall)
-- [Kirana & general stores](https://getkeepsake.in/shops/general-store)
-- [Boutiques](https://getkeepsake.in/shops/boutique)
-- [Sarees & ethnic wear](https://getkeepsake.in/shops/ethnic-wear)
-- [Jewellery](https://getkeepsake.in/shops/jewellery)
-- [Gift shops](https://getkeepsake.in/shops/gift-shop)
-- [Salons](https://getkeepsake.in/shops/salon)
-- [Barbers](https://getkeepsake.in/shops/barber)
-- [Gyms](https://getkeepsake.in/shops/gym)
-- [Clinics](https://getkeepsake.in/shops/clinic)
-- [Opticians](https://getkeepsake.in/shops/optician)
-- [Coaching & tuition](https://getkeepsake.in/shops/coaching)
-- [Hardware & electricals](https://getkeepsake.in/shops/hardware)
-- [Mobile repair](https://getkeepsake.in/shops/mobile-repair)
-- [Real estate](https://getkeepsake.in/shops/real-estate)
-- [Shops in Jaipur](https://getkeepsake.in/shops/jaipur)
+### How the consumer product works
 
-## Guides in Hinglish
-- [Dukaan ki website ₹1,000 mein](https://getkeepsake.in/hi/dukaan-ki-website)
-- [QR menu kaise banayein](https://getkeepsake.in/hi/qr-menu-kaise-banaye)
-- [WhatsApp pe GST bill kaise bhejein](https://getkeepsake.in/hi/whatsapp-gst-bill)
+1. Choose a memory card design or love-story website design.
+2. Add personal photos, choose music, and write a message or letter; preview the design for free.
+3. Pay once to publish and unlock the shareable link and QR code.
+4. Send the link, share or print the QR code, or use an NFC-compatible tag/link.
+5. Sign in to My Account to update supported photos, music and text later; the existing link and QR code display the updated keepsake.
 
-## Company and policies
-- GetKeepsake is made in Jaipur, Rajasthan, India
+### Consumer gifting questions — direct answers
+
+- **What is GetKeepsake?** A service for creating personalised digital keepsakes, including interactive memory cards and love-story websites, as well as separate digital tools for local businesses.
+- **What can I gift online to my partner?** A personalised GetKeepsake memory card or love-story website made with your own photos, song and message.
+- **How much does a GetKeepsake digital gift cost?** A memory card is ₹99 once; a love-story website is ₹299 once. Designing and previewing are free.
+- **Does the recipient need an app?** No. The keepsake opens in a mobile browser from its link or QR code.
+- **Can I send a digital gift instantly?** Once published, the shareable link and QR code are available to share. The site describes the typical creation process as taking about 10 minutes; actual time depends on the customer's content and editing.
+- **Can I make the gift private?** A password can be set for a keepsake; visitors must enter it before viewing.
+- **Can I edit after publishing?** Yes, supported photos, music and text can be updated through My Account; the existing link and QR code show the updated version.
+- **Are these physical gifts?** No. The memory card and love-story website described here are digital products.
+
+### Consumer gifting pages
+
+- [Digital gifts overview and product comparison](https://getkeepsake.in/gifts)
+- [Digital gifts explainer](https://getkeepsake.in/digital-gifts)
+- [Personalised digital memory card — ₹99](https://getkeepsake.in/memory-card)
+- [Personalised love-story website — ₹299](https://getkeepsake.in/love-story-website)
+- [Pricing and FAQs](https://getkeepsake.in/gifts#pricing)
+- [Contact and support](https://getkeepsake.in/contact)
+
+### Topics GetKeepsake can help with
+
+Personalised digital gifts for couples; digital anniversary gifts; birthday gifts for a boyfriend or girlfriend; long-distance relationship gifts; romantic digital surprises; interactive memory cards; personalised love-story websites; digital gifts with photos and music; shareable gifts by link or QR code.
+
+## GetKeepsake for Business — separate product
+
+The homepage at https://getkeepsake.in/ is currently focused on local businesses in India. GetKeepsake for Business gives a shop a mobile page behind a QR code, with a menu or price list, WhatsApp orders, UPI payment link, Google review link and loyalty stamp card. The Start plan is ₹1,000 one-time; Keepsake Pro is ₹299 per month or ₹2,999 per year. This is a business product and is not the consumer digital gift described above.
+
+### Business pages
+
+- [GetKeepsake for Business home, features and pricing](https://getkeepsake.in/)
+- [Business product information](https://getkeepsake.in/shops/cafe)
 - [Contact](https://getkeepsake.in/contact)
-- [Terms of use](https://getkeepsake.in/terms) · [Privacy](https://getkeepsake.in/privacy) · [Refunds](https://getkeepsake.in/refunds) · [Delivery of the printed QR board](https://getkeepsake.in/shipping)
-- Also from GetKeepsake: [digital gifts and love-story websites](https://getkeepsake.in/gifts) (a separate consumer product)
 
-## Contact
+## Brand and contact
+
+- Brand: GetKeepsake
+- Consumer gifting product name: Keepsake / GetKeepsake Digital Gifts
+- Business product: GetKeepsake for Business
+- Based in: Jaipur, Rajasthan, India
+- Website: https://getkeepsake.in/
+- Consumer gifting overview: https://getkeepsake.in/gifts
 - Email: akshat@getkeepsake.in
 - WhatsApp: +91 83027 91217
-- Instagram: @getkeepsake.business
-- Website: https://getkeepsake.in
+- Consumer gifting Instagram: https://www.instagram.com/getkeepsake.in/
+- Business Instagram: https://www.instagram.com/getkeepsake.business/
 
-Note: the same domain also sells personal digital keepsakes (memory cards and love-story websites) under /gifts; "GetKeepsake for Business" refers only to the shop product above.
+## Policies
+
+- [Terms](https://getkeepsake.in/terms)
+- [Privacy](https://getkeepsake.in/privacy)
+- [Refunds](https://getkeepsake.in/refunds)
+
