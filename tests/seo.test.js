@@ -24,9 +24,11 @@ test("product landing pages are distinct from the consumer overview", () => {
   assert.ok(seo.PAGES.includes("/love-story-website"));
 });
 
-test("preview root is routed to consumer gifts, not the business homepage", () => {
-  const rootRewrite = config.rewrites.find(r => r.source === "/");
-  assert.equal(rootRewrite?.destination, "/gifts.html");
+test("Vercel preview root redirects to consumer gifts without changing production root", () => {
+  const index = fs.readFileSync(path.join(root, "index.html"), "utf8");
+  assert.ok(index.includes('location.hostname.endsWith(".vercel.app")'));
+  assert.ok(index.includes('location.replace("/gifts.html"'));
+  assert.ok(!config.rewrites.some(r => r.source === "/"));
 });
 test("new 18-card collection is present in consumer gallery and studio", () => {
   const gallery = fs.readFileSync(path.join(root, "designs.html"), "utf8");
