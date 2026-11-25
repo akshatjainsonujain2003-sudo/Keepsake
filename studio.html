@@ -1492,7 +1492,21 @@ body{background:#FFF1EF}
 footer{background:#3D0A19}
 </style>
 
-<script src="/assets/ks-pixel.v1.js" defer></script><script src="/assets/ks-ref.v1.js" defer></script></head>
+<script src="/assets/ks-pixel.v1.js" defer></script><script src="/assets/ks-ref.v1.js" defer></script><style id="cards-redesign-v1">
+/* 2026 Cards Studio redesign: editorial rose/cream, clearer template selection */
+:root{--ks-redesign-bg:#fff8f5;--ks-redesign-ink:#2a171c;--ks-redesign-accent:#8f334a;--ks-redesign-line:#ead9d5}
+body{background:var(--ks-redesign-bg)!important;color:var(--ks-redesign-ink)!important}
+header,nav,.topbar{backdrop-filter:blur(18px)}
+#hero,.hero{background:linear-gradient(120deg,#fff7f0,#f8e6e4)!important;border-radius:28px!important}
+#templates,.templates,.templateGrid,#templateGrid{gap:14px!important}
+.template,.tpl,.template-card,.tcard,.design-card{border:1px solid var(--ks-redesign-line)!important;border-radius:20px!important;overflow:hidden!important;background:#fffdfb!important;box-shadow:0 8px 28px #3a10100a!important;transition:transform .22s,box-shadow .22s,border-color .22s!important}
+.template:hover,.tpl:hover,.template-card:hover,.tcard:hover,.design-card:hover{transform:translateY(-3px)!important;box-shadow:0 14px 34px #3a101018!important;border-color:#c88a99!important}
+button,.btn,.primary{border-radius:999px!important}
+input,textarea,select{border-radius:14px!important}
+#templateGrid img,.template img,.tpl img,.design-card img{object-fit:cover}
+@media(max-width:700px){body{padding-bottom:calc(92px + env(safe-area-inset-bottom))}#templateGrid,.templateGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}.template,.tpl,.template-card,.tcard{border-radius:16px!important}.hero h1{font-size:clamp(36px,11vw,54px)!important}}
+</style>
+</head>
 <body>
 <div class="topbar"><div class="wrap nav">
 <a class="brand" href="/gifts">Keepsake</a>
