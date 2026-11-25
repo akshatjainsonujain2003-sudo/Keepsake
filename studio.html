@@ -2229,6 +2229,7 @@ document.addEventListener("click",async e=>{const b=e.target.closest("#mineList 
 async function init(){ if(await parseHash()){showViewer();return} await licence();
  if(!$("#templateGrid")||!$("#preview")){return}
  restoreDraft();
+ const requestedDesign=new URLSearchParams(location.search).get('design'); if(requestedDesign&&templates.some(t=>t.id===requestedDesign)){currentTemplate=requestedDesign;d.template=requestedDesign;}
  hydrateForm();
  templateUI();$("#heroImg").src=getTemplate().th;bindLive();renderPreview();urlStart();
  LOCK=KSLock.mount($("#lockBox"));await openForEdit();
