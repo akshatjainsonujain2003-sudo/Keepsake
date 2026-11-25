@@ -1659,7 +1659,7 @@ const templates=[
  {id:"new17",name:"Swan Lake",img:"/assets/cards/new-17.svg"},
  {id:"new18",name:"Heirloom Album",img:"/assets/cards/new-18.svg"}
 ];
-templates.forEach(t=>t.th="/assets/t-"+t.id+".webp");
+templates.forEach(t=>t.th=t.id.startsWith("new")?t.img:"/assets/t-"+t.id+".webp");
 const DEF={t:"Our Memories",q:"Every moment with you is a beautiful memory.",p:"",style:"classic",i:[
  {k:"g",l:"Photo gallery",v:""},{k:"v",l:"Watch our video",v:""},{k:"a",l:"Our song",v:""},{k:"x",l:"A special message",v:"Write your message here."}
 ]};
