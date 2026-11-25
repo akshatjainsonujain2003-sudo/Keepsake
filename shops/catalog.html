@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#f4f1ea">
+<title>AI Catalog Studio · GetKeepsake</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f4f1ea;--paper:#fffdf8;--ink:#171512;--muted:#716a60;--line:#e1d9cc;--accent:#ff5b2e;--yellow:#ffd84d;--green:#1e6a45;--red:#b3261e;--radius:20px}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 Inter,system-ui,sans-serif}button,input,select,textarea{font:inherit}button{cursor:pointer}a{color:inherit}
+.wrap{max-width:1180px;margin:auto;padding:0 22px}.top{position:sticky;top:0;z-index:10;background:#f4f1eaeF;backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}.topin{height:68px;display:flex;align-items:center;justify-content:space-between;gap:16px}.brand{font-weight:800;letter-spacing:-.05em;text-decoration:none;font-size:19px}.brand span{color:var(--accent)}.admin{font-size:12px;color:var(--muted)}
+.hero{padding:38px 0 26px}.eyebrow{font-size:11px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--accent)}h1{font-size:clamp(36px,6vw,66px);letter-spacing:-.065em;line-height:.98;margin:12px 0}.hero p{max-width:680px;color:var(--muted);margin:14px 0 0;font-size:16px}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:24px 0 30px}.step{border:1px solid var(--line);background:#ffffff70;border-radius:14px;padding:13px 15px;display:flex;gap:11px;align-items:center}.num{width:30px;height:30px;border-radius:10px;background:var(--ink);color:white;display:grid;place-items:center;font-size:12px;font-weight:800;flex:none}.step b{display:block;font-size:13px}.step small{color:var(--muted);font-size:11px}
+.layout{display:grid;grid-template-columns:350px minmax(0,1fr);gap:18px;align-items:start;padding-bottom:60px}.panel{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:20px;box-shadow:0 8px 30px #291d0b06}.panel h2{font-size:17px;letter-spacing:-.03em;margin:0 0 6px}.sub{color:var(--muted);font-size:12px;margin:0 0 17px}
+label{display:block;font-size:12px;font-weight:700;margin:15px 0 7px}input[type=text],input[type=password],select,textarea{width:100%;border:1px solid var(--line);border-radius:11px;padding:11px 12px;background:#fff;color:var(--ink);outline:none}input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px #ff5b2e1a}
+.drop{border:1.5px dashed #c9bdae;border-radius:16px;background:#faf7f0;padding:20px 14px;text-align:center;cursor:pointer;transition:.2s}.drop:hover,.drop.drag{border-color:var(--accent);background:#fff5ef}.drop .ico{font-size:26px}.drop b{display:block;font-size:13px;margin:6px 0 3px}.drop small{font-size:11px;color:var(--muted)}.filelist{display:grid;gap:6px;margin-top:9px}.file{display:flex;align-items:center;gap:8px;padding:8px;background:#f6f2e9;border-radius:9px;font-size:11px}.file span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.file button{border:0;background:transparent;font-size:17px}.btn{border:0;border-radius:999px;background:var(--ink);color:#fff;padding:12px 16px;font-weight:750;font-size:13px;display:inline-flex;align-items:center;justify-content:center;gap:8px}.btn:hover{opacity:.88}.btn.primary{background:var(--accent);color:#fff}.btn.yellow{background:var(--yellow);color:var(--ink)}.btn.outline{background:transparent;border:1px solid var(--line);color:var(--ink)}.btn:disabled{opacity:.4;cursor:not-allowed}.full{width:100%;margin-top:14px}.small{font-size:11px;color:var(--muted);margin:12px 0 0;line-height:1.55}
+.notice{display:none;margin-top:12px;border-radius:12px;padding:11px 12px;font-size:12px;white-space:pre-wrap}.notice.show{display:block}.notice.error{background:#fff0ee;color:var(--red)}.notice.ok{background:#eaf6ee;color:var(--green)}.notice.info{background:#f1f0eb;color:var(--ink)}
+.toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:space-between;margin-bottom:12px}.toolbar h2{margin:0}.pill{font-size:11px;background:#eee8dc;padding:6px 9px;border-radius:99px;font-weight:750}.actions{display:flex;gap:7px;flex-wrap:wrap}
+.empty{border:1px dashed #c9bdae;border-radius:16px;min-height:330px;display:grid;place-items:center;text-align:center;padding:28px;color:var(--muted)}.empty .big{font-size:36px;margin-bottom:8px}.empty b{display:block;color:var(--ink);font-size:15px}.empty p{font-size:12px;max-width:340px}
+.review{display:none}.review.active{display:block}.warnings{background:#fff8e2;border:1px solid #f0d98a;padding:12px 14px;border-radius:12px;font-size:12px;margin:12px 0}.warnings ul{margin:6px 0 0;padding-left:18px}.group{border:1px solid var(--line);border-radius:15px;overflow:hidden;margin:12px 0;background:white}.grouphead{background:#f7f2e9;padding:10px 12px;display:flex;gap:8px;align-items:center}.grouphead input{font-weight:800;background:transparent;border:0;padding:7px}.grouphead .count{font-size:11px;color:var(--muted);white-space:nowrap}.grouphead button{border:0;background:transparent;font-size:17px}.items{padding:0 12px 10px}.item{display:grid;grid-template-columns:minmax(0,1fr) 100px 34px;gap:8px;padding:12px 0;border-bottom:1px solid #eee8df;align-items:start}.item:last-child{border-bottom:0}.item input{font-size:12px;padding:9px}.item textarea{font-size:11px;padding:8px;resize:vertical;min-height:35px}.itemname{display:grid;gap:6px}.itemname small{font-size:10px;color:var(--muted)}.pricecol{display:grid;gap:5px}.pricecol label{margin:0;font-size:10px}.remove{border:1px solid var(--line);background:white;border-radius:9px;height:34px}.low{border-color:#e9b64d!important;background:#fff9e9!important}.lowhint{color:#8b5c00!important}.addrow{border:1px dashed #c9bdae;background:transparent;border-radius:9px;padding:8px 11px;font-size:11px;font-weight:700;margin:8px 0 0}
+.publish{display:none;margin-top:18px;border:1px solid #b9d9c5;background:#f1faf4;border-radius:16px;padding:16px}.publish.active{display:block}.publish h3{margin:0 0 4px;font-size:15px}.publish p{margin:0 0 10px;color:var(--muted);font-size:12px}.publish .row{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:end}.publish label{margin-top:8px}
+@media(max-width:860px){.layout{grid-template-columns:1fr}.steps{grid-template-columns:1fr}.step{padding:10px 12px}.panel{padding:16px}.hero{padding-top:28px}.item{grid-template-columns:minmax(0,1fr) 90px 32px}.publish .row{grid-template-columns:1fr}.publish .btn{width:100%}.topin{height:60px}}
+@media(max-width:420px){.wrap{padding:0 12px}.item{grid-template-columns:minmax(0,1fr) 80px 30px;gap:5px}.item input{padding:8px 6px}.panel{border-radius:15px}.hero p{font-size:14px}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap topin"><a class="brand" href="/shops">GetKeepsake<span>.</span> <small style="font-weight:500;color:#716a60;letter-spacing:0;font-size:12px">/ AI Catalog Studio</small></a><span class="admin">Internal tool · Admin access</span></div></header>
+<main class="wrap">
+<section class="hero"><div class="eyebrow">Catalog automation · 01</div><h1>From menu photo<br>to live shop.</h1><p>Upload a cafe menu or a service rate card. AI extracts the names, prices and categories. Review every row, then publish the approved catalog to the existing GetKeepsake business page.</p>
+<div class="steps"><div class="step"><span class="num">1</span><div><b>Upload</b><small>Photos of menus & rate cards</small></div></div><div class="step"><span class="num">2</span><div><b>Review</b><small>Edit names, prices & groups</small></div></div><div class="step"><span class="num">3</span><div><b>Publish</b><small>Update the business page</small></div></div></div></section>
+<div class="layout">
+<aside class="panel">
+<h2>Scan a catalog</h2><p class="sub">Start with the business details and source images.</p>
+<label for="adminKey">Admin key</label><input id="adminKey" type="password" autocomplete="current-password" placeholder="Enter your ADMIN_KEY">
+<p class="small">The key is kept only for this browser tab and is never saved in the database.</p>
+<label for="businessType">Business type</label><select id="businessType"><option value="cafe / restaurant">Café / Restaurant</option><option value="salon / spa">Salon / Spa</option><option value="gym / fitness">Gym / Fitness</option><option value="dentist / clinic">Dentist / Clinic</option><option value="CA / lawyer / consultant">CA / Lawyer / Consultant</option><option value="retail / boutique">Retail / Boutique</option><option value="other services">Other services</option></select>
+<label>Menu or service images</label><div id="drop" class="drop" tabindex="0" role="button" aria-label="Choose menu images"><div class="ico">↥</div><b>Choose images or drop them here</b><small>JPG, PNG or WebP · up to 6 images</small><input id="files" type="file" accept="image/jpeg,image/png,image/webp" multiple hidden></div>
+<div id="filelist" class="filelist"></div>
+<button id="scan" class="btn primary full" disabled>✦ Scan with AI</button>
+<div id="status" class="notice"></div>
+<p class="small">Tip: use clear, straight-on photos with the full menu visible. Keep all pages from the same menu in one scan.</p>
+</aside>
+<section class="panel">
+<div class="toolbar"><div><h2>Review extracted items</h2><p class="sub" style="margin:4px 0 0">Everything stays editable until you publish.</p></div><div class="actions"><span id="itemCount" class="pill">0 items</span><button id="export" class="btn outline" disabled>Export JSON</button></div></div>
+<div id="empty" class="empty"><div><div class="big">▤</div><b>Your catalog will appear here</b><p>Upload menu or service images and scan them. AI will group the items by category and flag uncertain readings for review.</p></div></div>
+<div id="review" class="review"><div id="warnings" class="warnings" hidden></div><div id="groups"></div><button id="addGroup" class="btn outline">+ Add category</button>
+<div class="publish active"><h3>Publish to a GetKeepsake business page</h3><p>Paste the business page link or ID. Publishing replaces that page's existing menu with the reviewed catalog.</p><label for="memoryId">Business page URL or ID</label><input id="memoryId" type="text" placeholder="https://getkeepsake.in/b/0123abcd"><button id="publish" class="btn yellow full">Publish reviewed catalog</button><div id="pubstatus" class="notice"></div></div>
+</div>
+</section>
+</div>
+</main>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  let files = [], catalog = null, groups = [];
+  const adminKey = $("adminKey");
+  try { adminKey.value = sessionStorage.getItem("ks_catalog_admin_key") || ""; } catch (_) {}
+  adminKey.addEventListener("input", () => { try { sessionStorage.setItem("ks_catalog_admin_key", adminKey.value); } catch (_) {} updateScan(); });
+  const notice = (el, msg, type="info") => { el.textContent = msg; el.className = "notice show " + type; };
+  const clearNotice = el => { el.className = "notice"; el.textContent = ""; };
+  const escapeHtml = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  const size = n => n < 1024*1024 ? Math.round(n/1024)+" KB" : (n/1024/1024).toFixed(1)+" MB";
+  function updateScan(){ $("scan").disabled = !adminKey.value.trim() || !files.length; }
+  function drawFiles(){
+    $("filelist").innerHTML = files.map((f,i)=>'<div class="file"><span>▧ '+escapeHtml(f.name)+' · '+size(f.size)+'</span><button type="button" data-remove-file="'+i+'" aria-label="Remove image">×</button></div>').join("");
+    $("filelist").querySelectorAll("[data-remove-file]").forEach(b=>b.onclick=()=>{files.splice(+b.dataset.removeFile,1);drawFiles();updateScan();});
+    updateScan();
+  }
+  function addFiles(list){
+    const accepted = [...list].filter(f=>/^image\/(jpeg|png|webp)$/.test(f.type));
+    if(!accepted.length) return notice($("status"),"Choose JPG, PNG or WebP image files.","error");
+    files = [...files, ...accepted].slice(0,6);
+    if(list.length + files.length > 6) notice($("status"),"Maximum 6 images per scan.","info");
+    drawFiles(); clearNotice($("status"));
+  }
+  $("drop").addEventListener("click", e=>{if(e.target.id!=="files")$("files").click();});
+  $("drop").addEventListener("keydown", e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();$("files").click();}});
+  $("files").addEventListener("change",e=>{addFiles(e.target.files);e.target.value="";});
+  ["dragenter","dragover"].forEach(n=>$("drop").addEventListener(n,e=>{e.preventDefault();$("drop").classList.add("drag");}));
+  ["dragleave","drop"].forEach(n=>$("drop").addEventListener(n,e=>{e.preventDefault();$("drop").classList.remove("drag");}));
+  $("drop").addEventListener("drop",e=>addFiles(e.dataTransfer.files));
+
+  function readImage(file){
+    return new Promise((resolve,reject)=>{
+      const reader=new FileReader();
+      reader.onerror=()=>reject(new Error("Could not read "+file.name));
+      reader.onload=()=>{
+        const img=new Image();
+        img.onerror=()=>reject(new Error("Could not open "+file.name));
+        img.onload=()=>{
+          const max=1800,scale=Math.min(1,max/Math.max(img.width,img.height));
+          const canvas=document.createElement("canvas");canvas.width=Math.round(img.width*scale);canvas.height=Math.round(img.height*scale);
+          canvas.getContext("2d").drawImage(img,0,0,canvas.width,canvas.height);
+          resolve(canvas.toDataURL("image/jpeg",.82));
+        };
+        img.src=reader.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+  async function callApi(payload){
+    const r=await fetch("/api/catalog-ai",{method:"POST",headers:{"Content-Type":"application/json","x-admin-key":adminKey.value.trim()},body:JSON.stringify(payload)});
+    let j={};try{j=await r.json();}catch(_){}
+    if(!r.ok)throw new Error(j.error||"Request failed ("+r.status+").");
+    return j;
+  }
+  $("scan").onclick=async()=>{
+    if(!files.length||!adminKey.value.trim())return;
+    $("scan").disabled=true;$("scan").textContent="Reading menu…";clearNotice($("status"));
+    try{
+      const images=await Promise.all(files.map(readImage));
+      const result=await callApi({action:"extract",businessType:$("businessType").value,images});
+      catalog=result.catalog;
+      groups=catalog.groups.map(g=>({n:g.name,items:g.items.map(i=>({n:i.name,p:i.price,d:i.description,b:false,v:i.variants||[],confidence:i.confidence,note:i.note}))}));
+      drawGroups();$("empty").hidden=true;$("review").classList.add("active");
+      $("itemCount").textContent=result.count+" items";
+      $("export").disabled=false;
+      const warn=[...(catalog.warnings||[])];
+      const low=groups.flatMap(g=>g.items.filter(i=>i.confidence<75).map(i=>i.n+(i.note?" — "+i.note:" — please verify this reading.")));
+      if(low.length)warn.push(low.length+" item(s) have low confidence: "+low.slice(0,12).join("; ")+(low.length>12?"…":""));
+      if(warn.length){$("warnings").hidden=false;$("warnings").innerHTML="<b>Review before publishing</b><ul>"+warn.map(w=>"<li>"+escapeHtml(w)+"</li>").join("")+"</ul>";}else{$("warnings").hidden=true;$("warnings").innerHTML="";}
+      notice($("status"),"Extracted "+result.count+" items. Review the names and prices before publishing.","ok");
+    }catch(e){notice($("status"),e.message,"error");}
+    finally{$("scan").textContent="✦ Scan with AI";updateScan();}
+  };
+  function drawGroups(){
+    $("groups").innerHTML=groups.map((g,gi)=>'<div class="group" data-group="'+gi+'"><div class="grouphead"><input aria-label="Category name" data-group-name="'+gi+'" value="'+escapeHtml(g.n)+'"><span class="count">'+g.items.length+' items</span><button type="button" data-remove-group="'+gi+'" title="Remove category">×</button></div><div class="items">'+g.items.map((it,ii)=>'<div class="item" data-item="'+ii+'"><div class="itemname"><input data-field="n" data-g="'+gi+'" data-i="'+ii+'" value="'+escapeHtml(it.n)+'" aria-label="Item name">'+(it.note?'<small class="'+(it.confidence<75?'lowhint':'')+'">'+escapeHtml((it.confidence<75?'Check: ':'')+it.note)+'</small>':'')+'<input data-field="d" data-g="'+gi+'" data-i="'+ii+'" value="'+escapeHtml(it.d||"")+'" placeholder="Description (optional)" aria-label="Description"></div><div class="pricecol"><label>Price</label><input class="'+(it.confidence<75?'low':'')+'" data-field="p" data-g="'+gi+'" data-i="'+ii+'" value="'+escapeHtml(it.p)+'" placeholder="₹ —"></div><button class="remove" type="button" data-remove-item="'+gi+','+ii+'" title="Remove item">×</button></div>').join("")+'<button type="button" class="addrow" data-add-item="'+gi+'">+ Add item</button></div></div>').join("");
+    $("groups").querySelectorAll("[data-group-name]").forEach(el=>el.onchange=()=>{groups[+el.dataset.groupName].n=el.value;});
+    $("groups").querySelectorAll("[data-field]").forEach(el=>el.onchange=()=>{const it=groups[+el.dataset.g].items[+el.dataset.i];it[el.dataset.field]=el.value;});
+    $("groups").querySelectorAll("[data-remove-item]").forEach(el=>el.onclick=()=>{const [g,i]=el.dataset.removeItem.split(",").map(Number);groups[g].items.splice(i,1);drawGroups();updateCount();});
+    $("groups").querySelectorAll("[data-remove-group]").forEach(el=>el.onclick=()=>{groups.splice(+el.dataset.removeGroup,1);drawGroups();updateCount();});
+    $("groups").querySelectorAll("[data-add-item]").forEach(el=>el.onclick=()=>{groups[+el.dataset.addItem].items.push({n:"",p:"",d:"",b:false,v:[],confidence:100,note:""});drawGroups();updateCount();});
+  }
+  function updateCount(){$("itemCount").textContent=groups.reduce((n,g)=>n+g.items.length,0)+" items";$("export").disabled=!groups.length;}
+  $("addGroup").onclick=()=>{groups.push({n:"New category",items:[{n:"",p:"",d:"",b:false,v:[],confidence:100,note:""}]});drawGroups();updateCount();};
+  $("export").onclick=()=>{
+    const output={biz:1,menu:groups.map(g=>({n:g.n,items:g.items.filter(i=>i.n.trim()).map(i=>({n:i.n,p:i.p,d:i.d,b:!!i.b,i:"",...(i.v&&i.v.length?{v:i.v}:{})}))}))};
+    const blob=new Blob([JSON.stringify(output,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="getkeepsake-catalog.json";a.click();URL.revokeObjectURL(url);
+  };
+  function parseId(value){const m=String(value||"").match(/(?:\/b\/)?([a-f0-9]{8,16})\/?(?:[?#].*)?$/i);return m?m[1]:"";}
+  $("publish").onclick=async()=>{
+    const id=parseId($("memoryId").value);
+    if(!id)return notice($("pubstatus"),"Paste a valid business page link like https://getkeepsake.in/b/0123abcd, or its 8–16 character ID.","error");
+    const cleaned=groups.map(g=>({n:g.n,items:g.items.filter(i=>i.n.trim()).map(i=>({n:i.n,p:i.p,d:i.d,b:!!i.b,variants:i.v||[]}))})).filter(g=>g.items.length);
+    if(!cleaned.length)return notice($("pubstatus"),"Add at least one item before publishing.","error");
+    if(!confirm("Publish "+cleaned.reduce((n,g)=>n+g.items.length,0)+" reviewed items to /b/"+id+"? This replaces the existing menu on that business page."))return;
+    $("publish").disabled=true;$("publish").textContent="Publishing…";clearNotice($("pubstatus"));
+    try{
+      const result=await callApi({action:"publish",memoryId:id,groups:cleaned});
+      notice($("pubstatus"),"Published "+result.items+" items in "+result.groups+" categories. Open the live page: "+location.origin+result.url,"ok");
+      const a=document.createElement("a");a.href=result.url;a.target="_blank";a.rel="noopener";a.textContent="Open live business page ↗";a.className="btn outline";a.style.marginTop="10px";$("pubstatus").appendChild(document.createElement("br"));$("pubstatus").appendChild(a);
+    }catch(e){notice($("pubstatus"),e.message,"error");}
+    finally{$("publish").disabled=false;$("publish").textContent="Publish reviewed catalog";}
+  };
+})();
+</script>
+</body>
+</html>
