@@ -149,7 +149,9 @@ async function create(id, m, b, ctx, from) {
   const doc = { t: "", page: id, no, at: now, kind, seller: sellerOf(m, set), cust: x.cust, inc: x.inc, lines: x.lines, calc: x.calc, terms: set.terms, note: clip(b.note, 200),
     design: DESIGNS.includes(b.design) ? b.design : set.design || "a4m", pay, paid: pay && pay.amt >= x.calc.total ? { at: now, mode: pay.mode === "split" ? "split" : pay.mode } : null, cancel: null, ...(from ? { from } : {}) };
   if (!est) { const cs = await require("./_cost").lineCosts(id, x.calc.lines); if (cs) doc.cs = cs; } // cost of each line at the time of sale (owner only, never in the bill link)
+  if (!est) doc.stk = 1; // the items' counted stock goes down (back up if the bill is cancelled)
   if (!(await save(id, doc, !est))) return E(500, "Couldn't save the bill. Please try again.");
+  if (!est) await require("./_stock").move(id, doc.lines, -1);
   if (!est) await db.cmd("INCR", "blcnt:" + id);
   await remember(id, x.lines.filter(l => !l.x));
   if (x.cust.phone) await rememberCust(id, x.cust);
@@ -184,7 +186,9 @@ async function credit(id, m, b) {
     lines: lines.map(({ k, ...x }) => x), rk: lines.map(l => [l.k, l.q]), calc, terms: "", note: clip(b.reason, 120) || "Goods returned", design: bill.design || "a4m",
     ref: { t: bill.t, no: bill.no, at: bill.at, kind: bill.kind || "tax" }, refund: MODES.includes(b.mode) ? b.mode : "cash", paid: { at: now, mode: MODES.includes(b.mode) ? b.mode : "cash" }, cancel: null };
   if (bill.cs) doc.cs = lines.map(l => bill.cs[l.k] != null ? bill.cs[l.k] : null); // returned goods carry the cost they were sold at
+  doc.stk = 1; // returned goods go back into stock
   if (!(await save(id, doc, true))) return E(500, "Couldn't save the credit note. Please try again.");
+  await require("./_stock").move(id, doc.lines, 1);
   for (const l of lines) ret[l.k] = r2((ret[l.k] || 0) + l.q);
   bill.ret = ret; await db.setj("bl:" + t, bill);
   return { ok: true, bill: pub(doc), orig: pub(bill) };
@@ -303,6 +307,10 @@ async function handle(b, ctx) {
           try { const r = await require("./_khata").handle({ action: "kh-own-add", id, kind: "pay", phone: bill.cust.phone, name: bill.cust.name, amount: bill.kh, note: "Bill " + bill.no + " cancelled", src: "bill:" + bill.no, force: true }, ctx); if (!r.error) bill.khPaid = Date.now(); } catch (e) { console.error("bill khata cancel", e.message); }
         }
       }
+      // Stock follows: a cancelled bill puts its items back (a cancelled credit note takes them out again), and undoing it reverses that.
+      const sgn = bill.kind === "credit" ? -1 : 1;
+      if (b.cancel !== false && !bill.cancel && bill.stk) { await require("./_stock").move(id, bill.lines, sgn); bill.stk = 0; }
+      else if (b.cancel === false && bill.cancel && bill.stk === 0) { await require("./_stock").move(id, bill.lines, -sgn); bill.stk = 1; }
       bill.cancel = b.cancel === false ? null : bill.cancel || { at: Date.now() };
     } // a GST document is never deleted, only marked cancelled
     await db.setj("bl:" + t, bill);

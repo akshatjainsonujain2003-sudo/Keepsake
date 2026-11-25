@@ -71,6 +71,7 @@ module.exports = async (req, res) => {
       if (/^hq-pb-(search|build|quick)$/.test(b.action)) { const P = require("./_places"); if (await P.guard("hq", 300)) return db.reply(res, 429, { error: "Daily limit reached. Try tomorrow." });
         const r = b.action === "hq-pb-search" ? await P.search(b.q) : b.action === "hq-pb-quick" ? await P.quick(b, "hq") : await P.build(b.place, "hq"); return r.error ? db.reply(res, r.status || 400, { error: r.error }) : db.reply(res, 200, r); }
       if (b.action === "hq-scans") return db.reply(res, 200, await H.scans());
+      if (b.action === "hq-munshi") return db.reply(res, 200, await require("./_munshi").usage());
       // Tell Bing and the other IndexNow engines about every page in the sitemap (marketing pages and live shops).
       if (b.action === "hq-indexnow") { const S = require("./_shopseo"), shops = await S.sitemapShops();
         const urls = [...require("./seo").PAGES.map(p => S.BASE + p), ...shops.map(x => S.BASE + "/b/" + x.id)]; const ok = await S.indexNow(urls); return db.reply(res, ok ? 200 : 502, ok ? { ok: true, n: urls.length } : { error: "Couldn't reach IndexNow. Try again in a minute." }); }
