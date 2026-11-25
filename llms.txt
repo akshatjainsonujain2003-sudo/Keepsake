@@ -34,6 +34,14 @@ GetKeepsake's consumer gifting products are digital keepsakes that a customer pe
 - **Can I edit after publishing?** Yes, supported photos, music and text can be updated through My Account; the existing link and QR code show the updated version.
 - **Are these physical gifts?** No. The memory card and love-story website described here are digital products.
 
+### Gift discovery hub and search-intent pages
+
+- [Gift ideas hub](https://getkeepsake.in/gift-guides)
+- [Digital anniversary gifts under ₹300](https://getkeepsake.in/gifts/under-300)
+- [Instant and last-minute digital gifts](https://getkeepsake.in/gifts/instant)
+- [Alternatives to flowers](https://getkeepsake.in/gifts/alternatives-to-flowers)
+- [Personalised digital gift websites guide](https://getkeepsake.in/gifts/digital-gift-website)
+
 ### Consumer gifting pages
 
 - [Digital gifts overview and product comparison](https://getkeepsake.in/gifts)
