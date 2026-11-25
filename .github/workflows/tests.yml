@@ -1,0 +1,21 @@
+name: Test
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: node --test tests/*.test.js
+      - name: Notify IndexNow after production content changes
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          curl --fail-with-body --silent --show-error -X POST "https://api.indexnow.org/indexnow" \
+            -H "Content-Type: application/json; charset=utf-8" \
+            --data '{"host":"getkeepsake.in","key":"9f4c2a7e1b6d48c3a5e0f7b2d9c1e8a4","keyLocation":"https://getkeepsake.in/9f4c2a7e1b6d48c3a5e0f7b2d9c1e8a4.txt","urlList":["https://getkeepsake.in/","https://getkeepsake.in/gifts","https://getkeepsake.in/digital-gifts","https://getkeepsake.in/memory-card","https://getkeepsake.in/love-story-website","https://getkeepsake.in/designs","https://getkeepsake.in/gifts/girlfriend","https://getkeepsake.in/gifts/boyfriend","https://getkeepsake.in/gifts/anniversary","https://getkeepsake.in/gifts/birthday","https://getkeepsake.in/gifts/valentines","https://getkeepsake.in/gifts/long-distance"]}'

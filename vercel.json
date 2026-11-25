@@ -2,16 +2,6 @@
   "cleanUrls": true,
   "redirects": [
     {
-      "source": "/memory-card",
-      "destination": "/gifts",
-      "permanent": false
-    },
-    {
-      "source": "/love-story-website",
-      "destination": "/gifts",
-      "permanent": false
-    },
-    {
       "source": "/gifts/karva-chauth",
       "destination": "/gifts/valentines",
       "permanent": false
