@@ -29,10 +29,6 @@
   ],
   "rewrites": [
     {
-      "source": "/",
-      "destination": "/gifts.html"
-    },
-    {
       "source": "/api/geofence/:action",
       "destination": "/api/qr?gf=:action"
     },
