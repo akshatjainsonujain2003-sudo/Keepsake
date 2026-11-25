@@ -1516,7 +1516,7 @@ footer{background:#3D0A19}
 
 <section class="section" id="templates">
 <div class="wrap">
-<div class="sectionHead reveal"><div class="script">choose your paper</div><h2>Sixteen little worlds.</h2></div>
+<div class="sectionHead reveal"><div class="script">choose your paper</div><h2>Eighteen little worlds.</h2></div>
 <div class="templates" id="templateGrid"></div>
 </div>
 </section>
@@ -1615,16 +1615,24 @@ const ASSETS=new Proxy({},{get:(_,k)=>"/assets/"+k+".webp"});
 const __SRC="<!doctype html>\n"+document.documentElement.outerHTML;
 let forceSelf=false,localThumb="",longLink="",qrFrame=true,qrCap="scan to open our memory";
 const templates=[
- {id:"laceAlbum",name:"Lace Album",img:ASSETS.laceAlbum},
- {id:"envelope",name:"Love Letter",img:ASSETS.envelope},
- {id:"floralClip",name:"Garden Note",img:ASSETS.floralClip},
- {id:"burgundyFloral",name:"Burgundy Bloom",img:ASSETS.burgundyFloral},
- {id:"blueBotanical",name:"Blue Botanica",img:ASSETS.blueBotanical},
- {id:"greenLily",name:"Lily Lace",img:ASSETS.greenLily},
- {id:"rugGarden",name:"Persian Garden",img:ASSETS.rugGarden},
- {id:"pinkPalace",name:"Blush Palace",img:ASSETS.pinkPalace},
- {id:"navyPaper",name:"Midnight Paper",img:ASSETS.navyPaper},
- {id:"swanLace",name:"Swan Lace",img:ASSETS.swanLace},{id:"fullMoon",name:"Full Moon",img:ASSETS.fullMoon,photo:1},{id:"greenVinyl",name:"Green Vinyl",img:ASSETS.greenVinyl,photo:1},{id:"mistForest",name:"Misty Forest",img:ASSETS.mistForest,photo:1},{id:"goldenHaze",name:"Golden Haze",img:ASSETS.goldenHaze,photo:1},{id:"meadowLight",name:"Meadow Light",img:ASSETS.meadowLight,photo:1},{id:"terracottaArch",name:"Terracotta Arch",img:ASSETS.terracottaArch,photo:1}
+{id:"phygital01",name:"Blossom Persian",img:ASSETS.phygital01},
+{id:"phygital02",name:"Antique Parchment",img:ASSETS.phygital02},
+{id:"phygital03",name:"Lily Lace",img:ASSETS.phygital03},
+{id:"phygital04",name:"Ruby Velvet",img:ASSETS.phygital04},
+{id:"phygital05",name:"Double Lace Journal",img:ASSETS.phygital05},
+{id:"phygital06",name:"Garden Lily",img:ASSETS.phygital06},
+{id:"phygital07",name:"Midnight Persian",img:ASSETS.phygital07},
+{id:"phygital08",name:"Blush Palace",img:ASSETS.phygital08},
+{id:"phygital09",name:"Rosewood Persian",img:ASSETS.phygital09},
+{id:"phygital10",name:"Blue Botanica",img:ASSETS.phygital10},
+{id:"phygital11",name:"Golden Sunflower",img:ASSETS.phygital11},
+{id:"phygital12",name:"Rose Ribbon",img:ASSETS.phygital12},
+{id:"phygital13",name:"Sage Garden",img:ASSETS.phygital13},
+{id:"phygital14",name:"Lily Noir",img:ASSETS.phygital14},
+{id:"phygital15",name:"Vintage Rose",img:ASSETS.phygital15},
+{id:"phygital16",name:"Cream Botanical",img:ASSETS.phygital16},
+{id:"phygital17",name:"Blossom Envelope",img:ASSETS.phygital17},
+{id:"phygital18",name:"Swan Garden",img:ASSETS.phygital18}
 ];
 templates.forEach(t=>t.th="/assets/t-"+t.id+".webp");
 const DEF={t:"Our Memories",q:"Every moment with you is a beautiful memory.",p:"",style:"classic",i:[
