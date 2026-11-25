@@ -23,3 +23,19 @@ test("product landing pages are distinct from the consumer overview", () => {
   assert.ok(seo.PAGES.includes("/memory-card"));
   assert.ok(seo.PAGES.includes("/love-story-website"));
 });
+
+test("preview root is routed to consumer gifts, not the business homepage", () => {
+  const rootRewrite = config.rewrites.find(r => r.source === "/");
+  assert.equal(rootRewrite?.destination, "/gifts.html");
+});
+test("new 18-card collection is present in consumer gallery and studio", () => {
+  const gallery = fs.readFileSync(path.join(root, "designs.html"), "utf8");
+  const studio = fs.readFileSync(path.join(root, "studio.html"), "utf8");
+  for (let i = 1; i <= 18; i++) {
+    const id = "new" + String(i).padStart(2, "0");
+    assert.ok(gallery.includes(id), "gallery missing " + id);
+    assert.ok(studio.includes(id), "studio catalog missing " + id);
+  }
+  assert.ok(gallery.includes("new-card-collection"));
+  assert.ok(studio.includes("requestedDesign"));
+});
