@@ -23,3 +23,8 @@ test("product landing pages are distinct from the consumer overview", () => {
   assert.ok(seo.PAGES.includes("/memory-card"));
   assert.ok(seo.PAGES.includes("/love-story-website"));
 });
+
+test("consumer gifts page does not invoke installed-PWA splash behavior", () => {
+  const gifts = fs.readFileSync(path.join(root, "gifts.html"), "utf8");
+  assert.ok(!gifts.includes('<link rel="manifest" href="/site.webmanifest">'));
+});
