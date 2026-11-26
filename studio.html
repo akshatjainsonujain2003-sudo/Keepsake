@@ -1492,7 +1492,21 @@ body{background:#FFF1EF}
 footer{background:#3D0A19}
 </style>
 
-<script src="/assets/ks-pixel.v1.js" defer></script><script src="/assets/ks-ref.v1.js" defer></script></head>
+<script src="/assets/ks-pixel.v1.js" defer></script><script src="/assets/ks-ref.v1.js" defer></script><style id="cards-redesign-v1">
+/* 2026 Cards Studio redesign: editorial rose/cream, clearer template selection */
+:root{--ks-redesign-bg:#fff8f5;--ks-redesign-ink:#2a171c;--ks-redesign-accent:#8f334a;--ks-redesign-line:#ead9d5}
+body{background:var(--ks-redesign-bg)!important;color:var(--ks-redesign-ink)!important}
+header,nav,.topbar{backdrop-filter:blur(18px)}
+#hero,.hero{background:linear-gradient(120deg,#fff7f0,#f8e6e4)!important;border-radius:28px!important}
+#templates,.templates,.templateGrid,#templateGrid{gap:14px!important}
+.template,.tpl,.template-card,.tcard,.design-card{border:1px solid var(--ks-redesign-line)!important;border-radius:20px!important;overflow:hidden!important;background:#fffdfb!important;box-shadow:0 8px 28px #3a10100a!important;transition:transform .22s,box-shadow .22s,border-color .22s!important}
+.template:hover,.tpl:hover,.template-card:hover,.tcard:hover,.design-card:hover{transform:translateY(-3px)!important;box-shadow:0 14px 34px #3a101018!important;border-color:#c88a99!important}
+button,.btn,.primary{border-radius:999px!important}
+input,textarea,select{border-radius:14px!important}
+#templateGrid img,.template img,.tpl img,.design-card img{object-fit:cover}
+@media(max-width:700px){body{padding-bottom:calc(92px + env(safe-area-inset-bottom))}#templateGrid,.templateGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}.template,.tpl,.template-card,.tcard{border-radius:16px!important}.hero h1{font-size:clamp(36px,11vw,54px)!important}}
+</style>
+</head>
 <body>
 <div class="topbar"><div class="wrap nav">
 <a class="brand" href="/gifts">Keepsake</a>
@@ -1625,8 +1639,27 @@ const templates=[
  {id:"pinkPalace",name:"Blush Palace",img:ASSETS.pinkPalace},
  {id:"navyPaper",name:"Midnight Paper",img:ASSETS.navyPaper},
  {id:"swanLace",name:"Swan Lace",img:ASSETS.swanLace},{id:"fullMoon",name:"Full Moon",img:ASSETS.fullMoon,photo:1},{id:"greenVinyl",name:"Green Vinyl",img:ASSETS.greenVinyl,photo:1},{id:"mistForest",name:"Misty Forest",img:ASSETS.mistForest,photo:1},{id:"goldenHaze",name:"Golden Haze",img:ASSETS.goldenHaze,photo:1},{id:"meadowLight",name:"Meadow Light",img:ASSETS.meadowLight,photo:1},{id:"terracottaArch",name:"Terracotta Arch",img:ASSETS.terracottaArch,photo:1}
+,
+ {id:"new01",name:"Rose Atelier",img:"/assets/cards/new-01.svg"},
+ {id:"new02",name:"Moonlit Letter",img:"/assets/cards/new-02.svg"},
+ {id:"new03",name:"Secret Garden",img:"/assets/cards/new-03.svg"},
+ {id:"new04",name:"Pearl & Lace",img:"/assets/cards/new-04.svg"},
+ {id:"new05",name:"Ruby Velvet",img:"/assets/cards/new-05.svg"},
+ {id:"new06",name:"Blue Botanica",img:"/assets/cards/new-06.svg"},
+ {id:"new07",name:"Golden Hour",img:"/assets/cards/new-07.svg"},
+ {id:"new08",name:"Sage Promise",img:"/assets/cards/new-08.svg"},
+ {id:"new09",name:"Terracotta Love",img:"/assets/cards/new-09.svg"},
+ {id:"new10",name:"Noir Romance",img:"/assets/cards/new-10.svg"},
+ {id:"new11",name:"Lavender Dreams",img:"/assets/cards/new-11.svg"},
+ {id:"new12",name:"Citrus Bloom",img:"/assets/cards/new-12.svg"},
+ {id:"new13",name:"Cherry Notes",img:"/assets/cards/new-13.svg"},
+ {id:"new14",name:"Coastal Blue",img:"/assets/cards/new-14.svg"},
+ {id:"new15",name:"Vintage Postcard",img:"/assets/cards/new-15.svg"},
+ {id:"new16",name:"Wildflower",img:"/assets/cards/new-16.svg"},
+ {id:"new17",name:"Swan Lake",img:"/assets/cards/new-17.svg"},
+ {id:"new18",name:"Heirloom Album",img:"/assets/cards/new-18.svg"}
 ];
-templates.forEach(t=>t.th="/assets/t-"+t.id+".webp");
+templates.forEach(t=>t.th=t.id.startsWith("new")?t.img:"/assets/t-"+t.id+".webp");
 const DEF={t:"Our Memories",q:"Every moment with you is a beautiful memory.",p:"",style:"classic",i:[
  {k:"g",l:"Photo gallery",v:""},{k:"v",l:"Watch our video",v:""},{k:"a",l:"Our song",v:""},{k:"x",l:"A special message",v:"Write your message here."}
 ]};
@@ -2196,6 +2229,7 @@ document.addEventListener("click",async e=>{const b=e.target.closest("#mineList 
 async function init(){ if(await parseHash()){showViewer();return} await licence();
  if(!$("#templateGrid")||!$("#preview")){return}
  restoreDraft();
+ const requestedDesign=new URLSearchParams(location.search).get('design'); if(requestedDesign&&templates.some(t=>t.id===requestedDesign)){currentTemplate=requestedDesign;d.template=requestedDesign;}
  hydrateForm();
  templateUI();$("#heroImg").src=getTemplate().th;bindLive();renderPreview();urlStart();
  LOCK=KSLock.mount($("#lockBox"));await openForEdit();
