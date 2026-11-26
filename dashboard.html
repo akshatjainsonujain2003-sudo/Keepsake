@@ -8,7 +8,29 @@ body{background:#fff8f5!important;color:#2a171c!important}.nav{background:#fff9f
 .dashGrid{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))!important;gap:18px!important}.memory{background:#fffdfb!important;border:1px solid #ead9d5!important;border-radius:24px!important;color:#2a171c!important;box-shadow:0 10px 34px #40120b0a!important;padding:22px!important}.memory h2{font-family:'Cormorant Garamond',serif!important;font-size:32px!important;color:#512333!important}.muted{color:#79676b!important;opacity:1!important}.actions .btn{border-radius:999px!important}.empty{background:#fffdfb!important;border-color:#d9b7bf!important;color:#473039!important;border-radius:24px!important}.state.good{color:#35734e!important}.state.bad{color:#9e263f!important}.memory .pill.on{background:#e1f2e5!important;color:#2e6847!important}.memory .pill.off{background:#f8e8e0!important;color:#95533c!important}
 @media(max-width:600px){body{padding-bottom:24px}.dashHead h1{font-size:clamp(44px,12vw,64px)!important}.memory{padding:18px!important}}
 </style>
-</head><body>
+<style id="dashboard-redesign-v2">
+:root{--dash-ink:#3d2430;--dash-muted:#8b737b;--dash-border:#ecd9d9;--dash-pink:#b46a82;--dash-bg:#fff8f6}
+body{background:var(--dash-bg)!important;color:var(--dash-ink)!important}
+.nav{background:rgba(255,249,247,.94)!important;border-bottom:1px solid var(--dash-border)!important;backdrop-filter:blur(14px)}
+.nav .brand{color:#8c435c!important}
+.hero{background:radial-gradient(ellipse at 15% 0%,#f4dce5 0,transparent 48%),linear-gradient(135deg,#fff8f3,#f8e9e8)!important;padding:clamp(26px,5vw,60px) 0!important}
+.dash{max-width:1160px!important}
+.dashHead{align-items:center!important;padding:clamp(18px,4vw,36px)!important;background:rgba(255,255,255,.64);border:1px solid rgba(255,255,255,.8);border-radius:30px;box-shadow:0 15px 50px #6e26300a}
+.dashHead h1{font-family:'Cormorant Garamond',Georgia,serif!important;color:#4b2635!important;font-weight:500!important}
+.dashHead .lead{color:#7b6069!important}
+.dashHead .btn{box-shadow:0 7px 18px #a45e7420}
+.dashGrid{grid-template-columns:repeat(auto-fit,minmax(290px,1fr))!important;gap:18px!important}
+.memory{background:linear-gradient(160deg,#fff,#fffaf8)!important;border:1px solid var(--dash-border)!important;border-radius:24px!important;color:var(--dash-ink)!important;box-shadow:0 9px 28px #40120b0a!important;padding:23px!important;transition:transform .18s,box-shadow .18s!important}
+.memory:hover{transform:translateY(-3px);box-shadow:0 15px 34px #40120b12!important}
+.memory h2{font-family:'Cormorant Garamond',Georgia,serif!important;font-size:clamp(26px,4vw,34px)!important;color:#572c3b!important;line-height:1.08!important}
+.memory .pill.on{background:#e4f2e5!important;color:#2e6847!important}.memory .pill.off{background:#f8e9e1!important;color:#99573d!important}
+.muted{color:var(--dash-muted)!important;opacity:1!important}
+.actions{gap:8px!important}.actions a,.actions button{border-radius:999px!important}
+.empty{background:#fffdfb!important;border:1px dashed #d8aab8!important;border-radius:26px!important;padding:clamp(22px,5vw,42px)!important;color:#52323d!important}
+.state.good{color:#35734e!important}.state.bad{color:#9e263f!important}
+footer{background:#fff9f6!important;border-top:1px solid var(--dash-border)!important;color:#735d65!important}
+@media(max-width:640px){.hero{padding:20px 0!important}.dashHead{align-items:flex-start!important;flex-direction:column!important;border-radius:24px!important}.dashHead h1{font-size:clamp(40px,12vw,60px)!important}.dashHead>div:last-child{width:100%}.dashHead>div:last-child .btn{flex:1;text-align:center}.memory{padding:18px!important}}
+</style></head><body>
 <header class="nav"><div class="wrap"><a class="brand" href="/">Keepsake</a><nav><a class="btn sm" href="/studio">Create a memory</a></nav></div></header>
 <main><section class="hero"><div class="wrap dash"><div class="dashHead"><div><div class="eyebrow">Your private space</div><h1 style="font-size:clamp(46px,7vw,76px);margin:12px 0">My memories</h1><p class="lead" id="welcome">Your saved moments, together in one place.</p></div><div style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn" style="text-decoration:none" href="/studio">+ New card</a><a class="btn ghost" style="text-decoration:none" href="/builder">+ New website</a></div></div><p id="state" class="state" role="status">Loading your memories…</p><div id="list" class="dashGrid"></div><div id="empty" class="empty" hidden><h2 style="font-size:32px">Your first keepsake starts here.</h2><p>Design a memory, save it, activate it once, then share its link, QR code or NFC card.</p><a class="btn" href="/studio">Create your first memory</a></div></div></section></main>
 <footer><div class="wrap"><b class="brand" style="font-size:26px">Keepsake</b><p>NFC &amp; QR memory cards for the people you love.</p><a href="/account">Account</a></div></footer>
