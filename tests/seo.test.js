@@ -41,3 +41,20 @@ test("new 18-card collection is present in consumer gallery and studio", () => {
   assert.ok(gallery.includes("new-card-collection"));
   assert.ok(studio.includes("requestedDesign"));
 });
+
+test("new card gallery is placed before the older card gallery and styled responsively", () => {
+  const gallery = fs.readFileSync(path.join(root, "designs.html"), "utf8");
+  const newSection = gallery.indexOf('id="new-card-collection"');
+  const oldSection = gallery.indexOf('id="cards"');
+  assert.ok(newSection >= 0 && oldSection > newSection, "new collection should be shown before old collection");
+  assert.ok(gallery.includes(".new-card-grid{display:grid"));
+  assert.ok(gallery.includes("@media(max-width:600px)"));
+});
+test("all 18 card artwork assets exist and dashboard redesign is applied", () => {
+  for (let i = 1; i <= 18; i++) {
+    const file = path.join(root, "assets", "cards", "new-" + String(i).padStart(2, "0") + ".svg");
+    assert.ok(fs.existsSync(file), "missing art asset " + file);
+  }
+  const dashboard = fs.readFileSync(path.join(root, "dashboard.html"), "utf8");
+  assert.ok(dashboard.includes("dashboard-redesign-v2"));
+});
